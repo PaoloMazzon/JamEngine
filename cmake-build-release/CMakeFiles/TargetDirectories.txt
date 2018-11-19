@@ -1,0 +1,3 @@
+C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/rebuild_cache.dir
+C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir
+C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/edit_cache.dir
