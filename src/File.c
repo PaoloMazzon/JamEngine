@@ -1,0 +1,134 @@
+//
+// Created by lugi1 on 2018-11-15.
+//
+
+#include "File.h"
+#include <malloc.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+/////////////////////////////////////////////////////////
+StringList* createStringList() {
+	StringList* list;
+	list = (StringList*)calloc(1, sizeof(StringList));
+
+	// Check that it worked alright
+	if (list == NULL)
+		fprintf(stderr, "Could not allocate string list (createStringList)\n");
+
+	return list;
+}
+/////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////
+StringList* loadStringList(const char* fname) {
+	StringList* list = createStringList();
+	FILE* file = fopen(fname, "r");
+	char* currentString;
+	fpos_t startOfLine;
+	size_t sizeOfLine;
+	fpos_t startOfNewLine;
+	bool quit = false;
+	bool foundEndOfLine;
+	char currentChar;
+
+	if (file != NULL && list != NULL) {
+		fgetpos(file, &startOfNewLine);
+
+		// Continue to nab lines until EOF or error
+		while (!feof(file) && !quit) {
+			foundEndOfLine = false;
+			sizeOfLine = 0;
+			fsetpos(file, &startOfNewLine);
+			fgetpos(file, &startOfLine);
+
+			// Find the end of the line
+			while (!feof(file) && !foundEndOfLine) {
+				currentChar = (char)fgetc(file);
+				if (currentChar == '\r' || currentChar == '\n' || feof(file)) {
+					// We found the end, but we must move the cursor ahead one if its a CRLF
+					if (currentChar == '\r')
+						fgetc(file);
+
+					// We must break out of the loop
+					if (feof(file))
+						quit = true;
+
+					// Record where to start the next line then go back to the start of this one
+					fgetpos(file, &startOfNewLine);
+					fsetpos(file, &startOfLine);
+					foundEndOfLine = true;
+				}
+				sizeOfLine++;
+			}
+
+			// Create a space to copy the string into
+			currentString = (char*)calloc(1, sizeOfLine);
+			if (currentString != NULL) {
+				// Get the string, then throw it in the list
+				fgets(currentString, sizeOfLine, file); // TODO: Fix this not working on last line of a file
+				appendStringToStringList(list, currentString, true);
+			} else {
+				fprintf(stderr, "Failed to create string (loadStringList)\n");
+				quit = true;
+			}
+		}
+	} else {
+		if (list == NULL)
+			fprintf(stderr, "List could not be allocated (loadStringList)\n");
+		if (file == NULL)
+			fprintf(stderr, "File could not be opened (loadStringList)\n");
+	}
+
+	fclose(file);
+	return list;
+}
+/////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////
+void appendStringToStringList(StringList* list, char* string, bool heapBased) {
+	char** newList = NULL;
+	bool* newBools = NULL;
+
+	// We must make sure it exists first
+	if (list != NULL) {
+		// Reallocate the string list
+		newList = (char**)realloc(list->strList, (list->size + 1) * sizeof(char*));
+		newBools = (bool*)realloc(list->dynamic, (list->size + 1) * sizeof(bool));
+
+		// Double check that it worked
+		if (newList != NULL && newBools != NULL) {
+			// Set the new list pointer
+			list->strList = newList;
+			list->dynamic = newBools;
+
+			// Throw in the new string
+			list->strList[list->size] = string;
+			list->dynamic[list->size] = heapBased;
+			list->size++;
+		} else {
+			fprintf(stderr, "Could not reallocate string list(s) (appendStringToStringList)\n");
+			// Just in case one was initialized and the other wasn't
+			free(newBools);
+			free(newList);
+		}
+	} else {
+		fprintf(stderr, "List does not exist (appendStringToStringList)\n");
+	}
+}
+/////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////
+void freeStringList(StringList* list) {
+	int i;
+	if (list != NULL) {
+		for (i = 0; i < list->size; i++)
+			if (list->dynamic[i])
+				free(list->strList[i]);
+		free(list->strList);
+		free(list->dynamic);
+		free(list);
+	}
+}
+/////////////////////////////////////////////////////////

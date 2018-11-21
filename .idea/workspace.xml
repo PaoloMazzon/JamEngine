@@ -12,7 +12,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9952e5cf-690c-40a8-82bb-e58f7a3fd2dc" name="Default" comment="">
+    <list default="true" id="9952e5cf-690c-40a8-82bb-e58f7a3fd2dc" name="Default" comment="Got file loading (line-by-line) to work and did some testing with it.">
       <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
@@ -82,18 +82,18 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="c" value="15447" />
+          <entry key="c" value="15596" />
           <entry key="h" value="6442" />
           <entry key="m" value="28" />
-          <entry key="txt" value="1168" />
+          <entry key="txt" value="1244" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CMakeLists.txt" value="426" />
           <entry key="Doxygen file" value="85" />
-          <entry key="ObjectiveC" value="21832" />
-          <entry key="PLAIN_TEXT" value="742" />
+          <entry key="ObjectiveC" value="21981" />
+          <entry key="PLAIN_TEXT" value="818" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -140,8 +140,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/File.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="55" selection-start-line="55" selection-end-line="55" />
+            <state relative-caret-position="320">
+              <caret line="57" column="96" selection-start-line="57" selection-start-column="96" selection-end-line="57" selection-end-column="96" />
               <folding>
                 <element signature="e#42#59#0" expanded="true" />
               </folding>
@@ -152,8 +152,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cmake-build-debug/test.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+            <state relative-caret-position="100">
+              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
             </state>
           </provider>
         </entry>
@@ -180,6 +180,11 @@
     </replaceStrings>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Paolo Mazzon &lt;pdmazzon@gmail.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -228,8 +233,8 @@
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/test.c" />
         <option value="$PROJECT_DIR$/include/File.h" />
-        <option value="$PROJECT_DIR$/cmake-build-debug/test.txt" />
         <option value="$PROJECT_DIR$/src/File.c" />
+        <option value="$PROJECT_DIR$/cmake-build-debug/test.txt" />
       </list>
     </option>
   </component>
@@ -398,12 +403,20 @@
       <workItem from="1542334082209" duration="5752000" />
       <workItem from="1542520118401" duration="2009000" />
       <workItem from="1542759640555" duration="6269000" />
-      <workItem from="1542776580347" duration="1584000" />
+      <workItem from="1542776580347" duration="1853000" />
     </task>
+    <task id="LOCAL-00001" summary="Got file loading (line-by-line) to work and did some testing with it.">
+      <created>1542778424493</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1542778424493</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="213337000" />
+    <option name="totallyTimeSpent" value="213606000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -472,16 +485,9 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/File.c</url>
-          <line>55</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Got file loading (line-by-line) to work and did some testing with it." />
+    <option name="LAST_COMMIT_MESSAGE" value="Got file loading (line-by-line) to work and did some testing with it." />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
@@ -837,15 +843,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cmake-build-debug/test.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+        <state relative-caret-position="100">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/File.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="55" selection-start-line="55" selection-end-line="55" />
+        <state relative-caret-position="320">
+          <caret line="57" column="96" selection-start-line="57" selection-start-column="96" selection-end-line="57" selection-end-column="96" />
           <folding>
             <element signature="e#42#59#0" expanded="true" />
           </folding>
