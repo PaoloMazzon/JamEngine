@@ -7,6 +7,7 @@
 #include "Font.h"
 #include "Drawing.h"
 #include <time.h>
+#include "File.h"
 
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
@@ -113,6 +114,15 @@ int main(int argc, char* argv[]) {
 	font->characterHeight = 16;
 	font->characterWidth = 8;
 	bool run = true;
+
+	// Test File.h
+	int i;
+	StringList* test = loadStringList("test.txt");
+	for (i = 0; i < test->size; i++) {
+		printf("List[%i]: %s\n", i, test->strList[i]);
+		fflush(stdout);
+	}
+	freeStringList(test);
 
 	// Setup the screen
 	configScreenBuffer(renderer, GAME_WIDTH, GAME_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);

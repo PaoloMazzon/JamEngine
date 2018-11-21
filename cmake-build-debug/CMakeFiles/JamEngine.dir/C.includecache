@@ -6,3 +6,19 @@
 
 #IncludeRegexTransform: 
 
+../include/File.h
+stdbool.h
+-
+
+C:/Users/lugi1/Desktop/Code/JamEngine/src/File.c
+File.h
+C:/Users/lugi1/Desktop/Code/JamEngine/src/File.h
+malloc.h
+-
+stdio.h
+-
+string.h
+-
+stdbool.h
+-
+

@@ -4,20 +4,24 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "C:/Users/lugi1/Desktop/Code/JamEngine/src/AssetHandler.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Buffer.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Buffer.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Clock.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Clock.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Drawing.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Drawing.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Entity.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Entity.c.obj"
+  "C:/Users/lugi1/Desktop/Code/JamEngine/src/File.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/File.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Font.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Font.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Frame.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Frame.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Hitbox.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Hitbox.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Input.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Input.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Renderer.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Renderer.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Sprite.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Sprite.c.obj"
+  "C:/Users/lugi1/Desktop/Code/JamEngine/src/StringMap.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/StringMap.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Texture.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Texture.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/TileMap.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/TileMap.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/Vector.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Vector.c.obj"
   "C:/Users/lugi1/Desktop/Code/JamEngine/src/World.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/World.c.obj"
+  "C:/Users/lugi1/Desktop/Code/JamEngine/test.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/CMakeFiles/JamEngine.dir/test.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

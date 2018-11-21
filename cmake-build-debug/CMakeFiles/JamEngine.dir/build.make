@@ -56,10 +56,66 @@ include CMakeFiles/JamEngine.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/JamEngine.dir/flags.make
 
+CMakeFiles/JamEngine.dir/test.c.obj: CMakeFiles/JamEngine.dir/flags.make
+CMakeFiles/JamEngine.dir/test.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
+CMakeFiles/JamEngine.dir/test.c.obj: ../test.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/JamEngine.dir/test.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\test.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\test.c
+
+CMakeFiles/JamEngine.dir/test.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/JamEngine.dir/test.c.i"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\lugi1\Desktop\Code\JamEngine\test.c > CMakeFiles\JamEngine.dir\test.c.i
+
+CMakeFiles/JamEngine.dir/test.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/JamEngine.dir/test.c.s"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\lugi1\Desktop\Code\JamEngine\test.c -o CMakeFiles\JamEngine.dir\test.c.s
+
+CMakeFiles/JamEngine.dir/src/File.c.obj: CMakeFiles/JamEngine.dir/flags.make
+CMakeFiles/JamEngine.dir/src/File.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
+CMakeFiles/JamEngine.dir/src/File.c.obj: ../src/File.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/JamEngine.dir/src/File.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\File.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\File.c
+
+CMakeFiles/JamEngine.dir/src/File.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/JamEngine.dir/src/File.c.i"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\lugi1\Desktop\Code\JamEngine\src\File.c > CMakeFiles\JamEngine.dir\src\File.c.i
+
+CMakeFiles/JamEngine.dir/src/File.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/JamEngine.dir/src/File.c.s"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\lugi1\Desktop\Code\JamEngine\src\File.c -o CMakeFiles\JamEngine.dir\src\File.c.s
+
+CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj: CMakeFiles/JamEngine.dir/flags.make
+CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
+CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj: ../src/AssetHandler.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\AssetHandler.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\AssetHandler.c
+
+CMakeFiles/JamEngine.dir/src/AssetHandler.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/JamEngine.dir/src/AssetHandler.c.i"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\lugi1\Desktop\Code\JamEngine\src\AssetHandler.c > CMakeFiles\JamEngine.dir\src\AssetHandler.c.i
+
+CMakeFiles/JamEngine.dir/src/AssetHandler.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/JamEngine.dir/src/AssetHandler.c.s"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\lugi1\Desktop\Code\JamEngine\src\AssetHandler.c -o CMakeFiles\JamEngine.dir\src\AssetHandler.c.s
+
+CMakeFiles/JamEngine.dir/src/StringMap.c.obj: CMakeFiles/JamEngine.dir/flags.make
+CMakeFiles/JamEngine.dir/src/StringMap.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
+CMakeFiles/JamEngine.dir/src/StringMap.c.obj: ../src/StringMap.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/JamEngine.dir/src/StringMap.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\StringMap.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\StringMap.c
+
+CMakeFiles/JamEngine.dir/src/StringMap.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/JamEngine.dir/src/StringMap.c.i"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\lugi1\Desktop\Code\JamEngine\src\StringMap.c > CMakeFiles\JamEngine.dir\src\StringMap.c.i
+
+CMakeFiles/JamEngine.dir/src/StringMap.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/JamEngine.dir/src/StringMap.c.s"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\lugi1\Desktop\Code\JamEngine\src\StringMap.c -o CMakeFiles\JamEngine.dir\src\StringMap.c.s
+
 CMakeFiles/JamEngine.dir/src/Sprite.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Sprite.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Sprite.c.obj: ../src/Sprite.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/JamEngine.dir/src/Sprite.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/JamEngine.dir/src/Sprite.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Sprite.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Sprite.c
 
 CMakeFiles/JamEngine.dir/src/Sprite.c.i: cmake_force
@@ -73,7 +129,7 @@ CMakeFiles/JamEngine.dir/src/Sprite.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Hitbox.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Hitbox.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Hitbox.c.obj: ../src/Hitbox.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/JamEngine.dir/src/Hitbox.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/JamEngine.dir/src/Hitbox.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Hitbox.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Hitbox.c
 
 CMakeFiles/JamEngine.dir/src/Hitbox.c.i: cmake_force
@@ -87,7 +143,7 @@ CMakeFiles/JamEngine.dir/src/Hitbox.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Renderer.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Renderer.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Renderer.c.obj: ../src/Renderer.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/JamEngine.dir/src/Renderer.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/JamEngine.dir/src/Renderer.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Renderer.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Renderer.c
 
 CMakeFiles/JamEngine.dir/src/Renderer.c.i: cmake_force
@@ -101,7 +157,7 @@ CMakeFiles/JamEngine.dir/src/Renderer.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Texture.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Texture.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Texture.c.obj: ../src/Texture.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/JamEngine.dir/src/Texture.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/JamEngine.dir/src/Texture.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Texture.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Texture.c
 
 CMakeFiles/JamEngine.dir/src/Texture.c.i: cmake_force
@@ -115,7 +171,7 @@ CMakeFiles/JamEngine.dir/src/Texture.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Input.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Input.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Input.c.obj: ../src/Input.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/JamEngine.dir/src/Input.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/JamEngine.dir/src/Input.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Input.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Input.c
 
 CMakeFiles/JamEngine.dir/src/Input.c.i: cmake_force
@@ -129,7 +185,7 @@ CMakeFiles/JamEngine.dir/src/Input.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Drawing.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Drawing.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Drawing.c.obj: ../src/Drawing.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/JamEngine.dir/src/Drawing.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/JamEngine.dir/src/Drawing.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Drawing.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Drawing.c
 
 CMakeFiles/JamEngine.dir/src/Drawing.c.i: cmake_force
@@ -143,7 +199,7 @@ CMakeFiles/JamEngine.dir/src/Drawing.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Clock.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Clock.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Clock.c.obj: ../src/Clock.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/JamEngine.dir/src/Clock.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/JamEngine.dir/src/Clock.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Clock.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Clock.c
 
 CMakeFiles/JamEngine.dir/src/Clock.c.i: cmake_force
@@ -157,7 +213,7 @@ CMakeFiles/JamEngine.dir/src/Clock.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Frame.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Frame.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Frame.c.obj: ../src/Frame.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/JamEngine.dir/src/Frame.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/JamEngine.dir/src/Frame.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Frame.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Frame.c
 
 CMakeFiles/JamEngine.dir/src/Frame.c.i: cmake_force
@@ -171,7 +227,7 @@ CMakeFiles/JamEngine.dir/src/Frame.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Vector.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Vector.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Vector.c.obj: ../src/Vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/JamEngine.dir/src/Vector.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building C object CMakeFiles/JamEngine.dir/src/Vector.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Vector.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Vector.c
 
 CMakeFiles/JamEngine.dir/src/Vector.c.i: cmake_force
@@ -185,7 +241,7 @@ CMakeFiles/JamEngine.dir/src/Vector.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Entity.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Entity.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Entity.c.obj: ../src/Entity.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/JamEngine.dir/src/Entity.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building C object CMakeFiles/JamEngine.dir/src/Entity.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Entity.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Entity.c
 
 CMakeFiles/JamEngine.dir/src/Entity.c.i: cmake_force
@@ -199,7 +255,7 @@ CMakeFiles/JamEngine.dir/src/Entity.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/TileMap.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/TileMap.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/TileMap.c.obj: ../src/TileMap.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/JamEngine.dir/src/TileMap.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building C object CMakeFiles/JamEngine.dir/src/TileMap.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\TileMap.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\TileMap.c
 
 CMakeFiles/JamEngine.dir/src/TileMap.c.i: cmake_force
@@ -213,7 +269,7 @@ CMakeFiles/JamEngine.dir/src/TileMap.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Font.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Font.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Font.c.obj: ../src/Font.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/JamEngine.dir/src/Font.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building C object CMakeFiles/JamEngine.dir/src/Font.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Font.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Font.c
 
 CMakeFiles/JamEngine.dir/src/Font.c.i: cmake_force
@@ -227,7 +283,7 @@ CMakeFiles/JamEngine.dir/src/Font.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/Buffer.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/Buffer.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/Buffer.c.obj: ../src/Buffer.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building C object CMakeFiles/JamEngine.dir/src/Buffer.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building C object CMakeFiles/JamEngine.dir/src/Buffer.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\Buffer.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\Buffer.c
 
 CMakeFiles/JamEngine.dir/src/Buffer.c.i: cmake_force
@@ -241,7 +297,7 @@ CMakeFiles/JamEngine.dir/src/Buffer.c.s: cmake_force
 CMakeFiles/JamEngine.dir/src/World.c.obj: CMakeFiles/JamEngine.dir/flags.make
 CMakeFiles/JamEngine.dir/src/World.c.obj: CMakeFiles/JamEngine.dir/includes_C.rsp
 CMakeFiles/JamEngine.dir/src/World.c.obj: ../src/World.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building C object CMakeFiles/JamEngine.dir/src/World.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building C object CMakeFiles/JamEngine.dir/src/World.c.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\JamEngine.dir\src\World.c.obj   -c C:\Users\lugi1\Desktop\Code\JamEngine\src\World.c
 
 CMakeFiles/JamEngine.dir/src/World.c.i: cmake_force
@@ -254,6 +310,10 @@ CMakeFiles/JamEngine.dir/src/World.c.s: cmake_force
 
 # Object files for target JamEngine
 JamEngine_OBJECTS = \
+"CMakeFiles/JamEngine.dir/test.c.obj" \
+"CMakeFiles/JamEngine.dir/src/File.c.obj" \
+"CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj" \
+"CMakeFiles/JamEngine.dir/src/StringMap.c.obj" \
 "CMakeFiles/JamEngine.dir/src/Sprite.c.obj" \
 "CMakeFiles/JamEngine.dir/src/Hitbox.c.obj" \
 "CMakeFiles/JamEngine.dir/src/Renderer.c.obj" \
@@ -272,28 +332,37 @@ JamEngine_OBJECTS = \
 # External object files for target JamEngine
 JamEngine_EXTERNAL_OBJECTS =
 
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Sprite.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Hitbox.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Renderer.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Texture.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Input.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Drawing.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Clock.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Frame.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Vector.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Entity.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/TileMap.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Font.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/Buffer.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/src/World.c.obj
-libJamEngine.a: CMakeFiles/JamEngine.dir/build.make
-libJamEngine.a: CMakeFiles/JamEngine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Linking C static library libJamEngine.a"
-	$(CMAKE_COMMAND) -P CMakeFiles\JamEngine.dir\cmake_clean_target.cmake
+JamEngine.exe: CMakeFiles/JamEngine.dir/test.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/File.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/StringMap.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Sprite.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Hitbox.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Renderer.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Texture.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Input.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Drawing.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Clock.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Frame.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Vector.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Entity.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/TileMap.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Font.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/Buffer.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/src/World.c.obj
+JamEngine.exe: CMakeFiles/JamEngine.dir/build.make
+JamEngine.exe: C:/SDL/lib/x86/SDL2main.lib
+JamEngine.exe: C:/SDL/lib/x86/SDL2.lib
+JamEngine.exe: C:/SDL/lib/x86/SDL2_mixer.lib
+JamEngine.exe: C:/SDL/lib/x86/SDL2_image.lib
+JamEngine.exe: CMakeFiles/JamEngine.dir/linklibs.rsp
+JamEngine.exe: CMakeFiles/JamEngine.dir/objects1.rsp
+JamEngine.exe: CMakeFiles/JamEngine.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\lugi1\Desktop\Code\JamEngine\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking C executable JamEngine.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\JamEngine.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-CMakeFiles/JamEngine.dir/build: libJamEngine.a
+CMakeFiles/JamEngine.dir/build: JamEngine.exe
 
 .PHONY : CMakeFiles/JamEngine.dir/build
 

@@ -122,6 +122,33 @@ JamEngine/fast:
 	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/build
 .PHONY : JamEngine/fast
 
+src/AssetHandler.obj: src/AssetHandler.c.obj
+
+.PHONY : src/AssetHandler.obj
+
+# target to build an object file
+src/AssetHandler.c.obj:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj
+.PHONY : src/AssetHandler.c.obj
+
+src/AssetHandler.i: src/AssetHandler.c.i
+
+.PHONY : src/AssetHandler.i
+
+# target to preprocess a source file
+src/AssetHandler.c.i:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/AssetHandler.c.i
+.PHONY : src/AssetHandler.c.i
+
+src/AssetHandler.s: src/AssetHandler.c.s
+
+.PHONY : src/AssetHandler.s
+
+# target to generate assembly for a file
+src/AssetHandler.c.s:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/AssetHandler.c.s
+.PHONY : src/AssetHandler.c.s
+
 src/Buffer.obj: src/Buffer.c.obj
 
 .PHONY : src/Buffer.obj
@@ -229,6 +256,33 @@ src/Entity.s: src/Entity.c.s
 src/Entity.c.s:
 	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/Entity.c.s
 .PHONY : src/Entity.c.s
+
+src/File.obj: src/File.c.obj
+
+.PHONY : src/File.obj
+
+# target to build an object file
+src/File.c.obj:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/File.c.obj
+.PHONY : src/File.c.obj
+
+src/File.i: src/File.c.i
+
+.PHONY : src/File.i
+
+# target to preprocess a source file
+src/File.c.i:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/File.c.i
+.PHONY : src/File.c.i
+
+src/File.s: src/File.c.s
+
+.PHONY : src/File.s
+
+# target to generate assembly for a file
+src/File.c.s:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/File.c.s
+.PHONY : src/File.c.s
 
 src/Font.obj: src/Font.c.obj
 
@@ -392,6 +446,33 @@ src/Sprite.c.s:
 	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/Sprite.c.s
 .PHONY : src/Sprite.c.s
 
+src/StringMap.obj: src/StringMap.c.obj
+
+.PHONY : src/StringMap.obj
+
+# target to build an object file
+src/StringMap.c.obj:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/StringMap.c.obj
+.PHONY : src/StringMap.c.obj
+
+src/StringMap.i: src/StringMap.c.i
+
+.PHONY : src/StringMap.i
+
+# target to preprocess a source file
+src/StringMap.c.i:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/StringMap.c.i
+.PHONY : src/StringMap.c.i
+
+src/StringMap.s: src/StringMap.c.s
+
+.PHONY : src/StringMap.s
+
+# target to generate assembly for a file
+src/StringMap.c.s:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/StringMap.c.s
+.PHONY : src/StringMap.c.s
+
 src/Texture.obj: src/Texture.c.obj
 
 .PHONY : src/Texture.obj
@@ -500,6 +581,33 @@ src/World.c.s:
 	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/src/World.c.s
 .PHONY : src/World.c.s
 
+test.obj: test.c.obj
+
+.PHONY : test.obj
+
+# target to build an object file
+test.c.obj:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/test.c.obj
+.PHONY : test.c.obj
+
+test.i: test.c.i
+
+.PHONY : test.i
+
+# target to preprocess a source file
+test.c.i:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/test.c.i
+.PHONY : test.c.i
+
+test.s: test.c.s
+
+.PHONY : test.s
+
+# target to generate assembly for a file
+test.c.s:
+	$(MAKE) -f CMakeFiles\JamEngine.dir\build.make CMakeFiles/JamEngine.dir/test.c.s
+.PHONY : test.c.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -509,6 +617,9 @@ help:
 	@echo ... rebuild_cache
 	@echo ... JamEngine
 	@echo ... edit_cache
+	@echo ... src/AssetHandler.obj
+	@echo ... src/AssetHandler.i
+	@echo ... src/AssetHandler.s
 	@echo ... src/Buffer.obj
 	@echo ... src/Buffer.i
 	@echo ... src/Buffer.s
@@ -521,6 +632,9 @@ help:
 	@echo ... src/Entity.obj
 	@echo ... src/Entity.i
 	@echo ... src/Entity.s
+	@echo ... src/File.obj
+	@echo ... src/File.i
+	@echo ... src/File.s
 	@echo ... src/Font.obj
 	@echo ... src/Font.i
 	@echo ... src/Font.s
@@ -539,6 +653,9 @@ help:
 	@echo ... src/Sprite.obj
 	@echo ... src/Sprite.i
 	@echo ... src/Sprite.s
+	@echo ... src/StringMap.obj
+	@echo ... src/StringMap.i
+	@echo ... src/StringMap.s
 	@echo ... src/Texture.obj
 	@echo ... src/Texture.i
 	@echo ... src/Texture.s
@@ -551,6 +668,9 @@ help:
 	@echo ... src/World.obj
 	@echo ... src/World.i
 	@echo ... src/World.s
+	@echo ... test.obj
+	@echo ... test.i
+	@echo ... test.s
 .PHONY : help
 
 

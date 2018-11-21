@@ -28,10 +28,10 @@
 				</MakeCommands>
 			</Target>
 			<Target title="JamEngine">
-				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/libJamEngine.a" prefix_auto="0" extension_auto="0"/>
+				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/JamEngine.exe" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="2"/>
+				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="C:/Users/lugi1/Desktop/Code/JamEngine/include"/>
@@ -51,10 +51,10 @@
 				</MakeCommands>
 			</Target>
 			<Target title="JamEngine/fast">
-				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/libJamEngine.a" prefix_auto="0" extension_auto="0"/>
+				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/JamEngine.exe" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="2"/>
+				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="C:/Users/lugi1/Desktop/Code/JamEngine/include"/>
@@ -84,6 +84,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/AssetHandler.h">
+			<Option target="JamEngine"/>
+		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/Buffer.h">
 			<Option target="JamEngine"/>
 		</Unit>
@@ -97,6 +100,9 @@
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/Entity.h">
+			<Option target="JamEngine"/>
+		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/File.h">
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/Font.h">
@@ -117,6 +123,9 @@
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/Sprite.h">
 			<Option target="JamEngine"/>
 		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/StringMap.h">
+			<Option target="JamEngine"/>
+		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/Texture.h">
 			<Option target="JamEngine"/>
 		</Unit>
@@ -129,6 +138,9 @@
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/World.h">
 			<Option target="JamEngine"/>
 		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/AssetHandler.c">
+			<Option target="JamEngine"/>
+		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/Buffer.c">
 			<Option target="JamEngine"/>
 		</Unit>
@@ -139,6 +151,9 @@
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/Entity.c">
+			<Option target="JamEngine"/>
+		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/File.c">
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/Font.c">
@@ -159,6 +174,9 @@
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/Sprite.c">
 			<Option target="JamEngine"/>
 		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/StringMap.c">
+			<Option target="JamEngine"/>
+		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/Texture.c">
 			<Option target="JamEngine"/>
 		</Unit>
@@ -169,6 +187,9 @@
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/World.c">
+			<Option target="JamEngine"/>
+		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/test.c">
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/CMakeLists.txt">
