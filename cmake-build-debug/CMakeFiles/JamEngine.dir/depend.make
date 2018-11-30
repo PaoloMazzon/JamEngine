@@ -433,6 +433,7 @@ CMakeFiles/JamEngine.dir/src/Sprite.c.obj: C:/SDL/include/close_code.h
 CMakeFiles/JamEngine.dir/src/Sprite.c.obj: ../src/Sprite.c
 
 CMakeFiles/JamEngine.dir/src/StringMap.c.obj: ../include/Constants.h
+CMakeFiles/JamEngine.dir/src/StringMap.c.obj: ../include/File.h
 CMakeFiles/JamEngine.dir/src/StringMap.c.obj: ../include/StringMap.h
 CMakeFiles/JamEngine.dir/src/StringMap.c.obj: ../src/StringMap.c
 

@@ -1,6 +1,11 @@
-//
-// Created by lugi1 on 2018-07-19.
-//
+/// \file Entity.h
+/// \author lugi1
+/// \brief To make in-game objects easier to manage, we have entities
+///
+/// Entities are basically grand wrappers of many components; they
+/// group together sprites hitboxes, coordiantes, and some other helpful
+/// things in one package so you don't have 5 different arrays for one
+/// object.
 
 #pragma once
 #include "Sprite.h"

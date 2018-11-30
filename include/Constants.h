@@ -1,6 +1,6 @@
-//
-// Created by lugi1 on 2018-07-05.
-//
+/// \file Constant.h
+/// \author lugi1
+/// \brief Just some constants
 
 #pragma once
 #include <stdbool.h>

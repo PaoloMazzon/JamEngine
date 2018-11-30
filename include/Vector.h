@@ -1,6 +1,6 @@
-//
-// Created by lugi1 on 2018-07-18.
-//
+/// \file Vector.h
+/// \author lugi1
+/// \brief Some simple functions to make game development easier
 
 #pragma once
 #include <stdbool.h>

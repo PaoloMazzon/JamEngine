@@ -1,7 +1,6 @@
-//
-// Created by lugi1 on 2018-07-13.
-//
-
+/// \file Input.h
+/// \author lugi1
+/// \brief Declares the input handler and some functions to make it easier to use
 #pragma once
 #include <SDL.h>
 #include "Constants.h"

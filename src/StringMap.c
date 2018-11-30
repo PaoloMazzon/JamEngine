@@ -6,6 +6,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
+#include "File.h"
 
 ///////////////////////////////////////////////////////////
 SMap* createSMap() {
@@ -13,9 +14,11 @@ SMap* createSMap() {
 
 	// Check that it worked
 	if (smap != NULL) {
+		smap->garbage = NULL;
 		smap->vals = NULL;
 		smap->keys = NULL;
 		smap->size = 0;
+		smap->sizeOfGarbagePile = 0;
 	} else {
 		fprintf(stderr, "Failed to allocate SMap (createSMap)\n");
 	}
@@ -26,15 +29,51 @@ SMap* createSMap() {
 
 ///////////////////////////////////////////////////////////
 SMap* loadSMap(const char* filename) {
-	FILE* file = fopen(filename, "r");
 	SMap* map = createSMap();
+	StringList* list = loadStringList(filename);
+	char* key;
+	char* val;
+	int len, i, j;
+	int delimPos;
 
 	// Check the stuff
-	if (file != NULL && map != NULL) {
+	if (list != NULL && map != NULL) {
 		// Now we begin looping through every line
-		// TODO: Finish File.c and use that interface here so it not a massive pain in the ass
+		for (i = 0; i < list->size; i++) {
+			len = strlen(list->strList[i]);
+			delimPos = -1;
+
+			// We don't need empty lines/comments
+			if (len > 0) {
+				if (list->strList[i][0] != '#') {
+					// Find the delimiter
+					for (j = 0; j < len; j++)
+						if (list->strList[i][j] == '=')
+							delimPos = j;
+
+					// If it wasn't found, there is nothing of value on this line
+					if (delimPos != -1) {
+						// Create two strings to go into the map, then stick them on the garbage pile
+						key = (char*)calloc(1, (size_t)(delimPos + 1));
+						val = (char*)calloc(1, (size_t)(len - delimPos));
+
+						if (key != NULL && val != NULL) {
+							// Separate and copy the strings
+							// TODO: Finish this
+
+							throwAStringIntoTheGarbage(list, key);
+							throwAStringIntoTheGarbage(list, val);
+						} else {
+							fprintf(stderr, "Could not allocate strings, line %i (loadSMap)\n", i + 1);
+						}
+					} else {
+						fprintf(stderr, "Error in SMap file, line %i '%s' (loadSMap)\n", i + 1, list->strList[i]);
+					}
+				}
+			}
+		}
 	} else {
-		if (file == NULL)
+		if (list == NULL)
 			fprintf(stderr, "File could not be opened (loadSMap)\n");
 		if (map == NULL)
 			fprintf(stderr, "SMap could not be allocated (loadSMap)\n");
@@ -42,7 +81,7 @@ SMap* loadSMap(const char* filename) {
 	}
 
 	// Clean up
-	fclose(file);
+	freeStringList(list);
 
 	return map;
 }
@@ -67,7 +106,7 @@ void outputSMap(SMap* smap, FILE* stream) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-void setSMapVal(SMap* smap, const char* key, const char* val) {
+void setSMapVal(SMap* smap, char* key, char* val) {
 	bool found = false;
 	int i;
 
@@ -90,8 +129,8 @@ void setSMapVal(SMap* smap, const char* key, const char* val) {
 		if (!found) { // TODO: Fix this unsafe realloc usage
 			// Make the map one bigger and load it up
 			smap->size++;
-			smap->keys = (const char**)realloc((void*)smap->keys, smap->size * sizeof(const char**));
-			smap->vals = (const char**)realloc((void*)smap->vals, smap->size * sizeof(const char**));
+			smap->keys = (char**)realloc((void*)smap->keys, smap->size * sizeof(char*));
+			smap->vals = (char**)realloc((void*)smap->vals, smap->size * sizeof(char*));
 			smap->keys[smap->size - 1] = key;
 			smap->vals[smap->size - 1] = val;
 		}
@@ -102,8 +141,8 @@ void setSMapVal(SMap* smap, const char* key, const char* val) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-const char* getSMapVal(SMap* smap, const char* key, const char* def) {
-	const char* ret = def;
+const char* getSMapVal(SMap* smap, char* key, char* def) {
+	char* ret = def;
 	int i;
 
 	// First we make sure we weren't passed a dud
@@ -128,10 +167,34 @@ const char* getSMapVal(SMap* smap, const char* key, const char* def) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
+void throwAStringIntoTheGarbage(SMap* smap, char* garbage) {
+	char** tempPointer;
+	// Check that it exists
+	if (smap != NULL) {
+		tempPointer = (char**)realloc((void*)smap->garbage, (1 + smap->sizeOfGarbagePile) * sizeof(char*));
+
+		if (tempPointer != NULL) {
+			// Make the map one bigger and load it up
+			smap->sizeOfGarbagePile++;
+			smap->garbage = tempPointer;
+			smap->garbage[smap->sizeOfGarbagePile - 1] = garbage;
+		} else {
+			fprintf(stderr, "Failed to increase size of garbage pile (throwAStringIntoTheGarbage)\n");
+		}
+	} else {
+		fprintf(stderr, "Passed SMap does not exist (throwAStringIntoTheGarbage)\n");
+	}
+}
+///////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////
 void freeSMap(SMap* smap) {
+	int i;
 	if (smap != NULL) {
 		free(smap->keys);
 		free(smap->vals);
+		for (i = 0; i < smap->sizeOfGarbagePile; i++)
+			free(smap->garbage[i]);
 	}
 	free(smap);
 }

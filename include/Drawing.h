@@ -1,6 +1,6 @@
-//
-// Created by lugi1 on 2018-07-13.
-//
+/// \file Drawing.h
+/// \author lugi1
+/// \brief Declares a lot of tools for drawing.
 
 #pragma once
 #include "Renderer.h"

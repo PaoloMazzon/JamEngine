@@ -1,9 +1,11 @@
-//////////////////////////////////////////////////////////
-// Declares the buffer struct and functions
-//
-// Copyright (c) Paolo Mazzon
-// All rights reserved
-//////////////////////////////////////////////////////////
+/// \file Buffer.h
+/// \author lugi1
+/// \brief This is a tool to make binary data easy(er) to handle
+///
+/// Do note that this is still a complex tool that is used
+/// to make things either quicker or take up less space. This
+/// tool is extremely light since it is really just function
+/// calls and bit-shifting, so use it freely.
 
 #pragma once
 #include "Constants.h"

@@ -1,6 +1,6 @@
-//
-// Created by lugi1 on 2018-07-05.
-//
+/// \file Hitbox.h
+/// \author lugi1
+/// \brief Fairly bare-bones at the moment, but has some basic functionality.
 
 #pragma once
 #include "Constants.h"

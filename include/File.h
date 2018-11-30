@@ -1,6 +1,6 @@
-//
-// Created by lugi1 on 2018-11-15.
-//
+/// \file File.h
+/// \author lugi1
+/// \brief Really just makes file management easier in C, because oh boy is it a pain
 
 #pragma once
 #include <stdbool.h>

@@ -434,6 +434,7 @@ CMakeFiles/JamEngine.dir/src/Sprite.c.obj
  C:/Users/lugi1/Desktop/Code/JamEngine/src/Sprite.c
 CMakeFiles/JamEngine.dir/src/StringMap.c.obj
  ../include/Constants.h
+ ../include/File.h
  ../include/StringMap.h
  C:/Users/lugi1/Desktop/Code/JamEngine/src/StringMap.c
 CMakeFiles/JamEngine.dir/src/Texture.c.obj

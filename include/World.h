@@ -1,6 +1,6 @@
-//
-// Created by lugi1 on 2018-07-09.
-//
+/// \file World.h
+/// \author lugi1
+/// \brief Declares the world struct and functions surrounding it
 
 #pragma once
 #include "TileMap.h"

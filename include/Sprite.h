@@ -1,6 +1,12 @@
-//
-// Created by lugi1 on 2018-07-05.
-//
+/// \file Sprite.h
+/// \author lugi1
+/// \brief An extremely vital tool of game development, the sprite
+///
+/// This is an extremely powerful tool for game development since
+/// it can keep track of animations, size, rotation, and origins
+/// by itself. The loadSpriteFromSheet function allows you to draw
+/// your animations in any software then import any sort of wacky
+/// sheet then import it here easily.
 
 #pragma once
 #include "Renderer.h"
@@ -40,6 +46,17 @@ Sprite* createSprite(uint32 animationLength, uint16 frameDelay, bool looping);
 void spriteAppendFrame(Sprite* sprite, Frame* frame);
 
 /// \brief Loads a sprite from a spritesheet
+/// \param spriteSheet The parent texture with which to pull from
+/// \param cellCount The number of frames we will be pulling from the texture
+/// \param xInSheet Where the animation starts in the texture (x-coord)
+/// \param yInSheet Where the animation starts in the texture (y-coord)
+/// \param cellW The width of each frame
+/// \param cellH The height of each frame
+/// \param paddingW The width in pixels in between each frame
+/// \param paddingH The height in pixels in between each frame
+/// \param xAlign The alignment of the frames in the texture (in case they're not continuous)
+/// \param frameDelay The delay in in-game-frames between each frame in the animation
+/// \param looping Does the animation loop?
 Sprite* loadSpriteFromSheet(Texture* spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet, uint32 cellW, uint32 cellH, uint32 paddingW, uint32 paddingH, uint32 xAlign, uint16 frameDelay, bool looping);
 
 /// \brief Updates a sprite's animation

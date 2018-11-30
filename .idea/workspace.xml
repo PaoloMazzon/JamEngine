@@ -12,36 +12,33 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9952e5cf-690c-40a8-82bb-e58f7a3fd2dc" name="Default" comment="Got file loading (line-by-line) to work and did some testing with it.">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="9952e5cf-690c-40a8-82bb-e58f7a3fd2dc" name="Default" comment="fixed this git nonsense">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/C.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/DependInfo.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/cmake_clean.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/depend.internal" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/objects.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/objects1.rsp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/objects1.rsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/test.c.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/test.c.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/JamEngine.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/JamEngine.cbp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/JamEngine.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/JamEngine.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/DependInfo.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/cmake_clean.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/link.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/objects1.rsp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/objects1.rsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/progress.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/Makefile2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/progress.marks" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/JamEngine.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/JamEngine.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/AssetHandler.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/AssetHandler.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Buffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Buffer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Clock.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Clock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Constants.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Drawing.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Drawing.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Entity.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Entity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/File.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/File.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Font.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Font.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Frame.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Frame.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Hitbox.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Hitbox.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Input.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Input.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Renderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Renderer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Sprite.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Sprite.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/StringMap.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/StringMap.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Texture.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Texture.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/TileMap.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/TileMap.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Vector.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Vector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/World.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/World.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/StringMap.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/StringMap.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.c" beforeDir="false" afterPath="$PROJECT_DIR$/test.c" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -71,36 +68,36 @@
     <session id="1885014612">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="28" />
-          <entry key="project.open.time.10" value="4" />
+          <entry key="project.closed" value="34" />
+          <entry key="project.open.time.10" value="6" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.12" value="2" />
-          <entry key="project.open.time.8" value="9" />
-          <entry key="project.open.time.9" value="16" />
-          <entry key="project.opened" value="32" />
+          <entry key="project.open.time.8" value="10" />
+          <entry key="project.open.time.9" value="19" />
+          <entry key="project.opened" value="38" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="c" value="15596" />
-          <entry key="h" value="6442" />
+          <entry key="c" value="16955" />
+          <entry key="h" value="11771" />
           <entry key="m" value="28" />
-          <entry key="txt" value="1244" />
+          <entry key="txt" value="1267" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CMakeLists.txt" value="426" />
-          <entry key="Doxygen file" value="85" />
-          <entry key="ObjectiveC" value="21981" />
-          <entry key="PLAIN_TEXT" value="818" />
+          <entry key="Doxygen file" value="144" />
+          <entry key="ObjectiveC" value="28610" />
+          <entry key="PLAIN_TEXT" value="841" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="JamEngine (disassembly)" value="49" />
-          <entry key="c" value="41" />
-          <entry key="h" value="57" />
+          <entry key="c" value="44" />
+          <entry key="h" value="82" />
           <entry key="txt" value="9" />
         </counts>
       </usages-collector>
@@ -108,52 +105,24 @@
         <counts>
           <entry key="CMakeLists.txt" value="6" />
           <entry key="Disassembly" value="49" />
-          <entry key="ObjectiveC" value="98" />
+          <entry key="ObjectiveC" value="126" />
           <entry key="PLAIN_TEXT" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.vcs.git.usages">
+        <counts>
+          <entry key="git.branch.compare" value="2" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3100">
-              <caret line="124" column="25" selection-start-line="124" selection-start-column="25" selection-end-line="124" selection-end-column="25" />
-              <folding>
-                <element signature="e#41#59#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/include/File.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="22" column="22" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/File.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="57" column="96" selection-start-line="57" selection-start-column="96" selection-end-line="57" selection-end-column="96" />
-              <folding>
-                <element signature="e#42#59#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cmake-build-debug/test.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+            <state relative-caret-position="50">
+              <caret line="2" column="2" lean-forward="true" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
             </state>
           </provider>
         </entry>
@@ -192,49 +161,50 @@
       <list>
         <option value="$PROJECT_DIR$/src/LJE.c" />
         <option value="$PROJECT_DIR$/src/library.c" />
-        <option value="$PROJECT_DIR$/include/Constants.h" />
-        <option value="$PROJECT_DIR$/include/Clock.h" />
         <option value="$PROJECT_DIR$/src/Clock.c" />
         <option value="$PROJECT_DIR$/src/Input.c" />
-        <option value="$PROJECT_DIR$/include/Frame.h" />
         <option value="$PROJECT_DIR$/src/Frame.c" />
-        <option value="$PROJECT_DIR$/include/Input.h" />
-        <option value="$PROJECT_DIR$/include/Vector.h" />
-        <option value="$PROJECT_DIR$/include/Hitbox.h" />
         <option value="$PROJECT_DIR$/src/Vector.c" />
         <option value="$PROJECT_DIR$/src/Audio.c" />
         <option value="$PROJECT_DIR$/src/Buffer.c" />
-        <option value="$PROJECT_DIR$/include/Font.h" />
         <option value="$PROJECT_DIR$/src/Font.c" />
-        <option value="$PROJECT_DIR$/include/Texture.h" />
-        <option value="$PROJECT_DIR$/include/Sprite.h" />
-        <option value="$PROJECT_DIR$/include/Drawing.h" />
         <option value="$PROJECT_DIR$/src/Drawing.c" />
         <option value="$PROJECT_DIR$/include/Audio.h" />
-        <option value="$PROJECT_DIR$/include/TileMap.h" />
         <option value="$PROJECT_DIR$/src/TileMap.c" />
         <option value="$PROJECT_DIR$/src/World.c" />
         <option value="$PROJECT_DIR$/src/AssetHandler.c" />
         <option value="$PROJECT_DIR$/include/LJE.h" />
-        <option value="$PROJECT_DIR$/include/World.h" />
         <option value="$PROJECT_DIR$/src/Entity.c" />
         <option value="$PROJECT_DIR$/src/Hitbox.c" />
         <option value="$PROJECT_DIR$/src/Renderer.c" />
         <option value="$PROJECT_DIR$/src/Sprite.c" />
         <option value="$PROJECT_DIR$/src/Texture.c" />
-        <option value="$PROJECT_DIR$/include/Entity.h" />
-        <option value="$PROJECT_DIR$/include/StringMap.h" />
-        <option value="$PROJECT_DIR$/include/AssetHandler.h" />
-        <option value="$PROJECT_DIR$/include/Renderer.h" />
-        <option value="$PROJECT_DIR$/src/StringMap.c" />
         <option value="$PROJECT_DIR$/include/FakeString.h" />
         <option value="$PROJECT_DIR$/src/FakeString.c" />
         <option value="$PROJECT_DIR$/Notes.txt" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/test.c" />
-        <option value="$PROJECT_DIR$/include/File.h" />
         <option value="$PROJECT_DIR$/src/File.c" />
         <option value="$PROJECT_DIR$/cmake-build-debug/test.txt" />
+        <option value="$PROJECT_DIR$/src/StringMap.c" />
+        <option value="$PROJECT_DIR$/test.c" />
+        <option value="$PROJECT_DIR$/include/StringMap.h" />
+        <option value="$PROJECT_DIR$/include/Vector.h" />
+        <option value="$PROJECT_DIR$/include/TileMap.h" />
+        <option value="$PROJECT_DIR$/include/Texture.h" />
+        <option value="$PROJECT_DIR$/include/World.h" />
+        <option value="$PROJECT_DIR$/include/Sprite.h" />
+        <option value="$PROJECT_DIR$/include/Renderer.h" />
+        <option value="$PROJECT_DIR$/include/AssetHandler.h" />
+        <option value="$PROJECT_DIR$/include/Input.h" />
+        <option value="$PROJECT_DIR$/include/Buffer.h" />
+        <option value="$PROJECT_DIR$/include/Clock.h" />
+        <option value="$PROJECT_DIR$/include/Constants.h" />
+        <option value="$PROJECT_DIR$/include/Drawing.h" />
+        <option value="$PROJECT_DIR$/include/Entity.h" />
+        <option value="$PROJECT_DIR$/include/File.h" />
+        <option value="$PROJECT_DIR$/include/Font.h" />
+        <option value="$PROJECT_DIR$/include/Frame.h" />
+        <option value="$PROJECT_DIR$/include/Hitbox.h" />
       </list>
     </option>
   </component>
@@ -245,7 +215,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1300" />
     <option name="y" value="400" />
     <option name="width" value="1920" />
@@ -287,7 +257,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -403,7 +373,13 @@
       <workItem from="1542334082209" duration="5752000" />
       <workItem from="1542520118401" duration="2009000" />
       <workItem from="1542759640555" duration="6269000" />
-      <workItem from="1542776580347" duration="1853000" />
+      <workItem from="1542776580347" duration="2239000" />
+      <workItem from="1542942338372" duration="5269000" />
+      <workItem from="1543217776871" duration="455000" />
+      <workItem from="1543374786100" duration="135000" />
+      <workItem from="1543375119119" duration="785000" />
+      <workItem from="1543379826039" duration="598000" />
+      <workItem from="1543546322643" duration="2426000" />
     </task>
     <task id="LOCAL-00001" summary="Got file loading (line-by-line) to work and did some testing with it.">
       <created>1542778424493</created>
@@ -412,11 +388,18 @@
       <option name="project" value="LOCAL" />
       <updated>1542778424493</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fixed this git nonsense">
+      <created>1542778628741</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1542778628741</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="213606000" />
+    <option name="totallyTimeSpent" value="223660000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -428,20 +411,20 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
+    <frame x="-6" y="-6" width="1933" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49900794" visible="true" weight="0.17537314" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49900794" visible="true" weight="0.18613334" />
       <window_info id="Structure" order="1" sideWeight="0.50099206" side_tool="true" weight="0.17537314" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3286334" />
-      <window_info active="true" anchor="bottom" x="1" y="23" width="1919" height="1017" id="Debug" order="3" visible="true" weight="0.3392857" />
+      <window_info anchor="bottom" x="1" y="23" width="1919" height="1017" id="Debug" order="3" weight="0.3383948" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286334" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.3234127" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32837301" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32321042" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.329718" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.3286334" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
@@ -487,7 +470,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Got file loading (line-by-line) to work and did some testing with it." />
-    <option name="LAST_COMMIT_MESSAGE" value="Got file loading (line-by-line) to work and did some testing with it." />
+    <MESSAGE value="fixed this git nonsense" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed this git nonsense" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
@@ -553,38 +537,10 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/i686-w64-mingw32/include/stdint.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="41" column="47" selection-start-line="41" selection-start-column="47" selection-end-line="41" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/Clock.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="56" column="61" selection-start-line="56" selection-start-column="61" selection-end-line="56" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Clock.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/SDL/include/SDL_mouse.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="305">
           <caret line="280" column="8" selection-start-line="280" selection-start-column="8" selection-end-line="280" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/Frame.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="743">
-          <caret line="36" column="48" selection-start-line="36" selection-start-column="48" selection-end-line="36" selection-end-column="48" />
         </state>
       </provider>
     </entry>
@@ -599,13 +555,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cmake-build-debug/test.png" />
-    <entry file="file://$PROJECT_DIR$/include/Input.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="19" column="51" selection-start-line="19" selection-start-column="51" selection-end-line="19" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Vector.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="525">
@@ -614,24 +563,10 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Audio.c" />
-    <entry file="file://$PROJECT_DIR$/include/Buffer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2582">
-          <caret line="9" column="9" lean-forward="true" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Buffer.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1225">
           <caret line="49" column="4" lean-forward="true" selection-start-line="49" selection-start-column="4" selection-end-line="49" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/Font.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2425">
-          <caret line="97" column="50" selection-start-line="97" selection-start-column="50" selection-end-line="97" selection-end-column="50" />
         </state>
       </provider>
     </entry>
@@ -646,13 +581,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="393">
           <caret line="150" column="75" selection-start-line="150" selection-start-column="75" selection-end-line="150" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/Hitbox.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="9" column="4" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -678,27 +606,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/include/Audio.h" />
-    <entry file="file://$PROJECT_DIR$/include/Drawing.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="725">
-          <caret line="29" column="39" selection-start-line="29" selection-start-column="39" selection-end-line="29" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/Vector.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="10" column="55" selection-start-line="10" selection-start-column="55" selection-end-line="10" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/Sprite.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="38" column="11" selection-start-line="38" selection-start-column="11" selection-end-line="38" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/World.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
@@ -707,20 +614,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/include/LJE.h" />
-    <entry file="file://$PROJECT_DIR$/include/Texture.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/Constants.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="17" column="32" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Hitbox.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
@@ -756,21 +649,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/Entity.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/World.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/StringMap.h" />
     <entry file="file://$PROJECT_DIR$/src/TileMap.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="847">
@@ -779,21 +657,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/AssetHandler.c" />
-    <entry file="file://$PROJECT_DIR$/include/TileMap.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="499">
-          <caret line="52" column="3" selection-start-line="52" selection-start-column="3" selection-end-line="52" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/Renderer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="48" column="45" selection-start-line="48" selection-start-column="45" selection-end-line="48" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/StringMap.c" />
     <entry file="file://$PROJECT_DIR$/include/FakeString.h" />
     <entry file="file://$PROJECT_DIR$/src/FakeString.c" />
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
@@ -803,34 +666,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/AssetHandler.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="14" column="3" lean-forward="true" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Notes.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="534">
           <caret line="120" column="58" selection-start-line="120" selection-start-column="58" selection-end-line="120" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3100">
-          <caret line="124" column="25" selection-start-line="124" selection-start-column="25" selection-end-line="124" selection-end-column="25" />
-          <folding>
-            <element signature="e#41#59#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/File.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="22" column="22" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -850,11 +689,167 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/File.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="57" column="96" selection-start-line="57" selection-start-column="96" selection-end-line="57" selection-end-column="96" />
+        <state relative-caret-position="645">
+          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/test.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/StringMap.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="824">
+          <caret line="61" column="48" selection-start-line="61" selection-start-column="48" selection-end-line="61" selection-end-column="48" />
           <folding>
-            <element signature="e#42#59#0" expanded="true" />
+            <element signature="e#42#64#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/StringMap.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="21" selection-start-column="21" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/TileMap.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="7" column="37" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Texture.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="87" selection-start-line="2" selection-start-column="87" selection-end-line="2" selection-end-column="87" />
+          <folding>
+            <element signature="e#55#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/World.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Sprite.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1400">
+          <caret line="58" column="43" selection-start-line="58" selection-start-column="43" selection-end-line="58" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Renderer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="6" column="40" selection-start-line="6" selection-start-column="40" selection-end-line="6" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Vector.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="2" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/AssetHandler.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="24" selection-start-column="24" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Input.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="81" selection-start-line="2" selection-start-column="81" selection-end-line="2" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Buffer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2701">
+          <caret line="7" column="45" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
+          <folding>
+            <element signature="e#232#254#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Clock.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Clock.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Constants.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="20" selection-start-column="20" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Drawing.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="47" selection-start-line="2" selection-start-column="47" selection-end-line="2" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Entity.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/File.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="85" selection-start-line="2" selection-start-column="85" selection-end-line="2" selection-end-column="85" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Font.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Frame.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="7" column="60" selection-start-line="7" selection-start-column="60" selection-end-line="7" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Hitbox.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="77" selection-start-line="2" selection-start-column="77" selection-end-line="2" selection-end-column="77" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="2" lean-forward="true" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
         </state>
       </provider>
     </entry>

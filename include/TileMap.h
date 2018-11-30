@@ -1,7 +1,11 @@
-//
-// Created by lugi1 on 2018-08-07.
-//
-
+/// \file TileMap.h
+/// \author lugi1
+/// \brief This file declares the tile map struct and
+/// various functions to manage it.
+///
+/// The quickest way to do collisions is via tile map
+/// since it is just a 2D grid. Drawing.h can make auto
+/// -tiles from one of these as well.
 #pragma once
 
 #include "Constants.h"

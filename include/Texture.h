@@ -1,6 +1,6 @@
-//
-// Created by lugi1 on 2018-07-07.
-//
+/// \file Texture.h
+/// \author lugi1
+/// \brief Because of circular dependencies, this file only declares texture functions.
 
 #pragma once
 #include <SDL.h>

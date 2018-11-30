@@ -1,7 +1,10 @@
-//
-// Created by lugi1 on 2018-07-05.
-//
-
+/// \file Renderer.h
+/// \author lugi1
+/// \brief Declares the renderer, texture, and a lot of back-end things
+///
+/// This is the heart of the engine, the main game loop, window, screen
+/// buffer, and more is all handled by this thing. Only one instance of
+/// the renderer should exist at a time.
 #pragma once
 #include <SDL.h>
 #include "Constants.h"

@@ -1,9 +1,14 @@
-//////////////////////////////////////////////////////////
-// Declares the font things
-//
-// Copyright (c) Paolo Mazzon
-// All rights reserved
-//////////////////////////////////////////////////////////
+/// \file Font.h
+/// \author lugi1
+/// \brief Fonts are a must for most modern games, and as such we have this
+///
+/// Font.h is composed of two major parts: the fonts and the font renderers.
+/// Each font is made up of a latin base texture since most texts will include
+/// at least a couple latin/ascii characters as well as an optional unicode
+/// texture for whatever language you want to render. The font renderer expects
+/// all unicode text to be encoded in UTF-8, and will render any character it
+/// has access to (The font struct defines what range of unicode characters
+/// the extra font has access to).
 
 #pragma once
 #include "Renderer.h"

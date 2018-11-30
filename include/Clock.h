@@ -1,5 +1,12 @@
-// Code from roxlu.com
-
+/// \file Clock.h
+/// \author lugi1
+/// \brief This is a very nice tool that makes precise timing easy
+///
+/// It should be noted that this is not my code and most credit goes
+/// to the folk over at http://roxlu.com/
+/// That said, I did write the sleep function. I could have just used
+/// the SDL timer and made a neat little wrapper, but this is much
+/// more precise (nanosecond-precision) and easy to use.
 #pragma once
 
 #include <stdint.h>

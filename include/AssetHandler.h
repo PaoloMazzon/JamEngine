@@ -1,7 +1,6 @@
-//
-// Created by lugi1 on 2018-11-11.
-//
-
+/// \file AssetHandler.h
+/// \author lugi1
+/// \brief Makes loading lots of things easier
 #pragma once
 #include "Sprite.h"
 #include "Texture.h"

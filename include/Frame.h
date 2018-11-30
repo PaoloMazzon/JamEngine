@@ -1,7 +1,11 @@
-//
-// Created by lugi1 on 2018-07-14.
-//
-
+/// \file Frame.h
+/// \author lugi1
+/// \brief This is really just to make animations easier
+///
+/// Generally, you want to keep track of the textures frames
+/// use outside of the frame struct and clean them up yourself,
+/// ESPECIALLY if you use spritesheets. If each frame is just
+/// a file, sure, whatever, just make the frame clean it up.
 #pragma once
 #include "Renderer.h"
 #include "Texture.h"
