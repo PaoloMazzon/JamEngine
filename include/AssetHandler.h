@@ -9,77 +9,84 @@
 #include "Entity.h"
 #include "Hitbox.h"
 
+enum AssetType {texAsset, sprAsset, tileAsset, entAsset, hitAsset};
+
+/// \brief A struct that can hold any of the assets the asset handler needs
+///
+/// This struct utilizes an anonymous union inside it so it can hold
+/// any of the needed assets without using a bunch of extra storage.
+typedef struct {
+	enum AssetType type; ///< The type of asset this thing holds
+
+	union {
+		Texture* tex; ///< The internal texture
+		Sprite* spr; ///< The internal sprite
+		TileMap* tileMap; ///< The internal tile map
+		Entity* entity; ///< The internal entity
+		Hitbox* hitbox; ///< The internal hitbox
+	};
+} Asset;
+
 /// \brief Loads lots of assets at once from files
 /// to manage large projects
 ///
 /// Do not use these lightly, they are an incredibly
 /// helpful tool but they gobble up memory like there
 /// is no tomorrow.
+///
+/// Also, something incredibly important to note is that
+/// this class expects all strings (from the key array)
+/// to be dynamically allocated since they will all be
+/// later freed upon destruction. Do not manually set
+/// keys.
+///
+/// Because it is important in which order assets are
+/// loaded, this handler only lets you load directories.
+/// The recognized file formats are .ent, .spr, .png,
+/// .hit, .level, and .bmp. The loader always loads
+/// in the order Textures -> Sprites -> Entities.
+/// Where hitboxes/tile maps fit in there is not at
+/// important since they don't depend on other assets
+/// being loaded in first.
 typedef struct {
-	// For each type of asset, their is a key/val pair like a string map
-
-	// Sprites
-	int sprSize; ///< The size of the sprite list
-	const char** sprKeys; ///< The keys that match up with the vals
-	Sprite** spriteVals; ///< The actual values
-
-	// Textures
-	int texSize; ///< The size of the tex list
-	const char** texKeys; ///< The keys that match up with the vals
-	Texture** sheetVals; ///< The actual values
-
-	// Tile maps
-	int tileSize; ///< The size of the tile list
-	const char** tileKeys; ///< The keys that match up with the vals
-	TileMap** tileVals; ///< The actual values
-
-	// Entities
-	int entSize; ///< The size of the entity list
-	const char** entKeys; ///< The keys that match up with the vals
-	Entity** entityVals; ///< The actual values
-
-	// Hitboxes
-	int hitSize; ///< The size of the hitbox list
-	const char** hitKeys; ///< The keys that match up with the vals
-	Hitbox** hitboxVals; ///< The actual values
+	int size; ///< The size of the map
+	int* ids; ///< The keys that match up with the values
+	Asset** vals; ///< The actual assets
 } AssetHandler;
 
 /// \brief Creates an asset handler
 AssetHandler* createAssetHandler();
 
-/// \brief Loads a sprite
-void assetLoadSprite(AssetHandler* assetHandler, const char* filename);
-
-/// \brief Loads a texture
-void assetLoadTexture(AssetHandler* assetHandler, const char* filename);
-
-/// \brief Loads a tile map
-void assetLoadTileMap(AssetHandler* assetHandler, const char* filename);
-
-/// \brief Loads a entity
-void assetLoadEntity(AssetHandler* assetHandler, const char* filename);
-
-/// \brief Loads a hitbox
-void assetLoadHitbox(AssetHandler* assetHandler, const char* filename);
+/// \brief Throws an asset into the handler
+///
+/// Once an asset is thrown in here, the handler will take full
+/// responsibilty for its cleanup except for two cases: an entity's
+/// sprite and hitbox (Those must be loaded independently). Do
+/// not clean up assets yourself if you throw them into a handler.
+void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id);
 
 /// \brief Loads all recognized assets from a directory
-void assetLoadDirectory(AssetHandler* assetHandler, const char* directory);
+///
+/// This function is how you will load assets into the handler itself.
+/// If you have the assets separated into their own directories, you
+/// must make sure that you load them in the proper order as stated in
+/// the AssetHandler's documentation. The recognized file types are all
+/// made up for this engine and are .sprite, .entity, .map, .hitbox,
+/// and .texhashes.
+void assetLoadDirectory(AssetHandler* assetHandler, Renderer* renderer, const char* directory);
 
-/// \brief Finds and returns the asset for a given key or NULL if it can't find it
-Sprite* assetGetSprite(AssetHandler* assetHandler, const char* key);
+/// \brief Makes sure the assets in given ranges match their proper type
+///
+/// This function checks to make sure that every number between each range
+/// is its respective asset type. This is useful for mass checking what
+/// you load, since you can set it up such that all sprites are between
+/// 1000-1999 and so on. This function also makes sure that all the assets
+/// are not NULL pointers. All problems reported to stderr.
+bool assetAssertRanges(AssetHandler* handler, int entRangeStart, int entRangeEnd, int sprRangeStart, int sprRangeEnd,
+					   int tileRangeStart, int tileRangeEnd, int texRangeStart, int texRangeEnd, int hitRangeStart, int hitRangeEnd);
 
-/// \brief Finds and returns the asset for a given key or NULL if it can't find it
-Texture* assetGetTexture(AssetHandler* assetHandler, const char* key);
+/// \brief Grabs an asset, or returns NULL if the key is not bound
+Asset* assetGet(AssetHandler* assetHandler, int key);
 
-/// \brief Finds and returns the asset for a given key or NULL if it can't find it
-TileMap* assetGetTileMap(AssetHandler* assetHandler, const char* key);
-
-/// \brief Finds and returns the asset for a given key or NULL if it can't find it
-Entity* assetGetEntity(AssetHandler* assetHandler, const char* key);
-
-/// \brief Finds and returns the asset for a given key or NULL if it can't find it
-Hitbox* assetGetHitbox(AssetHandler* assetHandler, const char* key);
-
-/// \brief Frees an asset handler and all of its
-/// components
-AssetHandler* freeAssetHandler();
+/// \brief Frees an asset handler and all of its components
+AssetHandler* freeAssetHandler(AssetHandler* handler);

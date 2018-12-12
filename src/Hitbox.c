@@ -28,7 +28,7 @@ bool _circRectColl(double cX, double cY, double cR, double rX, double rY, double
 		// Next check is if the circle is touching a corner of the rectangle
 		if (pdtl < cR || pdtr < cR || pdbl < cR	|| pdbr < cR) {
 			coll = true;
-		} else { // TODO: The corners are janky and it only works properly on the bottom and top
+		} else {
 			// Next check is the more advanced trig-based radius touching edge check
 		}
 	} else {

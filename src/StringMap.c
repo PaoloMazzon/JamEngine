@@ -59,10 +59,13 @@ SMap* loadSMap(const char* filename) {
 
 						if (key != NULL && val != NULL) {
 							// Separate and copy the strings
-							// TODO: Finish this
+							memcpy(key, list->strList[i], (size_t)delimPos);
+							memcpy(val, list->strList[i] + delimPos + 1, (size_t)(len - delimPos));
 
-							throwAStringIntoTheGarbage(list, key);
-							throwAStringIntoTheGarbage(list, val);
+							// Then we put them into the map and keep track of garbage
+							setSMapVal(map, key, val);
+							throwAStringIntoTheGarbage(map, key);
+							throwAStringIntoTheGarbage(map, val);
 						} else {
 							fprintf(stderr, "Could not allocate strings, line %i (loadSMap)\n", i + 1);
 						}
@@ -95,7 +98,7 @@ void outputSMap(SMap* smap, FILE* stream) {
 	if (smap != NULL && stream != NULL) {
 		// Loop through the map and print it all
 		for (i = 0; i < smap->size; i++)
-			fprintf(stream, "%s=\"%s\"\n", smap->keys[i], smap->vals[i]);
+			fprintf(stream, "%s: \"%s\"\n", smap->keys[i], smap->vals[i]);
 	} else {
 		if (smap == NULL)
 			fprintf(stderr, "Passed SMap does not exist (outputSMap)\n");
@@ -126,7 +129,7 @@ void setSMapVal(SMap* smap, char* key, char* val) {
 		}
 
 		// We did not find it
-		if (!found) { // TODO: Fix this unsafe realloc usage
+		if (!found) {
 			// Make the map one bigger and load it up
 			smap->size++;
 			smap->keys = (char**)realloc((void*)smap->keys, smap->size * sizeof(char*));

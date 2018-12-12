@@ -10,7 +10,6 @@
 #include "Constants.h"
 #include "Input.h"
 
-
 /// \brief Simple texture class with some basic info
 ///
 /// Weather or not a texture is able to be rendered

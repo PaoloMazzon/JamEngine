@@ -28,17 +28,14 @@
 				</MakeCommands>
 			</Target>
 			<Target title="JamEngine">
-				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/JamEngine.exe" prefix_auto="0" extension_auto="0"/>
+				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/libJamEngine.a" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="1"/>
+				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="C:/Users/lugi1/Desktop/Code/JamEngine/include"/>
 					<Add directory="C:/SDL/include"/>
-					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++"/>
-					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32"/>
-					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward"/>
 					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include"/>
 					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include-fixed"/>
 					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/../../../../i686-w64-mingw32/include"/>
@@ -51,17 +48,14 @@
 				</MakeCommands>
 			</Target>
 			<Target title="JamEngine/fast">
-				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/JamEngine.exe" prefix_auto="0" extension_auto="0"/>
+				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug/libJamEngine.a" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="1"/>
+				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="C:/Users/lugi1/Desktop/Code/JamEngine/include"/>
 					<Add directory="C:/SDL/include"/>
-					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++"/>
-					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32"/>
-					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward"/>
 					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include"/>
 					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include-fixed"/>
 					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/../../../../i686-w64-mingw32/include"/>
@@ -94,6 +88,9 @@
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/Constants.h">
+			<Option target="JamEngine"/>
+		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/DrawEvents.h">
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/Drawing.h">
@@ -147,6 +144,9 @@
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/Clock.c">
 			<Option target="JamEngine"/>
 		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/DrawEvents.c">
+			<Option target="JamEngine"/>
+		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/Drawing.c">
 			<Option target="JamEngine"/>
 		</Unit>
@@ -187,9 +187,6 @@
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/World.c">
-			<Option target="JamEngine"/>
-		</Unit>
-		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/test.c">
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/CMakeLists.txt">

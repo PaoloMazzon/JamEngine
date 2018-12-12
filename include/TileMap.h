@@ -54,7 +54,6 @@ bool getMapPos(TileMap* tileMap, uint32 x, uint32 y);
 /// check as the fast one will not find all.
 bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h);
 
-// TODO: Make full collision check function
 
 /// \brief Frees a tile map from memory
 void freeTileMap(TileMap* tileMap);

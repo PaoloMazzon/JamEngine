@@ -28,10 +28,10 @@
 				</MakeCommands>
 			</Target>
 			<Target title="JamEngine">
-				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/JamEngine.exe" prefix_auto="0" extension_auto="0"/>
+				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/libJamEngine.a" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release"/>
 				<Option object_output="./"/>
-				<Option type="1"/>
+				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="C:/Users/lugi1/Desktop/Code/JamEngine/include"/>
@@ -48,10 +48,10 @@
 				</MakeCommands>
 			</Target>
 			<Target title="JamEngine/fast">
-				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/JamEngine.exe" prefix_auto="0" extension_auto="0"/>
+				<Option output="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/libJamEngine.a" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release"/>
 				<Option object_output="./"/>
-				<Option type="1"/>
+				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="C:/Users/lugi1/Desktop/Code/JamEngine/include"/>
@@ -88,6 +88,9 @@
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/Constants.h">
+			<Option target="JamEngine"/>
+		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/DrawEvents.h">
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/include/Drawing.h">
@@ -141,6 +144,9 @@
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/Clock.c">
 			<Option target="JamEngine"/>
 		</Unit>
+		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/DrawEvents.c">
+			<Option target="JamEngine"/>
+		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/Drawing.c">
 			<Option target="JamEngine"/>
 		</Unit>
@@ -181,9 +187,6 @@
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/src/World.c">
-			<Option target="JamEngine"/>
-		</Unit>
-		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/test.c">
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="C:/Users/lugi1/Desktop/Code/JamEngine/CMakeLists.txt">

@@ -1,4 +1,4 @@
-/// \file Constant.h
+/// \file Constants.h
 /// \author lugi1
 /// \brief Just some constants
 

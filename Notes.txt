@@ -90,6 +90,7 @@ Renderer
  	- Keyboard input
  	+ Gamepad input
  - Renderer
+ 	+ Delta timing
  	- Create window
  	- Handle window scaling/fullscreen
  	- Variable size screen buffer and render size
@@ -114,10 +115,15 @@ Renderer
  	- Hit-box
  	- Speed/Friction
  	- Built-in processors
- - Tile Maps       - Important for fast collisions
+ - Tile Maps
 	- Store grid in memory
 	- Check collisions with entities
- - Fonts           - Important for most projects
+ - Fonts
+ 	- Bitmap fonts
+ 	- Unicode bitmap fonts
+ 	- TTF fonts
+ - Draw Queues/Events for multi-threading
+ 	+ Queue management
  - Entity Lists    - Important for handling lots of things
  - Particle System - Very notable addition
  - Worlds          - Great feature yet not needed

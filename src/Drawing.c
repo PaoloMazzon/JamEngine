@@ -46,7 +46,7 @@ void drawRectangle(Renderer* renderer, int x, int y, int w, int h) {
 //////////////////////////////////////////////////////////////
 void drawCircle(Renderer* renderer, int x, int y, int r) {
 	if (renderer != NULL) {
-		// TODO: This
+
 	} else {
 		fprintf(stderr, "Passed renderer does not exist (drawCircle).\n");
 	}
@@ -222,7 +222,7 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 						frame = 44;
 					}
 
-					drawSpriteFrame(renderer, spr, j * map->cellWidth + startingCellX, i * map->cellHeight + startingCellY, (uint32)frame);
+					drawSpriteFrame(renderer, spr, x + (j * map->cellWidth + startingCellX), y + (i * map->cellHeight + startingCellY), (uint32)frame);
 				}
 			}
 		}

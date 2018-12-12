@@ -43,7 +43,6 @@ void drawFrame(Frame* frame, Renderer* renderer, sint32 x, sint32 y) {
 void freeFrame(Frame* frame, bool destroyTexture) {
 	if (frame != NULL) {
 		if (destroyTexture) {
-			fprintf(stderr, "fuck");
 			freeTexture(frame->tex);
 		}
 		free(frame);

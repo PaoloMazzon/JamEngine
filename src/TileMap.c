@@ -38,7 +38,7 @@ TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cel
 //////////////////////////////////////////////////////////
 TileMap* loadTileMap(const char* filename, uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
 	// Open the file and create the line for temporary storage and create the tile map
-	int x, y;
+	uint32 x, y;
 	FILE* file = fopen(filename, "r");
 	TileMap* map = createTileMap(width, height, cellWidth, cellHeight);
 
@@ -132,7 +132,9 @@ bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h) {
 		y2 = (y + h) / tileMap->cellHeight;
 
 		// Now check for a collision by just checking each corner
-		coll = (tileMap->grid[y1 * tileMap->width + x1] ||
+		if (x1 >= 0 && x1 < tileMap->width && y1 >= 0 && y1 < tileMap->height
+			&& x2 >= 0 && x2 < tileMap->width && y2 >= 0 && y2 < tileMap->height)
+			coll = (tileMap->grid[y1 * tileMap->width + x1] ||
 				tileMap->grid[y1 * tileMap->width + x2] ||
 				tileMap->grid[y2 * tileMap->width + x1] ||
 				tileMap->grid[y2 * tileMap->width + x2]);

@@ -20,8 +20,8 @@
 typedef struct {
 	Sprite* sprite;      ///< This entity's sprite (NULL is safe)
 	Hitbox* hitbox;      ///< This entity's hitbox (NULL is safe)
-	int x;               ///< X position in the game world
-	int y;               ///< Y position in the game world
+	double x;            ///< X position in the game world
+	double y;            ///< Y position in the game world
 	double hSpeed;       ///< Horizontal speed
 	double vSpeed;       ///< Vertical speed
 	double friction;     ///< Friction for speed calculations
@@ -36,11 +36,13 @@ void drawEntity(Renderer* renderer, Entity* entity);
 
 /// \brief Checks if two entities are colliding with one another
 ///
-/// X/Y coordinates are relative to entity1
+/// This function uses the rx/ry coordinates for entity 1, no its x/y
 bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2);
 
 /// \brief Checks if an entity is colliding with a tile map
-bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap);
+///
+/// This function uses the rx/ry coordinates for the entity, no the entity's x/y
+bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, int rx, int ry);
 
 /// \brief Frees an entity from memory
 ///

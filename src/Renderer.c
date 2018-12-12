@@ -53,6 +53,7 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 				} else {
 					freeRenderer(renderer);
 					renderer = NULL;
+					freeTexture(tex);
 					fprintf(stderr, "Failed to create internal texture (createRenderer). SDL Error: %s\n", SDL_GetError());
 				}
 			} else {
@@ -74,7 +75,7 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool fullscreen, double framerate) { // TODO: Rewrite this mess
+bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool fullscreen, double framerate) {
 	SDL_DisplayMode mode;
 	bool pass = false;
 
@@ -272,12 +273,10 @@ void rendererProcEndFrame(Renderer* renderer) {
 		renderer->between = ns() - renderer->lastTime;
 
 		// Sleep for any remaining time/calculate framerate
-		if (renderer->between < renderer->timePerFrame) {
+		if (renderer->between < renderer->timePerFrame)
 			sleep(renderer->timePerFrame - renderer->between);
-			renderer->framerate = (double)renderer->timePerFrame / ((double)ns() - (double)renderer->lastTime) * (double)renderer->fps;
-		} else {
-			renderer->framerate = (double)renderer->timePerFrame / (double)renderer->between * (double)renderer->fps;
-		}
+
+		renderer->framerate = 1000000000 / ((double)ns() - (double)renderer->lastTime);
 
 		// Update the last time
 		renderer->lastTime = ns();

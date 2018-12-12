@@ -24,12 +24,10 @@ typedef struct {
 	int kbLen; ///< The length of the two above arrays
 
 	// Mouse stuff
-	uint32 mX; ///< The mouse's current x position
-	uint32 mY; ///< The mouse's current y position
+	int mX; ///< The mouse's current x position
+	int mY; ///< The mouse's current y position
 	uint32 mouseState; ///< Current frame's mice buttons
 	uint32 previousMouseState; ///< Last frame's mice buttons
-
-	// TODO: Add gamepad support here
 } Input;
 
 /// \brief Creates an input struct for keeping track of user-input
