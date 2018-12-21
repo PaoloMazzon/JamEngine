@@ -75,7 +75,7 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool fullscreen, double framerate) {
+bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool fullscreen, double framerate) { // TODO: Fix this mess
 	SDL_DisplayMode mode;
 	bool pass = false;
 

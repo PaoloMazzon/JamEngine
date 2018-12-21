@@ -8,7 +8,7 @@
 #include <SDL_image.h>
 
 ////////////////////////////////////////////////////////////////
-Texture* createTexture(Renderer* renderer, uint32 w, uint32 h) {
+Texture* createTexture(Renderer* renderer, int w, int h) {
 	// Create the basic tex struct
 	Texture* tex = (Texture*)malloc(sizeof(Texture));
 
@@ -27,7 +27,7 @@ Texture* createTexture(Renderer* renderer, uint32 w, uint32 h) {
 		} else {
 			free(tex);
 			tex = NULL;
-			fprintf(stderr, "Failed to create SDL texture (createTexture). SDL Error: %s SDL Error: %s\n", SDL_GetError(), SDL_GetError());
+			fprintf(stderr, "Failed to create SDL texture (createTexture). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
 		fprintf(stderr, "Failed to allocate Texture. SDL Error: %s\n", SDL_GetError());

@@ -8,7 +8,7 @@
 #include "Renderer.h"
 
 /// \brief Creates a texture that can be rendered to
-Texture* createTexture(Renderer* renderer, uint32 w, uint32 h);
+Texture* createTexture(Renderer* renderer, int w, int h);
 
 /// \brief Loads a texture from a file
 Texture* loadTexture(Renderer* renderer, const char* filename);
