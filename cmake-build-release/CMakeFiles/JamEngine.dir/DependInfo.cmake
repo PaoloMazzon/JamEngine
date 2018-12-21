@@ -4,31 +4,31 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/AssetHandler.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Buffer.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Buffer.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Clock.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Clock.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/DrawEvents.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/DrawEvents.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Drawing.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Drawing.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Entity.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Entity.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/File.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/File.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Font.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Font.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Frame.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Frame.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Hitbox.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Hitbox.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Input.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Input.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Renderer.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Renderer.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Sprite.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Sprite.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/StringMap.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/StringMap.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Texture.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Texture.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/TileMap.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/TileMap.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/Vector.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Vector.c.obj"
-  "C:/Users/lugi1/Desktop/Code/JamEngine/src/World.c" "C:/Users/lugi1/Desktop/Code/JamEngine/cmake-build-release/CMakeFiles/JamEngine.dir/src/World.c.obj"
+  "/home/plo/code/jamengine/src/AssetHandler.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/AssetHandler.c.o"
+  "/home/plo/code/jamengine/src/Buffer.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Buffer.c.o"
+  "/home/plo/code/jamengine/src/Clock.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Clock.c.o"
+  "/home/plo/code/jamengine/src/DrawEvents.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/DrawEvents.c.o"
+  "/home/plo/code/jamengine/src/Drawing.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Drawing.c.o"
+  "/home/plo/code/jamengine/src/Entity.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Entity.c.o"
+  "/home/plo/code/jamengine/src/File.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/File.c.o"
+  "/home/plo/code/jamengine/src/Font.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Font.c.o"
+  "/home/plo/code/jamengine/src/Frame.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Frame.c.o"
+  "/home/plo/code/jamengine/src/Hitbox.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Hitbox.c.o"
+  "/home/plo/code/jamengine/src/Input.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Input.c.o"
+  "/home/plo/code/jamengine/src/Renderer.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Renderer.c.o"
+  "/home/plo/code/jamengine/src/Sprite.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Sprite.c.o"
+  "/home/plo/code/jamengine/src/StringMap.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/StringMap.c.o"
+  "/home/plo/code/jamengine/src/Texture.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Texture.c.o"
+  "/home/plo/code/jamengine/src/TileMap.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/TileMap.c.o"
+  "/home/plo/code/jamengine/src/Vector.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/Vector.c.o"
+  "/home/plo/code/jamengine/src/World.c" "/home/plo/code/jamengine/cmake-build-release/CMakeFiles/JamEngine.dir/src/World.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH
   "../include"
-  "C:/SDL/include"
+  "/usr/include/SDL2"
   )
 
 # Targets to which this target links.

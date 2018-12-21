@@ -1,0 +1,51 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/plo/code/jamengine/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_72de1/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_72de1.dir/build.make CMakeFiles/cmTC_72de1.dir/build
+gmake[1]: Entering directory '/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_72de1.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -std=gnu11 -o CMakeFiles/cmTC_72de1.dir/CheckSymbolExists.c.o   -c /home/plo/code/jamengine/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_72de1
+/home/plo/software/clion/bin/cmake/linux/bin/cmake -E cmake_link_script CMakeFiles/cmTC_72de1.dir/link.txt --verbose=1
+/usr/bin/cc      CMakeFiles/cmTC_72de1.dir/CheckSymbolExists.c.o  -o cmTC_72de1 
+/usr/lib64/gcc/x86_64-suse-linux/7/../../../../x86_64-suse-linux/bin/ld: CMakeFiles/cmTC_72de1.dir/CheckSymbolExists.c.o: in function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_72de1.dir/build.make:87: cmTC_72de1] Error 1
+gmake[1]: Leaving directory '/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:121: cmTC_72de1/fast] Error 2
+
+File /home/plo/code/jamengine/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/plo/code/jamengine/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_2496f/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_2496f.dir/build.make CMakeFiles/cmTC_2496f.dir/build
+gmake[1]: Entering directory '/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2496f.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -std=gnu11 -o CMakeFiles/cmTC_2496f.dir/CheckFunctionExists.c.o   -c /home/plo/software/clion/bin/cmake/linux/share/cmake-3.13/Modules/CheckFunctionExists.c
+Linking C executable cmTC_2496f
+/home/plo/software/clion/bin/cmake/linux/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2496f.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_2496f.dir/CheckFunctionExists.c.o  -o cmTC_2496f -lpthreads 
+/usr/lib64/gcc/x86_64-suse-linux/7/../../../../x86_64-suse-linux/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_2496f.dir/build.make:87: cmTC_2496f] Error 1
+gmake[1]: Leaving directory '/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:121: cmTC_2496f/fast] Error 2
+
+

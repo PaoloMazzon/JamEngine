@@ -3,4 +3,4 @@ grid_width=30
 grid_height=22
 cell_width=16
 cell_height=16
-file=assets\level.level
+file=assets/level.level

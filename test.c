@@ -84,7 +84,8 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	TileMap *currentLevel = NULL;
 
 	// Load the assets them check them
-	assetLoadDirectory(handler, renderer, "assets\\");
+	assetLoadDirectory(handler, renderer, "assets/");
+	fflush(stderr);
 	if (assetAssertRanges(handler, 1000, 1999, 3000, 3999, 5000, 5999, 2000, 2999, 4000, 4999) && rtRoom != NULL) {
 		// Load assets from the handler
 		tBackground = assetGet(handler, 2000)->tex;
@@ -176,7 +177,16 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				/////////////////////////////////////////////////////////////////////
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
+#ifdef WIN32
 				itoa((int) round(renderer->framerate), framerate, 10);
+#else
+				framerate[0] = 'N';
+				framerate[1] = '/';
+				framerate[2] = 'A';
+				framerate[3] = 0;
+				framerate[4] = 0;
+
+#endif
 				renderFont(0, 0, "FPS:", font, renderer);
 				renderFont(8 * 4, 0, framerate, font, renderer);
 				/////////////////////////////////////////////////////////////////////
@@ -197,7 +207,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 int main(int argc, char* argv[]) {
 	Renderer* renderer = createRenderer("Comp150 Game", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	Input* input = createInput();
-	Font* font = createFont(renderer, "standardlatin.png", NULL);
+	Font* font = createFont(renderer, "assets/standardlatin.png", NULL);
 	font->characterHeight = 16;
 	font->characterWidth = 8;
 	bool run = true;

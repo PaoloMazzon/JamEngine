@@ -46,8 +46,8 @@ static uint64_t ns() {
 			is_init = 1;
 		}
 		uint64_t now;
-		clock_gettime(CLOCKID, &spec);
-		now = spec.tv_sec * 1.0e9 + spec.tv_nsec;
+		clock_gettime(CLOCKID, &linux_rate);
+		now = (uint64_t)(linux_rate.tv_sec * 1.0e9 + linux_rate.tv_nsec);
 		return now;
 #elif defined(_WIN32)
 	static LARGE_INTEGER win_frequency;

@@ -229,8 +229,8 @@ AssetHandler* createAssetHandler() {
 void assetLoadDirectory(AssetHandler* assetHandler, Renderer* renderer, const char* directory) {
 	DIR *dir;
 	struct dirent* entCurrent;
-	char* tempString = (char*)calloc(1, 260);
-	char* fullFileName = (char*)calloc(1, 260 * 2);
+	char* tempString = (char*)calloc(1, 256);
+	char* fullFileName = (char*)calloc(1, 256 * 2);
 	char* extension = NULL;
 	int id = 0;
 	Asset* asset;
@@ -253,10 +253,10 @@ void assetLoadDirectory(AssetHandler* assetHandler, Renderer* renderer, const ch
 					 * extension (as apposed to writing my own that works with char
 					 * arrays).
 					 */
-					memset((void *) fullFileName, 0, 260 * 2);
-					memset((void *) tempString, 0, 260);
-					memcpy(tempString, entCurrent->d_name, entCurrent->d_namlen);
-					memcpy(fullFileName, directory, 260);
+					memset((void *) fullFileName, 0, 256 * 2);
+					memset((void *) tempString, 0, 256);
+					memcpy(tempString, entCurrent->d_name, 256);
+					memcpy(fullFileName, directory, 256);
 					strcat(fullFileName, tempString);
 					extension = strrchr(tempString, (int) '.');
 
