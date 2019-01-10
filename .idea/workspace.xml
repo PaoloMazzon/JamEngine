@@ -16,131 +16,32 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.1/CMakeCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.1/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.1/CMakeRCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.1/CMakeSystem.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.1/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.1/CompilerIdC/a.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/C.includecache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/DependInfo.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/build.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/cmake_clean.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/depend.internal" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/flags.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/includes_C.rsp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/link.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/linklibs.rsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/objects.a" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/objects1.rsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/AssetHandler.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Buffer.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Clock.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/DrawEvents.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Drawing.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Entity.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/File.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Font.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Frame.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Hitbox.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Input.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Renderer.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Sprite.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/StringMap.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Texture.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/TileMap.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Vector.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/src/World.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/test.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/JamEngine.dir/test.c.o" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Comp150Game.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Comp150Game.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/JamEngine" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/JamEngine" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/JamEngine.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/JamEngine.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/JamEngine.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/SDL2.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/SDL2_image.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/SDL2_mixer.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Sprite-0002.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/assets/level.map" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/assets/level.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/assets/textures.texhashes" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/assets/textures.texhashes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/background.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/brick.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/level.level" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/level1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libFLAC-8.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libJamEngine.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libJamEngine.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libjpeg-9.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libmodplug-1.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libogg-0.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libpng16-16.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libtiff-5.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libvorbis-0.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libvorbisfile-3.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libwebp-4.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/pixelman.ase" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/player.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/smpeg2.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/standardlatin.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/standing.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/walltiles.ase" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/walltiles.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/zlib1.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeCache.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.13.1/CMakeCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.13.1/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.13.1/CMakeRCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.13.1/CMakeSystem.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.13.1/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.13.1/CompilerIdC/a.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/CMakeOutput.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/DependInfo.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/build.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/cmake_clean.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/flags.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/includes_C.rsp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/link.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/linklibs.rsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/objects1.rsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/JamEngine.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/Makefile2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/TargetDirectories.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/clion-environment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/clion-environment.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/clion-log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/feature_tests.bin" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/feature_tests.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/Comp150Game.cbp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/progress.marks" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/JamEngine.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/JamEngine.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/JamEngine.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/SDL2.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/SDL2_image.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/SDL2_mixer.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/cmake_install.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libFLAC-8.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libJamEngine.a" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libjpeg-9.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libmodplug-1.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libogg-0.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libpng16-16.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libtiff-5.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libvorbis-0.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libvorbisfile-3.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/libwebp-4.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/smpeg2.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/test.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/zlib1.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/Clock.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Clock.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AssetHandler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/AssetHandler.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Font.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Font.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Font.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/Font.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.c" beforeDir="false" afterPath="$PROJECT_DIR$/test.c" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -171,21 +72,32 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="229">
-              <caret line="86" column="16" selection-start-line="86" selection-start-column="16" selection-end-line="86" selection-end-column="16" />
+            <state relative-caret-position="231">
+              <caret line="190" selection-start-line="190" selection-end-line="190" />
               <folding>
                 <element signature="e#42#60#0" expanded="true" />
-                <element signature="e#6195#6249#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+        <entry file="file://$PROJECT_DIR$/src/Font.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-186">
-              <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+            <state relative-caret-position="152">
+              <caret line="223" column="4" selection-start-line="223" selection-start-column="4" selection-end-line="223" selection-end-column="4" />
+              <folding>
+                <element signature="e#137#154#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/Font.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="295">
+              <caret line="73" selection-start-line="73" selection-end-line="73" selection-end-column="97" />
             </state>
           </provider>
         </entry>
@@ -237,7 +149,6 @@
         <option value="$PROJECT_DIR$/include/World.h" />
         <option value="$PROJECT_DIR$/include/Buffer.h" />
         <option value="$PROJECT_DIR$/include/File.h" />
-        <option value="$PROJECT_DIR$/include/Font.h" />
         <option value="$PROJECT_DIR$/include/Frame.h" />
         <option value="$PROJECT_DIR$/include/Hitbox.h" />
         <option value="$PROJECT_DIR$/include/Constants.h" />
@@ -246,7 +157,6 @@
         <option value="$PROJECT_DIR$/include/Entity.h" />
         <option value="$PROJECT_DIR$/src/Entity.c" />
         <option value="$PROJECT_DIR$/src/TileMap.c" />
-        <option value="$PROJECT_DIR$/src/Font.c" />
         <option value="$PROJECT_DIR$/doxyconfig.txt" />
         <option value="$PROJECT_DIR$/include/Input.h" />
         <option value="$PROJECT_DIR$/src/Hitbox.c" />
@@ -278,10 +188,12 @@
         <option value="$PROJECT_DIR$/src/AssetHandler.c" />
         <option value="$PROJECT_DIR$/include/Clock.h" />
         <option value="$PROJECT_DIR$/src/Vector.c" />
-        <option value="$PROJECT_DIR$/test.c" />
         <option value="$PROJECT_DIR$/cmake-build-debug/assets/level.map" />
         <option value="$PROJECT_DIR$/cmake-build-debug/assets/textures.texhashes" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/test.c" />
+        <option value="$PROJECT_DIR$/include/Font.h" />
+        <option value="$PROJECT_DIR$/src/Font.c" />
       </list>
     </option>
   </component>
@@ -306,22 +218,6 @@
               <item name="JamEngine" type="b2602c69:ProjectViewProjectNode" />
               <item name="jamengine" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="JamEngine" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jamengine" type="462c0819:PsiDirectoryNode" />
-              <item name="cmake-build-debug" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JamEngine" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jamengine" type="462c0819:PsiDirectoryNode" />
-              <item name="cmake-build-debug" type="462c0819:PsiDirectoryNode" />
-              <item name="assets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JamEngine" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jamengine" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -335,7 +231,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -484,6 +380,10 @@
       <workItem from="1544643372855" duration="383000" />
       <workItem from="1545366595683" duration="2368000" />
       <workItem from="1545425329656" duration="1814000" />
+      <workItem from="1545437064487" duration="563000" />
+      <workItem from="1545786064055" duration="1244000" />
+      <workItem from="1547155835173" duration="44000" />
+      <workItem from="1547156624547" duration="1764000" />
     </task>
     <task id="LOCAL-00001" summary="Got file loading (line-by-line) to work and did some testing with it.">
       <created>1542778424493</created>
@@ -517,7 +417,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="293828000" />
+    <option name="totallyTimeSpent" value="297443000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -532,17 +432,17 @@
     <frame x="0" y="27" width="1366" height="741" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49900794" visible="true" weight="0.1555387" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49900794" visible="true" weight="0.16464339" />
       <window_info id="Structure" order="1" sideWeight="0.50099206" side_tool="true" weight="0.17537314" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3286334" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32833335" />
       <window_info anchor="bottom" x="1" y="23" width="1919" height="1017" id="Debug" order="3" weight="0.32833335" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3275488" />
-      <window_info active="true" anchor="bottom" id="Messages" order="7" visible="true" weight="0.32" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.329718" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.3286334" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
@@ -659,24 +559,10 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/include/Input.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="725">
-          <caret line="29" column="61" selection-start-line="29" selection-start-column="61" selection-end-line="29" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Hitbox.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="750">
           <caret line="30" column="16" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Font.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="4" column="14" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -897,17 +783,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
-          <caret line="86" column="16" selection-start-line="86" selection-start-column="16" selection-end-line="86" selection-end-column="16" />
-          <folding>
-            <element signature="e#42#60#0" expanded="true" />
-            <element signature="e#6195#6249#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/TileMap.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="124">
@@ -951,8 +826,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-186">
+        <state relative-caret-position="152">
           <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="190" selection-start-line="190" selection-end-line="190" />
+          <folding>
+            <element signature="e#42#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/Font.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="73" selection-start-line="73" selection-end-line="73" selection-end-column="97" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Font.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="223" column="4" selection-start-line="223" selection-start-column="4" selection-end-line="223" selection-end-column="4" />
+          <folding>
+            <element signature="e#137#154#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

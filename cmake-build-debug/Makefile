@@ -609,6 +609,33 @@ src/World.c.s:
 	$(MAKE) -f CMakeFiles/JamEngine.dir/build.make CMakeFiles/JamEngine.dir/src/World.c.s
 .PHONY : src/World.c.s
 
+test.o: test.c.o
+
+.PHONY : test.o
+
+# target to build an object file
+test.c.o:
+	$(MAKE) -f CMakeFiles/JamEngine.dir/build.make CMakeFiles/JamEngine.dir/test.c.o
+.PHONY : test.c.o
+
+test.i: test.c.i
+
+.PHONY : test.i
+
+# target to preprocess a source file
+test.c.i:
+	$(MAKE) -f CMakeFiles/JamEngine.dir/build.make CMakeFiles/JamEngine.dir/test.c.i
+.PHONY : test.c.i
+
+test.s: test.c.s
+
+.PHONY : test.s
+
+# target to generate assembly for a file
+test.c.s:
+	$(MAKE) -f CMakeFiles/JamEngine.dir/build.make CMakeFiles/JamEngine.dir/test.c.s
+.PHONY : test.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -672,6 +699,9 @@ help:
 	@echo "... src/World.o"
 	@echo "... src/World.i"
 	@echo "... src/World.s"
+	@echo "... test.o"
+	@echo "... test.i"
+	@echo "... test.s"
 .PHONY : help
 
 

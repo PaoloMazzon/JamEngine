@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/JamEngine.dir/test.c.o"
   "CMakeFiles/JamEngine.dir/src/File.c.o"
   "CMakeFiles/JamEngine.dir/src/AssetHandler.c.o"
   "CMakeFiles/JamEngine.dir/src/StringMap.c.o"
@@ -17,8 +18,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/JamEngine.dir/src/Buffer.c.o"
   "CMakeFiles/JamEngine.dir/src/World.c.o"
   "CMakeFiles/JamEngine.dir/src/DrawEvents.c.o"
-  "libJamEngine.pdb"
-  "libJamEngine.a"
+  "JamEngine.pdb"
+  "JamEngine"
 )
 
 # Per-language clean rules from dependency scanning.

@@ -28,10 +28,10 @@
 				</MakeCommands>
 			</Target>
 			<Target title="JamEngine">
-				<Option output="/home/plo/code/jamengine/cmake-build-debug/libJamEngine.a" prefix_auto="0" extension_auto="0"/>
+				<Option output="/home/plo/code/jamengine/cmake-build-debug/JamEngine" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/plo/code/jamengine/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="2"/>
+				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="/home/plo/code/jamengine/include"/>
@@ -50,10 +50,10 @@
 				</MakeCommands>
 			</Target>
 			<Target title="JamEngine/fast">
-				<Option output="/home/plo/code/jamengine/cmake-build-debug/libJamEngine.a" prefix_auto="0" extension_auto="0"/>
+				<Option output="/home/plo/code/jamengine/cmake-build-debug/JamEngine" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/plo/code/jamengine/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="2"/>
+				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="/home/plo/code/jamengine/include"/>
@@ -191,6 +191,9 @@
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="/home/plo/code/jamengine/src/World.c">
+			<Option target="JamEngine"/>
+		</Unit>
+		<Unit filename="/home/plo/code/jamengine/test.c">
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="/home/plo/code/jamengine/CMakeLists.txt">

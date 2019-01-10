@@ -61,6 +61,20 @@ void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer
 
 /////////////////////////////////////////////////////
 /// \brief Renders text to a renderer with wrapping
+/// 	   and support for % tags/newlines
+///
+/// \param x The x position to draw at
+/// \param y The y position to draw at
+/// \param w The width at which to wrap
+/// \param string The string to render
+/// \param font The font to use
+/// \param renderer The renderer to draw to
+/// \param w Width before a newline
+/////////////////////////////////////////////////////
+void renderFontExt(int x, int y, const char* string, Font* font, Renderer* renderer, int w, ...);
+
+/////////////////////////////////////////////////////
+/// \brief Renders text to a renderer with wrapping
 ///
 /// \param x The x position to draw at
 /// \param y The y position to draw at

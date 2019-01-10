@@ -22,6 +22,7 @@ set(CMAKE_DEPENDS_CHECK_C
   "/home/plo/code/jamengine/src/TileMap.c" "/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/TileMap.c.o"
   "/home/plo/code/jamengine/src/Vector.c" "/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/Vector.c.o"
   "/home/plo/code/jamengine/src/World.c" "/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/JamEngine.dir/src/World.c.o"
+  "/home/plo/code/jamengine/test.c" "/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/JamEngine.dir/test.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

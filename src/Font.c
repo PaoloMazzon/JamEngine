@@ -215,6 +215,88 @@ void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
+void renderFontExt(int x, int y, const char* string, Font* font, Renderer* renderer, int w, ...) {
+	uint32 unichar = 0; // The final unicode character once UTF-8 is processed
+	uint32 lastunichar = 0; // The last unicode character
+	bool readyToProcessCharacter = false; // Done processing UTF-8 or not
+	const char* currentString = string; // Useful in case we're in a different string
+	void* currentBuffer = NULL; // For when we make temporary strings for doubles and such
+	bool continueRendering = true; // Since there can be two strings at once we need a more advanced method of counting than i
+	int i = 0; // Counter for the base string
+	int j; // Counter for any extra string
+	uint8 bytesLeft = 0;
+
+	if (renderer != NULL && font != NULL) {
+		while (continueRendering) {
+			// UTF-8 bit checks
+			if (isContinuationByte(string[i]) && bytesLeft > 0) {
+				bytesLeft--;
+				unichar |= string[i] & 63;
+
+				// Weather there is another byte or we are done
+				if (bytesLeft == 0)
+					readyToProcessCharacter = true;
+				else
+					unichar = unichar << 6;
+			} else if (is1ByteCharacter(string[i]) && bytesLeft == 0) {
+				// Just ascii, we are ready
+				unichar = string[i];
+				readyToProcessCharacter = true;
+			} else if (is2ByteCharacter(string[i]) && bytesLeft == 0) {
+				// Another byte is coming
+				bytesLeft = 1;
+
+				// Set up the uchar
+				unichar = (string[i] & 31) << 6;
+			} else if (is3ByteCharacter(string[i]) && bytesLeft == 0) {
+				// Another 2 bytes are coming
+				bytesLeft = 2;
+
+				// Set up the uchar
+				unichar = (string[i] & 15) << 6;
+			} else if (is4ByteCharacter(string[i]) && bytesLeft == 0) {
+				// Another 3 bytes are coming
+				bytesLeft = 3;
+
+				// Set up the uchar
+				unichar = (string[i] & 7) << 6;
+			} else {
+				// Encoding is wrong, restart
+				unichar = 0;
+				readyToProcessCharacter = false;
+				bytesLeft = 0;
+			}
+		}
+
+		// Once we ready for the whole character
+		/*
+		 * 1. \ was last character
+		 * 2. % was last character
+		 * 3. if neither of the above, current character is not % or \
+		 */
+		if (readyToProcessCharacter) {
+			// Escapes
+			if (lastunichar == '\\') {
+
+			} else if (lastunichar == '%') {
+
+			} else if (unichar != '\\' && unichar != '%') {
+				// Normal character
+			}
+
+			// We're done so store the old character
+			lastunichar = unichar;
+		}
+	} else {
+		if (renderer == NULL)
+			fprintf(stderr, "Renderer does not exist (renderFontExt)\n");
+		if (font == NULL)
+			fprintf(stderr, "Font does not exist (renderFontExt)\n");
+	}
+}
+/////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////
 void renderFontWrap(int x, int y, uint16 w, const char* string, Font* font, Renderer* renderer) {
 	uint32 unichar;
 	uint32 tempChar;

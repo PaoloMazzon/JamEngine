@@ -181,14 +181,14 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				itoa((int) round(renderer->framerate), framerate, 10);
 #else
 				framerate[0] = 'N';
-				framerate[1] = '/';
-				framerate[2] = 'A';
+				framerate[1] = '%';
+				framerate[2] = 's';
 				framerate[3] = 0;
 				framerate[4] = 0;
 
 #endif
 				renderFont(0, 0, "FPS:", font, renderer);
-				renderFont(8 * 4, 0, framerate, font, renderer);
+				renderFont(8 * 4, 0, framerate, font, renderer, "hello");
 				/////////////////////////////////////////////////////////////////////
 
 				rendererProcEndFrame(renderer);
