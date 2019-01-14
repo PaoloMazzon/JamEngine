@@ -13,9 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9952e5cf-690c-40a8-82bb-e58f7a3fd2dc" name="Default" comment="Started in on draw queues">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Font.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/Font.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.c" beforeDir="false" afterPath="$PROJECT_DIR$/test.c" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -58,8 +56,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Font.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="354" column="4" lean-forward="true" selection-start-line="354" selection-start-column="4" selection-end-line="354" selection-end-column="4" />
+            <state relative-caret-position="133">
+              <caret line="328" column="43" selection-start-line="328" selection-start-column="43" selection-end-line="328" selection-end-column="43" />
               <folding>
                 <element signature="e#137#154#0" expanded="true" />
               </folding>
@@ -359,6 +357,7 @@
       <workItem from="1547155835173" duration="44000" />
       <workItem from="1547156624547" duration="4578000" />
       <workItem from="1547499395879" duration="2539000" />
+      <workItem from="1547506639539" duration="1140000" />
     </task>
     <task id="LOCAL-00001" summary="Got file loading (line-by-line) to work and did some testing with it.">
       <created>1542778424493</created>
@@ -392,7 +391,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="302796000" />
+    <option name="totallyTimeSpent" value="303936000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -405,14 +404,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1366" height="741" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49900794" visible="true" weight="0.16691957" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49900794" visible="true" weight="0.16995448" />
       <window_info id="Structure" order="1" sideWeight="0.50099206" side_tool="true" weight="0.17537314" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32833335" />
-      <window_info anchor="bottom" x="1" y="23" width="1919" height="1017" id="Debug" order="3" weight="0.32833335" />
+      <window_info active="true" anchor="bottom" x="1" y="23" width="1919" height="1017" id="Debug" order="3" visible="true" weight="0.32833335" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3275488" />
@@ -825,8 +825,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Font.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="354" column="4" lean-forward="true" selection-start-line="354" selection-start-column="4" selection-end-line="354" selection-end-column="4" />
+        <state relative-caret-position="133">
+          <caret line="328" column="43" selection-start-line="328" selection-start-column="43" selection-end-line="328" selection-end-column="43" />
           <folding>
             <element signature="e#137#154#0" expanded="true" />
           </folding>

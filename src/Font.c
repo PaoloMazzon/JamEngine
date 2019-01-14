@@ -294,38 +294,35 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 			 * 3. if neither of the above, current character is not % or \
 			 */
 			if (readyToProcessCharacter) {
-				// Check if we're done this string
-				if (currentString[*currentIterator] != 0) {
-					// Escapes
-					if ((lastunichar == '\\' && !insideParameterString) || unichar == 10) {
-						if (unichar == 'n' || unichar == 10) {
-							charPlace.y += font->characterHeight;
-							charPlace.x = x;
-						}
-					} else if (lastunichar == '%' && !insideParameterString) {
-						// TODO: Implement variable length parameters
-					} else if (unichar != '\\' && unichar != '%') {
-						// It is a latin character
-						if (unichar < 255) {
-							// Locate the character
-							charSheetBox.x = (unichar - wh * (unichar / wh)) * font->characterWidth;
-							charSheetBox.y = unichar / wh * font->characterHeight;
+				// Escapes
+				if ((lastunichar == '\\' && !insideParameterString) || unichar == 10) {
+					if (unichar == 'n' || unichar == 10) {
+						charPlace.y += font->characterHeight;
+						charPlace.x = x - font->characterWidth;
+					}
+				} else if (lastunichar == '%' && !insideParameterString) {
+					// TODO: Implement variable length parameters
+				} else if (unichar != '\\' && unichar != '%') {
+					// It is a latin character
+					if (unichar < 255) {
+						// Locate the character
+						charSheetBox.x = (unichar - wh * (unichar / wh)) * font->characterWidth;
+						charSheetBox.y = unichar / wh * font->characterHeight;
 
-							// Print the character
-							SDL_RenderCopy(renderer->internalRenderer, font->latin, &charSheetBox, &charPlace);
-						} else if (unichar >= font->uStart && unichar <= font->uEnd) { // It is the unicode part
-							tempChar = unichar - font->uStart;
+						// Print the character
+						SDL_RenderCopy(renderer->internalRenderer, font->latin, &charSheetBox, &charPlace);
+					} else if (unichar >= font->uStart && unichar <= font->uEnd) { // It is the unicode part
+						tempChar = unichar - font->uStart;
 
-							// Locate the character
-							charSheetBox.x = (tempChar - uwh * (tempChar / uwh)) * font->characterWidth;
-							charSheetBox.y = tempChar / uwh * font->characterHeight;
+						// Locate the character
+						charSheetBox.x = (tempChar - uwh * (tempChar / uwh)) * font->characterWidth;
+						charSheetBox.y = tempChar / uwh * font->characterHeight;
 
-							// Print the character
-							SDL_RenderCopy(renderer->internalRenderer, font->font, &charSheetBox, &charPlace);
-						} else { // Not in the font
-							fprintf(stderr, "Error: Character '%u' is out of the font's range. (renderFontExt)\n",
-									unichar);
-						}
+						// Print the character
+						SDL_RenderCopy(renderer->internalRenderer, font->font, &charSheetBox, &charPlace);
+					} else { // Not in the font
+						fprintf(stderr, "Error: Character '%u' is out of the font's range. (renderFontExt)\n",
+								unichar);
 					}
 
 					// Check for text width
@@ -336,22 +333,30 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 						charPlace.x += font->characterWidth;
 					}
 				}
+			}
 
-				// We're done so store the old character
-				if (!insideParameterString)
-					lastunichar = unichar;
-				*currentIterator = *currentIterator + 1;
-			} else {
+			// We're done so store the old character
+			if (!insideParameterString)
+				lastunichar = unichar;
+			*currentIterator = *currentIterator + 1;
+
+			// Check if we're done rendering
+			if (currentString[*currentIterator] == 0) {
 				// Inserted string; not the base
 				if (currentIterator == &j) {
 					free(currentBuffer);
 					currentBuffer = NULL;
 					currentIterator = &i;
 					currentString = string;
+
+					// Check if we're at the end of the base string
+					if (currentString[*currentIterator] == 0)
+						continueRendering = false;
 				} else { // The base string
 					continueRendering = false;
 				}
 			}
+
 			readyToProcessCharacter = false;
 		}
 	} else {
