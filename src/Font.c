@@ -85,7 +85,7 @@ Font* createFont(Renderer* renderer, const char* latinFname, const char* fontFna
 void freeFont(Font* font) {
 	if (font != NULL) {
 		if (font->font != NULL)
-		SDL_DestroyTexture(font->font);
+			SDL_DestroyTexture(font->font);
 		if (font->latin != NULL) {
 			SDL_DestroyTexture(font->latin);
 		}
@@ -217,75 +217,142 @@ void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer
 /////////////////////////////////////////////////////
 void renderFontExt(int x, int y, const char* string, Font* font, Renderer* renderer, int w, ...) {
 	uint32 unichar = 0; // The final unicode character once UTF-8 is processed
+	uint32 tempChar = 0;
 	uint32 lastunichar = 0; // The last unicode character
 	bool readyToProcessCharacter = false; // Done processing UTF-8 or not
 	const char* currentString = string; // Useful in case we're in a different string
 	void* currentBuffer = NULL; // For when we make temporary strings for doubles and such
 	bool continueRendering = true; // Since there can be two strings at once we need a more advanced method of counting than i
 	int i = 0; // Counter for the base string
-	int j; // Counter for any extra string
+	int j = 0; // Counter for any extra string
+	int *currentIterator = &i; // The iterator for whichever string we're in
+	bool insideParameterString = false;
 	uint8 bytesLeft = 0;
+
+	// The boxes and settings for rendering the font
+	uint16 wh = font->latinWidth / font->characterWidth;
+	uint16 uwh = font->fontWidth / font->characterWidth;
+	SDL_Rect charPlace;
+	SDL_Rect charSheetBox;
+
+	// Set up the boxes
+	charSheetBox.x = 0;
+	charSheetBox.y = 0;
+	charSheetBox.w = font->characterWidth;
+	charSheetBox.h = font->characterHeight;
+	charPlace.x = x;
+	charPlace.y = y;
+	charPlace.w = font->characterWidth;
+	charPlace.h = font->characterHeight;
 
 	if (renderer != NULL && font != NULL) {
 		while (continueRendering) {
 			// UTF-8 bit checks
-			if (isContinuationByte(string[i]) && bytesLeft > 0) {
+			if (isContinuationByte(currentString[*currentIterator]) && bytesLeft > 0) {
 				bytesLeft--;
-				unichar |= string[i] & 63;
+				unichar |= currentString[*currentIterator] & 63;
 
 				// Weather there is another byte or we are done
 				if (bytesLeft == 0)
 					readyToProcessCharacter = true;
 				else
 					unichar = unichar << 6;
-			} else if (is1ByteCharacter(string[i]) && bytesLeft == 0) {
+			} else if (is1ByteCharacter(currentString[*currentIterator]) && bytesLeft == 0) {
 				// Just ascii, we are ready
-				unichar = string[i];
+				unichar = currentString[*currentIterator];
 				readyToProcessCharacter = true;
-			} else if (is2ByteCharacter(string[i]) && bytesLeft == 0) {
+			} else if (is2ByteCharacter(currentString[*currentIterator]) && bytesLeft == 0) {
 				// Another byte is coming
 				bytesLeft = 1;
 
 				// Set up the uchar
-				unichar = (string[i] & 31) << 6;
-			} else if (is3ByteCharacter(string[i]) && bytesLeft == 0) {
+				unichar = (currentString[*currentIterator] & 31) << 6;
+			} else if (is3ByteCharacter(currentString[*currentIterator]) && bytesLeft == 0) {
 				// Another 2 bytes are coming
 				bytesLeft = 2;
 
 				// Set up the uchar
-				unichar = (string[i] & 15) << 6;
-			} else if (is4ByteCharacter(string[i]) && bytesLeft == 0) {
+				unichar = (currentString[*currentIterator] & 15) << 6;
+			} else if (is4ByteCharacter(currentString[*currentIterator]) && bytesLeft == 0) {
 				// Another 3 bytes are coming
 				bytesLeft = 3;
 
 				// Set up the uchar
-				unichar = (string[i] & 7) << 6;
+				unichar = (currentString[*currentIterator] & 7) << 6;
 			} else {
 				// Encoding is wrong, restart
 				unichar = 0;
 				readyToProcessCharacter = false;
 				bytesLeft = 0;
 			}
-		}
 
-		// Once we ready for the whole character
-		/*
-		 * 1. \ was last character
-		 * 2. % was last character
-		 * 3. if neither of the above, current character is not % or \
-		 */
-		if (readyToProcessCharacter) {
-			// Escapes
-			if (lastunichar == '\\') {
 
-			} else if (lastunichar == '%') {
+			// Once we ready for the whole character
+			/*
+			 * 1. \ was last character
+			 * 2. % was last character
+			 * 3. if neither of the above, current character is not % or \
+			 */
+			if (readyToProcessCharacter) {
+				// Check if we're done this string
+				if (currentString[*currentIterator] != 0) {
+					// Escapes
+					if ((lastunichar == '\\' && !insideParameterString) || unichar == 10) {
+						if (unichar == 'n' || unichar == 10) {
+							charPlace.y += font->characterHeight;
+							charPlace.x = x;
+						}
+					} else if (lastunichar == '%' && !insideParameterString) {
+						// TODO: Implement variable length parameters
+					} else if (unichar != '\\' && unichar != '%') {
+						// It is a latin character
+						if (unichar < 255) {
+							// Locate the character
+							charSheetBox.x = (unichar - wh * (unichar / wh)) * font->characterWidth;
+							charSheetBox.y = unichar / wh * font->characterHeight;
 
-			} else if (unichar != '\\' && unichar != '%') {
-				// Normal character
+							// Print the character
+							SDL_RenderCopy(renderer->internalRenderer, font->latin, &charSheetBox, &charPlace);
+						} else if (unichar >= font->uStart && unichar <= font->uEnd) { // It is the unicode part
+							tempChar = unichar - font->uStart;
+
+							// Locate the character
+							charSheetBox.x = (tempChar - uwh * (tempChar / uwh)) * font->characterWidth;
+							charSheetBox.y = tempChar / uwh * font->characterHeight;
+
+							// Print the character
+							SDL_RenderCopy(renderer->internalRenderer, font->font, &charSheetBox, &charPlace);
+						} else { // Not in the font
+							fprintf(stderr, "Error: Character '%u' is out of the font's range. (renderFontExt)\n",
+									unichar);
+						}
+					}
+
+					// Check for text width
+					if (charPlace.x - x + font->characterWidth > w && w != -1) {
+						charPlace.y += font->characterHeight;
+						charPlace.x = x;
+					} else {
+						charPlace.x += font->characterWidth;
+					}
+				}
+
+				// We're done so store the old character
+				if (!insideParameterString)
+					lastunichar = unichar;
+				*currentIterator = *currentIterator + 1;
+			} else {
+				// Inserted string; not the base
+				if (currentIterator == &j) {
+					free(currentBuffer);
+					currentBuffer = NULL;
+					currentIterator = &i;
+					currentString = string;
+				} else { // The base string
+					continueRendering = false;
+				}
 			}
-
-			// We're done so store the old character
-			lastunichar = unichar;
+			readyToProcessCharacter = false;
 		}
 	} else {
 		if (renderer == NULL)
