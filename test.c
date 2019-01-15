@@ -188,7 +188,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 
 #endif
 				renderFont(0, 0, "FPS:", font, renderer);
-				renderFontExt(8 * 4, 0, "Test%%%%%%%%\\\\s%h\n this\\n test", font, renderer, 300);
+				renderFontExt(8 * 4, 0, "%sTest %s%s test", font, renderer, 300, "hello", "yeet", "this");
 				/////////////////////////////////////////////////////////////////////
 
 				rendererProcEndFrame(renderer);

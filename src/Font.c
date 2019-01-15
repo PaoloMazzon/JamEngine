@@ -216,18 +216,23 @@ void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer
 
 /////////////////////////////////////////////////////
 void renderFontExt(int x, int y, const char* string, Font* font, Renderer* renderer, int w, ...) {
+	// Variable length parameter things
+	va_list params;
+	va_start(params, w);
+
 	uint32 unichar = 0; // The final unicode character once UTF-8 is processed
 	uint32 tempChar = 0;
 	uint32 lastunichar = 0; // The last unicode character
 	bool readyToProcessCharacter = false; // Done processing UTF-8 or not
 	const char* currentString = string; // Useful in case we're in a different string
-	void* currentBuffer = NULL; // For when we make temporary strings for doubles and such
+	char* currentBuffer = NULL; // For when we make temporary strings for doubles and such
 	bool continueRendering = true; // Since there can be two strings at once we need a more advanced method of counting than i
 	int i = 0; // Counter for the base string
 	int j = 0; // Counter for any extra string
 	int *currentIterator = &i; // The iterator for whichever string we're in
 	bool insideParameterString = false;
 	uint8 bytesLeft = 0;
+	bool renderCurrentChar = true;
 
 	// The boxes and settings for rendering the font
 	uint16 wh = font->latinWidth / font->characterWidth;
@@ -294,15 +299,29 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 			 * 3. if neither of the above, current character is not % or \
 			 */
 			if (readyToProcessCharacter) {
+				renderCurrentChar = true;
 				// Escapes
 				if ((lastunichar == '\\' && !insideParameterString) || unichar == 10) {
+					renderCurrentChar = false;
 					if (unichar == 'n' || unichar == 10) {
 						charPlace.y += font->characterHeight;
 						charPlace.x = x - font->characterWidth;
+					} else if (unichar == '%') {
+						renderCurrentChar = true;
 					}
 				} else if (lastunichar == '%' && !insideParameterString) {
-					// TODO: Implement variable length parameters
-				} else if (unichar != '\\' && unichar != '%') {
+					renderCurrentChar = false;
+					if (unichar == 's') { // Strings
+						j = -1;
+						i++;
+						currentIterator = &j;
+						currentString = va_arg(params, const char*);
+					} else if (unichar == 'c') { // Character
+						unichar = (uint32)va_arg(params, int);
+						renderCurrentChar = true;
+					}
+				}
+				if (unichar != '\\' && unichar != '%' && renderCurrentChar) {
 					// It is a latin character
 					if (unichar < 255) {
 						// Locate the character
@@ -348,6 +367,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 					currentBuffer = NULL;
 					currentIterator = &i;
 					currentString = string;
+					insideParameterString = false;
 
 					// Check if we're at the end of the base string
 					if (currentString[*currentIterator] == 0)
@@ -365,6 +385,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 		if (font == NULL)
 			fprintf(stderr, "Font does not exist (renderFontExt)\n");
 	}
+	va_end(params);
 }
 /////////////////////////////////////////////////////
 
