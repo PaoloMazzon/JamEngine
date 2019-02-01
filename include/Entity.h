@@ -20,16 +20,19 @@
 typedef struct {
 	Sprite* sprite;      ///< This entity's sprite (NULL is safe)
 	Hitbox* hitbox;      ///< This entity's hitbox (NULL is safe)
+	EntityType type;     ///< Type of entity this is
 	double x;            ///< X position in the game world
 	double y;            ///< Y position in the game world
 	double hSpeed;       ///< Horizontal speed
 	double vSpeed;       ///< Vertical speed
 	double friction;     ///< Friction for speed calculations
 	int processPriority; ///< Entities are processed in descending order
+	int entityID;        ///< An ID that will be assigned by the asset loader (or user)
+	uint16 behaviour;    ///< Very open-ended, the engine does nothing with this
 } Entity;
 
 /// \brief Creates/initializes an entity class
-Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y);
+Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, int id);
 
 /// \brief Draws an entity
 void drawEntity(Renderer* renderer, Entity* entity);

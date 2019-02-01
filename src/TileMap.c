@@ -14,7 +14,7 @@ TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cel
 	// Check it worked
 	if (map != NULL) {
 		// Make the internal map
-		map->grid = (bool*)calloc(width, height);
+		map->grid = (uint16*)calloc(2, width * height);
 
 		// Check this one as well
 		if (map->grid != NULL) {
@@ -23,6 +23,8 @@ TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cel
 			map->height = height;
 			map->cellWidth = cellWidth;
 			map->cellHeight = cellHeight;
+			map->collisionRangeStart = 1;
+			map->collisionRangeEnd = 1;
 		} else {
 			free(map);
 			fprintf(stderr, "Failed to allocate tile map's grid.\n");
@@ -74,7 +76,7 @@ TileMap* loadTileMap(const char* filename, uint32 width, uint32 height, uint32 c
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, bool val) {
+bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, uint16 val) {
 	bool worked = false;
 
 	// Make sure the map is here
@@ -99,8 +101,8 @@ bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, bool val) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool getMapPos(TileMap* tileMap, uint32 x, uint32 y) {
-	bool val = 0;
+uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y) {
+	uint16 val = 0;
 
 	// Make sure the map is here
 	if (tileMap != NULL && tileMap->grid != NULL) {
@@ -134,10 +136,10 @@ bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h) {
 		// Now check for a collision by just checking each corner
 		if (x1 >= 0 && x1 < tileMap->width && y1 >= 0 && y1 < tileMap->height
 			&& x2 >= 0 && x2 < tileMap->width && y2 >= 0 && y2 < tileMap->height)
-			coll = (tileMap->grid[y1 * tileMap->width + x1] ||
-				tileMap->grid[y1 * tileMap->width + x2] ||
-				tileMap->grid[y2 * tileMap->width + x1] ||
-				tileMap->grid[y2 * tileMap->width + x2]);
+			coll = ((tileMap->grid[y1 * tileMap->width + x1] >= tileMap->collisionRangeStart && tileMap->grid[y1 * tileMap->width + x1] <= tileMap->collisionRangeEnd) ||
+					(tileMap->grid[y1 * tileMap->width + x2] >= tileMap->collisionRangeStart && tileMap->grid[y1 * tileMap->width + x2] <= tileMap->collisionRangeEnd) ||
+					(tileMap->grid[y2 * tileMap->width + x1] >= tileMap->collisionRangeStart && tileMap->grid[y2 * tileMap->width + x1] <= tileMap->collisionRangeEnd) ||
+					(tileMap->grid[y2 * tileMap->width + x2] >= tileMap->collisionRangeStart && tileMap->grid[y2 * tileMap->width + x2] <= tileMap->collisionRangeEnd));
 	} else {
 		if (tileMap != NULL)
 			fprintf(stderr, "Map does not exist (checkMapCollFast).\n");

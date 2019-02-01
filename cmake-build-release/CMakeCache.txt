@@ -381,7 +381,7 @@ ProcessorCount_cmd_sysctl-ADVANCED:INTERNAL=1
 SDL2_IMAGE_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: SDL2_IMAGE_LIBRARY
 SDL2_IMAGE_LIBRARY-ADVANCED:INTERNAL=1
-SDL2_LIBRARY_TEMP:INTERNAL=/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2.so;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread
+SDL2_LIBRARY_TEMP:INTERNAL=/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2main.a;/usr/lib64/libSDL2.so;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread;-lpthread
 //ADVANCED property for variable: SDL2_MIXER_INCLUDE_DIR
 SDL2_MIXER_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: SDL2_MIXER_LIBRARY

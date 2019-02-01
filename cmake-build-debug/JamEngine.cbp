@@ -103,6 +103,9 @@
 		<Unit filename="/home/plo/code/jamengine/include/Entity.h">
 			<Option target="JamEngine"/>
 		</Unit>
+		<Unit filename="/home/plo/code/jamengine/include/EntityList.h">
+			<Option target="JamEngine"/>
+		</Unit>
 		<Unit filename="/home/plo/code/jamengine/include/File.h">
 			<Option target="JamEngine"/>
 		</Unit>
@@ -155,6 +158,9 @@
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="/home/plo/code/jamengine/src/Entity.c">
+			<Option target="JamEngine"/>
+		</Unit>
+		<Unit filename="/home/plo/code/jamengine/src/EntityList.c">
 			<Option target="JamEngine"/>
 		</Unit>
 		<Unit filename="/home/plo/code/jamengine/src/File.c">

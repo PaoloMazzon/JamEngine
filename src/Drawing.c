@@ -116,14 +116,14 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 			for (j = 0; j < map->width; j++) {
 				if (getMapPos(map, (uint32)j, (uint32)i)) {
 					// Where there are adjacent tiles
-					w = getMapPos(map, (uint32)j - 1, (uint32)i);
-					e = getMapPos(map, (uint32)j + 1, (uint32)i);
-					n = getMapPos(map, (uint32)j, (uint32)i - 1);
-					s = getMapPos(map, (uint32)j, (uint32)i + 1);
-					ne = getMapPos(map, (uint32)j + 1, (uint32)i - 1);
-					nw = getMapPos(map, (uint32)j - 1, (uint32)i - 1);
-					se = getMapPos(map, (uint32)j + 1, (uint32)i + 1);
-					sw = getMapPos(map, (uint32)j - 1, (uint32)i + 1);
+					w = (getMapPos(map, (uint32)j - 1, (uint32)i) >= map->collisionRangeStart && getMapPos(map, (uint32)j - 1, (uint32)i) <= map->collisionRangeEnd);
+					e = (getMapPos(map, (uint32)j + 1, (uint32)i) >= map->collisionRangeStart && getMapPos(map, (uint32)j + 1, (uint32)i) <= map->collisionRangeEnd);
+					n = (getMapPos(map, (uint32)j, (uint32)i - 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j, (uint32)i - 1) <= map->collisionRangeEnd);
+					s = (getMapPos(map, (uint32)j, (uint32)i + 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j, (uint32)i + 1) <= map->collisionRangeEnd);
+					ne = (getMapPos(map, (uint32)j + 1, (uint32)i - 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j + 1, (uint32)i - 1) <= map->collisionRangeEnd);
+					nw = (getMapPos(map, (uint32)j - 1, (uint32)i - 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j - 1, (uint32)i - 1) <= map->collisionRangeEnd);
+					se = (getMapPos(map, (uint32)j + 1, (uint32)i + 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j + 1, (uint32)i + 1) <= map->collisionRangeEnd);
+					sw = (getMapPos(map, (uint32)j - 1, (uint32)i + 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j - 1, (uint32)i + 1) <= map->collisionRangeEnd);
 
 					// Calculate the tile
 					if (!w && !e && !s && n/* && !nw && !ne && !se && !sw*/) {
@@ -306,6 +306,12 @@ void drawTexturePart(Renderer* renderer, Texture* texture, sint32 x, sint32 y, s
 		if (texture == NULL)
 			fprintf(stderr, "Texture not present (drawTexturePart). SDL Error: %s", SDL_GetError());
 	}
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+void drawTileMap(Renderer* renderer, TileMap* tileMap, int x, int y, uint16 xInMapStart, uint16 yInMapStart, uint16 xInMapFinish, uint16 yInMapFinish) {
+	// TODO: This
 }
 //////////////////////////////////////////////////////////////
 

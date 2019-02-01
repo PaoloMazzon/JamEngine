@@ -171,6 +171,7 @@ Entity* assetLoadEntity(AssetHandler* assetHandler, SMap* file) {
 	Asset* hit = assetGet(assetHandler, hitID);
 	int x = strtol(getSMapVal(file, "x", "0"), NULL, 10);
 	int y = strtol(getSMapVal(file, "y", "0"), NULL, 10);
+	int id = strtol(getSMapVal(file, "id", "0"), NULL, 10);
 
 	// We need to know for sure that the assets are correct
 	if ((spr != NULL && spr->type != sprAsset) || (hit != NULL && hit->type != hitAsset)) {
@@ -178,13 +179,13 @@ Entity* assetLoadEntity(AssetHandler* assetHandler, SMap* file) {
 		fprintf(stderr, "Incorrect asset types passed (assetLoadEntity with sprite_id=%i and hitbox_id=%i)\n", sprID, hitID);
 	} else {
 		if (spr == NULL && hit == NULL)
-			ent = createEntity(NULL, NULL, x, y);
+			ent = createEntity(NULL, NULL, x, y, id);
 		else if (spr != NULL && hit == NULL)
-			ent = createEntity(spr->spr, NULL, x, y);
+			ent = createEntity(spr->spr, NULL, x, y, id);
 		else if (spr == NULL && hit != NULL)
-			ent = createEntity(NULL, hit->hitbox, x, y);
+			ent = createEntity(NULL, hit->hitbox, x, y, id);
 		else
-			ent = createEntity(spr->spr, hit->hitbox, x, y);
+			ent = createEntity(spr->spr, hit->hitbox, x, y, id);
 	}
 
 	return ent;

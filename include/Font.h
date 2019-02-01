@@ -30,6 +30,13 @@ typedef struct {
 	uint16 fontHeight; ///< The height in pixels of the font page
 } Font;
 
+/// \brief Converts a double to a base-10 string
+///
+/// WARNING: The returned string will either be NULL
+/// or a malloc-assigned address; you have to free
+/// the string yourself when you're done.
+char* convertDoubleToCString(double number);
+
 /////////////////////////////////////////////////////
 /// \brief Creates a new font and returns it
 ///

@@ -285,6 +285,33 @@ src/Entity.c.s:
 	$(MAKE) -f CMakeFiles/JamEngine.dir/build.make CMakeFiles/JamEngine.dir/src/Entity.c.s
 .PHONY : src/Entity.c.s
 
+src/EntityList.o: src/EntityList.c.o
+
+.PHONY : src/EntityList.o
+
+# target to build an object file
+src/EntityList.c.o:
+	$(MAKE) -f CMakeFiles/JamEngine.dir/build.make CMakeFiles/JamEngine.dir/src/EntityList.c.o
+.PHONY : src/EntityList.c.o
+
+src/EntityList.i: src/EntityList.c.i
+
+.PHONY : src/EntityList.i
+
+# target to preprocess a source file
+src/EntityList.c.i:
+	$(MAKE) -f CMakeFiles/JamEngine.dir/build.make CMakeFiles/JamEngine.dir/src/EntityList.c.i
+.PHONY : src/EntityList.c.i
+
+src/EntityList.s: src/EntityList.c.s
+
+.PHONY : src/EntityList.s
+
+# target to generate assembly for a file
+src/EntityList.c.s:
+	$(MAKE) -f CMakeFiles/JamEngine.dir/build.make CMakeFiles/JamEngine.dir/src/EntityList.c.s
+.PHONY : src/EntityList.c.s
+
 src/File.o: src/File.c.o
 
 .PHONY : src/File.o
@@ -663,6 +690,9 @@ help:
 	@echo "... src/Entity.o"
 	@echo "... src/Entity.i"
 	@echo "... src/Entity.s"
+	@echo "... src/EntityList.o"
+	@echo "... src/EntityList.i"
+	@echo "... src/EntityList.s"
 	@echo "... src/File.o"
 	@echo "... src/File.i"
 	@echo "... src/File.s"

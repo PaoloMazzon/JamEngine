@@ -30,6 +30,9 @@ void drawTexture(Renderer* renderer, Texture* texture, sint32 x, sint32 y);
 /// \brief Draws a tile map using an 48-frame sprite
 void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, uint32 startingCellX, uint32 startingCellY);
 
+///\brief Draws the tiles on a tilemap with settings
+void drawTileMap(Renderer* renderer, TileMap* tileMap, int x, int y, uint16 xInMapStart, uint16 yInMapStart, uint16 xInMapFinish, uint16 yInMapFinish);
+
 /// \breif Draws a texture to the current target with a bunch of extra preferences
 ///
 /// \param scaleX The x scale of the texture, 1 for normal

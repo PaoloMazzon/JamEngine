@@ -70,7 +70,6 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	// Core game pieces
 	bool mainMenu = false; // Weather or not return to main menu
 	bool runLoop = true;
-	char framerate[5] = "     ";
 
 	// Initialize assets
 	Texture *rtRoom = createTexture(renderer, GAME_WIDTH, GAME_HEIGHT);
@@ -177,18 +176,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				/////////////////////////////////////////////////////////////////////
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
-#ifdef WIN32
-				itoa((int) round(renderer->framerate), framerate, 10);
-#else
-				framerate[0] = 'N';
-				framerate[1] = '%';
-				framerate[2] = 's';
-				framerate[3] = 0;
-				framerate[4] = 0;
-
-#endif
-				renderFont(0, 0, "FPS:", font, renderer);
-				renderFontExt(8 * 4, 0, "%sTest %s%s test", font, renderer, 300, "hello", "yeet", "this");
+				renderFontExt(0, 0, "FPS: %f", font, renderer, 999, renderer->framerate);
 				/////////////////////////////////////////////////////////////////////
 
 				rendererProcEndFrame(renderer);

@@ -16,3 +16,11 @@ typedef signed char sint8;
 typedef signed short sint16;
 typedef signed int sint32;
 typedef signed long long sint64;
+
+// Entity things
+#define ENTITY_LIST_ALLOCATION_AMOUNT 5
+#define ENTITIES_IN_RANGE 0
+#define ENTITIES_OUT_OF_RANGE 1
+#define MAX_ENTITY_TYPES 5
+typedef enum {logic = 0, solid = 1, npc = 2, object = 3, item = 4} EntityType;
+typedef enum {rectangle, proximity} FilterType;

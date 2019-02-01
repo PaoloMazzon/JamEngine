@@ -9,22 +9,25 @@
 #pragma once
 
 #include "Constants.h"
+#include "Sprite.h"
 
-/// \brief Holds information vital to a fast tile-grid
+/// \brief A simple struct that makes collision checking and tile graphics easier
 ///
-/// The grid is stored in memory as a 1-D array that
-/// looks like this (using coordinates):
-/// [(0, 0), (1, 0), (2, 0), (3, 0), (0, 1), (1, 1), (2, 1), (3, 1), (0, 2)]
-/// If loading a tile map from a file, it might be best
-/// just to access the grid directly instead of doing
-/// 100 different function calls that each have a bit
-/// of overhead in the line of error-checking.
+/// Internally, this struct is just a width * height 16-bit grid. You don't need
+/// to use the graphical part of it, but the grid is 16-bit to allow for lots of
+/// graphical tiles and you only need a 1-bit grid (which, yes is not possible
+/// with base datatypes but you can get tricky with bool arrays) for that situation.
+/// The collisionRangeStart/End variables define what portion of the tile sheet
+/// is dedicated to solid objects so the collision detection works properly.
 typedef struct {
-	uint32 width;      ///< Grid's width
-	uint32 height;     ///< Grid's height
-	uint32 cellWidth;  ///< Width of any given cell in the map
-	uint32 cellHeight; ///< Height of any given cell in the map
-	bool* grid;       ///< The internal grid of size w * h
+	uint32 width;               ///< Grid's width
+	uint32 height;              ///< Grid's height
+	uint32 cellWidth;           ///< Width of any given cell in the map
+	uint32 cellHeight;          ///< Height of any given cell in the map
+	uint16* grid;               ///< The internal grid of size w * h
+	uint16 collisionRangeStart; ///< The start of the range of collide-able tiles
+	uint16 collisionRangeEnd;   ///< The end of the range of collide-able tiles
+	Sprite* tileSheet;          ///< The sprite sheet holding all tiles
 } TileMap;
 
 /// \brief Creates a tile map
@@ -40,10 +43,10 @@ TileMap* loadTileMap(const char* filename, uint32 width, uint32 height, uint32 c
 
 /// \brief Sets a position in a tile map
 /// Returns true if it worked
-bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, bool val);
+bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, uint16 val);
 
 /// \brief Gets a position in a tile map
-bool getMapPos(TileMap* tileMap, uint32 x, uint32 y);
+uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y);
 
 /// \brief Checks For a collision
 ///

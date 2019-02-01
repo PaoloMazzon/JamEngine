@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 //////////////////////////////////////////////////////////
-Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y) {
+Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, int id) {
 	Entity* ent = (Entity*)malloc(sizeof(Entity));
 
 	// Check that it worked
@@ -16,6 +16,7 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y) {
 		ent->hitbox = hitbox;
 		ent->x = x;
 		ent->y = y;
+		ent->entityID = id;
 		ent->hSpeed = 0;
 		ent->vSpeed = 0;
 		ent->friction = 0;
@@ -31,7 +32,7 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y) {
 //////////////////////////////////////////////////////////
 void drawEntity(Renderer* renderer, Entity* entity) {
 	if (entity != NULL && renderer != NULL) {
-		drawSprite(renderer, entity->sprite, entity->x, entity->y);
+		drawSprite(renderer, entity->sprite, (sint32)entity->x, (sint32)entity->y);
 	} else {
 		if (entity == NULL)
 			fprintf(stderr, "Entity does not exist (drawEntity).\n");

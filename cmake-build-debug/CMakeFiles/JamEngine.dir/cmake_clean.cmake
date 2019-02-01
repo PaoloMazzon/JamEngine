@@ -18,6 +18,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/JamEngine.dir/src/Buffer.c.o"
   "CMakeFiles/JamEngine.dir/src/World.c.o"
   "CMakeFiles/JamEngine.dir/src/DrawEvents.c.o"
+  "CMakeFiles/JamEngine.dir/src/EntityList.c.o"
   "JamEngine.pdb"
   "JamEngine"
 )
