@@ -1,3 +1,0 @@
-/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/JamEngine.dir
-/home/plo/code/jamengine/cmake-build-debug/CMakeFiles/edit_cache.dir

@@ -14,21 +14,33 @@
 
 /// \brief Defines an in-game entity
 ///
-/// Speed and friction is a convenience and the struct
-/// will do nothing with them. processPriority is for
-/// entity lists
+/// Speed, friction, and Z coordinate is just a convinience
+/// and none of the Entity functions will touch them. This
+/// is a 2D engine and thus does not care about the Z coord.
+/// There are cases in 2D games you want it, but that's not
+/// the engine's problem. Since not every use case needs
+/// these things, you can turn each individually off in the
+/// Constants.h file.
 typedef struct {
 	Sprite* sprite;      ///< This entity's sprite (NULL is safe)
 	Hitbox* hitbox;      ///< This entity's hitbox (NULL is safe)
 	EntityType type;     ///< Type of entity this is
 	double x;            ///< X position in the game world
 	double y;            ///< Y position in the game world
-	double hSpeed;       ///< Horizontal speed
-	double vSpeed;       ///< Vertical speed
-	double friction;     ///< Friction for speed calculations
 	int processPriority; ///< Entities are processed in descending order
-	int entityID;        ///< An ID that will be assigned by the asset loader (or user)
+	int entityID;        ///< The ID given to it by the asset loader when it was loaded
 	uint16 behaviour;    ///< Very open-ended, the engine does nothing with this
+
+#ifdef ENTITY_ENABLE_SPEED
+	double hSpeed;       ///< Horizontal speed (Can be disabled to save memory)
+	double vSpeed;       ///< Vertical speed (Can be disabled to save memory)
+#endif
+#ifdef ENTITY_ENABLE_FRICTION
+	double friction;     ///< Friction for speed calculations (Can be disabled to save memory)
+#endif
+#ifdef ENTITY_ENABLE_Z
+	double z;            ///< Z position in the game world (Can be disabled to save memory)
+#endif
 } Entity;
 
 /// \brief Creates/initializes an entity class

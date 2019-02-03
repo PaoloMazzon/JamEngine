@@ -15,6 +15,9 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 	Texture* tex;
 	Renderer* renderer = (Renderer*)malloc(sizeof(Renderer));
 
+	// This is why only 1 renderer should exist at a time
+	globalIDCounter = 0;
+
 	// Check if we were given a dud
 	if (renderer != NULL) {
 
