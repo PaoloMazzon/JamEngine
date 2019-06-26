@@ -98,7 +98,7 @@ void outputSMap(SMap* smap, FILE* stream) {
 	if (smap != NULL && stream != NULL) {
 		// Loop through the map and print it all
 		for (i = 0; i < smap->size; i++)
-			fprintf(stream, "%s: \"%s\"\n", smap->keys[i], smap->vals[i]);
+			fprintf(stream, "%s=%s\n", smap->keys[i], smap->vals[i]);
 	} else {
 		if (smap == NULL)
 			fprintf(stderr, "Passed SMap does not exist (outputSMap)\n");
@@ -109,7 +109,7 @@ void outputSMap(SMap* smap, FILE* stream) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-void setSMapVal(SMap* smap, char* key, char* val) {
+void setSMapVal(SMap* smap, const char* key, char* val) {
 	bool found = false;
 	int i;
 
@@ -134,7 +134,7 @@ void setSMapVal(SMap* smap, char* key, char* val) {
 			smap->size++;
 			smap->keys = (char**)realloc((void*)smap->keys, smap->size * sizeof(char*));
 			smap->vals = (char**)realloc((void*)smap->vals, smap->size * sizeof(char*));
-			smap->keys[smap->size - 1] = key;
+			smap->keys[smap->size - 1] = (char*)key;
 			smap->vals[smap->size - 1] = val;
 		}
 	} else {
@@ -144,7 +144,7 @@ void setSMapVal(SMap* smap, char* key, char* val) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-const char* getSMapVal(SMap* smap, char* key, char* def) {
+const char* getSMapVal(SMap* smap, const char* key, char* def) {
 	char* ret = def;
 	int i;
 

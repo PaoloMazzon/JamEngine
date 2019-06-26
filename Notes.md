@@ -57,18 +57,18 @@ TODO (/ before description means done)
  - Input System
   - /Mouse input
   - /Keyboard input
-  + Gamepad input
+  - Gamepad input
  - Renderer
-  + Delta timing
+  - Delta timing
   - /Create window
   - /Handle window scaling/fullscreen
   - /Variable size screen buffer and render size
   - /Main game loop
  - Drawing functions
   - /Render textures
-  + Let the fill colour thing work with alpha values
-  + Draw shapes
-  + Fonts (This implies that the font struct contains practical things only)
+  - Let the fill colour thing work with alpha values
+  - Draw shapes
+  - Fonts (This implies that the font struct contains practical things only)
  - Sprite
   - /Handle animations
   - /Frames
@@ -77,7 +77,7 @@ TODO (/ before description means done)
  - Hit-box
   - /Circles
   - /Rectangles
-  + Circle-to-rectangle (Algorithm is written down just don't want to type it out)
+  - Circle-to-rectangle (Algorithm is written down just don't want to type it out)
  - Entity
   - /Position in world
   - /Sprite
@@ -92,7 +92,7 @@ TODO (/ before description means done)
   - /Unicode bitmap fonts
   - /TTF fonts
  - Draw Queues/Events for multi-threading
-  + Queue management
+  - Queue management
  - Entity Lists - Important for handling lots of things
  - Particle System - Very notable addition
  - Worlds - Great feature yet not needed

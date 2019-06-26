@@ -8,8 +8,21 @@
 /// calls and bit-shifting, so use it freely.
 
 #pragma once
-#include "Constants.h"
 #include <stdbool.h>
+
+// We need to know size
+#ifndef uint8
+typedef unsigned char uint8;
+#endif
+#ifndef uint16
+typedef unsigned short uint16;
+#endif
+#ifndef uint32
+typedef unsigned int uint32;
+#endif
+#ifndef uint64
+typedef unsigned long long uint64;
+#endif
 
 ////////////////////////////////////////////////
 /// \brief A binary buffer for storing info

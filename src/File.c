@@ -2,11 +2,11 @@
 // Created by lugi1 on 2018-11-15.
 //
 
-#include "File.h"
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include "File.h"
 
 /////////////////////////////////////////////////////////
 StringList* createStringList() {
@@ -92,7 +92,7 @@ void appendStringToStringList(StringList* list, char* string, bool heapBased) {
 	bool* newBools = NULL;
 
 	// We must make sure it exists first
-	if (list != NULL) {
+	if (list != NULL && string != NULL) {
 		// Reallocate the string list
 		newList = (char**)realloc(list->strList, (list->size + 1) * sizeof(char*));
 		newBools = (bool*)realloc(list->dynamic, (list->size + 1) * sizeof(bool));
@@ -114,8 +114,57 @@ void appendStringToStringList(StringList* list, char* string, bool heapBased) {
 			free(newList);
 		}
 	} else {
-		fprintf(stderr, "List does not exist (appendStringToStringList)\n");
+		if (list == NULL)
+			fprintf(stderr, "List does not exist (appendStringToStringList)\n");
+		if (string == NULL)
+			fprintf(stderr, "String does not exist (appendStringToStringList)\n");
 	}
+}
+/////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////
+StringList* explodeString(const char* string, char delim, bool ignoreQuotes) {
+	int i;
+	bool inQuotes = false;
+	StringList* list = createStringList();
+	int lastLocation = 0;
+	char* currentBuffer;
+	int stringLength = strlen(string);
+	bool cameFromQuotes = false;
+
+	for (i = 0; i < stringLength; i++) {
+		// Only ignore quotes if we were told to, also both types of quotes
+		if ((string[i] == '\'' || string[i] == '"') && ignoreQuotes) {
+			inQuotes = !inQuotes;
+			cameFromQuotes = true;
+		}
+
+		// We hit a delim (or the end of the string) and we aren't in quotes
+		if ((string[i] == delim || i == stringLength - 1) && !inQuotes) {
+			// Account for the edge case if we're at the end
+			if (i == stringLength - 1)
+				i++;
+
+			// Don't copy the quotation marks
+			if (!cameFromQuotes)
+				currentBuffer = (char*)malloc(i - lastLocation + 1);
+			else
+				currentBuffer = (char*)malloc(i - lastLocation - 1);
+
+			if (currentBuffer != NULL) {
+				if (!cameFromQuotes)
+					memcpy((void*)currentBuffer, (const void*)(string + lastLocation), i - lastLocation);
+				else
+					memcpy((void*)currentBuffer, (const void*)(string + lastLocation + 1), i - lastLocation - 2);
+				currentBuffer[lastLocation - i] = 0;
+				appendStringToStringList(list, currentBuffer, true);
+				cameFromQuotes = false;
+			}
+			lastLocation = i + 1;
+		}
+	}
+
+	return list;
 }
 /////////////////////////////////////////////////////////
 

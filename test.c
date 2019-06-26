@@ -193,7 +193,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char* argv[]) {
-	Renderer* renderer = createRenderer("Comp150 Game", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
+	Renderer* renderer = createRenderer("Jam Engine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	Input* input = createInput();
 	Font* font = createFont(renderer, "assets/standardlatin.png", NULL);
 	font->characterHeight = 16;

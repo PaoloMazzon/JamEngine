@@ -22,8 +22,12 @@ typedef signed long long sint64;
 #define ENTITIES_IN_RANGE 1
 #define ENTITIES_OUT_OF_RANGE 0
 #define MAX_ENTITY_TYPES 5
+
+///< \brief Contains every type of thing an entity can be
 typedef enum {logic = 0, solid = 1, npc = 2, object = 3, item = 4} EntityType;
-typedef enum {rectangle, proximity} FilterType;
+
+/// \brief Used exclusive in worlds, sets up how to filter entities
+typedef enum {fRectangle, fProximity} FilterType;
 
 // This is used to give unique IDs to whatever
 uint64 globalIDCounter;

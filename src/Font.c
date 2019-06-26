@@ -7,12 +7,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <Renderer.h>
-
-///////////////////////////////////////////////////////
-char* convertDoubleToCString(double number) {
-	return NULL; // TODO: This
-}
-///////////////////////////////////////////////////////
+#include "StringUtil.h"
 
 ///////////////////////////////////////////////////////
 SDL_Texture* loadTex(SDL_Renderer* renderer, const char* fname) {
@@ -326,7 +321,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 						unichar = (uint32)va_arg(params, int);
 						renderCurrentChar = true;
 					} else if (unichar == 'f') { // Double
-						currentBuffer = convertDoubleToCString(va_arg(params, int));
+						currentBuffer = ftoa(va_arg(params, int));
 						if (currentBuffer != NULL) {
 							currentIterator = &j;
 							j = -1;

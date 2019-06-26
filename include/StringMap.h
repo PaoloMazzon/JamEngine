@@ -7,13 +7,12 @@
 /// to-frame basis.
 
 #pragma once
-#include "Constants.h"
 #include "stdio.h"
 
 /// \brief A key/val map for string:string operations
 typedef struct {
-	uint32 size; ///< Size of the two lists in elements
-	uint32 sizeOfGarbagePile; ///< Pretty self-explanatory
+	int size; ///< Size of the two lists in elements
+	int sizeOfGarbagePile; ///< Pretty self-explanatory
 	char** keys; ///< The keys
 	char** vals; ///< The values
 	char** garbage; ///< Heap-based strings that need to be freed upon destruction
@@ -29,10 +28,10 @@ SMap* loadSMap(const char* filename);
 void outputSMap(SMap* smap, FILE* stream);
 
 /// \brief Sets a value to a key in a map
-void setSMapVal(SMap* smap, char* key, char* val);
+void setSMapVal(SMap* smap, const char* key, char* val);
 
 /// \brief Gets a value from a map
-const char* getSMapVal(SMap* smap, char* key, char* def);
+const char* getSMapVal(SMap* smap, const char* key, char* def);
 
 /// \brief Throws a string into the garbage
 ///

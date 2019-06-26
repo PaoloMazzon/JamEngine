@@ -24,7 +24,9 @@ World* createWorld() {
 ///////////////////////////////////////////////////////
 void setWorldFilterTypeRectangle(World* world, uint16 inRangeRectangleWidth, uint16 inRangeRectangleHeight) {
 	if (world != NULL) {
-
+		world->distanceFilteringType = fRectangle;
+		world->inRangeRectangleWidth = inRangeRectangleWidth;
+		world->inRangeRectangleHeight = inRangeRectangleHeight;
 	} else {
 		fprintf(stderr, "World does not exist (setWorldFilterTypeRectangle)\n");
 	}
@@ -34,7 +36,8 @@ void setWorldFilterTypeRectangle(World* world, uint16 inRangeRectangleWidth, uin
 ///////////////////////////////////////////////////////
 void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius) {
 	if (world != NULL) {
-
+		world->distanceFilteringType = fProximity;
+		world->inRangeRadius = inRangeRadius;
 	} else {
 		fprintf(stderr, "World does not exist (setWorldFilterTypeCircle)\n");
 	}

@@ -1,10 +1,3 @@
-//////////////////////////////////////////////////////////
-// Defines the buffer struct
-//
-// Copyright (c) Paolo Mazzon
-// All rights reserved
-//////////////////////////////////////////////////////////
-
 #include "Buffer.h"
 #include <malloc.h>
 #include <stdio.h>
@@ -41,7 +34,7 @@ Buffer* loadBuffer(const char* filename) {
 	Buffer* returnBuffer = NULL;
 
 	// Make sure the file actually opened
-	if (ferror(bufferFile) == 0) {
+	if (bufferFile != NULL) {
 
 		// This just finds out how large the file is
 		while (!feof(bufferFile)) {
@@ -62,11 +55,11 @@ Buffer* loadBuffer(const char* filename) {
 			returnBuffer = NULL;
 			fprintf(stderr, "Failed to read buffer from file '%s'\n", filename);
 		}
+		fclose(bufferFile);
 	} else {
 		fprintf(stderr, "Failed to open file '%s'\n", filename);
 	}
 
-	fclose(bufferFile);
 	return returnBuffer;
 }
 ////////////////////////////////////////////////
