@@ -36,3 +36,10 @@ uint64 globalIDCounter;
 #define ENTITY_ENABLE_Z
 #define ENTITY_ENABLE_SPEED
 #define ENTITY_ENABLE_FRICTION
+
+// The names of INI headers for assets
+#define INI_SPRITE_PREFIX 's'
+#define INI_ENTITY_PREFIX 'e'
+#define INI_HITBOX_PREFIX 'h'
+#define INI_TEXTURE_PREFIX 't'
+#define INI_TILEMAP_PREFIX 'm'

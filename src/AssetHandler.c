@@ -3,7 +3,7 @@
 //
 
 #include "AssetHandler.h"
-#include "StringMap.h"
+#include "INI.h"
 #include <stdio.h>
 #include <dirent.h>
 
@@ -221,121 +221,12 @@ AssetHandler* createAssetHandler() {
 }
 ///////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////
 #define PHASE_GENERAL 0
 #define PHASE_SPRITES 1
 #define PHASE_ENTITIES 2
-
-///////////////////////////////////////////////////////////////
-// TODO: Investigate the problems in here
-void assetLoadDirectory(AssetHandler* assetHandler, Renderer* renderer, const char* directory) {
-	DIR *dir;
-	struct dirent* entCurrent;
-	char* tempString = (char*)calloc(1, 256);
-	char* fullFileName = (char*)calloc(1, 256 * 2);
-	char* extension = NULL;
-	int id = 0;
-	Asset* asset;
-	uint8 phase = PHASE_GENERAL;
-	SMap* file = NULL;
-
-	if (tempString != NULL && assetHandler != NULL && fullFileName != NULL) {
-		if ((dir = opendir(directory)) != NULL) {
-			/* There are multiple phases in loading assets because the order
-			 * in which we load them matters. This means we need to loop through
-			 * the directory multiple times to hit the right files at the right
-			 * time.
-			 */
-			while (phase < 3) {
-				// Here we will loop through the directory
-				while ((entCurrent = readdir(dir)) != NULL) {
-					/* The dirent's struct chooses to use an array of chars instead
-					 * of a classic C-string, and as such we need to convert it to
-					 * a C-string to use the built-in functions for extracting file
-					 * extension (as apposed to writing my own that works with char
-					 * arrays).
-					 */
-					memset((void *) fullFileName, 0, 256 * 2);
-					memset((void *) tempString, 0, 256);
-					memcpy(tempString, entCurrent->d_name, 256);
-					memcpy(fullFileName, directory, 256);
-					strcat(fullFileName, tempString);
-					extension = strrchr(tempString, (int) '.');
-
-					// Now we must check the file extension and act accordingly
-					if (strcmp(extension, ".sprite") == 0 || strcmp(extension, ".map") == 0 ||
-						strcmp(extension, ".texhashes") == 0 || strcmp(extension, ".hitbox") == 0 ||
-						strcmp(extension, ".entity") == 0) {
-						// We know that it is a file we want
-						file = loadSMap(fullFileName);
-
-						if (file != NULL) {
-							/* This is an interesting segment. We already know that the
-							 * file in question is open and it is an extension we want,
-							 * but we don't know if we're ready for a given asset or not
-							 * since we can't load entities before sprites and such.
-							 * Because of this, we have 3 phases: general, sprites, and
-							 * entities. Once we have everything except for sprites and
-							 * entities, we load sprites, then entities after that.
-							 */
-							if (strcmp(extension, ".sprite") == 0 && phase == PHASE_SPRITES) {
-								id = strtol(getSMapVal(file, "id", "0"), NULL, 10);
-								asset = (Asset *) malloc(sizeof(Asset));
-								if (asset != NULL) {
-									asset->type = sprAsset;
-									asset->spr = assetLoadSprite(assetHandler, file);
-									loadAssetIntoHandler(assetHandler, asset, id);
-								} else
-									fprintf(stderr, "Failed to create asset (assetLoadDirectory)\n");
-							} else if (strcmp(extension, ".map") == 0 && phase == PHASE_GENERAL) {
-								id = strtol(getSMapVal(file, "id", "0"), NULL, 10);
-								asset = (Asset *) malloc(sizeof(Asset));
-								if (asset != NULL) {
-									asset->type = tileAsset;
-									asset->tileMap = assetLoadTileMap(file);
-									loadAssetIntoHandler(assetHandler, asset, id);
-								} else
-									fprintf(stderr, "Failed to create asset (assetLoadDirectory)\n");
-							} else if (strcmp(extension, ".entity") == 0 && phase == PHASE_ENTITIES) {
-								id = strtol(getSMapVal(file, "id", "0"), NULL, 10);
-								asset = (Asset *) malloc(sizeof(Asset));
-								if (asset != NULL) {
-									asset->type = entAsset;
-									asset->entity = assetLoadEntity(assetHandler, file);
-									loadAssetIntoHandler(assetHandler, asset, id);
-								} else
-									fprintf(stderr, "Failed to create asset (assetLoadDirectory)\n");
-							} else if (strcmp(extension, ".hitbox") == 0 && phase == PHASE_GENERAL) {
-								id = strtol(getSMapVal(file, "id", "0"), NULL, 10);
-								asset = (Asset *) malloc(sizeof(Asset));
-								if (asset != NULL) {
-									asset->type = hitAsset;
-									asset->hitbox = assetLoadHitbox(file);
-									loadAssetIntoHandler(assetHandler, asset, id);
-								} else
-									fprintf(stderr, "Failed to create asset (assetLoadDirectory)\n");
-							} else if (strcmp(extension, ".texhashes") == 0 && phase == PHASE_GENERAL) {
-								assetLoadTexture(assetHandler, file, renderer);
-							}
-						} else {
-							fprintf(stderr, "Failed to load file %s (assetLoadDirectory)\n", tempString);
-						}
-					}
-				}
-				phase += 1;
-				rewinddir(dir);
-			}
-			closedir(dir);
-		} else {
-			fprintf(stderr, "Failed to open directory (assetLoadDirectory)\n");
-		}
-	} else {
-		if (assetHandler == NULL)
-			fprintf(stderr, "Asset handler does not exist(assetLoadDirectory: %s)", directory);
-		if (tempString == NULL)
-			fprintf(stderr, "Failed to create temporary string (assetLoadDirectory: %s)", directory);
-	}
-	free(tempString);
-	free(fullFileName);
+void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename) {
+	// TODO: This
 }
 ///////////////////////////////////////////////////////////////
 

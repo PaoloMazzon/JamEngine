@@ -67,13 +67,8 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id);
 
 /// \brief Loads all recognized assets from a directory
 ///
-/// This function is how you will load assets into the handler itself.
-/// If you have the assets separated into their own directories, you
-/// must make sure that you load them in the proper order as stated in
-/// the AssetHandler's documentation. The recognized file types are all
-/// made up for this engine and are .sprite, .entity, .map, .hitbox,
-/// and .texhashes.
-void assetLoadDirectory(AssetHandler* assetHandler, Renderer* renderer, const char* directory);
+/// Loads all assets from an INI file.
+void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename);
 
 /// \brief Makes sure the assets in given ranges match their proper type
 ///

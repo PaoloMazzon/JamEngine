@@ -17,22 +17,24 @@ Algorithm???: The world should be able to auto tile on the fly to
 a texture that is of a size less than the world kind of in a chunk
 system to only update and store in vram those on screen.
 
-Loading and Panning out of a Game
----------------------------------
-That's a lot of thinking I don't want to do right now.
+Asset Loading System
+--------------------
+The asset loader will load a single INI file at a time. This INI file is
+expected to follow a certain format; every asset should have its own header
+with a single-character prefix denoting the type, followed by an ID for the
+asset. For example, a sprite header would look something like `[s481]`. You
+could of course, also put a comment (with #) before every header to make it
+clear what the asset is too.
 
-SMAPS
------
-Their files look like the following
+By default, the prefixes are as follows:
+ + `e` for entities
+ + `s` for sprites
+ + `m` for tile maps
+ + `t` for textures
+ + `h` for hitboxes 
 
-    key=val
-    key=val
-    key=val
-
-Just INI files without headers
-
-Bits & Pieces To-do when I'm not feeling like a lazy prick
-----------------------------------------------------------
+Bits & Pieces To-Do
+-------------------
  - Gamepad input
  - Rewrite the window resizing function so it doesn't crash the game if it fails
 
