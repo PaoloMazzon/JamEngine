@@ -255,31 +255,41 @@ double atof(const char* string) {
 	int inputLength = strlen(string);
 	int decimalPosition = -1;
 	bool errorInString = false;
+	int negative = 0;
 
-	// Make sure there is a proper number here
-	for (i = 0; i < inputLength; i++) {
-		if ((string[i] > 57 || string[i] < 48) && string[i] != 46 && string[i] != 44)
-			errorInString = true;
-		else if ((string[i] == 46 || string[i] == 44) && decimalPosition != -1)
-			errorInString = true;
-		else if (string[i] == 46 || string[i] == 44)
-			decimalPosition = i;
-	}
+	if (inputLength > 0) {
+		// Account for negatives
+		if (string[0] == '-')
+			negative = 1;
 
-	// We continue if the string checks out
-	if (!errorInString) {
-		if (decimalPosition == -1)
-			decimalPosition = inputLength;
-
-		// Calculate everything before the decimal
-		for (i = 0; i < decimalPosition; i++) {
-			output += pow(10, (decimalPosition - 1) - i) * (string[i] - 48);
+		// Make sure there is a proper number here
+		for (i = negative; i < inputLength; i++) {
+			if ((string[i] > 57 || string[i] < 48) && string[i] != 46 && string[i] != 44)
+				errorInString = true;
+			else if ((string[i] == 46 || string[i] == 44) && decimalPosition != -1)
+				errorInString = true;
+			else if (string[i] == 46 || string[i] == 44)
+				decimalPosition = i;
 		}
 
-		// Now everything after the decimal
-		for (i = decimalPosition + 1; i < inputLength; i++) {
-			output += pow(10, decimalPosition - i) * (string[i] - 48);
+		// We continue if the string checks out
+		if (!errorInString) {
+			if (decimalPosition == -1)
+				decimalPosition = inputLength;
+
+			// Calculate everything before the decimal
+			for (i = negative; i < decimalPosition; i++) {
+				output += pow(10, (decimalPosition - 1) - i) * (string[i] - 48);
+			}
+
+			// Now everything after the decimal
+			for (i = decimalPosition + 1; i < inputLength; i++) {
+				output += pow(10, decimalPosition - i) * (string[i] - 48);
+			}
 		}
+
+		if (negative == 1)
+			output *= -1;
 	}
 
 	return output;
@@ -289,7 +299,30 @@ double atof(const char* string) {
 ///////////////////////////////////////////////////////////////
 char* ftoa(double input) {
 	int i;
-	int numberOfCharacters = ceil(log10(input));
+	int numberOfCharacters;
+	int negative = 0;
+	bool addedToDecimal = false;
+
+	if (input < 0) {
+		input = input * -1;
+		negative = 1;
+	}
+
+	// This algorithm doesn't like numbers in the range (0, 1) with no leading number
+	// in the ones or tenths place so this fixes it (along with replacing this with a
+	// 0 at the end of this function but before negatives are handled)
+	if (input < 1)  {
+		input += 5; // This 5 is completely arbitrary is just needs to be between 1 and 9
+		addedToDecimal = true;
+	}
+
+	// Calculate the special case for powers of 10 (1, 10, 100, 1000...)
+	if (input == pow(10, ceil(log10(input))))
+		numberOfCharacters = ceil(log10(input)) + 1;
+	else
+		numberOfCharacters = ceil(log10(input));
+
+	// Declare rest of variables
 	int numWithoutDecimals = numberOfCharacters;
 	double threshHold = 0.0000005;
 	double findDecimalPlaces = input;
@@ -305,9 +338,9 @@ char* ftoa(double input) {
 	
 	// Allocate the string - we may or may not need space for a decimal point
 	if (numWithoutDecimals < numberOfCharacters)
-		string = (char*)calloc(1, numberOfCharacters + 2);
+		string = (char*)calloc(1, numberOfCharacters + 2 + negative);
 	else
-		string = (char*)calloc(1, numberOfCharacters + 1);
+		string = (char*)calloc(1, numberOfCharacters + 1 + negative);
 
 	if (string != NULL) {
 		// First we deal with before the decimal
@@ -330,6 +363,18 @@ char* ftoa(double input) {
 				string[i] = floor(subtractFromInput) + 48;
 				input = (subtractFromInput) - floor(subtractFromInput);
 			}
+		}
+
+		// Just in case we threw something before a decimal, replace it with a zero
+		if (addedToDecimal)
+			string[0] = '0';
+
+		// Now that the string is assembled, if we're negative, we will now push
+		// everything 1 back and insert a negative sign
+		if (negative) {
+			for (i = strlen(string); i > 0; i--)
+				string[i] = string[i - 1];
+			string[0] = '-';
 		}
 	} else {
 		fprintf(stderr, "Failed to allocate string with decimal %f (ftoa)\n", input);
