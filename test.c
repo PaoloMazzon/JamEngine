@@ -11,7 +11,6 @@
 #include "File.h"
 #include <math.h>
 #include "AssetHandler.h"
-#include "StringMap.h"
 
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
@@ -20,7 +19,6 @@
 #define SCREEN_HEIGHT 720
 #define BLOCK_WIDTH 16
 #define BLOCK_HEIGHT 16
-#define LEVEL_1_NAME "level1.txt"
 
 // Takes a number and returns either -1, 1, or 0 depending on weather its positive negative or neither
 static inline int sign(double number) {
@@ -83,7 +81,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	TileMap *currentLevel = NULL;
 
 	// Load the assets them check them
-	assetLoadDirectory(handler, renderer, "assets/");
+	assetLoadINI(handler, renderer, "assets/level0.ini");
 	fflush(stderr);
 	if (assetAssertRanges(handler, 1000, 1999, 3000, 3999, 5000, 5999, 2000, 2999, 4000, 4999) && rtRoom != NULL) {
 		// Load assets from the handler

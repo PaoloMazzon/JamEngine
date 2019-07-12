@@ -30,8 +30,20 @@ By default, the prefixes are as follows:
  + `e` for entities
  + `s` for sprites
  + `m` for tile maps
- + `t` for textures
- + `h` for hitboxes 
+ + `h` for hitboxes
+
+Do note that textures are a special case. All textures should be denoted in
+the INI by the following format:
+
+    [texture_ids]
+    43=path/to/image.png
+    44=playersprite.png
+    45=monster.png
+    key=file
+    ...
+
+Where the key is id of the texture and file is the path to the texture in the
+disk. 
 
 Bits & Pieces To-Do
 -------------------
@@ -54,47 +66,48 @@ World
 TODO (/ before description means done)
 ====================================
  - Textures
-  - /Load textures
-  - /Create from scratch
+    + /Load textures
+    + /Create from scratch
  - Input System
-  - /Mouse input
-  - /Keyboard input
-  - Gamepad input
+    + /Mouse input
+    + /Keyboard input
+    + Gamepad input
  - Renderer
-  - Delta timing
-  - /Create window
-  - /Handle window scaling/fullscreen
-  - /Variable size screen buffer and render size
-  - /Main game loop
+    + Delta timing
+    + /Create window
+    + /Handle window scaling/fullscreen
+    + /Variable size screen buffer and render size
+    + /Main game loop
  - Drawing functions
-  - /Render textures
-  - Let the fill colour thing work with alpha values
-  - Draw shapes
-  - Fonts (This implies that the font struct contains practical things only)
+    + /Render textures
+    + Let the fill colour thing work with alpha values
+    + Draw shapes
+    + Fonts (This implies that the font struct contains practical things only)
  - Sprite
-  - /Handle animations
-  - /Frames
-  - /Sprite rendering functions
-  - /Load sprite sheet
+    + /Handle animations
+    + /Frames
+    + /Sprite rendering functions
+    + /Load sprite sheet
  - Hit-box
-  - /Circles
-  - /Rectangles
-  - Circle-to-rectangle (Algorithm is written down just don't want to type it out)
+    + /Circles
+    + /Rectangles
+    + Circle-to-rectangle (Algorithm is written down just don't want to type it out)
  - Entity
-  - /Position in world
-  - /Sprite
-  - /Hit-box
-  - /Speed/Friction
-  - /Built-in processors
+    + /Position in world
+    + /Sprite
+    + /Hit-box
+    + /Speed/Friction
+    + /Built-in processors
  - Tile Maps
-  - /Store grid in memory
-  - /Check collisions with entities
+    + /Store grid in memory
+    + /Check collisions with entities
  - Fonts
-  - /Bitmap fonts
-  - /Unicode bitmap fonts
-  - /TTF fonts
+    + /Bitmap fonts
+    + /Unicode bitmap fonts
+    + /Pseudo-printf-formatting (it accepts `%s` (string), `%c` (character), and `%f` (double))
+    + TTF fonts
  - Draw Queues/Events for multi-threading
-  - Queue management
+    + Queue management
  - Entity Lists - Important for handling lots of things
  - Particle System - Very notable addition
  - Worlds - Great feature yet not needed
