@@ -131,8 +131,25 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 
 		// Phase 1: Sprites
 		for (i = 0; i < ini->numberOfHeaders; i++) {
-			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
-
+			if (strlen(ini->headerNames[i]) > 0) {
+				if (ini->headerNames[i][0] == INI_SPRITE_PREFIX) {
+					loadAssetIntoHandler(
+							assetHandler,
+							createAsset(loadSpriteFromSheet(
+									assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "texture_id", "0")))->tex,
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "animation_length", "1")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "x_in_texture", "0")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "y_in_texture", "0")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "frame_width", "16")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "frame_height", "16")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "padding_width", "0")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "padding_height", "0")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "x_align", "0")),
+									(uint16)atof(getKeyINI(ini, ini->headerNames[i], "frame_delay", "0")),
+									(bool)atof(getKeyINI(ini, ini->headerNames[i], "looping", "0"))), sprAsset),
+							(int)atof(ini->headerNames[i] + 1)
+					);
+				}
 			}
 		}
 
