@@ -41,5 +41,4 @@ uint64 globalIDCounter;
 #define INI_SPRITE_PREFIX 's'
 #define INI_ENTITY_PREFIX 'e'
 #define INI_HITBOX_PREFIX 'h'
-#define INI_TEXTURE_PREFIX 't'
 #define INI_TILEMAP_PREFIX 'm'

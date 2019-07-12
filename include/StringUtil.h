@@ -3,10 +3,10 @@
 /// Some incredibly useful string stuff
 #pragma once
 
-#define END_OF_STRING -1
-#define LAST_OCCURRENCE -1
+#define END_OF_STRING (-1)
+#define LAST_OCCURRENCE (-1)
 #define FIRST_OCCURRENCE 1
-#define STRING_NOT_FOUND -1
+#define STRING_NOT_FOUND (-1)
 #define DEFAULT_ALLOC_AMOUNT 10
 
 /// \brief Makes it easier to work with strings

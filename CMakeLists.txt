@@ -7,7 +7,7 @@ set(CMAKE_C_STANDARD 11)
 
 # Stuff relative to the project
 set(OUTPUT_LIB 0)
-set(FILES_USED src/File.c src/AssetHandler.c include/AssetHandler.h include/File.h include/Sprite.h include/Hitbox.h src/Sprite.c src/Hitbox.c src/Renderer.c include/Renderer.h include/Constants.h include/Texture.h src/Texture.c src/Input.c include/Input.h src/Drawing.c include/Drawing.h src/Clock.c include/Clock.h src/Frame.c include/Frame.h src/Vector.c include/Vector.h src/Entity.c include/Entity.h src/TileMap.c include/TileMap.h src/Font.c include/Font.h src/Buffer.c include/Buffer.h src/World.c include/World.h include/DrawEvents.h src/DrawEvents.c include/EntityList.h src/EntityList.c include/StringUtil.h src/StringUtil.c)
+set(FILES_USED src/File.c src/AssetHandler.c include/AssetHandler.h include/File.h include/Sprite.h include/Hitbox.h src/Sprite.c src/Hitbox.c src/Renderer.c include/Renderer.h include/Constants.h include/Texture.h src/Texture.c src/Input.c include/Input.h src/Drawing.c include/Drawing.h src/Clock.c include/Clock.h src/Frame.c include/Frame.h src/Vector.c include/Vector.h src/Entity.c include/Entity.h src/TileMap.c include/TileMap.h src/Font.c include/Font.h src/Buffer.c include/Buffer.h src/World.c include/World.h include/DrawEvents.h src/DrawEvents.c include/EntityList.h src/EntityList.c include/StringUtil.h src/StringUtil.c src/File.c src/Clock.c src/Buffer.c src/INI.c src/StringUtil.c src/StringMap.c include/StringMap.h include/File.h include/Clock.h include/Buffer.h include/StringUtil.h include/INI.h)
 
 # This is entirely so CLion will stop complaining
 if (WIN32)

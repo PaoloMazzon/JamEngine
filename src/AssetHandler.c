@@ -6,6 +6,10 @@
 #include "INI.h"
 #include <stdio.h>
 #include <dirent.h>
+#include <INI.h>
+#include <StringMap.h>
+#include <AssetHandler.h>
+#include <StringUtil.h>
 
 ///////////////////////////////////////////////////////////////
 void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id) {
@@ -63,7 +67,31 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id) {
 }
 ///////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////
+Asset* createAsset(void* pointer, enum AssetType type) {
+	Asset* asset = (Asset*)malloc(sizeof(Asset));
 
+	if (asset != NULL && pointer != NULL) {
+		asset->type = type;
+
+		if (type == texAsset)
+			asset->tex = pointer;
+		if (type == sprAsset)
+			asset->spr = pointer;
+		if (type == hitAsset)
+			asset->hitbox = pointer;
+		if (type == entAsset)
+			asset->entity = pointer;
+		if (type == tileAsset)
+			asset->tileMap = pointer;
+	} else {
+		if (asset == NULL)
+			fprintf(stderr, "Failed to create asset (createAsset)\n");
+		if (pointer == NULL)
+			fprintf(stderr, "Pointer does not exist (createAsset)\n");
+	}
+}
+///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
 AssetHandler* createAssetHandler() {
@@ -79,12 +107,49 @@ AssetHandler* createAssetHandler() {
 }
 ///////////////////////////////////////////////////////////////
 
+/*#define INI_SPRITE_PREFIX 's'
+#define INI_ENTITY_PREFIX 'e'
+#define INI_HITBOX_PREFIX 'h'
+#define INI_TILEMAP_PREFIX 'm'*/
 ///////////////////////////////////////////////////////////////
-#define PHASE_GENERAL 0
-#define PHASE_SPRITES 1
-#define PHASE_ENTITIES 2
 void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename) {
-	// TODO: This
+	INI* ini = loadINI(filename);
+	uint32 i, j;
+
+	if (assetHandler != NULL && renderer != NULL && ini != NULL) {
+		// Load the texture ids first
+		for (i = 0; i < ini->numberOfHeaders; i++) {
+			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
+				for (j = 0; j < ini->headers[i]->size; j++)
+					loadAssetIntoHandler(
+							assetHandler,
+							createAsset(loadTexture(renderer, ini->headers[i]->vals[j]), texAsset),
+							(int)atof(ini->headers[i]->keys[j])
+					);
+			}
+		}
+
+		// Phase 1: Sprites
+		for (i = 0; i < ini->numberOfHeaders; i++) {
+			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
+
+			}
+		}
+
+		// Phase 2: Everything else
+		for (i = 0; i < ini->numberOfHeaders; i++) {
+			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
+
+			}
+		}
+	} else {
+		if (assetHandler == NULL)
+			fprintf(stderr, "Asset loader does not exist for file %s (assetLoadINI)\n", filename);
+		if (renderer == NULL)
+			fprintf(stderr, "Renderer does not exist for file %s (assetLoadINI)\n", filename);
+		if (ini == NULL)
+			fprintf(stderr, "Failed to load INI for file %s (assetLoadINI)\n", filename);
+	}
 }
 ///////////////////////////////////////////////////////////////
 

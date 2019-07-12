@@ -27,6 +27,7 @@ could of course, also put a comment (with #) before every header to make it
 clear what the asset is too.
 
 By default, the prefixes are as follows:
+
  + `e` for entities
  + `s` for sprites
  + `m` for tile maps
