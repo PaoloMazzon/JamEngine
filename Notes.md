@@ -64,8 +64,16 @@ World
  - Tile maps
  - Function that runs on creation, frame updates, and destruction
 
-TODO (/ before description means done)
-====================================
+Problems
+========
+
+ - I think there is a potential memory leak in loadAssetIntoHandler where if you pass
+ something with the same id it will do nothing and create a memory leak with anything
+ passed into it.
+
+TODO List (/ before description means done)
+===========================================
+
  - Textures
     + /Load textures
     + /Create from scratch

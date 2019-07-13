@@ -1,6 +1,6 @@
-/// \page StringUtil.h
+/// \file StringUtil.h
 /// \author plo, of course
-/// Some incredibly useful string stuff
+/// \brief Some incredibly useful string stuff
 #pragma once
 
 #define END_OF_STRING (-1)

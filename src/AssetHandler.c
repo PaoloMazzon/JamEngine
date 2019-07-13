@@ -156,7 +156,32 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 		// Phase 2: Everything else
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
-
+				if (ini->headerNames[i][0] == INI_HITBOX_PREFIX) {
+					hitboxType hType = hitRectangle;
+					if (getKeyINI(ini, ini->headerNames[i], "type", "rectangle") == "circle") hType = hitCircle;
+					loadAssetIntoHandler(
+							assetHandler,
+							createAsset(createHitbox(
+									hType,
+									atof(getKeyINI(ini, ini->headerNames[i], "radius", "0")),
+									atof(getKeyINI(ini, ini->headerNames[i], "width", "0")),
+									atof(getKeyINI(ini, ini->headerNames[i], "height", "0"))
+							), hitAsset),
+							(int)atof(ini->headerNames[i] + 1)
+					);
+				} else if (ini->headerNames[i][0] == INI_TILEMAP_PREFIX) {
+					loadAssetIntoHandler( // TODO: This
+							assetHandler,
+							createAsset(0, tileAsset),
+							(int)atof(ini->headerNames[i] + 1)
+					);
+				} else if (ini->headerNames[i][0] == INI_ENTITY_PREFIX) {
+					loadAssetIntoHandler( // TODO: This
+							assetHandler,
+							createAsset(0, entAsset),
+							(int)atof(ini->headerNames[i] + 1)
+					);
+				}
 			}
 		}
 	} else {
