@@ -172,13 +172,24 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 				} else if (ini->headerNames[i][0] == INI_TILEMAP_PREFIX) {
 					loadAssetIntoHandler( // TODO: This
 							assetHandler,
-							createAsset(0, tileAsset),
+							createAsset(loadTileMap(
+									getKeyINI(ini, ini->headerNames[i], "file", ""),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "grid_width", "0")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "grid_height", "0")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "cell_width", "0")),
+									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "cell_height", "0"))), tileAsset),
 							(int)atof(ini->headerNames[i] + 1)
 					);
 				} else if (ini->headerNames[i][0] == INI_ENTITY_PREFIX) {
 					loadAssetIntoHandler( // TODO: This
 							assetHandler,
-							createAsset(0, entAsset),
+							createAsset(createEntity(
+									assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "sprite_id", "0")))->spr,
+									assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "hitbox_id", "0")))->hitbox,
+									(int)atof(getKeyINI(ini, ini->headerNames[i], "x", "0")),
+									(int)atof(getKeyINI(ini, ini->headerNames[i], "y", "0")),
+									(int)atof(getKeyINI(ini, ini->headerNames[i], "id", "0"))
+							), entAsset),
 							(int)atof(ini->headerNames[i] + 1)
 					);
 				}
