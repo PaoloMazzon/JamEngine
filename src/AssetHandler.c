@@ -133,7 +133,8 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strlen(ini->headerNames[i]) > 0) {
 				if (ini->headerNames[i][0] == INI_SPRITE_PREFIX) {
-					loadAssetIntoHandler(
+					if (assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "texture_id", "0"))) != NULL)
+						loadAssetIntoHandler(
 							assetHandler,
 							createAsset(loadSpriteFromSheet(
 									assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "texture_id", "0")))->tex,
@@ -148,7 +149,9 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 									(uint16)atof(getKeyINI(ini, ini->headerNames[i], "frame_delay", "0")),
 									(bool)atof(getKeyINI(ini, ini->headerNames[i], "looping", "0"))), sprAsset),
 							(int)atof(ini->headerNames[i] + 1)
-					);
+						);
+					else
+						fprintf(stderr, "Failed to load entity of id %s (assetLoadINI)\\n", ini->headerNames[i] + 1);
 				} else if (ini->headerNames[i][0] == INI_HITBOX_PREFIX) {
 					hitboxType hType = hitRectangle;
 					if (getKeyINI(ini, ini->headerNames[i], "type", "rectangle") == "circle") hType = hitCircle;
@@ -181,9 +184,10 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 							(int)atof(ini->headerNames[i] + 1)
 					);
 				} else if (ini->headerNames[i][0] == INI_ENTITY_PREFIX) {
-					printf("sid: %s\nhid: %s\nx: %s\ny: %s\nid: %s\n", getKeyINI(ini, ini->headerNames[i], "sprite_id", "0"), getKeyINI(ini, ini->headerNames[i], "hitbox_id", "0"), getKeyINI(ini, ini->headerNames[i], "x", "0"), getKeyINI(ini, ini->headerNames[i], "y", "0"), getKeyINI(ini, ini->headerNames[i], "id", "0"));
-					fflush(stdout);
-					loadAssetIntoHandler(
+					// Make sure we have all necessary assets
+					if (assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "sprite_id", "0"))) != NULL
+					 && assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "hitbox_id", "0"))) != NULL)
+						loadAssetIntoHandler(
 							assetHandler,
 							createAsset(createEntity(
 									assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "sprite_id", "0")))->spr,
@@ -193,7 +197,9 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 									(int)atof(getKeyINI(ini, ini->headerNames[i], "id", "0"))
 							), entAsset),
 							(int)atof(ini->headerNames[i] + 1)
-					);
+						);
+					else
+						fprintf(stderr, "Failed to load entity of id %s (assetLoadINI)\n", ini->headerNames[i] + 1);
 				}
 			}
 		}

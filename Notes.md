@@ -44,7 +44,8 @@ the INI by the following format:
     ...
 
 Where the key is id of the texture and file is the path to the texture in the
-disk. 
+disk. *NOTE:* Do not use 0 as an ID as the loader needs that specific ID for
+error checking.
 
 Bits & Pieces To-Do
 -------------------

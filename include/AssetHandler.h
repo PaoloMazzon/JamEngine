@@ -67,7 +67,8 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id);
 
 /// \brief Loads all recognized assets from a directory
 ///
-/// Loads all assets from an INI file.
+/// Loads all assets from an INI file. Note that you should never use 0
+/// as an ID for an asset or the loader may not load everything correctly.
 void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename);
 
 /// \brief Makes sure the assets in given ranges match their proper type
