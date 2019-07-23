@@ -318,9 +318,9 @@ char* ftoa(double input) {
 
 	// Calculate the special case for powers of 10 (1, 10, 100, 1000...)
 	if (input == pow(10, ceil(log10(input))))
-		numberOfCharacters = ceil(log10(input)) + 1;
+		numberOfCharacters = (int)ceil(log10(input)) + 1;
 	else
-		numberOfCharacters = ceil(log10(input));
+		numberOfCharacters = (int)ceil(log10(input));
 
 	// Declare rest of variables
 	int numWithoutDecimals = numberOfCharacters;

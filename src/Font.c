@@ -321,7 +321,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 						unichar = (uint32)va_arg(params, int);
 						renderCurrentChar = true;
 					} else if (unichar == 'f') { // Double
-						currentBuffer = ftoa(va_arg(params, int));
+						currentBuffer = ftoa(va_arg(params, double));
 						if (currentBuffer != NULL) {
 							currentIterator = &j;
 							j = -1;
