@@ -5,6 +5,7 @@
 
 #include "Sprite.h"
 #include <stdio.h>
+#include <Sprite.h>
 #include "Frame.h"
 #include "Renderer.h"
 #include "Drawing.h"
@@ -238,6 +239,9 @@ void freeSprite(Sprite* sprite, bool freeFrames, bool freeTextures) {
 			for (i = 0; i < sprite->animationLength; i++)
 				freeFrame(sprite->frames[i], freeTextures);
 		}
+		// Either way the frames list has to go
+		free(sprite->frames);
+
 		free(sprite);
 	}
 }

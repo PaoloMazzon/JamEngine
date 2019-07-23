@@ -300,6 +300,7 @@ AssetHandler* freeAssetHandler(AssetHandler* handler) {
 		}
 		free(handler->vals);
 		free(handler->ids);
+		free(handler);
 	}
 }
 ///////////////////////////////////////////////////////////////

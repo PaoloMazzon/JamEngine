@@ -21,7 +21,8 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 	// Check if we were given a dud
 	if (renderer != NULL) {
 
-		// Essentially boot up SDL
+		// Ignore any complaints valgrind gives about this, its out
+		// of my control
 		SDL_Init(SDL_INIT_EVERYTHING);
 
 		// Make the window centered on the screen, and as an OpenGL window
