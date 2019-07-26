@@ -46,6 +46,9 @@ typedef struct {
 /// \brief Creates/initializes an entity class
 Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, int id);
 
+/// \brief Makes a 1:1 copy of an entity and returns the new copy
+Entity* copyEntity(Entity* baseEntity);
+
 /// \brief Draws an entity
 void drawEntity(Renderer* renderer, Entity* entity);
 

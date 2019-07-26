@@ -17,14 +17,15 @@ typedef signed short sint16;
 typedef signed int sint32;
 typedef signed long long sint64;
 
-// Entity things
+// World things
 #define ENTITY_LIST_ALLOCATION_AMOUNT 5
 #define ENTITIES_IN_RANGE 1
 #define ENTITIES_OUT_OF_RANGE 0
-#define MAX_ENTITY_TYPES 5
+#define MAX_ENTITY_TYPES 6
+#define MAX_TILEMAPS 5
 
 ///< \brief Contains every type of thing an entity can be
-typedef enum {logic = 0, solid = 1, npc = 2, object = 3, item = 4} EntityType;
+typedef enum {logic = 0, solid = 1, npc = 2, object = 3, item = 4, player = 5} EntityType;
 
 /// \brief Used exclusive in worlds, sets up how to filter entities
 typedef enum {fRectangle, fProximity} FilterType;

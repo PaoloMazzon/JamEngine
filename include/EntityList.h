@@ -64,4 +64,9 @@ void shrinkEntityList(EntityList* list);
 void emptyEntityList(EntityList* list, bool destroyEntities);
 
 /// \brief Destroys an entity list
+///
+/// \param list The entity list to free
+/// \param destroyEntities Weather or not to also free the entities
+///
+/// destroyEntities does not free any of the entities' sprites/hitboxes/whatever.
 void freeEntityList(EntityList* list, bool destroyEntities);
