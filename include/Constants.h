@@ -25,7 +25,9 @@ typedef signed long long sint64;
 #define MAX_TILEMAPS 5
 
 ///< \brief Contains every type of thing an entity can be
-typedef enum {logic = 0, solid = 1, npc = 2, object = 3, item = 4, player = 5} EntityType;
+///
+/// Don't use none in an actual entity, its to denote the lack thereof
+typedef enum {none = -1, logic = 0, solid = 1, npc = 2, object = 3, item = 4, player = 5} EntityType;
 
 /// \brief Used exclusive in worlds, sets up how to filter entities
 typedef enum {fRectangle, fProximity} FilterType;

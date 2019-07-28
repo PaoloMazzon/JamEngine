@@ -6,6 +6,8 @@
 #include <malloc.h>
 #include <World.h>
 #include <Entity.h>
+#include <Vector.h>
+#include <EntityList.h>
 
 ///////////////////////////////////////////////////////
 World* createWorld() {
@@ -77,8 +79,31 @@ void worldAddEntity(World* world, Entity* entity) {
 
 ///////////////////////////////////////////////////////
 void worldRemoveEntity(World* world, uint64 entityID) {
-	if (world != NULL) {
+	int i;
+	EntityType type = none;
 
+	if (world != NULL) {
+		// First find it in the master list
+		for (i = 0; i < world->worldEntities->size; i++) {
+			if (world->worldEntities->entities[i] != NULL && world->worldEntities->entities[i]->entityID == entityID) {
+				type = world->worldEntities->entities[i]->type;
+				freeEntity(world->worldEntities->entities[i], false, false, false);
+				world->worldEntities->entities[i] = NULL;
+			}
+		}
+
+		// Clear it from the other lists if it actually exists
+		if (type != none) {
+			for (i = 0; i < world->entityTypes[type]->size; i++)
+				if (world->entityTypes[type]->entities[i] != NULL && world->entityTypes[type]->entities[i]->entityID == entityID)
+					world->entityTypes[type]->entities[i] = NULL;
+			for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++)
+				if (world->entityByRange[ENTITIES_IN_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_IN_RANGE]->entities[i]->entityID == entityID)
+					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == NULL;
+			for (i = 0; i < world->entityByRange[ENTITIES_OUT_OF_RANGE]->size; i++)
+				if (world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i]->entityID == entityID)
+					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] == NULL;
+		}
 	} else {
 		fprintf(stderr, "World does not exist (worldRemoveEntity)\n");
 	}
@@ -86,9 +111,19 @@ void worldRemoveEntity(World* world, uint64 entityID) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
+void worldRotateEntity(World* world, uint64 entityID) {
+	if (world != NULL) {
+		// TODO: This
+	} else {
+		fprintf(stderr, "World does not exist (worldRotateEntity)\n");
+	}
+}
+///////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////
 void filterEntitiesByProximity(World* world, int pointX, int pointY) {
 	if (world != NULL) {
-
+		// TODO: This
 	} else {
 		fprintf(stderr, "World does not exist (filterEntitiesByProximity)\n");
 	}

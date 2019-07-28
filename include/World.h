@@ -83,7 +83,22 @@ void worldAddEntity(World* world, Entity* entity);
 /// \brief Adds a tilemap to the world
 void worldAddTileMap(World* world, TileMap* tileMap);
 
+/// \brief Moves an entity from in range to out of range
+///
+/// This may seem useless since there is already a function that
+/// does this automatically, but this can be useful if you have
+/// a bunch of entities that need to be removed all the time and
+/// you'd rather just stop processing the entity and just clean it
+/// up later.
+void worldRotateEntity(World* world, uint64 entityID);
+
 /// \brief Removes an entity from the world
+///
+/// This function does indeed destroy the entity it removes
+///
+/// \warning This function is somewhat heavy due to the fact that
+/// it will loop over at least 3 different entity lists trying to
+/// find all references to the specific entity
 void worldRemoveEntity(World* world, uint64 entityID);
 
 /// \brief Sorts a world's entities into lists filtered by distance
