@@ -8,12 +8,13 @@
 #include <Entity.h>
 #include <Vector.h>
 #include <EntityList.h>
+#include <Sprite.h>
 
 ///////////////////////////////////////////////////////
 World* createWorld() {
 	World* world = (World*)calloc(1, sizeof(World));
 	int i;
-	bool error;
+	bool error = false;
 
 	if (world != NULL) {
 		// We now need to initialize the 8 or so entity lists that come with a world
@@ -78,14 +79,14 @@ void worldAddEntity(World* world, Entity* entity) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldRemoveEntity(World* world, uint64 entityID) {
+void worldRemoveEntity(World* world, Entity* entity) {
 	int i;
 	EntityType type = none;
 
 	if (world != NULL) {
 		// First find it in the master list
 		for (i = 0; i < world->worldEntities->size; i++) {
-			if (world->worldEntities->entities[i] != NULL && world->worldEntities->entities[i]->entityID == entityID) {
+			if (world->worldEntities->entities[i] != NULL && world->worldEntities->entities[i] == entity) {
 				type = world->worldEntities->entities[i]->type;
 				freeEntity(world->worldEntities->entities[i], false, false, false);
 				world->worldEntities->entities[i] = NULL;
@@ -95,13 +96,13 @@ void worldRemoveEntity(World* world, uint64 entityID) {
 		// Clear it from the other lists if it actually exists
 		if (type != none) {
 			for (i = 0; i < world->entityTypes[type]->size; i++)
-				if (world->entityTypes[type]->entities[i] != NULL && world->entityTypes[type]->entities[i]->entityID == entityID)
+				if (world->entityTypes[type]->entities[i] != NULL && world->entityTypes[type]->entities[i] == entity)
 					world->entityTypes[type]->entities[i] = NULL;
 			for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++)
-				if (world->entityByRange[ENTITIES_IN_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_IN_RANGE]->entities[i]->entityID == entityID)
+				if (world->entityByRange[ENTITIES_IN_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == entity)
 					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == NULL;
 			for (i = 0; i < world->entityByRange[ENTITIES_OUT_OF_RANGE]->size; i++)
-				if (world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i]->entityID == entityID)
+				if (world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] == entity)
 					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] == NULL;
 		}
 	} else {
@@ -111,9 +112,20 @@ void worldRemoveEntity(World* world, uint64 entityID) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldRotateEntity(World* world, uint64 entityID) {
+void worldRotateEntity(World* world, Entity* entity) {
+	int i = 0;
+	bool found = false;
+
 	if (world != NULL) {
-		// TODO: This
+		// Find the entity in the in range list, if it's not there we don't need to do anything
+		while (i < world->entityByRange[ENTITIES_IN_RANGE]->size && !found) {
+			if (world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == entity) {
+				world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
+				addEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
+				found = true;
+			}
+			i++;
+		}
 	} else {
 		fprintf(stderr, "World does not exist (worldRotateEntity)\n");
 	}
@@ -122,8 +134,53 @@ void worldRotateEntity(World* world, uint64 entityID) {
 
 ///////////////////////////////////////////////////////
 void filterEntitiesByProximity(World* world, int pointX, int pointY) {
+	uint32 i;
+	Entity* entity;
+
 	if (world != NULL) {
-		// TODO: This
+		// Essentially the same code for the two different types of ranges b/c
+		// it is cheaper than running the same if statement every iteration
+		if (world->distanceFilteringType == fRectangle) {
+			// Situation 1: It was in range but now is not
+			for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++) {
+				entity = world->entityByRange[ENTITIES_IN_RANGE]->entities[i];
+				if (entity != NULL && !pointInRectangle(entity->x + entity->sprite->originX, entity->y + entity->sprite->originY,
+														pointX, pointY, world->inRangeRectangleWidth, world->inRangeRectangleHeight)) {
+					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
+					addEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
+				}
+			}
+
+			// Situation 2: It was out of range but now its in range
+			for (i = 0; i < world->entityByRange[ENTITIES_OUT_OF_RANGE]->size; i++) {
+				entity = world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i];
+				if (entity != NULL && pointInRectangle(entity->x + entity->sprite->originX, entity->y + entity->sprite->originY,
+														pointX, pointY, world->inRangeRectangleWidth, world->inRangeRectangleHeight)) {
+					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] = NULL;
+					addEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
+				}
+			}
+		} else {
+			// Situation 1: It was in range but now is not
+			for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++) {
+				entity = world->entityByRange[ENTITIES_IN_RANGE]->entities[i];
+				if (entity != NULL && !pointInCircle(entity->x + entity->sprite->originX, entity->y + entity->sprite->originY,
+														pointX, pointY, world->inRangeRadius)) {
+					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
+					addEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
+				}
+			}
+
+			// Situation 2: It was out of range but now its in range
+			for (i = 0; i < world->entityByRange[ENTITIES_OUT_OF_RANGE]->size; i++) {
+				entity = world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i];
+				if (entity != NULL && pointInCircle(entity->x + entity->sprite->originX, entity->y + entity->sprite->originY,
+													   pointX, pointY, world->inRangeRadius)) {
+					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] = NULL;
+					addEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
+				}
+			}
+		}
 	} else {
 		fprintf(stderr, "World does not exist (filterEntitiesByProximity)\n");
 	}

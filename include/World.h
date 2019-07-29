@@ -46,6 +46,10 @@
 /// loads entities from files, you make copies of the asset handler's entities
 /// and give them to world to play with, world frees all of the copies,
 /// AssetHandler frees all of the base entities and its other resources.
+///
+/// \warning Never change a value in this struct yourself, always use the
+/// funtions for it or you will very quickly be looking at lots of memory
+/// leaks.
 typedef struct {
 	// Core data
 	TileMap* worldMaps[MAX_TILEMAPS]; ///< This is the struct that represents the collisions in this world
@@ -89,8 +93,8 @@ void worldAddTileMap(World* world, TileMap* tileMap);
 /// does this automatically, but this can be useful if you have
 /// a bunch of entities that need to be removed all the time and
 /// you'd rather just stop processing the entity and just clean it
-/// up later.
-void worldRotateEntity(World* world, uint64 entityID);
+/// up later. This function does nothing if the entity is not in range.
+void worldRotateEntity(World* world, Entity* entity);
 
 /// \brief Removes an entity from the world
 ///
@@ -99,7 +103,7 @@ void worldRotateEntity(World* world, uint64 entityID);
 /// \warning This function is somewhat heavy due to the fact that
 /// it will loop over at least 3 different entity lists trying to
 /// find all references to the specific entity
-void worldRemoveEntity(World* world, uint64 entityID);
+void worldRemoveEntity(World* world, Entity* entity);
 
 /// \brief Sorts a world's entities into lists filtered by distance
 /// \warning This function is very heavy on the CPU

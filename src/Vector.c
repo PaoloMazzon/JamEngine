@@ -22,3 +22,9 @@ bool pointInRectangle(double px, double py, double rx, double ry, double rw, dou
 	return (px >= rx && px <= rx + rw && py >= ry && py <= ry + rh);
 }
 //////////////////////////////////////////////////
+
+//////////////////////////////////////////////////
+bool pointInCircle(double px, double py, double cx, double cy, double radius) {
+	return pointDistance(px, py, cx, cy) <= radius;
+}
+//////////////////////////////////////////////////

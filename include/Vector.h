@@ -13,3 +13,6 @@ double pointAngle(double x1, double y1, double x2, double y2);
 
 /// \brief Checks if a point is inside a rectangle
 bool pointInRectangle(double px, double py, double rx, double ry, double rw, double rh);
+
+/// \brief Checks if a point is in a circle
+bool pointInCircle(double px, double py, double cx, double cy, double radius);
