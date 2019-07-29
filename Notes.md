@@ -1,7 +1,7 @@
 LJE (Light Jam Engine) uses SDL2
 ================================
 
-IMPORTANT INFO
+Important Info
 --------------
 The struct definition for the Textures is held in the renderer
 to avoid circular references, while the functions for textures
@@ -11,11 +11,17 @@ This engine does not define any sort of audio functionality
 because it would just be a very simple wrapper of SDL's
 mixer. This is not needed because implementing SDL_mixer
 audio is already extremely simple and would rather inefficient
-to wrap every function.
+to wrap every function. This may change in the future if I
+decide to have the `AssetLoader` also handle audio but thats
+a bit far off in the future.
 
-Algorithm???: The world should be able to auto tile on the fly to
-a texture that is of a size less than the world kind of in a chunk
-system to only update and store in vram those on screen.
+Collision grids and tile maps are the same thing in this engine,
+and an easy way to make use of this is to have a background
+tile map for background/foilage/whatever and a foreground tile
+map for trees/walls/rocks that is also what is used for collisons.
+Just keep in mind that most of the time it is much cheaper to
+have multiple tile maps over using entities as individual bits of
+walls.
 
 Asset Loading System
 --------------------
@@ -47,30 +53,24 @@ Where the key is id of the texture and file is the path to the texture in the
 disk. *NOTE:* Do not use 0 as an ID as the loader needs that specific ID for
 error checking.
 
-Bits & Pieces To-Do
--------------------
+Major To-Do List
+----------------
  - Gamepad input
  - Rewrite the window resizing function so it doesn't crash the game if it fails
+ - There is a potential memory leak in loadAssetIntoHandler where if you pass
+  something with the same ID it will do nothing and create a memory leak with anything
+  passed into it.
+ - Make individual `load*` functions for asset handler that checks and makes sure the types
+  match up (instead of doing this manually every time)
+ - Load this into Windows and make sure everything works okay on MinGW or MSVC or whatever
+ - Make a better error-checking system (in addition to `stderr`) that will likely be a global
+  variable, a couple error setting/getting functions, and a bunch of error constants
 
 Possible future additions
 -------------------------
  - SAT Collisions
  - Vector images
  - Tweening
-
-World
- - Entity list of major entities
- - List of entity lists for things like NPCs and walls
- - Collision grids
- - Tile maps
- - Function that runs on creation, frame updates, and destruction
-
-Problems
-========
-
- - I think there is a potential memory leak in loadAssetIntoHandler where if you pass
- something with the same id it will do nothing and create a memory leak with anything
- passed into it.
 
 TODO List (/ before description means done)
 ===========================================
