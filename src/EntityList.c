@@ -3,6 +3,7 @@
 //
 
 #include "EntityList.h"
+#include "JamError.h"
 
 ///////////////////////////////////////////////////////////////
 EntityList* createEntityList() {
@@ -10,6 +11,7 @@ EntityList* createEntityList() {
 
 	if (list == NULL) {
 		fprintf(stderr, "Failed to allocate entity list (createEntityList)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	return list;
@@ -45,10 +47,12 @@ void addEntityToList(EntityList* list, Entity* entity) {
 				list->size++;
 				list->capacity += ENTITY_LIST_ALLOCATION_AMOUNT;
 			} else {
+				jSetError(ERROR_REALLOC_FAILED);
 				fprintf(stderr, "Could not reallocate entity list to accommodate for new entity (addEntityToList)\n");
 			}
 		}
 	} else {
+		jSetError(ERROR_NULL_POINTER);
 		fprintf(stderr, "List does not exist (addEntityToList)\n");
 	}
 }
@@ -85,6 +89,7 @@ Entity* findEntityInList(EntityList* list, int entityID) {
 			i++;
 		}
 	} else {
+		jSetError(ERROR_NULL_POINTER);
 		fprintf(stderr, "List does not exist (findEntityInList)\n");
 	}
 
@@ -137,8 +142,10 @@ void shrinkEntityList(EntityList* list) {
 			list->capacity = (uint32)posInList;
 		} else {
 			fprintf(stderr, "Failed to reallocate entity list (shrinkEntityList)\n");
+			jSetError(ERROR_REALLOC_FAILED);
 		}
 	} else {
+		jSetError(ERROR_NULL_POINTER);
 		fprintf(stderr, "List does not exist (shrinkEntityList)\n");
 	}
 }
@@ -158,6 +165,7 @@ void emptyEntityList(EntityList* list, bool destroyEntities) {
 		list->capacity = 0;
 	} else {
 		fprintf(stderr, "List does not exist (emptyEntityList)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////////////

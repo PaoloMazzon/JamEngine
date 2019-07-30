@@ -14,6 +14,7 @@ typedef struct {
 
 /// \brief Creates a string list
 /// \return Returns the new list or NULL
+/// \throws ERROR_ALLOC_FAILED
 StringList* createStringList();
 
 /// \brief Reads a file line-by-line into a string list
@@ -21,6 +22,8 @@ StringList* createStringList();
 /// \return Returns a new list or NULL
 /// 
 /// This does not include newline characters
+/// \throws ERROR_ALLOC_FAILED
+/// \throws ERROR_OPEN_FAILED
 StringList* loadStringList(const char* fname);
 
 /// \brief Appends a string to an string list
@@ -31,6 +34,9 @@ StringList* loadStringList(const char* fname);
 /// If heapBased is set to true, the pointer is
 /// now this struct's responsibilty, and will be
 /// destroyed with the struct.
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_REALLOC_FAILED
 void appendStringToStringList(StringList* list, char* string, bool heapBased);
 
 /// \brief Separates a string based on a delimiter
@@ -44,6 +50,7 @@ void appendStringToStringList(StringList* list, char* string, bool heapBased);
 /// you will theoretically get back a list of ["hello", "world",
 /// "123"]. If ignoreQuotes is true, then delimiters inside of
 /// quotation marks will be ignored.
+/// \throws ERROR_ALLOC_FAILED
 StringList* explodeString(const char* string, char delim, bool ignoreQuotes);
 
 /// \brief Frees a string list as well as its contents

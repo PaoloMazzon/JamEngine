@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "File.h"
+#include "JamError.h"
 
 /////////////////////////////////////////////////////////
 StringList* createStringList() {
@@ -14,8 +15,10 @@ StringList* createStringList() {
 	list = (StringList*)calloc(1, sizeof(StringList));
 
 	// Check that it worked alright
-	if (list == NULL)
+	if (list == NULL) {
 		fprintf(stderr, "Could not allocate string list (createStringList)\n");
+		jSetError(ERROR_ALLOC_FAILED);
+	}
 
 	return list;
 }
@@ -71,14 +74,19 @@ StringList* loadStringList(const char* fname) {
 				appendStringToStringList(list, currentString, true);
 			} else {
 				fprintf(stderr, "Failed to create string (loadStringList)\n");
+				jSetError(ERROR_ALLOC_FAILED);
 				quit = true;
 			}
 		}
 	} else {
-		if (list == NULL)
+		if (list == NULL) {
 			fprintf(stderr, "List could not be allocated (loadStringList)\n");
-		if (file == NULL)
+			jSetError(ERROR_ALLOC_FAILED);
+		}
+		if (file == NULL) {
 			fprintf(stderr, "File could not be opened (loadStringList)\n");
+			jSetError(ERROR_OPEN_FAILED);
+		}
 	}
 
 	fclose(file);
@@ -109,15 +117,20 @@ void appendStringToStringList(StringList* list, char* string, bool heapBased) {
 			list->size++;
 		} else {
 			fprintf(stderr, "Could not reallocate string list(s) (appendStringToStringList)\n");
+			jSetError(ERROR_REALLOC_FAILED);
 			// Just in case one was initialized and the other wasn't
 			free(newBools);
 			free(newList);
 		}
 	} else {
-		if (list == NULL)
+		if (list == NULL) {
 			fprintf(stderr, "List does not exist (appendStringToStringList)\n");
-		if (string == NULL)
+			jSetError(ERROR_NULL_POINTER);
+		}
+		if (string == NULL) {
 			fprintf(stderr, "String does not exist (appendStringToStringList)\n");
+			jSetError(ERROR_NULL_POINTER);
+		}
 	}
 }
 /////////////////////////////////////////////////////////
@@ -129,7 +142,7 @@ StringList* explodeString(const char* string, char delim, bool ignoreQuotes) {
 	StringList* list = createStringList();
 	int lastLocation = 0;
 	char* currentBuffer;
-	int stringLength = strlen(string);
+	int stringLength = (int)strlen(string);
 	bool cameFromQuotes = false;
 
 	for (i = 0; i < stringLength; i++) {
@@ -159,6 +172,9 @@ StringList* explodeString(const char* string, char delim, bool ignoreQuotes) {
 				currentBuffer[lastLocation - i] = 0;
 				appendStringToStringList(list, currentBuffer, true);
 				cameFromQuotes = false;
+			} else {
+				fprintf(stderr, "Failed to create string (explodeString)\n");
+				jSetError(ERROR_ALLOC_FAILED);
 			}
 			lastLocation = i + 1;
 		}

@@ -38,6 +38,7 @@ typedef struct {
 } EntityList;
 
 /// \brief Creates an entity list
+/// \throws ERROR_NULL_POINTER
 EntityList* createEntityList();
 
 /// \brief Puts an entity into the list, making it bigger or possibly using a free spot
@@ -47,20 +48,28 @@ EntityList* createEntityList();
 /// list. If there is no free spots left, even on the end, it will
 /// allocate ENTITY_LIST_ALLOCATION_AMOUNT new spots then put the entity
 /// in one of those spots.
+///
+/// \throws ERROR_REALLOC_FAILED
+/// \throws ERROR_NULL_POINTER
 void addEntityToList(EntityList* list, Entity* entity);
 
 /// \brief Removes an entity from the list and returns it
 /// \return Returns NULL if it was not found
+/// \throws ERROR_NULL_POINTER
 Entity* popEntityFromList(EntityList* list, int entityID);
 
 /// \brief Looks for and returns an entity from the list
 /// \return Returns NULL if it was not found
+/// \throws ERROR_NULL_POINTER
 Entity* findEntityInList(EntityList* list, int entityID);
 
 /// \brief Shrinks an entity list down to no bigger than needed
+/// \throws ERROR_REALLOC_FAILED
+/// \throws ERROR_NULL_POINTER
 void shrinkEntityList(EntityList* list);
 
 /// \brief Removes all entities from the list
+/// \throws ERROR_NULL_POINTER
 void emptyEntityList(EntityList* list, bool destroyEntities);
 
 /// \brief Destroys an entity list
