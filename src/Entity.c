@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "TileMap.h"
 #include <stdio.h>
+#include "JamError.h"
 
 //////////////////////////////////////////////////////////
 Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, int id) {
@@ -23,6 +24,7 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, int id) {
 		ent->processPriority = 0;
 	} else {
 		fprintf(stderr, "Failed to create Entity struct (createEntity).\n");
+		jSetError(ERROR_ALLOC_FAILED);
 	}
 
 	return ent;
@@ -44,6 +46,7 @@ void drawEntity(Renderer* renderer, Entity* entity) {
 			fprintf(stderr, "Entity does not exist (drawEntity).\n");
 		if (renderer == NULL)
 			fprintf(stderr, "Renderer does not exist (drawEntity).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////
@@ -78,19 +81,29 @@ bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2) {
 	} else {
 		if (entity1 == NULL) {
 			fprintf(stderr, "entity1 does not exist (checkEntityCollision).\n");
+			jSetError(ERROR_NULL_POINTER);
 		} else {
-			if (entity1->sprite == NULL)
+			if (entity1->sprite == NULL) {
 				fprintf(stderr, "entity1 does not have a sprite (checkEntityCollision).\n");
-			if (entity1->hitbox == NULL)
+				jSetError(ERROR_INCORRECT_FORMAT);
+			}
+			if (entity1->hitbox == NULL) {
 				fprintf(stderr, "entity1 does not have a hitbox (checkEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT);
+			}
 		}
 		if (entity2 == NULL) {
 			fprintf(stderr, "entity2 does not exist (checkEntityCollision).\n");
+			jSetError(ERROR_NULL_POINTER);
 		} else {
-			if (entity2->sprite == NULL)
+			if (entity2->sprite == NULL) {
 				fprintf(stderr, "entity2 does not have a sprite (checkEntityCollision).\n");
-			if (entity2->hitbox == NULL)
+				jSetError(ERROR_INCORRECT_FORMAT);
+			}
+			if (entity2->hitbox == NULL) {
 				fprintf(stderr, "entity2 does not have a hitbox (checkEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT);
+			}
 		}
 	}
 
@@ -119,14 +132,21 @@ bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, int rx, int r
 	} else {
 		if (entity == NULL) {
 			fprintf(stderr, "entity1 does not exist (checkEntityTileMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER);
 		} else {
-			if (entity->sprite == NULL)
+			if (entity->sprite == NULL) {
 				fprintf(stderr, "entity does not have a sprite (checkEntityTileMapCollision).\n");
-			if (entity->hitbox == NULL)
+				jSetError(ERROR_INCORRECT_FORMAT);
+			}
+			if (entity->hitbox == NULL) {
 				fprintf(stderr, "entity does not have a hitbox (checkEntityTileMapCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT);
+			}
 		}
-		if (tileMap == NULL)
+		if (tileMap == NULL) {
 			fprintf(stderr, "tileMap does not exist (checkEntityTileMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER);
+		}
 	}
 
 	return coll;

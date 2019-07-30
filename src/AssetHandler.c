@@ -118,10 +118,6 @@ AssetHandler* createAssetHandler() {
 }
 ///////////////////////////////////////////////////////////////
 
-/*#define INI_SPRITE_PREFIX 's'
-#define INI_ENTITY_PREFIX 'e'
-#define INI_HITBOX_PREFIX 'h'
-#define INI_TILEMAP_PREFIX 'm'*/
 ///////////////////////////////////////////////////////////////
 void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename) {
 	INI* ini = loadINI(filename);

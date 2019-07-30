@@ -34,6 +34,7 @@ typedef unsigned long long uint64;
 /// pass a null pointer to any functions here your
 /// program will crash. Make sure you check the
 /// buffer to not be null before you work with it.
+///
 ////////////////////////////////////////////////
 typedef struct {
 	uint8* buffer; ///< The actual binary buffer
@@ -47,6 +48,8 @@ typedef struct {
 /// \param size The size of said buffer in bytes
 ///
 /// \return Returns a new buffer of size 'size'
+///
+/// \throws ERROR_ALLOC_FAILED
 ////////////////////////////////////////////////
 Buffer* createBuffer(uint64 size);
 
@@ -56,6 +59,9 @@ Buffer* createBuffer(uint64 size);
 /// \param filename Name of the binary file
 ///
 /// \return Returns a new buffer with the file
+///
+/// \throws ERROR_FILE_FAILED
+/// \throws ERROR_OPEN_FAILED
 ////////////////////////////////////////////////
 Buffer* loadBuffer(const char* filename);
 
@@ -73,6 +79,8 @@ void freeBuffer(Buffer* buffer);
 /// \param newSize The buffer's new size
 ///
 /// \return Returns false if failed
+///
+/// \throws ERROR_REALLOC_FAILED
 ////////////////////////////////////////////////
 bool resizeBuffer(Buffer* buffer, uint64 newSize);
 
@@ -90,6 +98,8 @@ void zeroBuffer(Buffer* buffer);
 /// \param byte The byte to place
 ///
 /// \return Returns false if failed
+///
+/// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
 bool addByte1(Buffer* buffer, uint8 byte);
 
@@ -100,6 +110,8 @@ bool addByte1(Buffer* buffer, uint8 byte);
 /// \param bytes The byte to place
 ///
 /// \return Returns false if failed
+///
+/// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
 bool addByte2(Buffer* buffer, uint16 bytes);
 
@@ -110,6 +122,8 @@ bool addByte2(Buffer* buffer, uint16 bytes);
 /// \param bytes The byte to place
 ///
 /// \return Returns false if failed
+///
+/// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
 bool addByte4(Buffer* buffer, uint32 bytes);
 
@@ -120,6 +134,8 @@ bool addByte4(Buffer* buffer, uint32 bytes);
 /// \param bytes The bytes to place
 ///
 /// \return Returns false if failed
+///
+/// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
 bool addByte8(Buffer* buffer, uint64 bytes);
 

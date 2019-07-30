@@ -44,22 +44,28 @@ typedef struct {
 } Entity;
 
 /// \brief Creates/initializes an entity class
+/// \throws ERROR_ALLOC_FAILED
 Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, int id);
 
 /// \brief Makes a 1:1 copy of an entity and returns the new copy
 Entity* copyEntity(Entity* baseEntity);
 
 /// \brief Draws an entity
+/// \throws ERROR_NULL_POINTER
 void drawEntity(Renderer* renderer, Entity* entity);
 
 /// \brief Checks if two entities are colliding with one another
 ///
 /// This function uses the rx/ry coordinates for entity 1, no its x/y
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_INCORRECT_FORMAT
 bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2);
 
 /// \brief Checks if an entity is colliding with a tile map
 ///
 /// This function uses the rx/ry coordinates for the entity, no the entity's x/y
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_INCORRECT_FORMAT
 bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, int rx, int ry);
 
 /// \brief Frees an entity from memory

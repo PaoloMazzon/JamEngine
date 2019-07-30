@@ -23,6 +23,11 @@ Just keep in mind that most of the time it is much cheaper to
 have multiple tile maps over using entities as individual bits of
 walls.
 
+As far as this documentation is concerned, when it says "Exceptions" it
+actually means that specific flag may be set to `jErrorCode` (which
+can be checked via `jGetError`). If an error occurs, the program will
+not cease to run, that's on you.
+
 Asset Loading System
 --------------------
 The asset loader will load a single INI file at a time. This INI file is
