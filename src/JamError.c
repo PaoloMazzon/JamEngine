@@ -4,14 +4,14 @@
 #include "JamError.h"
 
 /////////////////////////////////////////////////////////
-void jSetError(uint8 errorCode) {
+void jSetError(uint16 errorCode) {
 	jErrorCode = errorCode | jErrorCode;
 }
 /////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////
-uint8 jGetError() {
-	uint8 oldErrors = jErrorCode;
+uint16 jGetError() {
+	uint16 oldErrors = jErrorCode;
 	jErrorCode = 0;
 	return oldErrors;
 }

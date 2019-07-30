@@ -27,6 +27,13 @@ typedef unsigned long long uint64;
 ////////////////////////////////////////////////
 /// \brief A binary buffer for storing info
 ///
+/// \warning Functions surrounding this buffer,
+/// unlike other functions in jam engine, are not
+/// safe to give null pointers for the sake of
+/// this binary buffer being lightning fast. If
+/// pass a null pointer to any functions here your
+/// program will crash. Make sure you check the
+/// buffer to not be null before you work with it.
 ////////////////////////////////////////////////
 typedef struct {
 	uint8* buffer; ///< The actual binary buffer

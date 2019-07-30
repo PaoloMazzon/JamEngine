@@ -5,6 +5,7 @@
 #include "Drawing.h"
 #include <stdio.h>
 #include <Renderer.h>
+#include "JamError.h"
 
 //////////////////////////////////////////////////////////////
 void drawSetColour(Renderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
@@ -12,6 +13,7 @@ void drawSetColour(Renderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
 		SDL_SetRenderDrawColor(renderer->internalRenderer, r, g, b, a);
 	} else {
 		fprintf(stderr, "Passed renderer does not exist (drawSetColour).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -22,6 +24,7 @@ void drawGetColour(Renderer* renderer, uint8* r, uint8* g, uint8* b, uint8* a) {
 		SDL_GetRenderDrawColor(renderer->internalRenderer, r, g, b, a);
 	} else {
 		fprintf(stderr, "Passed renderer does not exist (drawGetColour).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -39,6 +42,7 @@ void drawRectangle(Renderer* renderer, int x, int y, int w, int h) {
 		SDL_RenderDrawRect(renderer->internalRenderer, &rectangle);
 	} else {
 		fprintf(stderr, "Passed renderer does not exist (drawRectangle).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -46,9 +50,10 @@ void drawRectangle(Renderer* renderer, int x, int y, int w, int h) {
 //////////////////////////////////////////////////////////////
 void drawCircle(Renderer* renderer, int x, int y, int r) {
 	if (renderer != NULL) {
-
+		// TODO: This
 	} else {
 		fprintf(stderr, "Passed renderer does not exist (drawCircle).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -79,6 +84,7 @@ void drawFillColour(Renderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
 		SDL_SetTextureBlendMode(renderTarget, texMode);
 	} else {
 		fprintf(stderr, "Passed renderer does not exist (drawFillColour).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -99,6 +105,7 @@ void drawTexture(Renderer* renderer, Texture* texture, sint32 x, sint32 y) {
 			fprintf(stderr, "Renderer not present (drawTexture). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
 			fprintf(stderr, "Texture not present (drawTexture). SDL Error: %s", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -227,14 +234,21 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 			}
 		}
 	} else {
-		if (renderer == NULL)
+		if (renderer == NULL) {
 			fprintf(stderr, "Renderer doesn't exist (drawSortedMap)\n");
-		if (map == NULL)
+			jSetError(ERROR_NULL_POINTER);
+		}
+		if (map == NULL) {
 			fprintf(stderr, "Map doesn't exist (drawSortedMap)\n");
-		if (spr == NULL)
+			jSetError(ERROR_NULL_POINTER);
+		}
+		if (spr == NULL) {
 			fprintf(stderr, "Sprite doesn't exist (drawSortedMap)\n");
-		else if (!(spr->animationLength == 48 || spr->animationLength == 47))
+			jSetError(ERROR_NULL_POINTER);
+		} else if (!(spr->animationLength == 48 || spr->animationLength == 47)) {
 			fprintf(stderr, "Sprite does not contain 48 frames(drawSortedMap)\n");
+			jSetError(ERROR_INCORRECT_FORMAT);
+		}
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -274,12 +288,14 @@ void drawTextureExt(Renderer* renderer, Texture* texture, sint32 x, sint32 y, si
 			SDL_SetTextureAlphaMod(texture->tex, previousAlpha);
 		} else {
 			fprintf(stderr, "Texture does not support alpha (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_SDL_ERROR);
 		}
 	} else {
 		if (renderer == NULL)
 			fprintf(stderr, "Renderer not present (drawTextureExt). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
 			fprintf(stderr, "Texture not present (drawTextureExt). SDL Error: %s", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -305,6 +321,7 @@ void drawTexturePart(Renderer* renderer, Texture* texture, sint32 x, sint32 y, s
 			fprintf(stderr, "Renderer not present (drawTexturePart). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
 			fprintf(stderr, "Texture not present (drawTexturePart). SDL Error: %s", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -355,12 +372,14 @@ void drawTexturePartExt(Renderer* renderer, Texture* texture, sint32 x, sint32 y
 			SDL_SetTextureAlphaMod(texture->tex, previousAlpha);
 		} else {
 			fprintf(stderr, "Texture does not support alpha (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_SDL_ERROR);
 		}
 	} else {
 		if (renderer == NULL)
 			fprintf(stderr, "Renderer not present (drawTextureExt). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
 			fprintf(stderr, "Texture not present (drawTextureExt). SDL Error: %s", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////

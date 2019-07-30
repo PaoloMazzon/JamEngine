@@ -1,16 +1,18 @@
 #include "Buffer.h"
 #include <malloc.h>
 #include <stdio.h>
+#include <JamError.h>
 
 ////////////////////////////////////////////////
 Buffer* createBuffer(uint64 size) {
 	// Create the buffer and internal buffer
-	char* internalBuffer = (char*)malloc((size_t)size);
+	uint8* internalBuffer = (uint8*)malloc((size_t)size);
 	Buffer* buffer = (Buffer*)malloc(sizeof(Buffer));
 
 	// Check them
 	if (internalBuffer == NULL || buffer == NULL) {
 		fprintf(stderr, "Failed to allocate one of the buffers.\n");
+		jSetError(ERROR_ALLOC_FAILED);
 
 		if (buffer != NULL)
 			free(buffer);
@@ -54,10 +56,12 @@ Buffer* loadBuffer(const char* filename) {
 			freeBuffer(returnBuffer);
 			returnBuffer = NULL;
 			fprintf(stderr, "Failed to read buffer from file '%s'\n", filename);
+			jSetError(ERROR_FILE_FAILED);
 		}
 		fclose(bufferFile);
 	} else {
 		fprintf(stderr, "Failed to open file '%s'\n", filename);
+		jSetError(ERROR_OPEN_FAILED);
 	}
 
 	return returnBuffer;
@@ -76,18 +80,21 @@ void freeBuffer(Buffer* buffer) {
 
 ////////////////////////////////////////////////
 bool resizeBuffer(Buffer* buffer, uint64 newSize) {
-	char* newBuffer = (char*)realloc((void*)buffer->buffer, (size_t)newSize);
+	uint8* newBuffer = (uint8*)realloc((void*)buffer->buffer, (size_t)newSize);
+	bool ret = true;
 
 	// CHECKS
 	if (newBuffer == NULL) {
-		return false;
+		ret = false;
+		fprintf(stderr, "Failed to create new buffer (resizeBuffer)\n");
+		jSetError(ERROR_REALLOC_FAILED);
 	} else {
 		buffer->buffer = newBuffer;
 		buffer->size = newSize;
 		buffer->pointer = 0;
 	}
 
-	return true;
+	return ret;
 }
 ////////////////////////////////////////////////
 
@@ -103,8 +110,10 @@ void zeroBuffer(Buffer* buffer) {
 ////////////////////////////////////////////////
 bool addByte1(Buffer* buffer, uint8 byte) {
 	// Run some checks
-	if (buffer->pointer + 1 > buffer->size)
+	if (buffer->pointer + 1 > buffer->size) {
+		jSetError(ERROR_OUT_OF_BOUNDS);
 		return false;
+	}
 
 	// Place the actual byte
 	buffer->buffer[buffer->pointer] = (uint8)(byte);
@@ -118,8 +127,10 @@ bool addByte1(Buffer* buffer, uint8 byte) {
 ////////////////////////////////////////////////
 bool addByte2(Buffer* buffer, uint16 bytes) {
 	// Run some checks
-	if (buffer->pointer + 2 > buffer->size)
+	if (buffer->pointer + 2 > buffer->size) {
+		jSetError(ERROR_OUT_OF_BOUNDS);
 		return false;
+	}
 
 	// Place the actual bytes
 	buffer->buffer[buffer->pointer] = (uint8)(bytes & 255);
@@ -134,8 +145,10 @@ bool addByte2(Buffer* buffer, uint16 bytes) {
 ////////////////////////////////////////////////
 bool addByte4(Buffer* buffer, uint32 bytes) {
 	// Run some checks
-	if (buffer->pointer + 4 > buffer->size)
+	if (buffer->pointer + 4 > buffer->size) {
+		jSetError(ERROR_OUT_OF_BOUNDS);
 		return false;
+	}
 
 	// Place the actual bytes
 	buffer->buffer[buffer->pointer] = (uint8)(bytes & 255);
@@ -152,8 +165,10 @@ bool addByte4(Buffer* buffer, uint32 bytes) {
 ////////////////////////////////////////////////
 bool addByte8(Buffer* buffer, uint64 bytes) {
 	// Run some checks
-	if (buffer->pointer + 8 > buffer->size)
+	if (buffer->pointer + 8 > buffer->size) {
+		jSetError(ERROR_OUT_OF_BOUNDS);
 		return false;
+	}
 
 	// Place the actual bytes
 	buffer->buffer[buffer->pointer] = (uint8)(bytes & 255);
