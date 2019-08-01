@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <Renderer.h>
 #include "StringUtil.h"
+#include <JamError.h>
 
 ///////////////////////////////////////////////////////
 SDL_Texture* loadTex(SDL_Renderer* renderer, const char* fname) {
@@ -41,6 +42,7 @@ Font* createFont(Renderer* renderer, const char* latinFname, const char* fontFna
 	// Check it
 	if (font == NULL) {
 		fprintf(stderr, "Failed to allocate font struct.\n");
+		jSetError(ERROR_ALLOC_FAILED);
 	} else {
 		// Load latin font
 		SDL_Texture* latin = loadTex(renderer->internalRenderer, latinFname);
@@ -49,6 +51,7 @@ Font* createFont(Renderer* renderer, const char* latinFname, const char* fontFna
 		if (latin == NULL) {
 			freeFont(font);
 			fprintf(stderr, "Failed to load latin font texture, SDL error: %s\n", SDL_GetError());
+			jSetError(ERROR_OPEN_FAILED);
 			font = NULL;
 		} else {
 			// Set up the font things
@@ -67,6 +70,7 @@ Font* createFont(Renderer* renderer, const char* latinFname, const char* fontFna
 				if (tex == NULL) {
 					freeFont(font);
 					fprintf(stderr, "Failed to load font texture, SDL error: %s\n", SDL_GetError());
+					jSetError(ERROR_OPEN_FAILED);
 					font = NULL;
 				} else {
 					font->font = tex;
@@ -200,6 +204,7 @@ void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer
 					SDL_RenderCopy(renderer->internalRenderer, font->font, &charSheetBox, &charPlace);
 				} else { // Not in the font
 					fprintf(stderr, "Error: Character '%u' is out of the font's range.\n", unichar);
+					jSetError(ERROR_OUT_OF_BOUNDS);
 				}
 			} else {
 				charPlace.y += font->characterHeight;
@@ -351,6 +356,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 					} else { // Not in the font
 						fprintf(stderr, "Error: Character '%u' is out of the font's range. (renderFontExt)\n",
 								unichar);
+						jSetError(ERROR_OUT_OF_BOUNDS);
 					}
 
 					// Check for text width
@@ -393,6 +399,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 			fprintf(stderr, "Renderer does not exist (renderFontExt)\n");
 		if (font == NULL)
 			fprintf(stderr, "Font does not exist (renderFontExt)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 	va_end(params);
 }
@@ -485,6 +492,7 @@ void renderFontWrap(int x, int y, uint16 w, const char* string, Font* font, Rend
 					SDL_RenderCopy(renderer->internalRenderer, font->font, &charSheetBox, &charPlace);
 				} else { // Not in the font
 					fprintf(stderr, "Error: Character '%u' is out of the font's range.\n", unichar);
+					jSetError(ERROR_OUT_OF_BOUNDS);
 				}
 			} else {
 				charPlace.y += font->characterHeight;

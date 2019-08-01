@@ -38,6 +38,9 @@ typedef struct {
 /// \param fontFname The bitmap font's filename
 ///
 /// \return Returns a new font
+///
+/// \throws ERROR_OPEN_FAILED
+/// \throws ERROR_ALLOC_FAILED
 /////////////////////////////////////////////////////
 Font* createFont(Renderer* renderer, const char* latinFname, const char* fontFname);
 
@@ -56,6 +59,8 @@ void freeFont(Font* font);
 /// \param string The string to render
 /// \param font The font to use
 /// \param renderer The renderer to draw to
+///
+/// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
 void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer);
 
@@ -70,6 +75,9 @@ void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer
 /// \param font The font to use
 /// \param renderer The renderer to draw to
 /// \param w Width before a newline
+///
+/// \throws ERROR_OUT_OF_BOUNDS
+/// \throws ERROR_NULL_POINTER
 /////////////////////////////////////////////////////
 void renderFontExt(int x, int y, const char* string, Font* font, Renderer* renderer, int w, ...);
 
@@ -82,6 +90,8 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 /// \param string The string to render
 /// \param font The font to use
 /// \param renderer The renderer to draw to
+///
+/// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
 void renderFontWrap(int x, int y, uint16 w, const char* string, Font* font, Renderer* renderer);
 

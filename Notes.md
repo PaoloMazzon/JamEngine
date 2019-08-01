@@ -72,6 +72,26 @@ Major To-Do List
   variable, a couple error setting/getting functions, and a bunch of error constants
  - Make drawSortedMap convert the `TileMap`'s values into sprite frames so it can be done
   quicker in the future.
+ - Alot of Font.c is not verbose and this should be fixed.
+
+Features
+========
+ - Renderer that handles all timing and rendering 
+ - Asset Handler for loading and managing lots of things at once
+ - Buffers that allow for quick binary access (they also handle loading from files)
+ - Accurate cross-platform timing
+ - Some basic drawing functionality
+ - Entities, sprites, frames, hitboxes, and textures all different concepts. Different entities can have the same sprite; different sprites can use different regions of the same texture, etc...
+ - Entity lists to make handling lots of entities easier
+ - Sprites can be loaded from a sprite sheet with a single function
+ - Worlds to make level management easier
+ - Font framework that is quite flexible but only bitmap fonts right now
+ - Font can do unicode, take varargs like printf (it accepts %f, %c, and %s)
+ - Basic hitbox functionality
+ - Incredibly easy-to-use INI file I/O as well as some other file I/O functionality
+ - Pure-C (and thus cross-platform) implementations of atof and ftoa (string to double and double to string respectively)
+ - Fair bit of string-manipulation functionality (see StringUtil.h)
+ - Tile maps that can be auto tiled, used for collisions, used for enemy positions, etc...
 
 Possible future additions
 -------------------------
@@ -79,52 +99,22 @@ Possible future additions
  - Vector images
  - Tweening
 
-TODO List (/ before description means done)
-===========================================
+To-Do List
+==========
 
- - Textures
-    + /Load textures
-    + /Create from scratch
  - Input System
-    + /Mouse input
-    + /Keyboard input
     + Gamepad input
  - Renderer
     + Delta timing
-    + /Create window
-    + /Handle window scaling/fullscreen
-    + /Variable size screen buffer and render size
-    + /Main game loop
  - Drawing functions
-    + /Render textures
     + Let the fill colour thing work with alpha values
     + Draw shapes
     + Fonts (This implies that the font struct contains practical things only)
- - Sprite
-    + /Handle animations
-    + /Frames
-    + /Sprite rendering functions
-    + /Load sprite sheet
  - Hit-box
-    + /Circles
-    + /Rectangles
     + Circle-to-rectangle (Algorithm is written down just don't want to type it out)
- - Entity
-    + /Position in world
-    + /Sprite
-    + /Hit-box
-    + /Speed/Friction
-    + /Built-in processors
  - Tile Maps
-    + /Store grid in memory
-    + /Check collisions with entities
+    + Auto tile to the grid (write down the sprite's frame as value)
  - Fonts
-    + /Bitmap fonts
-    + /Unicode bitmap fonts
-    + /Pseudo-printf-formatting (it accepts `%s` (string), `%c` (character), and `%f` (double))
     + TTF fonts
  - Draw Queues/Events for multi-threading
     + Queue management
- - Entity Lists - Important for handling lots of things
- - Particle System - Very notable addition
- - Worlds - Great feature yet not needed
