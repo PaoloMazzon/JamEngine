@@ -40,6 +40,7 @@ typedef struct {
 /// after, but if you care not for performance, spriteAppendFrame
 /// can be used and is a bit easier to use. If there is no animation
 /// you can just set the latter two arguments to 0/false.
+///
 /// \throws ERROR_ALLOC_FAILED
 Sprite* createSprite(uint32 animationLength, uint16 frameDelay, bool looping);
 
@@ -68,6 +69,7 @@ Sprite* loadSpriteFromSheet(Texture* spriteSheet, uint32 cellCount, uint32 xInSh
 ///
 /// Don't run this if updateOnDraw is on, also don't
 /// run this multiple times a frame
+///
 /// \throws ERROR_NULL_POINTER
 void updateSprite(Sprite* sprite);
 

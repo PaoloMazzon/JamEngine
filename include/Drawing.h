@@ -42,7 +42,6 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 void drawTileMap(Renderer* renderer, TileMap* tileMap, int x, int y, uint16 xInMapStart, uint16 yInMapStart, uint16 xInMapFinish, uint16 yInMapFinish);
 
 /// \breif Draws a texture to the current target with a bunch of extra preferences
-///
 /// \param scaleX The x scale of the texture, 1 for normal
 /// \param scaleY The y scale of the texture, 1 for normal
 /// \param rot Rotation in radians
@@ -56,7 +55,6 @@ void drawTextureExt(Renderer* renderer, Texture* texture, sint32 x, sint32 y, si
 void drawTexturePart(Renderer* renderer, Texture* texture, sint32 x, sint32 y, sint32 texX, sint32 texY, sint32 texW, sint32 texH);
 
 /// \breif Draws a texture to the renderer with a bunch of extra preferences
-///
 /// \param scaleX The x scale of the texture, 1 for normal
 /// \param scaleY The y scale of the texture, 1 for normal
 /// \param rot Rotation in radians

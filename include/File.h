@@ -22,6 +22,7 @@ StringList* createStringList();
 /// \return Returns a new list or NULL
 /// 
 /// This does not include newline characters
+///
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPEN_FAILED
 StringList* loadStringList(const char* fname);
@@ -50,6 +51,7 @@ void appendStringToStringList(StringList* list, char* string, bool heapBased);
 /// you will theoretically get back a list of ["hello", "world",
 /// "123"]. If ignoreQuotes is true, then delimiters inside of
 /// quotation marks will be ignored.
+///
 /// \throws ERROR_ALLOC_FAILED
 StringList* explodeString(const char* string, char delim, bool ignoreQuotes);
 

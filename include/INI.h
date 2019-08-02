@@ -53,6 +53,7 @@ char* getKeyINI(INI* ini, const char* header, const char* key, char* def);
 /// Don't use this function yourself unless you specifically
 /// want your string destroyed at precisely the time the ini
 /// will be.
+///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_REALLOC_FAILED
 void throwInGarbageINI(INI* ini, char* string);

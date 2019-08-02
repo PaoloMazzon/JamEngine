@@ -44,6 +44,7 @@ const char* getSMapVal(SMap* smap, const char* key, char* def);
 ///
 /// Do this for strings you're using in this thing that are dynamically
 /// allocated so freeSMap can take care of them.
+///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
 void throwAStringIntoTheGarbage(SMap* smap, char* garbage);

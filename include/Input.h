@@ -38,6 +38,7 @@ Input* createInput();
 ///
 /// This must either be ran before you run rendererProcEvents or the
 /// input class given to rendererProcEvents for input to work properly
+///
 /// \throws ERROR_NULL_POINTER
 void updateInput(Input* input);
 

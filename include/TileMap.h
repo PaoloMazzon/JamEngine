@@ -42,10 +42,11 @@ TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cel
 /// Tile maps loaded from files accept "*" as a true value
 /// all else as false. Should just be a plain text file. For
 /// example, a 4 * 4 grid might look like
-///     ..*.
-///     *..*
-///     *..*
-///     ****
+/// 
+/// 	..*.
+/// 	*..*
+/// 	*..*
+/// 	****
 ///
 /// \throws ERROR_FILE_FAILED
 /// \throws ERROR_OPEN_FAILED

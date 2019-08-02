@@ -43,15 +43,15 @@ StringBuilder* createBuilderFromString(const char* string);
 /// 
 /// \return Returns whatever you gave for string
 ///
-/// \throws ERROR_REALLOC_FAILED
-/// \throws ERROR_NULL_POINTER
-///
 /// This function allocates new memory as needed automatically.
 /// Also, this function returns whatever you pass for string
 /// specifically so you do something like 
 /// `free(insertStringIntoBuilder(builder, ftoa(100), END_OF_STRING));`
 /// to make the whole process really easy. (This function will
 /// not cause a fuss if you pass null pointers)
+///
+/// \throws ERROR_REALLOC_FAILED
+/// \throws ERROR_NULL_POINTER
 char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index);
 
 /// \brief Removes something from the builder
@@ -69,8 +69,6 @@ void removeCharFromBuilder(StringBuilder* builder, int index);
 /// \param occurrencesRequired How many occurences of string in we want (or just use the two constants LAST_OCCURRENCE and FIRST_OCCURRENCE)
 ///
 /// \return Returns the index where the string shows up or -1 if not found
-/// \throws ERROR_NULL_POINTER
-/// \throws ERROR_OUT_OF_BOUNDS
 /// 
 /// occurencesRequired is how many times string has to show up before this function
 /// recognizes it and returns the position. For example, a value of
@@ -78,6 +76,9 @@ void removeCharFromBuilder(StringBuilder* builder, int index);
 /// A count of 4 would look for the fourth occurence of string and so
 /// on. LAST_OCCURRENCE on count will tell this function to look for the LAST
 /// occurence of string.
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_OUT_OF_BOUNDS
 int findStringInBuilder(StringBuilder* builder, const char* string, int occurrencesRequired);
 
 /// \brief Grabs a substring and returns it as a new builder
@@ -94,11 +95,12 @@ StringBuilder* substringFromBuilder(StringBuilder* builder, int index, int lengt
 
 /// \brief Shrinks a string builder so it doesn't have any extra memory on the end
 /// \param builder The builder to shrink
-/// \throws ERROR_NULL_POINTER
 /// 
 /// This function removes any extra memory from the end of the char
 /// array, making the allocated memory only what it's using. If
 /// allocAmount is 1, this function will do nothing.
+///
+/// \throws ERROR_NULL_POINTER
 void shrinkBuilder(StringBuilder* builder);
 
 /// \brief Pulls a c-string from a builder
@@ -117,12 +119,13 @@ const char* getBuilderArray(StringBuilder* builder);
 /// \param builder the string builder to count up
 /// 
 /// \return Returns the total character count or -1 on failure
-/// \throws ERROR_NULL_POINTER
 /// 
 /// The reason this function exists instead of just
 /// taking from builder->length is because this function
 /// accounts for UTF-8 characters and will not count
 /// a single emoji or whatever as 4 characters.
+///
+/// \throws ERROR_NULL_POINTER
 int getBuilderLength(StringBuilder* builder);
 
 /// \brief Frees a string builder

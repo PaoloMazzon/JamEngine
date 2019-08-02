@@ -47,6 +47,11 @@
 /// and give them to world to play with, world frees all of the copies,
 /// AssetHandler frees all of the base entities and its other resources.
 ///
+/// Another important note is that doxygen is not a fan of anonymous unions/
+/// structs and as such it is hard to tell that there is a union holding a struct
+/// and uint16. The union holds two uint16's. These are inRangeRadius, inRangeRectangleWidth,
+/// and inRangeRectangleHeight respectively.
+///
 /// \warning Never change a value in this struct yourself, always use the
 /// funtions for it or you will very quickly be looking at lots of memory
 /// leaks.
@@ -106,20 +111,20 @@ void worldRotateEntity(World* world, Entity* entity);
 ///
 /// This function does indeed destroy the entity it removes
 ///
-/// \throws ERROR_NULL_POINTER
-///
 /// \warning This function is somewhat heavy due to the fact that
 /// it will loop over at least 3 different entity lists trying to
 /// find all references to the specific entity
+/// \throws ERROR_NULL_POINTER
 void worldRemoveEntity(World* world, Entity* entity);
 
 /// \brief Sorts a world's entities into lists filtered by distance
-/// \warning This function is very heavy on the CPU
-/// \throws ERROR_NULL_POINTER
 ///
 /// pointX and pointY mean different things depending on if the in range
 /// thing is a rectangle or circle. If its a rectangle, pointX/Y are the
 /// top-left of it; if its a circle, its the centre of it.
+///
+/// \warning This function is very heavy on the CPU
+/// \throws ERROR_NULL_POINTER
 void filterEntitiesByProximity(World* world, int pointX, int pointY);
 
 /// \brief Frees a world

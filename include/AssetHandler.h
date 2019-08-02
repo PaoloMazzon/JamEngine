@@ -64,6 +64,7 @@ AssetHandler* createAssetHandler();
 /// responsibilty for its cleanup except for two cases: an entity's
 /// sprite and hitbox (Those must be loaded independently). Do
 /// not clean up assets yourself if you throw them into a handler.
+///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NUULL_POINTER
 void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id);
@@ -72,6 +73,7 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id);
 ///
 /// Loads all assets from an INI file. Note that you should never use 0
 /// as an ID for an asset or the loader may not load everything correctly.
+///
 /// \throws ERROR_ASSET_NOT_FOUND
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OPEN_FAILED
@@ -84,6 +86,7 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 /// you load, since you can set it up such that all sprites are between
 /// 1000-1999 and so on. This function also makes sure that all the assets
 /// are not NULL pointers. All problems reported to stderr.
+///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
 bool assetAssertRanges(AssetHandler* handler, int entRangeStart, int entRangeEnd, int sprRangeStart, int sprRangeEnd,

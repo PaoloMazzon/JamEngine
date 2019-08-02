@@ -29,6 +29,7 @@ typedef struct {
 ///
 /// There is no way to create an empty frame
 /// for that is completely redundant
+///
 /// \throws ERROR_ALLOC_FAILED
 Frame* createFrame(Texture* tex, sint32 x, sint32 y, sint32 w, sint32 h);
 
@@ -36,6 +37,7 @@ Frame* createFrame(Texture* tex, sint32 x, sint32 y, sint32 w, sint32 h);
 ///
 /// The sprite struct doesn't use this, it's
 /// just a convenience for users
+///
 /// \throws ERROR_NULL_POINTER
 void drawFrame(Frame* frame, Renderer* renderer, sint32 x, sint32 y);
 
