@@ -19,24 +19,33 @@ typedef struct {
 } SMap;
 
 /// \brief Creates an empty map
+/// \throws ERROR_ALLOC_FAILED
 SMap* createSMap();
 
 /// \brief Loads a map from an smap file
+/// \throws ERROR_OPEN_FAILED
+/// \throws ERROR_ALLOC_FAILED
+/// \throws ERROR_INCORRECT_FORMAT
 SMap* loadSMap(const char* filename);
 
 /// \brief Prints the map in INI format to the given stream
+/// \throws ERROR_NULL_POINTER
 void outputSMap(SMap* smap, FILE* stream);
 
 /// \brief Sets a value to a key in a map
+/// \throws ERROR_NULL_POINTER
 void setSMapVal(SMap* smap, const char* key, char* val);
 
 /// \brief Gets a value from a map
+/// \throws ERROR_NULL_POINTER
 const char* getSMapVal(SMap* smap, const char* key, char* def);
 
 /// \brief Throws a string into the garbage
 ///
 /// Do this for strings you're using in this thing that are dynamically
 /// allocated so freeSMap can take care of them.
+/// \throws ERROR_REALLOC_FAILED
+/// \throws ERROR_NULL_POINTER
 void throwAStringIntoTheGarbage(SMap* smap, char* garbage);
 
 /// \brief Frees the map

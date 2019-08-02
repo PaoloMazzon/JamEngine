@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "File.h"
+#include "JamError.h"
 
 ///////////////////////////////////////////////////////////
 SMap* createSMap() {
@@ -21,6 +22,7 @@ SMap* createSMap() {
 		smap->sizeOfGarbagePile = 0;
 	} else {
 		fprintf(stderr, "Failed to allocate SMap (createSMap)\n");
+		jSetError(ERROR_ALLOC_FAILED);
 	}
 
 	return smap;
@@ -68,18 +70,24 @@ SMap* loadSMap(const char* filename) {
 							throwAStringIntoTheGarbage(map, val);
 						} else {
 							fprintf(stderr, "Could not allocate strings, line %i (loadSMap)\n", i + 1);
+							jSetError(ERROR_ALLOC_FAILED);
 						}
 					} else {
 						fprintf(stderr, "Error in SMap file, line %i '%s' (loadSMap)\n", i + 1, list->strList[i]);
+						jSetError(ERROR_INCORRECT_FORMAT);
 					}
 				}
 			}
 		}
 	} else {
-		if (list == NULL)
+		if (list == NULL) {
 			fprintf(stderr, "File could not be opened (loadSMap)\n");
-		if (map == NULL)
+			jSetError(ERROR_OPEN_FAILED);
+		}
+		if (map == NULL) {
 			fprintf(stderr, "SMap could not be allocated (loadSMap)\n");
+			jSetError(ERROR_ALLOC_FAILED);
+		}
 		freeSMap(map);
 	}
 
@@ -104,6 +112,7 @@ void outputSMap(SMap* smap, FILE* stream) {
 			fprintf(stderr, "Passed SMap does not exist (outputSMap)\n");
 		if (stream == NULL)
 			fprintf(stderr, "Passed FILE does not exist (outputSMap)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////////
@@ -116,15 +125,10 @@ void setSMapVal(SMap* smap, const char* key, char* val) {
 	// Check that it exists
 	if (smap != NULL) {
 		// First we see if the key already exists
-		for (i = 0; i < smap->size; i++) {
+		for (i = 0; i < smap->size && !found; i++) {
 			if (strcmp(smap->keys[i], key) == 0) {
 				smap->vals[i] = val;
 				found = true;
-
-				// I realize this is bad but this case is very simple and would
-				// be a pain in the ass/less efficient to turn into a while loop
-				// so whatever we'll just break out of the for
-				break;
 			}
 		}
 
@@ -139,6 +143,7 @@ void setSMapVal(SMap* smap, const char* key, char* val) {
 		}
 	} else {
 		fprintf(stderr, "Passed SMap does not exist (setSMapVal with key %s)\n", key);
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////////
@@ -151,18 +156,14 @@ const char* getSMapVal(SMap* smap, const char* key, char* def) {
 	// First we make sure we weren't passed a dud
 	if (smap != NULL) {
 		// Loop through the map and attempt to find it
-		for (i = 0; i < smap->size; i++) {
+		for (i = 0; i < smap->size && ret == def; i++) {
 			if (strcmp(smap->keys[i], key) == 0) {
 				ret = smap->vals[i];
-
-				// I realize this is bad but this case is very simple and would
-				// be a pain in the ass/less efficient to turn into a while loop
-				// so whatever we'll just break out of the for
-				break;
 			}
 		}
 	} else {
 		fprintf(stderr, "Passed SMap does not exist (getSMapVal for key %s)", key);
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	return ret;
@@ -183,9 +184,11 @@ void throwAStringIntoTheGarbage(SMap* smap, char* garbage) {
 			smap->garbage[smap->sizeOfGarbagePile - 1] = garbage;
 		} else {
 			fprintf(stderr, "Failed to increase size of garbage pile (throwAStringIntoTheGarbage)\n");
+			jSetError(ERROR_REALLOC_FAILED);
 		}
 	} else {
 		fprintf(stderr, "Passed SMap does not exist (throwAStringIntoTheGarbage)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////////
