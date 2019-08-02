@@ -76,6 +76,7 @@ Major To-Do List
  - Make drawSortedMap convert the `TileMap`'s values into sprite frames so it can be done
   quicker in the future.
  - Alot of Font.c is not verbose and this should be fixed.
+ - Go through and check what needs to be optimized
 
 Features
 ========

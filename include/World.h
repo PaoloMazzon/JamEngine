@@ -71,21 +71,25 @@ typedef struct {
 } World;
 
 /// \brief Creates a world to work with
+/// \throws ERROR_ALLOC_FAILED
 World* createWorld();
 
 /// \brief Sets up a rectangular filter in a world
+/// \throws ERROR_NULL_POINTER
 void setWorldFilterTypeRectangle(World* world, uint16 inRangeRectangleWidth, uint16 inRangeRectangleHeight);
 
 /// \brief Sets up a circular filter in a world
+/// \throws ERROR_NULL_POINTER
 void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius);
 
 /// \brief Adds an entity to the world
 ///
 /// By default, all entities are in range.
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_INCORRECT_FORMAT
 void worldAddEntity(World* world, Entity* entity);
 
-/// \brief Adds a tilemap to the world
-void worldAddTileMap(World* world, TileMap* tileMap);
 
 /// \brief Moves an entity from in range to out of range
 ///
@@ -94,11 +98,15 @@ void worldAddTileMap(World* world, TileMap* tileMap);
 /// a bunch of entities that need to be removed all the time and
 /// you'd rather just stop processing the entity and just clean it
 /// up later. This function does nothing if the entity is not in range.
+///
+/// \throws ERROR_NULL_POINTER
 void worldRotateEntity(World* world, Entity* entity);
 
 /// \brief Removes an entity from the world
 ///
 /// This function does indeed destroy the entity it removes
+///
+/// \throws ERROR_NULL_POINTER
 ///
 /// \warning This function is somewhat heavy due to the fact that
 /// it will loop over at least 3 different entity lists trying to
@@ -107,6 +115,7 @@ void worldRemoveEntity(World* world, Entity* entity);
 
 /// \brief Sorts a world's entities into lists filtered by distance
 /// \warning This function is very heavy on the CPU
+/// \throws ERROR_NULL_POINTER
 ///
 /// pointX and pointY mean different things depending on if the in range
 /// thing is a rectangle or circle. If its a rectangle, pointX/Y are the

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <TileMap.h>
+#include "JamError.h"
 
 //////////////////////////////////////////////////////////
 TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
@@ -28,9 +29,11 @@ TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cel
 		} else {
 			free(map);
 			fprintf(stderr, "Failed to allocate tile map's grid.\n");
+			jSetError(ERROR_ALLOC_FAILED);
 		}
 	} else {
 		fprintf(stderr, "Failed to allocate tile map.\n");
+		jSetError(ERROR_ALLOC_FAILED);
 	}
 
 	return map;
@@ -59,13 +62,18 @@ TileMap* loadTileMap(const char* filename, uint32 width, uint32 height, uint32 c
 		// Check if the file screwed up somehow
 		if (ferror(file) != 0) {
 			fprintf(stderr, "Could not load tile map from file (loadTileMap).\n");
+			jSetError(ERROR_FILE_FAILED);
 			freeTileMap(map);
 		}
 	} else {
-		if (map == NULL)
+		if (map == NULL) {
 			fprintf(stderr, "Map could not be allocated (loadTileMap).\n");
-		if (file == NULL)
+			jSetError(ERROR_ALLOC_FAILED);
+		}
+		if (file == NULL) {
 			fprintf(stderr, "File could not be opened (loadTileMap).\n");
+			jSetError(ERROR_OPEN_FAILED);
+		}
 		freeTileMap(map);
 	}
 
@@ -94,6 +102,7 @@ bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, uint16 val) {
 			fprintf(stderr, "Map does not exist (setMapPos).\n");
 		else
 			fprintf(stderr, "Map grid does not exist (setMapPos).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	return worked;
@@ -114,6 +123,7 @@ uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y) {
 			fprintf(stderr, "Map does not exist (getMapPos).\n");
 		else
 			fprintf(stderr, "Map grid does not exist (getMapPos).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	return val;
@@ -145,6 +155,7 @@ bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h) {
 			fprintf(stderr, "Map does not exist (checkMapCollFast).\n");
 		else
 			fprintf(stderr, "Map grid does not exist (checkMapCollFast).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	return coll;

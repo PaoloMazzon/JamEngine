@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <malloc.h>
+#include "JamError.h"
 
 ///////////////////////////////////////////////////////////////
 StringBuilder* createStringBuilder() {
@@ -13,6 +14,7 @@ StringBuilder* createStringBuilder() {
 		builder->allocAmount = DEFAULT_ALLOC_AMOUNT;
 	} else {
 		fprintf(stderr, "Could not create builder (createStringBuilder)\n");
+		jSetError(ERROR_ALLOC_FAILED);
 	}
 
 	return builder;
@@ -27,6 +29,7 @@ StringBuilder* createBuilderFromString(const char* string) {
 		insertStringIntoBuilder(builder, (char*)string, -1);	
 	} else {
 		fprintf(stderr, "Failed to create builder (createBuilderFromString)\n");
+		jSetError(ERROR_ALLOC_FAILED);
 	}
 
 	return builder;
@@ -58,6 +61,7 @@ char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index) {
 				builder->str[builder->length + stringLen] = 0;
 			} else {
 				fprintf(stderr, "Failed to reallocate builder (insertStringIntoBuilder)\n");
+				jSetError(ERROR_REALLOC_FAILED);
 				goodToProceed = false;
 			}
 		}
@@ -78,6 +82,7 @@ char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index) {
 			fprintf(stderr, "Builder does not exist (insertStringIntoBuilder)\n");
 		if (string == NULL)
 			fprintf(stderr, "String does not exist (insertStringIntoBuilder)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	return string;
@@ -101,10 +106,13 @@ void removeCharFromBuilder(StringBuilder* builder, int index) {
 			builder->length--;
 		}
 	} else {
-		if (builder == NULL)
+		if (builder == NULL) {
 			fprintf(stderr, "Builder does not exist (removeCharFromBuilder)\n");
-		else
+			jSetError(ERROR_NULL_POINTER);
+		} else {
 			fprintf(stderr, "Index out of bounds (removeCharFromBuilder)\n");
+			jSetError(ERROR_OUT_OF_BOUNDS);
+		}
 	}
 }
 ///////////////////////////////////////////////////////////////
@@ -141,8 +149,10 @@ int findStringInBuilder(StringBuilder* builder, const char* string, int occurren
 	} else {
 		if (builder == NULL)
 			fprintf(stderr, "Builder does not exist (removeCharFromBuilder)\n");
-		if (occurrencesRequired < -1)
+		if (occurrencesRequired < -1) {
 			fprintf(stderr, "Occurrences required out of bounds (removeCharFromBuilder)\n");
+			jSetError(ERROR_OUT_OF_BOUNDS);
+		} else jSetError(ERROR_NULL_POINTER);
 		if (string == NULL)
 			fprintf(stderr, "String does not exist (removeCharFromBuilder)\n");
 	}
@@ -173,15 +183,22 @@ StringBuilder* substringFromBuilder(StringBuilder* builder, int index, int lengt
 			freeStringBuilder(sub);
 			sub = NULL;
 			fprintf(stderr, "Failed to create internal string (substringFromBuilder)\n");
+			jSetError(ERROR_ALLOC_FAILED);
 		}
 	} else {
 		freeStringBuilder(sub);
-		if (sub == NULL)
+		if (sub == NULL) {
 			fprintf(stderr, "Failed to create substring (substringFromBuilder)\n");
-		if (builder == NULL)
+			jSetError(ERROR_ALLOC_FAILED);
+		}
+		if (builder == NULL) {
 			fprintf(stderr, "Builder does not exist (substringFromBuilder)\n");
-		if (builder != NULL && sub != NULL)
+			jSetError(ERROR_NULL_POINTER);
+		}
+		if (builder != NULL && sub != NULL) {
 			fprintf(stderr, "Index out of bounds (substringFromBuilder)\n");
+			jSetError(ERROR_OUT_OF_BOUNDS);
+		}
 		sub = NULL;
 	}
 
@@ -204,6 +221,7 @@ void shrinkBuilder(StringBuilder* builder) { // NOTE: UNTESTED
 		}
 	} else {
 		fprintf(stderr, "Builder does not exist (shrinkBuilder)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////////////
@@ -220,6 +238,7 @@ int getBuilderLength(StringBuilder* builder) {
 	} else {
 		count = -1;
 		fprintf(stderr, "Builder does not exist (getBuilderLength)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	return count;
@@ -233,6 +252,7 @@ const char* getBuilderArray(StringBuilder* builder) {
 		ret = (const char*)builder->str;
 	} else {
 		fprintf(stderr, "Builder does not exist (getBuilderArray)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	return ret;
@@ -378,6 +398,7 @@ char* ftoa(double input) {
 		}
 	} else {
 		fprintf(stderr, "Failed to allocate string with decimal %f (ftoa)\n", input);
+		jSetError(ERROR_ALLOC_FAILED);
 	}
 
 	return string;

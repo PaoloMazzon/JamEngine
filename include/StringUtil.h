@@ -24,6 +24,7 @@ typedef struct {
 /// \brief Creates a string builder
 /// 
 /// \return Returns the new builder or NULL if it failed
+/// \throws ERROR_ALLOC_FAILED
 StringBuilder* createStringBuilder();
 
 /// \brief Creates a string builder with a string pre loaded into it
@@ -31,6 +32,7 @@ StringBuilder* createStringBuilder();
 /// \param string The string to copy into the new builder
 /// 
 /// \return Returns the new builder or NULL if it failed
+/// \throws ERROR_ALLOC_FAILED
 StringBuilder* createBuilderFromString(const char* string);
 
 /// \brief Inserts a string into a string builder starting at index
@@ -40,7 +42,10 @@ StringBuilder* createBuilderFromString(const char* string);
 /// \param index Where to insert the string or END_OF_STRING to append it
 /// 
 /// \return Returns whatever you gave for string
-/// 
+///
+/// \throws ERROR_REALLOC_FAILED
+/// \throws ERROR_NULL_POINTER
+///
 /// This function allocates new memory as needed automatically.
 /// Also, this function returns whatever you pass for string
 /// specifically so you do something like 
@@ -53,6 +58,8 @@ char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index);
 ///
 /// \param builder The builder to use
 /// \param index The index of the character to remove or END_OF_STRING for the end of the string
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_OUT_OF_BOUNDS
 void removeCharFromBuilder(StringBuilder* builder, int index);
 
 /// \brief Finds a string in a string builder and returns it
@@ -62,6 +69,8 @@ void removeCharFromBuilder(StringBuilder* builder, int index);
 /// \param occurrencesRequired How many occurences of string in we want (or just use the two constants LAST_OCCURRENCE and FIRST_OCCURRENCE)
 ///
 /// \return Returns the index where the string shows up or -1 if not found
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_OUT_OF_BOUNDS
 /// 
 /// occurencesRequired is how many times string has to show up before this function
 /// recognizes it and returns the position. For example, a value of
@@ -78,11 +87,14 @@ int findStringInBuilder(StringBuilder* builder, const char* string, int occurren
 /// \param length How many characters to grab or END_OF_STRING for the rest of the string
 /// 
 /// \return Returns the substring or NULL if it failed
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ALLOC_FAILED
+/// \throws ERROR_OUT_OF_BOUNDS
 StringBuilder* substringFromBuilder(StringBuilder* builder, int index, int length);
 
 /// \brief Shrinks a string builder so it doesn't have any extra memory on the end
-/// 
 /// \param builder The builder to shrink
+/// \throws ERROR_NULL_POINTER
 /// 
 /// This function removes any extra memory from the end of the char
 /// array, making the allocated memory only what it's using. If
@@ -94,6 +106,7 @@ void shrinkBuilder(StringBuilder* builder);
 /// \param builder The string builder to grab from
 /// 
 /// \return Returns a classic c-style string
+/// \throws ERROR_NULL_POINTER
 ///
 /// The string this returns belongs to the builder and as
 /// such it will be destroyed with the builder.
@@ -104,6 +117,7 @@ const char* getBuilderArray(StringBuilder* builder);
 /// \param builder the string builder to count up
 /// 
 /// \return Returns the total character count or -1 on failure
+/// \throws ERROR_NULL_POINTER
 /// 
 /// The reason this function exists instead of just
 /// taking from builder->length is because this function
@@ -134,4 +148,5 @@ double atof(const char* string);
 /// \param input The number to be converted
 /// 
 /// \return Returns the processed string which will need to be manually freed
+/// \throws ERROR_ALLOC_FAILED
 char* ftoa(double input);

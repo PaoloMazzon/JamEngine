@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include <stdio.h>
 #include <SDL_image.h>
+#include "JamError.h"
 
 ////////////////////////////////////////////////////////////////
 Texture* createTexture(Renderer* renderer, int w, int h) {
@@ -28,9 +29,11 @@ Texture* createTexture(Renderer* renderer, int w, int h) {
 			free(tex);
 			tex = NULL;
 			fprintf(stderr, "Failed to create SDL texture (createTexture). SDL Error: %s\n", SDL_GetError());
+			jSetError(ERROR_SDL_ERROR);
 		}
 	} else {
 		fprintf(stderr, "Failed to allocate Texture. SDL Error: %s\n", SDL_GetError());
+		jSetError(ERROR_SDL_ERROR);
 	}
 
 	// If we get a dud back, it returns null which informs the user
@@ -81,20 +84,25 @@ Texture* loadTexture(Renderer* renderer, const char* filename) {
 					free(tex);
 					tex = NULL;
 					fprintf(stderr, "Failed to create texture from surface (loadTexture). SDL Error: %s\n", SDL_GetError());
+					jSetError(ERROR_SDL_ERROR);
 				}
 			} else {
 				free(tex);
 				tex = NULL;
 				fprintf(stderr, "Failed to create SDL surface (loadTexture). SDL Error: %s\n", SDL_GetError());
+				jSetError(ERROR_SDL_ERROR);
 			}
 		} else {
 			fprintf(stderr, "Failed to allocate Texture. SDL Error: %s\n", SDL_GetError());
+			jSetError(ERROR_ALLOC_FAILED);
+
 		}
 	} else {
 		if (renderer == NULL)
 			fprintf(stderr, "Cannot load texture, null renderer passed. SDL Error: %s\n", SDL_GetError());
 		else
 			fprintf(stderr, "Cannot load texture, renderer contains no internal renderer. SDL Error: %s\n", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	// If we get a dud back, it returns null which informs the user

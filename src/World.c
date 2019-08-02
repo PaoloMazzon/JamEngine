@@ -9,6 +9,7 @@
 #include <Vector.h>
 #include <EntityList.h>
 #include <Sprite.h>
+#include "JamError.h"
 
 ///////////////////////////////////////////////////////
 World* createWorld() {
@@ -26,11 +27,13 @@ World* createWorld() {
 
 		if (error) {
 			fprintf(stderr, "Failed to allocate entity lists (createWorld)\n");
+			jSetError(ERROR_ALLOC_FAILED);
 			// keep on rocking in the
 			freeWorld(world);
 		}
 	} else {
 		fprintf(stderr, "Could not allocate world (createWorld)\n");
+		jSetError(ERROR_ALLOC_FAILED);
 	}
 
 	return world;
@@ -45,6 +48,7 @@ void setWorldFilterTypeRectangle(World* world, uint16 inRangeRectangleWidth, uin
 		world->inRangeRectangleHeight = inRangeRectangleHeight;
 	} else {
 		fprintf(stderr, "World does not exist (setWorldFilterTypeRectangle)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////
@@ -56,6 +60,7 @@ void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius) {
 		world->inRangeRadius = inRangeRadius;
 	} else {
 		fprintf(stderr, "World does not exist (setWorldFilterTypeCircle)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////
@@ -68,12 +73,18 @@ void worldAddEntity(World* world, Entity* entity) {
 		addEntityToList(world->entityTypes[entity->type], entity);
 		addEntityToList(world->worldEntities, entity);
 	} else {
-		if (world == NULL)
+		if (world == NULL) {
 			fprintf(stderr, "World does not exist (worldAddEntity)\n");
-		if (entity == NULL)
+			jSetError(ERROR_NULL_POINTER);
+		}
+		if (entity == NULL) {
 			fprintf(stderr, "Entity does not exist (worldAddEntity)\n");
-		if (entity != NULL && entity->type >= MAX_ENTITY_TYPES)
+			jSetError(ERROR_NULL_POINTER);
+		}
+		if (entity != NULL && entity->type >= MAX_ENTITY_TYPES) {
 			fprintf(stderr, "Entity type is invalid (worldAddEntity)\n");
+			jSetError(ERROR_INCORRECT_FORMAT);
+		}
 	}
 }
 ///////////////////////////////////////////////////////
@@ -107,6 +118,7 @@ void worldRemoveEntity(World* world, Entity* entity) {
 		}
 	} else {
 		fprintf(stderr, "World does not exist (worldRemoveEntity)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////
@@ -128,6 +140,7 @@ void worldRotateEntity(World* world, Entity* entity) {
 		}
 	} else {
 		fprintf(stderr, "World does not exist (worldRotateEntity)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////
@@ -183,6 +196,7 @@ void filterEntitiesByProximity(World* world, int pointX, int pointY) {
 		}
 	} else {
 		fprintf(stderr, "World does not exist (filterEntitiesByProximity)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 ///////////////////////////////////////////////////////
@@ -198,8 +212,6 @@ void freeWorld(World* world) {
 		freeEntityList(world->entityByRange[ENTITIES_OUT_OF_RANGE], false);
 		freeEntityList(world->worldEntities, true);
 		free(world->worldMaps);
-	} else {
-		fprintf(stderr, "World does not exist (freeWorld)\n");
 	}
 }
 ///////////////////////////////////////////////////////
