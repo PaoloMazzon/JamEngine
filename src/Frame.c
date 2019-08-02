@@ -6,6 +6,7 @@
 #include "Drawing.h"
 #include "Texture.h"
 #include <stdio.h>
+#include <JamError.h>
 
 //////////////////////////////////////////////////////////////
 Frame* createFrame(Texture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
@@ -20,6 +21,7 @@ Frame* createFrame(Texture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
 		frame->h = h;
 	} else {
 		fprintf(stderr, "Could not allocate frame. (createFrame).\n");
+		jSetError(ERROR_ALLOC_FAILED);
 	}
 
 	return frame;
@@ -35,6 +37,7 @@ void drawFrame(Frame* frame, Renderer* renderer, sint32 x, sint32 y) {
 			fprintf(stderr, "Frame does not exist. (drawFrame).\n");
 		if (renderer != NULL)
 			fprintf(stderr, "Renderer does not exist. (drawFrame).\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 }
 //////////////////////////////////////////////////////////////

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "Vector.h"
+#include "JamError.h"
 
 // A function used only in this file, checks if a circle and rectangle are colliding
 bool _circRectColl(double cX, double cY, double cR, double rX, double rY, double rW, double rH) {
@@ -51,6 +52,7 @@ Hitbox* createHitbox(hitboxType type, double radius, double width, double height
 		hitbox->height = height;
 	} else {
 		fprintf(stderr, "Failed to allocate hitbox. (createHitbox)\n");
+		jSetError(ERROR_ALLOC_FAILED);
 	}
 
 	return hitbox;
@@ -81,6 +83,7 @@ bool checkHitboxCollision(Hitbox* hitbox1, double x1, double y1, Hitbox* hitbox2
 			fprintf(stderr, "Hitbox 1 does not exist. (checkHitboxCollision)\n");
 		if (hitbox2 == NULL)
 			fprintf(stderr, "Hitbox 2 does not exist. (checkHitboxCollision)\n");
+		jSetError(ERROR_NULL_POINTER);
 	}
 
 	return hit;

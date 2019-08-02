@@ -19,9 +19,12 @@ typedef struct {
 } INI;
 
 /// \brief Creates a new INI struct
+/// \throws ERROR_ALLOC_FAILED
 INI* createINI();
 
 /// \brief Loads an INI from a file
+/// \throws ERROR_ALLOC_FAILED
+/// \throws ERROR_OPEN_FAILED
 INI* loadINI(const char* filename);
 
 /// \brief This will print the INI file to a stream
@@ -32,15 +35,26 @@ INI* loadINI(const char* filename);
 /// file that loadINI will be able to read. It's also
 /// good for debugging because you can print your INIs
 /// to stdout/stderr/whatever.
+///
+/// \throws ERROR_NULL_POINTER
 void outputINI(INI* ini, FILE* stream);
 
 /// \brief Set a key in an INI
+/// \throws ERROR_ALLOC_FAILED
+/// \throws ERROR_NULL_POINTER
 void setKeyINI(INI* ini, const char* header, const char* key, char* val);
 
 /// \brief Gets a key from an INI
+/// \throws ERROR_NULL_POINTER
 char* getKeyINI(INI* ini, const char* header, const char* key, char* def);
 
-/// \brief Puts something to the garbage pile to be freed later
+/// \brief Puts something to the garbage pile to be freed on destruction
+///
+/// Don't use this function yourself unless you specifically
+/// want your string destroyed at precisely the time the ini
+/// will be.
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_REALLOC_FAILED
 void throwInGarbageINI(INI* ini, char* string);
 
 /// \brief Destroys an INI and all memory it allocated

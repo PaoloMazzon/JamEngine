@@ -20,9 +20,11 @@ typedef struct {
 } Hitbox;
 
 /// \brief Creates a hitbox
+/// \throws ERROR_ALLOC_FAILED
 Hitbox* createHitbox(hitboxType type, double radius, double width, double height);
 
 /// \brief Checks for a collision between two hitboxes
+/// \throws ERROR_NULL_POINTER
 bool checkHitboxCollision(Hitbox* hitbox1, double x1, double y1, Hitbox* hitbox2, double x2, double y2);
 
 /// \brief Clears a hitbox from memory

@@ -40,9 +40,12 @@ typedef struct {
 /// after, but if you care not for performance, spriteAppendFrame
 /// can be used and is a bit easier to use. If there is no animation
 /// you can just set the latter two arguments to 0/false.
+/// \throws ERROR_ALLOC_FAILED
 Sprite* createSprite(uint32 animationLength, uint16 frameDelay, bool looping);
 
 /// \brief Adds a frame to a sprite
+/// \throws ERROR_ALLOC_FAILED
+/// \throws ERROR_NULL_POINTER
 void spriteAppendFrame(Sprite* sprite, Frame* frame);
 
 /// \brief Loads a sprite from a spritesheet
@@ -57,18 +60,24 @@ void spriteAppendFrame(Sprite* sprite, Frame* frame);
 /// \param xAlign The alignment of the frames in the texture (in case they're not continuous)
 /// \param frameDelay The delay in in-game-frames between each frame in the animation
 /// \param looping Does the animation loop?
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_SDL_ERROR
 Sprite* loadSpriteFromSheet(Texture* spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet, uint32 cellW, uint32 cellH, uint32 paddingW, uint32 paddingH, uint32 xAlign, uint16 frameDelay, bool looping);
 
 /// \brief Updates a sprite's animation
 ///
 /// Don't run this if updateOnDraw is on, also don't
 /// run this multiple times a frame
+/// \throws ERROR_NULL_POINTER
 void updateSprite(Sprite* sprite);
 
 /// \brief Draws a sprite on screen
+/// \throws ERROR_NULL_POINTER
 void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y);
 
 /// \brief Draws a specific frame of a sprite without screwing with the animation
+/// \throws ERROR_OUT_OF_BOUNDS
+/// \throws ERROR_NULL_POINTER
 void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, uint32 frame);
 
 /// \brief Frees a sprite

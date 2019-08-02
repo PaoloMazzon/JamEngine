@@ -26,7 +26,10 @@ walls.
 As far as this documentation is concerned, when it says "Exceptions" it
 actually means that specific flag may be set to `jErrorCode` (which
 can be checked via `jGetError`). If an error occurs, the program will
-not cease to run, that's on you.
+not cease to run, that's on you. Please also note that while a function
+may say it only throws x y or z, it may call other Jam Engine functions
+that throw other things. This is to say that a function can indirectly
+raise errors that weren't denoted in the root function's documentation.
 
 Asset Loading System
 --------------------
