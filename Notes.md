@@ -71,8 +71,6 @@ Major To-Do List
  - Make individual `load*` functions for asset handler that checks and makes sure the types
   match up (instead of doing this manually every time)
  - Load this into Windows and make sure everything works okay on MinGW or MSVC or whatever
- - Make a better error-checking system (in addition to `stderr`) that will likely be a global
-  variable, a couple error setting/getting functions, and a bunch of error constants
  - Make drawSortedMap convert the `TileMap`'s values into sprite frames so it can be done
   quicker in the future.
  - Alot of Font.c is not verbose and this should be fixed.
