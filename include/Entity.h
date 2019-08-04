@@ -22,14 +22,15 @@
 /// these things, you can turn each individually off in the
 /// Constants.h file.
 typedef struct {
-	Sprite* sprite;      ///< This entity's sprite (NULL is safe)
-	Hitbox* hitbox;      ///< This entity's hitbox (NULL is safe)
-	EntityType type;     ///< Type of entity this is
-	double x;            ///< X position in the game world
-	double y;            ///< Y position in the game world
-	int processPriority; ///< Entities are processed in descending order
-	int entityID;        ///< The ID given to it by the asset loader when it was loaded
-	uint16 behaviour;    ///< Very open-ended, the engine does nothing with this
+	Sprite* sprite;       ///< This entity's sprite (NULL is safe)
+	Hitbox* hitbox;       ///< This entity's hitbox (NULL is safe)
+	EntityType type;      ///< Type of entity this is
+	double x;             ///< X position in the game world
+	double y;             ///< Y position in the game world
+	int processPriority;  ///< Entities are processed in descending order
+	uint16 behaviour;     ///< Very open-ended, the engine does nothing with this
+	double hitboxOffsetX; ///< The hitbox's offset from the entity, this ignore the sprite's origin
+	double hitboxOffsetY; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 
 #ifdef ENTITY_ENABLE_SPEED
 	double hSpeed;       ///< Horizontal speed (Can be disabled to save memory)
@@ -45,7 +46,7 @@ typedef struct {
 
 /// \brief Creates/initializes an entity class
 /// \throws ERROR_ALLOC_FAILED
-Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, int id);
+Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, double hitboxOffsetX, double hitboxOffsetY);
 
 /// \brief Makes a 1:1 copy of an entity and returns the new copy
 Entity* copyEntity(Entity* baseEntity);
@@ -66,7 +67,7 @@ bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2);
 /// This function uses the rx/ry coordinates for the entity, no the entity's x/y
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, int rx, int ry);
+bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, double ry);
 
 /// \brief Frees an entity from memory
 ///

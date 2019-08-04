@@ -5,10 +5,11 @@
 #include "Entity.h"
 #include "TileMap.h"
 #include <stdio.h>
+#include <Entity.h>
 #include "JamError.h"
 
 //////////////////////////////////////////////////////////
-Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, int id) {
+Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, double hitboxOffsetX, double hitboxOffsetY) {
 	Entity* ent = (Entity*)malloc(sizeof(Entity));
 
 	// Check that it worked
@@ -17,7 +18,8 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, int id) {
 		ent->hitbox = hitbox;
 		ent->x = x;
 		ent->y = y;
-		ent->entityID = id;
+		ent->hitboxOffsetX = hitboxOffsetX;
+		ent->hitboxOffsetY = hitboxOffsetY;
 		ent->hSpeed = 0;
 		ent->vSpeed = 0;
 		ent->friction = 0;
@@ -58,8 +60,7 @@ bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2) {
 
 	// Check both things exist
 	if (entity1 != NULL && entity2 != NULL && entity1->hitbox != NULL
-		&& entity1->sprite != NULL && entity2->hitbox != NULL
-		&& entity2->sprite != NULL) {
+		&& entity2->hitbox != NULL) {
 		// Load up the values
 		x1 = x;
 		y1 = y;
@@ -68,12 +69,12 @@ bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2) {
 
 		// Account for rectangular origins
 		if (entity1->hitbox->type == hitRectangle) {
-			x1 -= entity1->sprite->originX;
-			y1 -= entity1->sprite->originY;
+			x1 -= entity1->hitboxOffsetX;
+			y1 -= entity1->hitboxOffsetY;
 		}
 		if (entity2->hitbox->type == hitRectangle) {
-			x2 -= entity2->sprite->originX;
-			y2 -= entity2->sprite->originY;
+			x2 -= entity2->hitboxOffsetX;
+			y2 -= entity2->hitboxOffsetY;
 		}
 
 		// Now check the collision itself
@@ -112,23 +113,23 @@ bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, int rx, int ry) {
+bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, double ry) {
 	bool coll = false;
 	double x, y; // Accounting for origins
 
 	// Check both things exist
-	if (entity != NULL && entity->hitbox != NULL && entity->sprite != NULL && tileMap != NULL) {
+	if (entity != NULL && entity->hitbox != NULL && tileMap != NULL) {
 		x = rx;
 		y = ry;
 
 		// Account for rectangular origins
 		if (entity->hitbox->type == hitRectangle) {
-			x -= entity->sprite->originX;
-			y -= entity->sprite->originY;
+			x += entity->hitboxOffsetX;
+			y += entity->hitboxOffsetY;
 		}
 
 		// Now check the collision itself
-		coll = checkMapCollFast(tileMap, (int)x, (int)y, (int)entity->hitbox->width, (int)entity->hitbox->height);
+		coll = checkMapCollFast(tileMap, (int)round(x), (int)round(y), (int)entity->hitbox->width, (int)entity->hitbox->height);
 	} else {
 		if (entity == NULL) {
 			fprintf(stderr, "entity1 does not exist (checkEntityTileMapCollision).\n");

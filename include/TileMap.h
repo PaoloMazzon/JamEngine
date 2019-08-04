@@ -72,7 +72,7 @@ uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y);
 /// check as the fast one will not find all.
 ///
 /// \throws ERROR_NULL_POINTER
-bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h);
+bool checkMapCollFast(TileMap* tileMap, double x, double y, double w, double h);
 
 
 /// \brief Frees a tile map from memory

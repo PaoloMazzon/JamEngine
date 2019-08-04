@@ -13,6 +13,8 @@
 #include <Entity.h>
 #include <Sprite.h>
 #include <Hitbox.h>
+#include <Renderer.h>
+#include <Input.h>
 #include "AssetHandler.h"
 
 /////////////////// Constants ///////////////////
@@ -24,13 +26,13 @@
 #define BLOCK_HEIGHT 16
 
 // Takes a number and returns either -1, 1, or 0 depending on weather its positive negative or neither
-static inline int sign(double number) {
+static inline double sign(double number) {
 	if (number > 0)
-		return 1;
+		return 1.0;
 	else if (number < 0)
-		return -1;
+		return -1.0;
 	else
-		return 0;
+		return 0.0;
 }
 
 /////////////////////////////////////// The main menu ///////////////////////////////////////
@@ -141,20 +143,18 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				 * 2. If so, continually move a pixel towards it until you're touching it
 				 * 3. After we inch towards the wall, we correct the decimal place if there is one
 				*/
-				if (checkEntityTileMapCollision(ePlayer, currentLevel, (int) ePlayer->x + (int) ePlayer->hSpeed,
-												(int) ePlayer->y)) {
-					while (!checkEntityTileMapCollision(ePlayer, currentLevel, (int) ePlayer->x + sign(ePlayer->hSpeed),
-														(int) ePlayer->y))
-						ePlayer->x += (double) sign(ePlayer->hSpeed);
-					ePlayer->x = round(ePlayer->x - sign(ePlayer->hSpeed));
+				if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + ePlayer->hSpeed, ePlayer->y)) {
+					ePlayer->x -= ePlayer->hSpeed;
+					ePlayer->x = round(ePlayer->x);
+					while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + sign(ePlayer->hSpeed), ePlayer->y))
+						ePlayer->x += sign(ePlayer->hSpeed);
 					ePlayer->hSpeed = 0;
 				}
-				if (checkEntityTileMapCollision(ePlayer, currentLevel, (int) ePlayer->x,
-												(int) ePlayer->y + (int) ePlayer->vSpeed)) {
-					while (!checkEntityTileMapCollision(ePlayer, currentLevel, (int) ePlayer->x,
-														(int) ePlayer->y + sign(ePlayer->vSpeed)))
-						ePlayer->y += (double) sign(ePlayer->vSpeed);
-					ePlayer->y = round(ePlayer->y - sign(ePlayer->vSpeed));
+				if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + ePlayer->vSpeed)) {
+					ePlayer->y -= ePlayer->vSpeed;
+					ePlayer->y = round(ePlayer->y);
+					while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + sign(ePlayer->vSpeed)))
+						ePlayer->y += sign(ePlayer->vSpeed);
 					ePlayer->vSpeed = 0;
 				}
 				ePlayer->x += ePlayer->hSpeed;
@@ -172,13 +172,13 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				else
 					ePlayer->sprite = sPlayerStand;
 
+
 				// And finally, draw the player
 				drawEntity(renderer, ePlayer);
 				/////////////////////////////////////////////////////////////////////
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
-				renderFontExt(0, 0, "FPS: %f", font, renderer, 999, renderer->framerate);
-				drawRectangle(renderer, (int)ePlayer->x + ePlayer->sprite->originX, (int)ePlayer->y + ePlayer->sprite->originY, (int)ePlayer->hitbox->width, (int)ePlayer->hitbox->height);
+				renderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
 				/////////////////////////////////////////////////////////////////////
 
 				rendererProcEndFrame(renderer);

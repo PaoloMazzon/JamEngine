@@ -59,13 +59,13 @@ void addEntityToList(EntityList* list, Entity* entity) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Entity* popEntityFromList(EntityList* list, int entityID) {
-	Entity* search = NULL;
+Entity* popEntityFromList(EntityList* list, Entity* entity) {
 	int i = 0;
+	bool found = false;
 	if (list != NULL) {
-		while (i < list->size && search == NULL) {
-			if (list->entities[i]->entityID == entityID) {
-				search = list->entities[i];
+		while (i < list->size && found == false) {
+			if (list->entities[i] == entity) {
+				found = true;
 				list->entities[i] = NULL;
 			}
 			i++;
@@ -74,26 +74,7 @@ Entity* popEntityFromList(EntityList* list, int entityID) {
 		fprintf(stderr, "List does not exist (popEntityInList)\n");
 	}
 
-	return search;
-}
-///////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////
-Entity* findEntityInList(EntityList* list, int entityID) {
-	Entity* search = NULL;
-	int i = 0;
-	if (list != NULL) {
-		while (i < list->size && search == NULL) {
-			if (list->entities[i]->entityID == entityID)
-				search = list->entities[i];
-			i++;
-		}
-	} else {
-		jSetError(ERROR_NULL_POINTER);
-		fprintf(stderr, "List does not exist (findEntityInList)\n");
-	}
-
-	return search;
+	return entity;
 }
 ///////////////////////////////////////////////////////////////
 

@@ -210,7 +210,8 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 												getKeyINI(ini, ini->headerNames[i], "hitbox_id", "0")))->hitbox,
 										(int) atof(getKeyINI(ini, ini->headerNames[i], "x", "0")),
 										(int) atof(getKeyINI(ini, ini->headerNames[i], "y", "0")),
-										(int) atof(getKeyINI(ini, ini->headerNames[i], "id", "0"))
+										(int) atof(getKeyINI(ini, ini->headerNames[i], "hitbox_offset_x", "0")),
+										(int) atof(getKeyINI(ini, ini->headerNames[i], "hitbox_offset_y", "0"))
 								), entAsset),
 								(int) atof(ini->headerNames[i] + 1)
 						);

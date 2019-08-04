@@ -56,12 +56,7 @@ void addEntityToList(EntityList* list, Entity* entity);
 /// \brief Removes an entity from the list and returns it
 /// \return Returns NULL if it was not found
 /// \throws ERROR_NULL_POINTER
-Entity* popEntityFromList(EntityList* list, int entityID);
-
-/// \brief Looks for and returns an entity from the list
-/// \return Returns NULL if it was not found
-/// \throws ERROR_NULL_POINTER
-Entity* findEntityInList(EntityList* list, int entityID);
+Entity* popEntityFromList(EntityList* list, Entity* entity);
 
 /// \brief Shrinks an entity list down to no bigger than needed
 /// \throws ERROR_REALLOC_FAILED
