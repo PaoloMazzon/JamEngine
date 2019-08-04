@@ -99,7 +99,11 @@ Asset* createAsset(void* pointer, enum AssetType type) {
 			fprintf(stderr, "Pointer does not exist (createAsset)\n");
 			jSetError(ERROR_NULL_POINTER);
 		}
+		free(asset);
+		asset = NULL;
 	}
+
+	return asset;
 }
 ///////////////////////////////////////////////////////////////
 

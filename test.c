@@ -10,6 +10,9 @@
 #include <time.h>
 #include "File.h"
 #include <math.h>
+#include <Entity.h>
+#include <Sprite.h>
+#include <Hitbox.h>
 #include "AssetHandler.h"
 
 /////////////////// Constants ///////////////////
@@ -100,7 +103,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 		/// properly formatted based on adjacent walls.
 		setRenderTarget(renderer, rtRoom);
 		drawTexture(renderer, tBackground, 0, 0);
-		drawSortedMap(renderer, sWallSet, currentLevel, 8, -2, 0, 0);
+		drawSortedMap(renderer, sWallSet, currentLevel, 0, 0, 0, 0);
 		setRenderTarget(renderer, NULL);
 
 		while (runLoop) {
@@ -175,6 +178,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				renderFontExt(0, 0, "FPS: %f", font, renderer, 999, renderer->framerate);
+				drawRectangle(renderer, (int)ePlayer->x + ePlayer->sprite->originX, (int)ePlayer->y + ePlayer->sprite->originY, (int)ePlayer->hitbox->width, (int)ePlayer->hitbox->height);
 				/////////////////////////////////////////////////////////////////////
 
 				rendererProcEndFrame(renderer);
