@@ -112,6 +112,11 @@ bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2) {
 }
 //////////////////////////////////////////////////////////
 
+int roundToInt(double x) {
+	x += 0.5;
+	return (int)(x);
+}
+
 //////////////////////////////////////////////////////////
 bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, double ry) {
 	bool coll = false;
@@ -119,17 +124,11 @@ bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, do
 
 	// Check both things exist
 	if (entity != NULL && entity->hitbox != NULL && tileMap != NULL) {
-		x = rx;
-		y = ry;
-
-		// Account for rectangular origins
-		if (entity->hitbox->type == hitRectangle) {
-			x += entity->hitboxOffsetX;
-			y += entity->hitboxOffsetY;
-		}
+		x = rx + entity->hitboxOffsetX;
+		y = ry + entity->hitboxOffsetY;
 
 		// Now check the collision itself
-		coll = checkMapCollFast(tileMap, (int)round(x), (int)round(y), (int)entity->hitbox->width, (int)entity->hitbox->height);
+		coll = checkMapCollFast(tileMap, roundToInt(x), roundToInt(y), (int)entity->hitbox->width, (int)entity->hitbox->height);
 	} else {
 		if (entity == NULL) {
 			fprintf(stderr, "entity1 does not exist (checkEntityTileMapCollision).\n");

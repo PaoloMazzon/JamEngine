@@ -40,7 +40,7 @@ Input* createInput();
 /// input class given to rendererProcEvents for input to work properly
 ///
 /// \throws ERROR_NULL_POINTER
-void updateInput(Input* input);
+void updateInput(Input* input, double screenMultiplier);
 
 /// \brief Checks if a key is currently pressed
 /// \throws ERROR_OUT_OF_BOUNDS

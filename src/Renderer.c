@@ -6,6 +6,7 @@
 #include "Texture.h"
 #include <stdio.h>
 #include <SDL_video.h>
+#include <Renderer.h>
 #include "Clock.h"
 #include "JamError.h"
 
@@ -157,12 +158,14 @@ void freeRenderer(Renderer* renderer) {
 bool rendererProcEvents(Renderer* renderer, Input* input) {
 	SDL_Event event;
 	bool ret = true;
+	int wW = 0;
 
 	// The preliminary check
 	if (renderer != NULL) {
 		// Check if we are given an input to update
 		if (input != NULL)
-			updateInput(input);
+			SDL_GetWindowSize(renderer->gameWindow, &wW, NULL);
+			updateInput(input, (double)wW / renderer->screenBuffer->w);
 
 		// Update the events queue and keyboard and etc you get the point
 		SDL_PumpEvents();

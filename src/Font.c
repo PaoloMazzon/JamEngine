@@ -311,7 +311,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 					renderCurrentChar = false;
 					if (unichar == 'n' || unichar == 10) {
 						charPlace.y += font->characterHeight;
-						charPlace.x = x - font->characterWidth;
+						charPlace.x = x;
 					} else if (unichar == '%') {
 						renderCurrentChar = true;
 					}

@@ -36,8 +36,8 @@ Input* createInput() {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void updateInput(Input* input) {
-	int i;
+void updateInput(Input* input, double screenMultiplier) {
+	int i, wx, wy;
 
 	// Check that the input exists
 	if (input != NULL) {
@@ -48,6 +48,9 @@ void updateInput(Input* input) {
 		// Update mouse stuff
 		input->previousMouseState = input->mouseState;
 		input->mouseState = SDL_GetMouseState(&input->mX, &input->mY);
+
+		input->mX = (int)((double)input->mX / screenMultiplier);
+		input->mY = (int)((double)input->mY / screenMultiplier);
 	} else {
 		fprintf(stderr, "Input doesn't exist (updateInput). SDL Error: %s", SDL_GetError());
 		jSetError(ERROR_NULL_POINTER);

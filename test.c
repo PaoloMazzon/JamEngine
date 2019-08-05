@@ -144,14 +144,14 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				 * 3. After we inch towards the wall, we correct the decimal place if there is one
 				*/
 				if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + ePlayer->hSpeed, ePlayer->y)) {
-					ePlayer->x -= ePlayer->hSpeed;
+					ePlayer->x -= sign(ePlayer->hSpeed);
 					ePlayer->x = round(ePlayer->x);
 					while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + sign(ePlayer->hSpeed), ePlayer->y))
 						ePlayer->x += sign(ePlayer->hSpeed);
 					ePlayer->hSpeed = 0;
 				}
 				if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + ePlayer->vSpeed)) {
-					ePlayer->y -= ePlayer->vSpeed;
+					ePlayer->y -= sign(ePlayer->vSpeed);
 					ePlayer->y = round(ePlayer->y);
 					while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + sign(ePlayer->vSpeed)))
 						ePlayer->y += sign(ePlayer->vSpeed);
@@ -178,7 +178,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				/////////////////////////////////////////////////////////////////////
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
-				renderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
+				renderFontExt(16, 16, "FPS: %f\n(%f,%f)", font, renderer, 999, round(renderer->framerate), ePlayer->x, ePlayer->y);
 				/////////////////////////////////////////////////////////////////////
 
 				rendererProcEndFrame(renderer);

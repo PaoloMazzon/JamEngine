@@ -131,17 +131,17 @@ uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool checkMapCollFast(TileMap* tileMap, double x, double y, double w, double h) {
+bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h) {
 	bool coll = false;
 	int x1, y1, x2, y2;
 
 	// Make sure the map is here
 	if (tileMap != NULL && tileMap->grid != NULL) {
 		// First get all the values
-		x1 = (int)floor(x / tileMap->cellWidth);
-		y1 = (int)floor(y / tileMap->cellHeight);
-		x2 = (int)floor((x + w) / tileMap->cellWidth);
-		y2 = (int)floor((y + h) / tileMap->cellHeight);
+		x1 = x / tileMap->cellWidth;
+		y1 = y / tileMap->cellHeight;
+		x2 = (x + w - 1) / tileMap->cellWidth;
+		y2 = (y + h - 1) / tileMap->cellHeight;
 
 		// Now check for a collision by just checking each corner
 		if (x1 >= 0 && x1 < tileMap->width && y1 >= 0 && y1 < tileMap->height
