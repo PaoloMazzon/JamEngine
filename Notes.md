@@ -31,6 +31,13 @@ may say it only throws x y or z, it may call other Jam Engine functions
 that throw other things. This is to say that a function can indirectly
 raise errors that weren't denoted in the root function's documentation.
 
+Even though some assets may require other assets in the asset loader
+(an entity needing a sprite and hitbox, for example), it does not matter
+in what order they are defined in the INI, the asset loader will load
+specifically in this order: textures -> sprites and hitboxes -> tilemaps
+and entities. This way, no matter what assets rely on other assets, there
+will never be an asset that is loaded before its dependencies.
+
 Asset Loading System
 --------------------
 The asset loader will load a single INI file at a time. This INI file is
@@ -75,6 +82,8 @@ Major To-Do List
   quicker in the future.
  - Alot of Font.c is not verbose and this should be fixed.
  - Go through and check what needs to be optimized
+ - Go through the asset loading function and put each asset's loading bit into its own function
+ - Give tile sheets their own x/y for collisions
 
 Features
 ========

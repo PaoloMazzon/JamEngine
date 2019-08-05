@@ -80,6 +80,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	Sprite* sWallSet = NULL;
 	Sprite* sPlayerMove = NULL;
 	Sprite* sPlayerStand = NULL;
+	Sprite* sPlayerJump = NULL;
 	Texture *tBackground = NULL;
 	Entity *ePlayer = NULL;
 	TileMap *tmLevel1 = NULL;
@@ -94,8 +95,9 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 		ePlayer = assetGet(handler, 1000)->entity;
 		tmLevel1 = assetGet(handler, 5000)->tileMap;
 		sWallSet = assetGet(handler, 3002)->spr;
-		sPlayerMove = assetGet(handler, 3001)->spr;;
-		sPlayerStand = assetGet(handler, 3000)->spr;;
+		sPlayerMove = assetGet(handler, 3001)->spr;
+		sPlayerStand = assetGet(handler, 3000)->spr;
+		sPlayerJump = assetGet(handler, 3003)->spr;
 		currentLevel = tmLevel1;
 
 		/////////// CREATE THE CURRENT ROOM'S BACKGROUND ///////////
@@ -160,6 +162,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				ePlayer->x += ePlayer->hSpeed;
 				ePlayer->y += ePlayer->vSpeed;
 
+				//////////////////////// Player Animations ////////////////////////
 				// We must invert the player if he is going left
 				if (ePlayer->hSpeed > 0)
 					ePlayer->sprite->scaleX = 1;
@@ -172,12 +175,11 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				else
 					ePlayer->sprite = sPlayerStand;
 
-
-				// And finally, draw the player
-				drawEntity(renderer, ePlayer);
-				/////////////////////////////////////////////////////////////////////
+				if (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + 1))
+					ePlayer->sprite = sPlayerJump;
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
+				drawEntity(renderer, ePlayer);
 				renderFontExt(16, 16, "FPS: %f\n(%f,%f)", font, renderer, 999, round(renderer->framerate), ePlayer->x, ePlayer->y);
 				/////////////////////////////////////////////////////////////////////
 
