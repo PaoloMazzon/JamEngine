@@ -20,6 +20,8 @@
 /// The collisionRangeStart/End variables define what portion of the tile sheet
 /// is dedicated to solid objects so the collision detection works properly.
 typedef struct {
+	int xInWorld;               ///< X position in the world of the grid (for collisions only, drawing ignores this)
+	int yInWorld;               ///< Y position in the world of the grid (for collisions only, drawing ignores this)
 	uint32 width;               ///< Grid's width
 	uint32 height;              ///< Grid's height
 	uint32 cellWidth;           ///< Width of any given cell in the map

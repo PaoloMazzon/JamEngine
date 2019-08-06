@@ -79,22 +79,34 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id);
 /// \throws ERROR_OPEN_FAILED
 void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename);
 
-/// \brief Makes sure the assets in given ranges match their proper type
-///
-/// This function checks to make sure that every number between each range
-/// is its respective asset type. This is useful for mass checking what
-/// you load, since you can set it up such that all sprites are between
-/// 1000-1999 and so on. This function also makes sure that all the assets
-/// are not NULL pointers. All problems reported to stderr.
-///
-/// \throws ERROR_NULL_POINTER
-/// \throws ERROR_ASSET_WRONG_TYPE
-bool assetAssertRanges(AssetHandler* handler, int entRangeStart, int entRangeEnd, int sprRangeStart, int sprRangeEnd,
-					   int tileRangeStart, int tileRangeEnd, int texRangeStart, int texRangeEnd, int hitRangeStart, int hitRangeEnd);
-
 /// \brief Grabs an asset, or returns NULL if the key is not bound
 /// \throws ERROR_NULL_POINTER
 Asset* assetGet(AssetHandler* assetHandler, int key);
+
+/// \brief Pulls a specific asset safely, making sure the types match up
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ASSET_WRONG_TYPE
+Sprite* assetGetSprite(AssetHandler* handler, int key);
+
+/// \brief Pulls a specific asset safely, making sure the types match up
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ASSET_WRONG_TYPE
+Entity* assetGetEntity(AssetHandler* handler, int key);
+
+/// \brief Pulls a specific asset safely, making sure the types match up
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ASSET_WRONG_TYPE
+Hitbox* assetGetHitbox(AssetHandler* handler, int key);
+
+/// \brief Pulls a specific asset safely, making sure the types match up
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ASSET_WRONG_TYPE
+Texture* assetGetTexture(AssetHandler* handler, int key);
+
+/// \brief Pulls a specific asset safely, making sure the types match up
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ASSET_WRONG_TYPE
+TileMap* assetGetTileMap(AssetHandler* handler, int key);
 
 /// \brief Frees an asset handler and all of its components
 AssetHandler* freeAssetHandler(AssetHandler* handler);

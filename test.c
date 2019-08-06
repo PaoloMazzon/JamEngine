@@ -16,6 +16,7 @@
 #include <Renderer.h>
 #include <Input.h>
 #include "AssetHandler.h"
+#include <JamError.h>
 
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
@@ -74,31 +75,26 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	bool mainMenu = false; // Weather or not return to main menu
 	bool runLoop = true;
 
-	// Initialize assets
-	Texture *rtRoom = createTexture(renderer, GAME_WIDTH, GAME_HEIGHT);
+	// Load the asset handler
 	AssetHandler* handler = createAssetHandler();
-	Sprite* sWallSet = NULL;
-	Sprite* sPlayerMove = NULL;
-	Sprite* sPlayerStand = NULL;
-	Sprite* sPlayerJump = NULL;
-	Texture *tBackground = NULL;
-	Entity *ePlayer = NULL;
-	TileMap *tmLevel1 = NULL;
-	TileMap *currentLevel = NULL;
-
-	// Load the assets them check them
 	assetLoadINI(handler, renderer, "assets/level0.ini");
-	fflush(stderr);
-	if (assetAssertRanges(handler, 1000, 1999, 3000, 3999, 5000, 5999, 2000, 2999, 4000, 4999) && rtRoom != NULL) {
-		// Load assets from the handler
-		tBackground = assetGet(handler, 2000)->tex;
-		ePlayer = assetGet(handler, 1000)->entity;
-		tmLevel1 = assetGet(handler, 5000)->tileMap;
-		sWallSet = assetGet(handler, 3002)->spr;
-		sPlayerMove = assetGet(handler, 3001)->spr;
-		sPlayerStand = assetGet(handler, 3000)->spr;
-		sPlayerJump = assetGet(handler, 3003)->spr;
-		currentLevel = tmLevel1;
+
+	// Load all the game assets from the handler
+	Sprite* sWallSet = assetGetSprite(handler, 3002);
+	Sprite* sPlayerMove = assetGetSprite(handler, 3001);
+	Sprite* sPlayerStand = assetGetSprite(handler, 3000);
+	Sprite* sPlayerJump = assetGetSprite(handler, 3003);
+	Texture *tBackground = assetGetTexture(handler, 2000);
+	Entity *ePlayer = assetGetEntity(handler, 1000);
+	TileMap *tmLevel1 = assetGetTileMap(handler, 5000);
+	TileMap *currentLevel = tmLevel1;
+
+	// Instead of drawing the grid everyframe, just draw it once to this
+	Texture *rtRoom = createTexture(renderer, GAME_WIDTH, GAME_HEIGHT);
+
+	// We don't really care what went wrong, but if something went wrong while
+	// while loading assets, we cannot continue.
+	if (jGetError() == 0) {
 
 		/////////// CREATE THE CURRENT ROOM'S BACKGROUND ///////////
 		/// This beautiful function "drawSortedMap" allows us

@@ -242,60 +242,6 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-bool assetAssertRanges(AssetHandler* handler, int entRangeStart, int entRangeEnd, int sprRangeStart, int sprRangeEnd,
-					   int tileRangeStart, int tileRangeEnd, int texRangeStart, int texRangeEnd, int hitRangeStart, int hitRangeEnd) {
-	bool assert = true;
-	int i = 0;
-
-	if (handler != NULL) {
-		while (i < handler->size && assert) {
-			// We must make sure that whatever asset is here is proper
-			if (handler->vals[i] != NULL) {
-				if (handler->vals[i]->type == sprAsset) {
-					if (handler->ids[i] > sprRangeEnd || handler->ids[i] < sprRangeStart) {
-						assert = false;
-						fprintf(stderr, "Asset of ID %i did not pass assertion (Wrong asset type - assetAssertRanges)\n", handler->ids[i]);
-					}
-				} else if (handler->vals[i]->type == entAsset) {
-					if (handler->ids[i] > entRangeEnd || handler->ids[i] < entRangeStart) {
-						assert = false;
-						fprintf(stderr, "Asset of ID %i did not pass assertion (Wrong asset type - assetAssertRanges)\n", handler->ids[i]);
-					}
-				} else if (handler->vals[i]->type == hitAsset) {
-					if (handler->ids[i] > hitRangeEnd || handler->ids[i] < hitRangeStart) {
-						assert = false;
-						fprintf(stderr, "Asset of ID %i did not pass assertion (Wrong asset type - assetAssertRanges)\n", handler->ids[i]);
-					}
-				} else if (handler->vals[i]->type == tileAsset) {
-					if (handler->ids[i] > tileRangeEnd || handler->ids[i] < tileRangeStart) {
-						assert = false;
-						fprintf(stderr, "Asset of ID %i did not pass assertion (Wrong asset type - assetAssertRanges)\n", handler->ids[i]);
-					}
-				} else if (handler->vals[i]->type == texAsset) {
-					if (handler->ids[i] > texRangeEnd || handler->ids[i] < texRangeStart) {
-						assert = false;
-						fprintf(stderr, "Asset of ID %i did not pass assertion (Wrong asset type - assetAssertRanges)\n", handler->ids[i]);
-					}
-				}
-			} else {
-				assert = false;
-				fprintf(stderr, "Asset of ID %i did not pass assertion (Does not exist - assetAssertRanges)\n", handler->ids[i]);
-			}
-			i++;
-		}
-	} else {
-		fprintf(stderr, "Handler does not exist (assetAssertRanges)\n");
-		jSetError(ERROR_NULL_POINTER);
-	}
-
-	if (!assert)
-		jSetError(ERROR_ASSET_WRONG_TYPE);
-
-	return assert;
-}
-///////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////
 Asset* assetGet(AssetHandler* assetHandler, int key) {
 	int i;
 	Asset* asset = NULL;
@@ -309,6 +255,126 @@ Asset* assetGet(AssetHandler* assetHandler, int key) {
 	}
 
 	return asset;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+Sprite* assetGetSprite(AssetHandler* handler, int key) {
+	Asset* asset = assetGet(handler, key);
+	Sprite* returnVal = NULL;
+
+	if (handler != NULL) {
+		if (asset != NULL && asset->type == sprAsset) {
+			returnVal = asset->spr;
+		} else if (asset != NULL) {
+			fprintf(stderr, "Incorrect asset type for key %i, expected sprite (assetGetSprite)\n");
+			jSetError(ERROR_ASSET_WRONG_TYPE);
+		} else {
+			fprintf(stderr, "Failed to find sprite for key %i (assetGetSprite)\n");
+			jSetError(ERROR_ASSET_NOT_FOUND);
+		}
+	} else {
+		fprintf(stderr, "AssetHandler does not exist (assetGetSprite)\n");
+		jSetError(ERROR_NULL_POINTER);
+	}
+
+	return returnVal;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+Entity* assetGetEntity(AssetHandler* handler, int key) {
+	Asset* asset = assetGet(handler, key);
+	Entity* returnVal = NULL;
+
+	if (handler != NULL) {
+		if (asset != NULL && asset->type == entAsset) {
+			returnVal = asset->entity;
+		} else if (asset != NULL) {
+			fprintf(stderr, "Incorrect asset type for key %i, expected entity (assetGetEntity)\n");
+			jSetError(ERROR_ASSET_WRONG_TYPE);
+		} else {
+			fprintf(stderr, "Failed to find entity for key %i (assetGetEntity)\n");
+			jSetError(ERROR_ASSET_NOT_FOUND);
+		}
+	} else {
+		fprintf(stderr, "AssetHandler does not exist (assetGetEntity)\n");
+		jSetError(ERROR_NULL_POINTER);
+	}
+
+	return returnVal;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+Hitbox* assetGetHitbox(AssetHandler* handler, int key) {
+	Asset* asset = assetGet(handler, key);
+	Hitbox* returnVal = NULL;
+
+	if (handler != NULL) {
+		if (asset != NULL && asset->type == hitAsset) {
+			returnVal = asset->hitbox;
+		} else if (asset != NULL) {
+			fprintf(stderr, "Incorrect asset type for key %i, expected hitbox (assetGetHitbox)\n");
+			jSetError(ERROR_ASSET_WRONG_TYPE);
+		} else {
+			fprintf(stderr, "Failed to find hitbox for key %i (assetGetHitbox)\n");
+			jSetError(ERROR_ASSET_NOT_FOUND);
+		}
+	} else {
+		fprintf(stderr, "AssetHandler does not exist (assetGetHitbox)\n");
+		jSetError(ERROR_NULL_POINTER);
+	}
+
+	return returnVal;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+Texture* assetGetTexture(AssetHandler* handler, int key) {
+	Asset* asset = assetGet(handler, key);
+	Texture* returnVal = NULL;
+
+	if (handler != NULL) {
+		if (asset != NULL && asset->type == texAsset) {
+			returnVal = asset->tex;
+		} else if (asset != NULL) {
+			fprintf(stderr, "Incorrect asset type for key %i, expected texture (assetGetTexture)\n");
+			jSetError(ERROR_ASSET_WRONG_TYPE);
+		} else {
+			fprintf(stderr, "Failed to find texture for key %i (assetGetTexture)\n");
+			jSetError(ERROR_ASSET_NOT_FOUND);
+		}
+	} else {
+		fprintf(stderr, "AssetHandler does not exist(assetGetTexture)\n");
+		jSetError(ERROR_NULL_POINTER);
+	}
+
+	return returnVal;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+TileMap* assetGetTileMap(AssetHandler* handler, int key) {
+	Asset* asset = assetGet(handler, key);
+	TileMap* returnVal = NULL;
+
+	if (handler != NULL) {
+		if (asset != NULL && asset->type == tileAsset) {
+			returnVal = asset->tileMap;
+		} else if (asset != NULL) {
+			fprintf(stderr, "Incorrect asset type for key %i, expected tileMap (assetGetTileMap)\n");
+			jSetError(ERROR_ASSET_WRONG_TYPE);
+		} else {
+			fprintf(stderr, "Failed to find tileMap for key %i (assetGetTileMap)\n");
+			jSetError(ERROR_ASSET_NOT_FOUND);
+		}
+	} else {
+		fprintf(stderr, "AssetHandler does not exist(assetGetTileMap)\n");
+		jSetError(ERROR_NULL_POINTER);
+	}
+
+	return returnVal;
 }
 ///////////////////////////////////////////////////////////////
 

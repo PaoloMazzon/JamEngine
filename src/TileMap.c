@@ -26,6 +26,8 @@ TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cel
 			map->cellHeight = cellHeight;
 			map->collisionRangeStart = 1;
 			map->collisionRangeEnd = 1;
+			map->xInWorld = 0;
+			map->yInWorld = 0;
 		} else {
 			free(map);
 			fprintf(stderr, "Failed to allocate tile map's grid.\n");
@@ -138,10 +140,10 @@ bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h) {
 	// Make sure the map is here
 	if (tileMap != NULL && tileMap->grid != NULL) {
 		// First get all the values
-		x1 = x / tileMap->cellWidth;
-		y1 = y / tileMap->cellHeight;
-		x2 = (x + w - 1) / tileMap->cellWidth;
-		y2 = (y + h - 1) / tileMap->cellHeight;
+		x1 = (x / tileMap->cellWidth) - tileMap->xInWorld;
+		y1 = (y / tileMap->cellHeight) - tileMap->yInWorld;
+		x2 = ((x + w - 1) / tileMap->cellWidth) - tileMap->xInWorld;
+		y2 = ((y + h - 1) / tileMap->cellHeight) - tileMap->yInWorld;
 
 		// Now check for a collision by just checking each corner
 		if (x1 >= 0 && x1 < tileMap->width && y1 >= 0 && y1 < tileMap->height

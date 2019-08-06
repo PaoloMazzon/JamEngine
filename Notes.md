@@ -75,8 +75,6 @@ Major To-Do List
  - There is a potential memory leak in loadAssetIntoHandler where if you pass
   something with the same ID it will do nothing and create a memory leak with anything
   passed into it.
- - Make individual `load*` functions for asset handler that checks and makes sure the types
-  match up (instead of doing this manually every time)
  - Load this into Windows and make sure everything works okay on MinGW or MSVC or whatever
  - Make drawSortedMap convert the `TileMap`'s values into sprite frames so it can be done
   quicker in the future.
