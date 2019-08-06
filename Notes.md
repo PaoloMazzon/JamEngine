@@ -75,13 +75,10 @@ Major To-Do List
  - There is a potential memory leak in loadAssetIntoHandler where if you pass
   something with the same ID it will do nothing and create a memory leak with anything
   passed into it.
- - Load this into Windows and make sure everything works okay on MinGW or MSVC or whatever
- - Make drawSortedMap convert the `TileMap`'s values into sprite frames so it can be done
-  quicker in the future.
+ - Load this into Windows and make sure everything works okay on MinGW or MSVC or whatever 
  - Alot of Font.c is not verbose and this should be fixed.
  - Go through and check what needs to be optimized
  - Go through the asset loading function and put each asset's loading bit into its own function
- - Give tile sheets their own x/y for collisions
 
 Features
 ========
