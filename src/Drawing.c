@@ -7,6 +7,7 @@
 #include <Renderer.h>
 #include "JamError.h"
 
+
 //////////////////////////////////////////////////////////////
 void drawSetColour(Renderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
 	if (renderer != NULL) {
@@ -32,6 +33,7 @@ void drawGetColour(Renderer* renderer, uint8* r, uint8* g, uint8* b, uint8* a) {
 //////////////////////////////////////////////////////////////
 void drawRectangle(Renderer* renderer, int x, int y, int w, int h) {
 	SDL_Rect rectangle;
+	calculateForCamera(renderer, &x, &y);
 
 	// Very simple, just check for renderer then draw the rectangle
 	if (renderer != NULL) {
@@ -92,6 +94,7 @@ void drawFillColour(Renderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
 //////////////////////////////////////////////////////////////
 void drawTexture(Renderer* renderer, Texture* texture, sint32 x, sint32 y) {
 	SDL_Rect dest;
+	calculateForCamera(renderer, &x, &y);
 
 	// Check for both pieces
 	if (renderer != NULL && texture != NULL) {
@@ -115,6 +118,7 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 	int i, j;
 	bool n, e, s, w, ne, nw, se, sw;
 	int frame;
+	calculateForCamera(renderer, &x, &y);
 
 	// First confirm the things exist
 	if (renderer != NULL && spr != NULL && map != NULL && (spr->animationLength == 48 || spr->animationLength == 47)) {
@@ -259,6 +263,7 @@ void drawTextureExt(Renderer* renderer, Texture* texture, sint32 x, sint32 y, si
 	SDL_Point origin;
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 	Uint8 previousAlpha;
+	calculateForCamera(renderer, &x, &y);
 
 	// Check for both pieces
 	if (renderer != NULL && texture != NULL) {
@@ -304,6 +309,7 @@ void drawTextureExt(Renderer* renderer, Texture* texture, sint32 x, sint32 y, si
 void drawTexturePart(Renderer* renderer, Texture* texture, sint32 x, sint32 y, sint32 texX, sint32 texY, sint32 texW, sint32 texH) {
 	SDL_Rect dest;
 	SDL_Rect src;
+	calculateForCamera(renderer, &x, &y);
 
 	// Check for both pieces
 	if (renderer != NULL && texture != NULL) {
@@ -339,6 +345,7 @@ void drawTexturePartExt(Renderer* renderer, Texture* texture, sint32 x, sint32 y
 	SDL_Point origin;
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 	Uint8 previousAlpha;
+	calculateForCamera(renderer, &x, &y);
 
 	// Check for both pieces
 	if (renderer != NULL && texture != NULL) {

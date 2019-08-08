@@ -175,6 +175,8 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 					ePlayer->sprite = sPlayerJump;
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
+				renderer->cameraX = ePlayer->x - GAME_WIDTH / 2 + 8;
+				renderer->cameraY = ePlayer->y - GAME_HEIGHT / 2 + 16;
 				drawEntity(renderer, ePlayer);
 				renderFontExt(16, 16, "FPS: %f\n(%f,%f)", font, renderer, 999, round(renderer->framerate), ePlayer->x, ePlayer->y);
 				/////////////////////////////////////////////////////////////////////

@@ -49,6 +49,10 @@ typedef struct {
 	uint64_t timePerFrame; ///< Number of microseconds per frame
 	double framerate; ///< The current framerate
 	uint64_t fps; ///< The expected framerate
+	bool renderingToScreenBuffer; ///< Until SDL_GetRenderTarget is figured out, this is a stand in
+
+	double cameraX; ///< X Location of the camera in the game world (offset to render by)
+	double cameraY; ///< Y Location of the camera in the game world (offset to render by)
 } Renderer;
 
 /// \brief Initializes a Renderer
@@ -65,8 +69,18 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 /// \throws ERROR_NULL_POINTER
 bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool fullscreen, double framerate);
 
+/// \brief Checks if the render target is the screen buffer or not
+/// \throws ERROR_NULL_POINTER
+bool rendererIsScreenBuffer(Renderer* renderer);
+
+/// \brief Calculates x/y for the renderer's camera
+///
+/// If renderer is NULL, this function won't complain or anything,
+/// so you can throw this anywhere. This only changes the x and y
+/// if the renderer's render target is the screen.
+void calculateForCamera(Renderer* renderer, int* x, int* y);
+
 /// \brief Sets the render target, or null for the screen
-/// \throws
 /// \throws ERROR_NULL_POINTER
 void setRenderTarget(Renderer* renderer, Texture* texture);
 

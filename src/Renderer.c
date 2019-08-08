@@ -55,6 +55,8 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 					renderer->displayBufferH = h;
 					renderer->displayBufferX = 0;
 					renderer->displayBufferY = 0;
+					renderer->cameraX = 0;
+					renderer->cameraY = 0;
 					SDL_SetRenderTarget(sdlRenderer, tex->tex);
 				} else {
 					freeRenderer(renderer);
@@ -106,6 +108,7 @@ bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool 
 			renderer->screenBuffer = createTexture(renderer, (uint32)mode.w, (uint32)mode.h);
 			renderer->displayBufferW = (uint32)mode.w;
 			renderer->displayBufferW = (uint32)mode.h;
+			renderer->renderingToScreenBuffer = true;
 
 			SDL_SetWindowFullscreen(renderer->gameWindow, SDL_WINDOW_FULLSCREEN);
 
@@ -141,6 +144,30 @@ bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool 
 	return pass;
 }
 /////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+bool rendererIsScreenBuffer(Renderer* renderer) {
+	bool ret = false;
+
+	if (renderer != NULL) {
+		ret = renderer->renderingToScreenBuffer;
+	} else {
+		jSetError(ERROR_NULL_POINTER);
+		fprintf(stderr, "Renderer does not exist (rendererIsScreenBuffer)\n");
+	}
+
+	return ret;
+}
+/////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+void calculateForCamera(Renderer* renderer, int* x, int* y) {
+	if (rendererIsScreenBuffer(renderer)) {
+		*x -= renderer->cameraX;
+		*y -= renderer->cameraY;
+	}
+}
+//////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
 void freeRenderer(Renderer* renderer) {
@@ -188,8 +215,10 @@ void setRenderTarget(Renderer* renderer, Texture* texture) {
 	// The preliminary check
 	if (renderer != NULL) {
 		if (texture == NULL) {
+			renderer->renderingToScreenBuffer = true;
 			SDL_SetRenderTarget(renderer->internalRenderer, renderer->screenBuffer->tex);
 		} else {
+			renderer->renderingToScreenBuffer = false;
 			SDL_SetRenderTarget(renderer->internalRenderer, texture->tex);
 		}
 	} else {
