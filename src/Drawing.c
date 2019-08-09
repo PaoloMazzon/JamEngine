@@ -5,6 +5,7 @@
 #include "Drawing.h"
 #include <stdio.h>
 #include <Renderer.h>
+#include <TileMap.h>
 #include "JamError.h"
 
 
@@ -122,6 +123,11 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 
 	// First confirm the things exist
 	if (renderer != NULL && spr != NULL && map != NULL && (spr->animationLength == 48 || spr->animationLength == 47)) {
+		// Save this tileset to the tilemap
+		map->tileSheet = spr;
+		map->collisionRangeStart = 1;
+		map->collisionRangeEnd = 48;
+
 		// We gotta run through every cell
 		for (i = map->height - 1; i >= 0; i--) {
 			for (j = 0; j < map->width; j++) {
@@ -233,6 +239,7 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 						frame = 44;
 					}
 
+					setMapPos(map, (uint16)j, (uint16)i, (uint16)(frame + 1));
 					drawSpriteFrame(renderer, spr, x + (j * map->cellWidth + startingCellX), y + (i * map->cellHeight + startingCellY), (uint32)frame);
 				}
 			}
@@ -253,6 +260,34 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 			fprintf(stderr, "Sprite does not contain 48 frames(drawSortedMap)\n");
 			jSetError(ERROR_INCORRECT_FORMAT);
 		}
+	}
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+void drawTileMap(Renderer* renderer, TileMap* map, int x, int y, uint32 xInMapStart, uint32 yInMapStart, uint32 xInMapFinish, uint32 yInMapFinish) {
+	int i, j, originalX;
+	originalX = x;
+	if (renderer != NULL && map != NULL && map->tileSheet != NULL) {
+		if (xInMapFinish == 0) xInMapFinish = map->width - 1;
+		if (yInMapFinish == 0) yInMapFinish = map->height - 1;
+
+		for (i = yInMapStart; i <= yInMapFinish; i++) {
+			for (j = xInMapStart; j <= xInMapFinish; j++) {
+				drawSpriteFrame(renderer, map->tileSheet, x, y, (uint32)getMapPos(map, (uint16)j, (uint16)i) - 1);
+				x += map->cellWidth;
+			}
+			x = originalX;
+			y += map->cellHeight;
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER);
+		if (renderer == NULL)
+			fprintf(stderr, "Renderer does not exist (drawTileMap)\n");
+		if (map == NULL)
+			fprintf(stderr, "Map does not exist (drawTileMap)\n");
+		if (map != NULL && map->tileSheet == NULL)
+			fprintf(stderr, "Internal tilesheet does not exist (drawTileMap)\n");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -329,12 +364,6 @@ void drawTexturePart(Renderer* renderer, Texture* texture, sint32 x, sint32 y, s
 			fprintf(stderr, "Texture not present (drawTexturePart). SDL Error: %s", SDL_GetError());
 		jSetError(ERROR_NULL_POINTER);
 	}
-}
-//////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////
-void drawTileMap(Renderer* renderer, TileMap* tileMap, int x, int y, uint16 xInMapStart, uint16 yInMapStart, uint16 xInMapFinish, uint16 yInMapFinish) {
-	// TODO: This
 }
 //////////////////////////////////////////////////////////////
 

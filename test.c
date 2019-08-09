@@ -111,7 +111,9 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 			runLoop = rendererProcEvents(renderer, input);
 
 			if (runLoop) {
-				drawTexture(renderer, rtRoom, 0, 0);
+				//drawTexture(renderer, rtRoom, 0, 0);
+				drawTexture(renderer, tBackground, (sint32)renderer->cameraX, (sint32)renderer->cameraY);
+				drawTileMap(renderer, currentLevel, 0, 0, 0, 0, 0, 0);
 
 				////////////////////// PLAYER MOVEMENT/PHYSICS //////////////////////
 				// Gravity
