@@ -16,3 +16,6 @@ bool pointInRectangle(double px, double py, double rx, double ry, double rw, dou
 
 /// \brief Checks if a point is in a circle
 bool pointInCircle(double px, double py, double cx, double cy, double radius);
+
+/// \brief Returns val but clamped between min and max (eg, clamp(10, 4, 8) would return 8)
+double clamp(double val, double min, double max);

@@ -79,6 +79,8 @@ Major To-Do List
  - Alot of Font.c is not verbose and this should be fixed.
  - Go through and check what needs to be optimized
  - Go through the asset loading function and put each asset's loading bit into its own function
+ - Make sprite transformations (scale, rotation, etc..) stored on an entity-to-entity basis instead
+  of a per-sprite basis
 
 Features
 ========

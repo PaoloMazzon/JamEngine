@@ -268,13 +268,16 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 void drawTileMap(Renderer* renderer, TileMap* map, int x, int y, uint32 xInMapStart, uint32 yInMapStart, uint32 xInMapFinish, uint32 yInMapFinish) {
 	int i, j, originalX;
 	originalX = x;
+	uint32 val;
 	if (renderer != NULL && map != NULL && map->tileSheet != NULL) {
 		if (xInMapFinish == 0) xInMapFinish = map->width - 1;
 		if (yInMapFinish == 0) yInMapFinish = map->height - 1;
 
 		for (i = yInMapStart; i <= yInMapFinish; i++) {
 			for (j = xInMapStart; j <= xInMapFinish; j++) {
-				drawSpriteFrame(renderer, map->tileSheet, x, y, (uint32)getMapPos(map, (uint16)j, (uint16)i) - 1);
+				val = (uint32)getMapPos(map, (uint16)j, (uint16)i);
+				if (val > 0)
+					drawSpriteFrame(renderer, map->tileSheet, x, y, val - 1);
 				x += map->cellWidth;
 			}
 			x = originalX;

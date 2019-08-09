@@ -234,14 +234,14 @@ void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, uin
 		);
 	} else {
 		if (renderer == NULL) {
-			fprintf(stderr, "Renderer does not exist (drawSprite).\n");
+			fprintf(stderr, "Renderer does not exist (drawSpriteFrame).\n");
 			jSetError(ERROR_NULL_POINTER);
 		}
 		if (sprite == NULL) {
-			fprintf(stderr, "Sprite does not exist (drawSprite).\n");
+			fprintf(stderr, "Sprite does not exist (drawSpriteFrame).\n");
 			jSetError(ERROR_NULL_POINTER);
 		} else if (frame >= sprite->animationLength) {
-			fprintf(stderr, "Frame %i out of bounds (drawSprite).\n", (int) frame);
+			fprintf(stderr, "Frame %i out of bounds (drawSpriteFrame).\n", (int) frame);
 			jSetError(ERROR_OUT_OF_BOUNDS);
 		}
 	}

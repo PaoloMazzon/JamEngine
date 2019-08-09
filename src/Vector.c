@@ -28,3 +28,13 @@ bool pointInCircle(double px, double py, double cx, double cy, double radius) {
 	return pointDistance(px, py, cx, cy) <= radius;
 }
 //////////////////////////////////////////////////
+
+//////////////////////////////////////////////////
+double clamp(double val, double min, double max) {
+	if (val < min)
+		return min;
+	if (val > max)
+		return max;
+	return val;
+}
+//////////////////////////////////////////////////

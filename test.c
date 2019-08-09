@@ -17,6 +17,8 @@
 #include <Input.h>
 #include "AssetHandler.h"
 #include <JamError.h>
+#include <Vector.h>
+#include <TileMap.h>
 
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
@@ -177,8 +179,8 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 					ePlayer->sprite = sPlayerJump;
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
-				renderer->cameraX = ePlayer->x - GAME_WIDTH / 2 + 8;
-				renderer->cameraY = ePlayer->y - GAME_HEIGHT / 2 + 16;
+				renderer->cameraX = clamp(ePlayer->x - GAME_WIDTH / 2 + 8, 0, currentLevel->width * currentLevel->cellWidth - GAME_WIDTH);
+				renderer->cameraY = clamp(ePlayer->y - GAME_HEIGHT / 2 + 16, 0, currentLevel->height * currentLevel->cellHeight - GAME_HEIGHT);
 				drawEntity(renderer, ePlayer);
 				renderFontExt(16, 16, "FPS: %f\n(%f,%f)", font, renderer, 999, round(renderer->framerate), ePlayer->x, ePlayer->y);
 				/////////////////////////////////////////////////////////////////////
@@ -199,7 +201,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 int main(int argc, char* argv[]) {
 	Renderer* renderer = createRenderer("Jam Engine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	Input* input = createInput();
-	Font* font = createFont(renderer, "assets/standardlatin.png", NULL);
+	Font* font = createFont(renderer, "assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;
 	font->characterWidth = 8;
 	bool run = true;
