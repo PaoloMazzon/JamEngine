@@ -122,6 +122,85 @@ AssetHandler* createAssetHandler() {
 }
 ///////////////////////////////////////////////////////////////
 
+//////////////////////// Functions that load individual pieces ////////////////////////
+void assetLoadTileMap(AssetHandler* assetHandler, INI* ini, const char* headerName) {
+	loadAssetIntoHandler(
+			assetHandler,
+			createAsset(loadTileMap(
+					getKeyINI(ini, headerName, "file", ""),
+					(uint32)atof(getKeyINI(ini, headerName, "grid_width", "0")),
+					(uint32)atof(getKeyINI(ini, headerName, "grid_height", "0")),
+					(uint32)atof(getKeyINI(ini, headerName, "cell_width", "0")),
+					(uint32)atof(getKeyINI(ini, headerName, "cell_height", "0"))), tileAsset),
+			(int)atof(headerName + 1)
+	);
+}
+
+void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerName) {
+	if (assetGet(assetHandler, (int)atof(getKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
+		loadAssetIntoHandler(
+				assetHandler,
+				createAsset(loadSpriteFromSheet(
+						assetGet(assetHandler, (int) atof(
+								getKeyINI(ini, headerName, "texture_id", "0")))->tex,
+						(uint32) atof(getKeyINI(ini, headerName, "animation_length", "1")),
+						(uint32) atof(getKeyINI(ini, headerName, "x_in_texture", "0")),
+						(uint32) atof(getKeyINI(ini, headerName, "y_in_texture", "0")),
+						(uint32) atof(getKeyINI(ini, headerName, "frame_width", "16")),
+						(uint32) atof(getKeyINI(ini, headerName, "frame_height", "16")),
+						(uint32) atof(getKeyINI(ini, headerName, "padding_width", "0")),
+						(uint32) atof(getKeyINI(ini, headerName, "padding_height", "0")),
+						(uint32) atof(getKeyINI(ini, headerName, "x_align", "0")),
+						(uint16) atof(getKeyINI(ini, headerName, "frame_delay", "0")),
+						(bool) atof(getKeyINI(ini, headerName, "looping", "0"))), sprAsset),
+				(int) atof(headerName + 1)
+		);
+	} else {
+		fprintf(stderr, "Failed to load sprite of id %s, tex not found (assetLoadINI)\\n", headerName + 1);
+		jSetError(ERROR_ASSET_NOT_FOUND);
+	}
+}
+
+void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerName) {
+	// Make sure we have all necessary assets
+	if (assetGet(assetHandler, (int)atof(getKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
+		&& assetGet(assetHandler, (int)atof(getKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
+		loadAssetIntoHandler(
+				assetHandler,
+				createAsset(createEntity(
+						assetGet(assetHandler, (int) atof(
+								getKeyINI(ini, headerName, "sprite_id", "0")))->spr,
+						assetGet(assetHandler, (int) atof(
+								getKeyINI(ini, headerName, "hitbox_id", "0")))->hitbox,
+						(int) atof(getKeyINI(ini, headerName, "x", "0")),
+						(int) atof(getKeyINI(ini, headerName, "y", "0")),
+						(int) atof(getKeyINI(ini, headerName, "hitbox_offset_x", "0")),
+						(int) atof(getKeyINI(ini, headerName, "hitbox_offset_y", "0"))
+				), entAsset),
+				(int) atof(headerName + 1)
+		);
+	} else {
+		fprintf(stderr, "Failed to load entity of id %s (assetLoadINI)\n", headerName + 1);
+		jSetError(ERROR_ASSET_NOT_FOUND);
+	}
+}
+
+void assetLoadHitbox(AssetHandler* assetHandler, INI* ini, const char* headerName) {
+	hitboxType hType = hitRectangle;
+	if (getKeyINI(ini, headerName, "type", "rectangle") == "circle") hType = hitCircle;
+	loadAssetIntoHandler(
+			assetHandler,
+			createAsset(createHitbox(
+					hType,
+					atof(getKeyINI(ini, headerName, "radius", "0")),
+					atof(getKeyINI(ini, headerName, "width", "0")),
+					atof(getKeyINI(ini, headerName, "height", "0"))
+			), hitAsset),
+			(int)atof(headerName + 1)
+	);
+}
+//////////////////////// End of assetLoadINI support functions ////////////////////////
+
 ///////////////////////////////////////////////////////////////
 void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename) {
 	INI* ini = loadINI(filename);
@@ -144,41 +223,9 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strlen(ini->headerNames[i]) > 0) {
 				if (ini->headerNames[i][0] == INI_SPRITE_PREFIX) {
-					if (assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "texture_id", "0"))) != NULL) {
-						loadAssetIntoHandler(
-								assetHandler,
-								createAsset(loadSpriteFromSheet(
-										assetGet(assetHandler, (int) atof(
-												getKeyINI(ini, ini->headerNames[i], "texture_id", "0")))->tex,
-										(uint32) atof(getKeyINI(ini, ini->headerNames[i], "animation_length", "1")),
-										(uint32) atof(getKeyINI(ini, ini->headerNames[i], "x_in_texture", "0")),
-										(uint32) atof(getKeyINI(ini, ini->headerNames[i], "y_in_texture", "0")),
-										(uint32) atof(getKeyINI(ini, ini->headerNames[i], "frame_width", "16")),
-										(uint32) atof(getKeyINI(ini, ini->headerNames[i], "frame_height", "16")),
-										(uint32) atof(getKeyINI(ini, ini->headerNames[i], "padding_width", "0")),
-										(uint32) atof(getKeyINI(ini, ini->headerNames[i], "padding_height", "0")),
-										(uint32) atof(getKeyINI(ini, ini->headerNames[i], "x_align", "0")),
-										(uint16) atof(getKeyINI(ini, ini->headerNames[i], "frame_delay", "0")),
-										(bool) atof(getKeyINI(ini, ini->headerNames[i], "looping", "0"))), sprAsset),
-								(int) atof(ini->headerNames[i] + 1)
-						);
-					} else {
-						fprintf(stderr, "Failed to load sprite of id %s, tex not found (assetLoadINI)\\n", ini->headerNames[i] + 1);
-						jSetError(ERROR_ASSET_NOT_FOUND);
-					}
+					assetLoadSprite(assetHandler, ini, ini->headerNames[i]);
 				} else if (ini->headerNames[i][0] == INI_HITBOX_PREFIX) {
-					hitboxType hType = hitRectangle;
-					if (getKeyINI(ini, ini->headerNames[i], "type", "rectangle") == "circle") hType = hitCircle;
-					loadAssetIntoHandler(
-							assetHandler,
-							createAsset(createHitbox(
-									hType,
-									atof(getKeyINI(ini, ini->headerNames[i], "radius", "0")),
-									atof(getKeyINI(ini, ini->headerNames[i], "width", "0")),
-									atof(getKeyINI(ini, ini->headerNames[i], "height", "0"))
-							), hitAsset),
-							(int)atof(ini->headerNames[i] + 1)
-					);
+					assetLoadHitbox(assetHandler, ini, ini->headerNames[i]);
 				}
 			}
 		}
@@ -187,38 +234,9 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], "texture_ids") != 0) {
 				if (ini->headerNames[i][0] == INI_TILEMAP_PREFIX) {
-					loadAssetIntoHandler(
-							assetHandler,
-							createAsset(loadTileMap(
-									getKeyINI(ini, ini->headerNames[i], "file", ""),
-									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "grid_width", "0")),
-									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "grid_height", "0")),
-									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "cell_width", "0")),
-									(uint32)atof(getKeyINI(ini, ini->headerNames[i], "cell_height", "0"))), tileAsset),
-							(int)atof(ini->headerNames[i] + 1)
-					);
+					assetLoadTileMap(assetHandler, ini, ini->headerNames[i]);
 				} else if (ini->headerNames[i][0] == INI_ENTITY_PREFIX) {
-					// Make sure we have all necessary assets
-					if (assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "sprite_id", "0"))) != NULL
-					 && assetGet(assetHandler, (int)atof(getKeyINI(ini, ini->headerNames[i], "hitbox_id", "0"))) != NULL) {
-						loadAssetIntoHandler(
-								assetHandler,
-								createAsset(createEntity(
-										assetGet(assetHandler, (int) atof(
-												getKeyINI(ini, ini->headerNames[i], "sprite_id", "0")))->spr,
-										assetGet(assetHandler, (int) atof(
-												getKeyINI(ini, ini->headerNames[i], "hitbox_id", "0")))->hitbox,
-										(int) atof(getKeyINI(ini, ini->headerNames[i], "x", "0")),
-										(int) atof(getKeyINI(ini, ini->headerNames[i], "y", "0")),
-										(int) atof(getKeyINI(ini, ini->headerNames[i], "hitbox_offset_x", "0")),
-										(int) atof(getKeyINI(ini, ini->headerNames[i], "hitbox_offset_y", "0"))
-								), entAsset),
-								(int) atof(ini->headerNames[i] + 1)
-						);
-					} else {
-						fprintf(stderr, "Failed to load entity of id %s (assetLoadINI)\n", ini->headerNames[i] + 1);
-						jSetError(ERROR_ASSET_NOT_FOUND);
-					}
+					assetLoadEntity(assetHandler, ini, ini->headerNames[i]);
 				}
 			}
 		}
