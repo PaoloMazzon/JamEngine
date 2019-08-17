@@ -12,16 +12,21 @@
 #include <StringUtil.h>
 #include <JamError.h>
 
+// The base key comparison function
+bool keysEqual(AssetKey key1, AssetKey key2) {
+	return strcmp(key1, key2) == 0;
+}
+
 ///////////////////////////////////////////////////////////////
-void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id) {
+void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id) {
 	int i;
 	int exists = -1;
-	int* newInts = NULL;
+	AssetKey* newInts = NULL;
 	Asset** newAssets = NULL;
 	if (handler != NULL && asset != NULL) {
 		// Look and check if the ID already exists
 		for (i = 0; i < handler->size; i++)
-			if (handler->ids[i] == id)
+			if (keysEqual(handler->ids[i], id))
 				exists = i;
 
 		// Either throw it in its spot or make a new spot
@@ -42,7 +47,7 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id) {
 			handler->vals[exists] = asset;
 		} else {
 			// We must make room for a new piece
-			newInts = (int*)realloc((void*)handler->ids, sizeof(int) * (handler->size + 1));
+			newInts = (AssetKey*)realloc((void*)handler->ids, sizeof(AssetKey) * (handler->size + 1));
 			newAssets = (Asset**)realloc((void*)handler->vals, sizeof(Asset*) * (handler->size + 1));
 
 			if (newAssets != NULL && newInts != NULL) {
@@ -54,19 +59,19 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id) {
 				handler->size++;
 			} else {
 				// Oh heck go back
-				handler->ids = (int*)realloc((void*)handler->ids, sizeof(int) * (handler->size));
+				handler->ids = (AssetKey*)realloc((void*)handler->ids, sizeof(AssetKey) * (handler->size));
 				handler->vals = (Asset**)realloc((void*)handler->vals, sizeof(Asset*) * (handler->size));
-				fprintf(stderr, "Failed to increment handler size (loadAssetIntoHandler with ID %i)\n", id);
+				fprintf(stderr, "Failed to increment handler size (loadAssetIntoHandler with ID %s)\n", id);
 				jSetError(ERROR_REALLOC_FAILED);
 			}
 		}
 	} else {
 		if (handler == NULL) {
-			fprintf(stderr, "Handler does not exist (loadAssetIntoHandler with ID %i)\n", id);
+			fprintf(stderr, "Handler does not exist (loadAssetIntoHandler with ID %s)\n", id);
 			jSetError(ERROR_NULL_POINTER);
 		}
 		if (asset == NULL) {
-			fprintf(stderr, "Asset passed was null (loadAssetIntoHandler with ID %i)\n", id);
+			fprintf(stderr, "Asset passed was null (loadAssetIntoHandler with ID %s)\n", id);
 			jSetError(ERROR_NULL_POINTER);
 		}
 	}
@@ -132,17 +137,16 @@ void assetLoadTileMap(AssetHandler* assetHandler, INI* ini, const char* headerNa
 					(uint32)atof(getKeyINI(ini, headerName, "grid_height", "0")),
 					(uint32)atof(getKeyINI(ini, headerName, "cell_width", "0")),
 					(uint32)atof(getKeyINI(ini, headerName, "cell_height", "0"))), tileAsset),
-			(int)atof(headerName + 1)
+			(headerName + 1)
 	);
 }
 
 void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerName) {
-	if (assetGet(assetHandler, (int)atof(getKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
+	if (assetGet(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
 		loadAssetIntoHandler(
 				assetHandler,
 				createAsset(loadSpriteFromSheet(
-						assetGet(assetHandler, (int) atof(
-								getKeyINI(ini, headerName, "texture_id", "0")))->tex,
+						assetGet(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0")))->tex,
 						(uint32) atof(getKeyINI(ini, headerName, "animation_length", "1")),
 						(uint32) atof(getKeyINI(ini, headerName, "x_in_texture", "0")),
 						(uint32) atof(getKeyINI(ini, headerName, "y_in_texture", "0")),
@@ -153,7 +157,7 @@ void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerNam
 						(uint32) atof(getKeyINI(ini, headerName, "x_align", "0")),
 						(uint16) atof(getKeyINI(ini, headerName, "frame_delay", "0")),
 						(bool) atof(getKeyINI(ini, headerName, "looping", "0"))), sprAsset),
-				(int) atof(headerName + 1)
+				(headerName + 1)
 		);
 	} else {
 		fprintf(stderr, "Failed to load sprite of id %s, tex not found (assetLoadINI)\\n", headerName + 1);
@@ -163,21 +167,21 @@ void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerNam
 
 void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerName) {
 	// Make sure we have all necessary assets
-	if (assetGet(assetHandler, (int)atof(getKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
-		&& assetGet(assetHandler, (int)atof(getKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
+	if (assetGet(assetHandler, (getKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
+		&& assetGet(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
 		loadAssetIntoHandler(
 				assetHandler,
 				createAsset(createEntity(
-						assetGet(assetHandler, (int) atof(
-								getKeyINI(ini, headerName, "sprite_id", "0")))->spr,
-						assetGet(assetHandler, (int) atof(
-								getKeyINI(ini, headerName, "hitbox_id", "0")))->hitbox,
+						assetGet(assetHandler,
+								 (getKeyINI(ini, headerName, "sprite_id", "0")))->spr,
+						assetGet(assetHandler,
+								 (getKeyINI(ini, headerName, "hitbox_id", "0")))->hitbox,
 						(int) atof(getKeyINI(ini, headerName, "x", "0")),
 						(int) atof(getKeyINI(ini, headerName, "y", "0")),
 						(int) atof(getKeyINI(ini, headerName, "hitbox_offset_x", "0")),
 						(int) atof(getKeyINI(ini, headerName, "hitbox_offset_y", "0"))
 				), entAsset),
-				(int) atof(headerName + 1)
+				(headerName + 1)
 		);
 	} else {
 		fprintf(stderr, "Failed to load entity of id %s (assetLoadINI)\n", headerName + 1);
@@ -196,7 +200,7 @@ void assetLoadHitbox(AssetHandler* assetHandler, INI* ini, const char* headerNam
 					atof(getKeyINI(ini, headerName, "width", "0")),
 					atof(getKeyINI(ini, headerName, "height", "0"))
 			), hitAsset),
-			(int)atof(headerName + 1)
+			(headerName + 1)
 	);
 }
 //////////////////////// End of assetLoadINI support functions ////////////////////////
@@ -207,6 +211,9 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 	uint32 i, j;
 
 	if (assetHandler != NULL && renderer != NULL && ini != NULL) {
+		// Keep track of the ini (it holds the strings) and destroy it later
+		assetHandler->localINI = ini;
+
 		// Load the texture ids first
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
@@ -214,7 +221,7 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 					loadAssetIntoHandler(
 							assetHandler,
 							createAsset(loadTexture(renderer, ini->headers[i]->vals[j]), texAsset),
-							(int)atof(ini->headers[i]->keys[j])
+							(ini->headers[i]->keys[j])
 					);
 			}
 		}
@@ -254,18 +261,16 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 			jSetError(ERROR_OPEN_FAILED);
 		}
 	}
-
-	freeINI(ini);
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Asset* assetGet(AssetHandler* assetHandler, int key) {
+Asset* assetGet(AssetHandler* assetHandler, AssetKey key) {
 	int i;
 	Asset* asset = NULL;
 	if (assetHandler != NULL) {
 		for (i = 0; i < assetHandler->size; i++)
-			if (assetHandler->ids[i] == key)
+			if (keysEqual(assetHandler->ids[i], key))
 				asset = assetHandler->vals[i];
 	} else {
 		fprintf(stderr, "AssetHandler does not exist (assetGet)\n");
@@ -277,7 +282,7 @@ Asset* assetGet(AssetHandler* assetHandler, int key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Sprite* assetGetSprite(AssetHandler* handler, int key) {
+Sprite* assetGetSprite(AssetHandler* handler, AssetKey key) {
 	Asset* asset = assetGet(handler, key);
 	Sprite* returnVal = NULL;
 
@@ -285,10 +290,10 @@ Sprite* assetGetSprite(AssetHandler* handler, int key) {
 		if (asset != NULL && asset->type == sprAsset) {
 			returnVal = asset->spr;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %i, expected sprite (assetGetSprite)\n");
+			fprintf(stderr, "Incorrect asset type for key %s, expected sprite (assetGetSprite)\n", key);
 			jSetError(ERROR_ASSET_WRONG_TYPE);
 		} else {
-			fprintf(stderr, "Failed to find sprite for key %i (assetGetSprite)\n");
+			fprintf(stderr, "Failed to find sprite for key %s (assetGetSprite)\n", key);
 			jSetError(ERROR_ASSET_NOT_FOUND);
 		}
 	} else {
@@ -301,7 +306,7 @@ Sprite* assetGetSprite(AssetHandler* handler, int key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Entity* assetGetEntity(AssetHandler* handler, int key) {
+Entity* assetGetEntity(AssetHandler* handler, AssetKey key) {
 	Asset* asset = assetGet(handler, key);
 	Entity* returnVal = NULL;
 
@@ -309,10 +314,10 @@ Entity* assetGetEntity(AssetHandler* handler, int key) {
 		if (asset != NULL && asset->type == entAsset) {
 			returnVal = asset->entity;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %i, expected entity (assetGetEntity)\n");
+			fprintf(stderr, "Incorrect asset type for key %s, expected entity (assetGetEntity)\n", key);
 			jSetError(ERROR_ASSET_WRONG_TYPE);
 		} else {
-			fprintf(stderr, "Failed to find entity for key %i (assetGetEntity)\n");
+			fprintf(stderr, "Failed to find entity for key %s (assetGetEntity)\n", key);
 			jSetError(ERROR_ASSET_NOT_FOUND);
 		}
 	} else {
@@ -325,7 +330,7 @@ Entity* assetGetEntity(AssetHandler* handler, int key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Hitbox* assetGetHitbox(AssetHandler* handler, int key) {
+Hitbox* assetGetHitbox(AssetHandler* handler, AssetKey key) {
 	Asset* asset = assetGet(handler, key);
 	Hitbox* returnVal = NULL;
 
@@ -333,10 +338,10 @@ Hitbox* assetGetHitbox(AssetHandler* handler, int key) {
 		if (asset != NULL && asset->type == hitAsset) {
 			returnVal = asset->hitbox;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %i, expected hitbox (assetGetHitbox)\n");
+			fprintf(stderr, "Incorrect asset type for key %s, expected hitbox (assetGetHitbox)\n", key);
 			jSetError(ERROR_ASSET_WRONG_TYPE);
 		} else {
-			fprintf(stderr, "Failed to find hitbox for key %i (assetGetHitbox)\n");
+			fprintf(stderr, "Failed to find hitbox for key %s (assetGetHitbox)\n", key);
 			jSetError(ERROR_ASSET_NOT_FOUND);
 		}
 	} else {
@@ -349,7 +354,7 @@ Hitbox* assetGetHitbox(AssetHandler* handler, int key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Texture* assetGetTexture(AssetHandler* handler, int key) {
+Texture* assetGetTexture(AssetHandler* handler, AssetKey key) {
 	Asset* asset = assetGet(handler, key);
 	Texture* returnVal = NULL;
 
@@ -357,10 +362,10 @@ Texture* assetGetTexture(AssetHandler* handler, int key) {
 		if (asset != NULL && asset->type == texAsset) {
 			returnVal = asset->tex;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %i, expected texture (assetGetTexture)\n");
+			fprintf(stderr, "Incorrect asset type for key %s, expected texture (assetGetTexture)\n", key);
 			jSetError(ERROR_ASSET_WRONG_TYPE);
 		} else {
-			fprintf(stderr, "Failed to find texture for key %i (assetGetTexture)\n");
+			fprintf(stderr, "Failed to find texture for key %s (assetGetTexture)\n", key);
 			jSetError(ERROR_ASSET_NOT_FOUND);
 		}
 	} else {
@@ -373,7 +378,7 @@ Texture* assetGetTexture(AssetHandler* handler, int key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-TileMap* assetGetTileMap(AssetHandler* handler, int key) {
+TileMap* assetGetTileMap(AssetHandler* handler, AssetKey key) {
 	Asset* asset = assetGet(handler, key);
 	TileMap* returnVal = NULL;
 
@@ -381,10 +386,10 @@ TileMap* assetGetTileMap(AssetHandler* handler, int key) {
 		if (asset != NULL && asset->type == tileAsset) {
 			returnVal = asset->tileMap;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %i, expected tileMap (assetGetTileMap)\n");
+			fprintf(stderr, "Incorrect asset type for key %s, expected tileMap (assetGetTileMap)\n", key);
 			jSetError(ERROR_ASSET_WRONG_TYPE);
 		} else {
-			fprintf(stderr, "Failed to find tileMap for key %i (assetGetTileMap)\n");
+			fprintf(stderr, "Failed to find tileMap for key %s (assetGetTileMap)\n", key);
 			jSetError(ERROR_ASSET_NOT_FOUND);
 		}
 	} else {
@@ -416,6 +421,7 @@ AssetHandler* freeAssetHandler(AssetHandler* handler) {
 		}
 		free(handler->vals);
 		free(handler->ids);
+		freeINI(handler->localINI);
 		free(handler);
 	}
 }

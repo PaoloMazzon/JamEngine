@@ -43,7 +43,7 @@ Asset Loading System
 The asset loader will load a single INI file at a time. This INI file is
 expected to follow a certain format; every asset should have its own header
 with a single-character prefix denoting the type, followed by an ID for the
-asset. For example, a sprite header would look something like `[s481]`. You
+asset. For example, a sprite header would look something like `[sPlayerSprite]`. You
 could of course, also put a comment (with #) before every header to make it
 clear what the asset is too.
 
@@ -58,23 +58,26 @@ Do note that textures are a special case. All textures should be denoted in
 the INI by the following format:
 
     [texture_ids]
-    43=path/to/image.png
-    44=playersprite.png
-    45=monster.png
+    imageTexture=path/to/image.png
+    playerTexture=playersprite.png
+    monsterTexture=monster.png
     key=file
     ...
 
 Where the key is id of the texture and file is the path to the texture in the
 disk. *NOTE:* Do not use 0 as an ID as the loader needs that specific ID for
-error checking.
+error checking. Furthermore, it is vital that you never attempt to load an INI
+more than once for each instance of `AssetLoader`. This is due to how it
+manages memory (specifically the keys used as strings) and the fact that each
+loader will hold on to its original INI until destruction. Having the old INI
+available can make debugging easier and makes memory management a lot simpler
+as well since the asset loader is just responsible for cleaning up the INI instead
+of cleaning up * amount of strings. 
 
 Major To-Do List
 ----------------
  - Gamepad input
  - Rewrite the window resizing function so it doesn't crash the game if it fails
- - There is a potential memory leak in loadAssetIntoHandler where if you pass
-  something with the same ID it will do nothing and create a memory leak with anything
-  passed into it.
  - Load this into Windows and make sure everything works okay on MinGW or MSVC or whatever 
  - Alot of Font.c is not verbose and this should be fixed.
  - Go through and check what needs to be optimized

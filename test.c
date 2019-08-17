@@ -83,13 +83,13 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	assetLoadINI(handler, renderer, "assets/level0.ini");
 
 	// Load all the game assets from the handler
-	Sprite* sWallSet = assetGetSprite(handler, 3002);
-	Sprite* sPlayerMove = assetGetSprite(handler, 3001);
-	Sprite* sPlayerStand = assetGetSprite(handler, 3000);
-	Sprite* sPlayerJump = assetGetSprite(handler, 3003);
-	Texture *tBackground = assetGetTexture(handler, 2000);
-	Entity *ePlayer = assetGetEntity(handler, 1000);
-	TileMap *tmLevel1 = assetGetTileMap(handler, 5000);
+	Sprite* sWallSet = assetGetSprite(handler, "WallTilesetSprite");
+	Sprite* sPlayerMove = assetGetSprite(handler, "PlayerMovingSprite");
+	Sprite* sPlayerStand = assetGetSprite(handler, "PlayerStandingSprite");
+	Sprite* sPlayerJump = assetGetSprite(handler, "PlayerJumpingSprite");
+	Texture *tBackground = assetGetTexture(handler, "BackgroundTexture");
+	Entity *ePlayer = assetGetEntity(handler, "PlayerEntity");
+	TileMap *tmLevel1 = assetGetTileMap(handler, "Level0Tilemap");
 	TileMap *currentLevel = tmLevel1;
 
 	// Instead of drawing the grid everyframe, just draw it once to this

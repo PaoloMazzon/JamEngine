@@ -8,6 +8,7 @@
 #include "Font.h"
 #include "Entity.h"
 #include "Hitbox.h"
+#include "INI.h"
 
 enum AssetType {texAsset, sprAsset, tileAsset, entAsset, hitAsset};
 
@@ -26,6 +27,8 @@ typedef struct {
 		Hitbox* hitbox; ///< The internal hitbox
 	};
 } Asset;
+
+typedef const char* AssetKey;
 
 /// \brief Loads lots of assets at once from files
 /// to manage large projects
@@ -50,8 +53,9 @@ typedef struct {
 /// being loaded in first.
 typedef struct {
 	int size; ///< The size of the map
-	int* ids; ///< The keys that match up with the values
+	AssetKey* ids; ///< The keys that match up with the values
 	Asset** vals; ///< The actual assets
+	INI* localINI; ///< Let the INI keep track of internal string's memory
 } AssetHandler;
 
 /// \brief Creates an asset handler
@@ -65,9 +69,11 @@ AssetHandler* createAssetHandler();
 /// sprite and hitbox (Those must be loaded independently). Do
 /// not clean up assets yourself if you throw them into a handler.
 ///
+/// \warning Never run this more than once per assetLoader object, otherwise
+/// you will more than likely get a segfault and if not at least a memory leak.
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NUULL_POINTER
-void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, int id);
+void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id);
 
 /// \brief Loads all recognized assets from a directory
 ///
@@ -81,32 +87,32 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 
 /// \brief Grabs an asset, or returns NULL if the key is not bound
 /// \throws ERROR_NULL_POINTER
-Asset* assetGet(AssetHandler* assetHandler, int key);
+Asset* assetGet(AssetHandler* assetHandler, AssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Sprite* assetGetSprite(AssetHandler* handler, int key);
+Sprite* assetGetSprite(AssetHandler* handler, AssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Entity* assetGetEntity(AssetHandler* handler, int key);
+Entity* assetGetEntity(AssetHandler* handler, AssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Hitbox* assetGetHitbox(AssetHandler* handler, int key);
+Hitbox* assetGetHitbox(AssetHandler* handler, AssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Texture* assetGetTexture(AssetHandler* handler, int key);
+Texture* assetGetTexture(AssetHandler* handler, AssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-TileMap* assetGetTileMap(AssetHandler* handler, int key);
+TileMap* assetGetTileMap(AssetHandler* handler, AssetKey key);
 
 /// \brief Frees an asset handler and all of its components
 AssetHandler* freeAssetHandler(AssetHandler* handler);
