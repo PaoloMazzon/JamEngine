@@ -166,9 +166,9 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				//////////////////////// Player Animations ////////////////////////
 				// We must invert the player if he is going left
 				if (ePlayer->hSpeed > 0)
-					ePlayer->sprite->scaleX = 1;
+					ePlayer->scaleX = 1;
 				else if (ePlayer->hSpeed < 0)
-					ePlayer->sprite->scaleX = -1;
+					ePlayer->scaleX = -1;
 
 				// Walking/standing animations
 				if (ePlayer->hSpeed != 0)

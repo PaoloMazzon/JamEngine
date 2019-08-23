@@ -26,8 +26,6 @@ Sprite* createSprite(uint32 animationLength, uint16 frameDelay, bool looping) {
 		sprite->looping = looping;
 		sprite->originX = 0;
 		sprite->originY = 0;
-		sprite->scaleX = 1;
-		sprite->scaleY = 1;
 		sprite->rot = 0;
 		sprite->alpha = 255;
 		sprite->updateOnDraw = true;
@@ -184,7 +182,7 @@ void updateSprite(Sprite* sprite) {
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y) {
+void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY) {
 	if (sprite != NULL) {
 		// Update the sprite if that is to be done before drawing
 		if (sprite->updateOnDraw)
@@ -197,8 +195,8 @@ void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y) {
 		y,
 		sprite->originX,
 		sprite->originY,
-		sprite->scaleX,
-		sprite->scaleY,
+		scaleX,
+		scaleY,
 		sprite->rot,
 		sprite->alpha,
 		sprite->frames[sprite->currentFrame]->x,
@@ -214,7 +212,7 @@ void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y) {
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, uint32 frame) {
+void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, uint32 frame) {
 	if (renderer != NULL && sprite != NULL && frame < sprite->animationLength) {
 		// Draw it to the screen with all the crazy parameters
 		drawTexturePartExt(renderer,
@@ -223,8 +221,8 @@ void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, uin
 						   y,
 						   sprite->originX,
 						   sprite->originY,
-						   sprite->scaleX,
-						   sprite->scaleY,
+						   scaleX,
+						   scaleY,
 						   sprite->rot,
 						   sprite->alpha,
 						   sprite->frames[frame]->x,

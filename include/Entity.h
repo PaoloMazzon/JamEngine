@@ -31,6 +31,8 @@ typedef struct {
 	uint16 behaviour;     ///< Very open-ended, the engine does nothing with this
 	double hitboxOffsetX; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	double hitboxOffsetY; ///< The hitbox's offset from the entity, this ignore the sprite's origin
+	float scaleX;         ///< The x scale of the entity (for sprite rendering)
+	float scaleY;         ///< The y scale of the entity (for sprite rendering)
 
 #ifdef ENTITY_ENABLE_SPEED
 	double hSpeed;       ///< Horizontal speed (Can be disabled to save memory)

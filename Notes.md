@@ -80,10 +80,6 @@ Major To-Do List
  - Rewrite the window resizing function so it doesn't crash the game if it fails
  - Load this into Windows and make sure everything works okay on MinGW or MSVC or whatever 
  - Alot of Font.c is not verbose and this should be fixed.
- - Go through and check what needs to be optimized
- - Go through the asset loading function and put each asset's loading bit into its own function
- - Make sprite transformations (scale, rotation, etc..) stored on an entity-to-entity basis instead
-  of a per-sprite basis
 
 Features
 ========

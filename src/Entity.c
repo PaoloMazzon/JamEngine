@@ -18,6 +18,8 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, double hitbox
 		ent->hitbox = hitbox;
 		ent->x = x;
 		ent->y = y;
+		ent->scaleX = 1;
+		ent->scaleY = 1;
 		ent->hitboxOffsetX = hitboxOffsetX;
 		ent->hitboxOffsetY = hitboxOffsetY;
 		ent->hSpeed = 0;
@@ -42,7 +44,7 @@ Entity* copyEntity(Entity* baseEntity) {
 //////////////////////////////////////////////////////////
 void drawEntity(Renderer* renderer, Entity* entity) {
 	if (entity != NULL && renderer != NULL) {
-		drawSprite(renderer, entity->sprite, (sint32)entity->x, (sint32)entity->y);
+		drawSprite(renderer, entity->sprite, (sint32)entity->x, (sint32)entity->y, entity->scaleX, entity->scaleY);
 	} else {
 		if (entity == NULL)
 			fprintf(stderr, "Entity does not exist (drawEntity).\n");
