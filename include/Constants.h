@@ -35,6 +35,9 @@ typedef enum {fRectangle, fProximity} FilterType;
 // This is used to give unique IDs to whatever
 uint64 globalIDCounter;
 
+// This is the maximum number vertices checkMapCollision is allowed to check
+#define MAX_GRID_VERTICES 16
+
 // Optimization options - comment  out anything here to turn it off
 #define ENTITY_ENABLE_Z
 #define ENTITY_ENABLE_SPEED

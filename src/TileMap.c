@@ -165,6 +165,71 @@ bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
+bool checkMapCollision(TileMap* tileMap, int x, int y, int w, int h) {
+	// I have no idea why this is needed but it is so whatever
+	w--;
+	h--;
+
+	bool coll = false;
+	int i, j, xInRect, yInRect, xFactor, yFactor;
+	xInRect = x;
+	yInRect = y;
+	int verticesX[MAX_GRID_VERTICES];
+	int verticesY[MAX_GRID_VERTICES];
+	int currentVertex = 0;
+
+	// Make sure the map is here
+	if (tileMap != NULL && tileMap->grid != NULL) {
+		xFactor = (int)ceil((double)w / (double)tileMap->cellWidth) + 1;
+		yFactor = (int)ceil((double)h / (double)tileMap->cellHeight) + 1;
+
+		// We won't try collisions if this rectangle requires too many vertices
+		if (xFactor * yFactor < MAX_GRID_VERTICES) {
+			for (i = 0; i < yFactor; i++) {
+				for (j = 0; j < xFactor; j++) {
+					// Set the current vertex
+					verticesX[currentVertex] = (xInRect / tileMap->cellWidth) - tileMap->xInWorld;
+					verticesY[currentVertex] = (yInRect / tileMap->cellHeight) - tileMap->yInWorld;
+					currentVertex++;
+
+					// Calculate where to go from here
+					if (xInRect + tileMap->cellWidth > x + w)
+						xInRect = x + w;
+					else
+						xInRect += tileMap->cellWidth;
+				}
+				// Calculate where to go from here
+				xInRect = x;
+				if (yInRect + tileMap->cellHeight > y + h)
+					yInRect = y + h;
+				else
+					yInRect += tileMap->cellHeight;
+			}
+
+			// Actually check those vertices for a collision
+			for (i = 0; i < currentVertex && !coll; i++) {
+				// Make sure it's in bounds
+				if (verticesX[i] >= 0 && verticesX[i] < tileMap->width && verticesY[i] >= 0 && verticesY[i] < tileMap->height)
+					coll = tileMap->grid[verticesY[i] * tileMap->width + verticesX[i]] >= tileMap->collisionRangeStart && tileMap->grid[verticesY[i] * tileMap->width + verticesX[i]] <= tileMap->collisionRangeEnd;
+			}
+		} else {
+			fprintf(stderr, "Rectangle  [%i, %i, %i, %i] requires too many vertices (checkMapCollision)\n", x, y, w, h);
+			jSetError(ERROR_OUT_OF_BOUNDS);
+		}
+
+	} else {
+		if (tileMap != NULL)
+			fprintf(stderr, "Map does not exist (checkMapCollision).\n");
+		else
+			fprintf(stderr, "Map grid does not exist (checkMapCollision).\n");
+		jSetError(ERROR_NULL_POINTER);
+	}
+
+	return coll;
+}
+//////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////
 void freeTileMap(TileMap* tileMap) {
 	if (tileMap != NULL) {
 		free(tileMap->grid);

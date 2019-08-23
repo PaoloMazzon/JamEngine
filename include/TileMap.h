@@ -76,6 +76,17 @@ uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y);
 /// \throws ERROR_NULL_POINTER
 bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h);
 
+/// \brief Checks for a collision in a tile map
+///
+/// This collision check takes more memory and cycles to
+/// perform than checkMapCollFast but can handle any rectangle
+/// whereas the aforementioned can only properly check for
+/// rectangles that are smaller/equal to the size of the
+/// tile map's cells.
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_OUT_OF_BOUNDS
+bool checkMapCollision(TileMap* tileMap, int x, int y, int w, int h);
 
 /// \brief Frees a tile map from memory
 void freeTileMap(TileMap* tileMap);

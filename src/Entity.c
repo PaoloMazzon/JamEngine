@@ -130,7 +130,7 @@ bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, do
 		y = ry + entity->hitboxOffsetY;
 
 		// Now check the collision itself
-		coll = checkMapCollFast(tileMap, roundToInt(x), roundToInt(y), (int)entity->hitbox->width, (int)entity->hitbox->height);
+		coll = checkMapCollision(tileMap, roundToInt(x), roundToInt(y), (int)entity->hitbox->width, (int)entity->hitbox->height);
 	} else {
 		if (entity == NULL) {
 			fprintf(stderr, "entity1 does not exist (checkEntityTileMapCollision).\n");
