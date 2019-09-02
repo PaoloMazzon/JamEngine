@@ -4,6 +4,7 @@
 
 #include "EntityList.h"
 #include "JamError.h"
+#include <stdio.h>
 
 ///////////////////////////////////////////////////////////////
 EntityList* createEntityList() {

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <TileMap.h>
 #include "JamError.h"
+#include <math.h>
 
 //////////////////////////////////////////////////////////
 TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {

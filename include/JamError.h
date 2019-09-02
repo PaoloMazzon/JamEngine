@@ -19,6 +19,9 @@ uint16 jErrorCode;
 #define ERROR_REALLOC_FAILED   0b0000000000000010
 
 ///< Failed to open a file; lots of reasons this can happen
+#ifdef ERROR_OPEN_FAILED
+#undef ERROR_OPEN_FAILED
+#endif
 #define ERROR_OPEN_FAILED      0b0000000000000100
 
 ///< A null pointer was passed into a JamEngine function that expected otherwise (certain functions are ok with it)
