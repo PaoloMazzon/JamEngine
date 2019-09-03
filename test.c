@@ -18,6 +18,7 @@
 #include "AssetHandler.h"
 #include <JamError.h>
 #include <Vector.h>
+#include "World.h"
 #include <TileMap.h>
 
 /////////////////// Constants ///////////////////
@@ -89,8 +90,16 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	Sprite* sPlayerJump = assetGetSprite(handler, "PlayerJumpingSprite");
 	Texture *tBackground = assetGetTexture(handler, "BackgroundTexture");
 	Entity *ePlayer = assetGetEntity(handler, "PlayerEntity");
+	Entity* eEnemyBase = assetGetEntity(handler, "EnemyEntity");
 	TileMap *tmLevel1 = assetGetTileMap(handler, "Level0Tilemap");
 	TileMap *currentLevel = tmLevel1;
+
+	// The world
+	// TODO: This
+	World* gameWorld = createWorld();
+	setWorldFilterTypeRectangle(gameWorld, GAME_WIDTH - 100, GAME_HEIGHT - 100);
+	worldAddEntity(gameWorld, copyEntity(eEnemyBase, 100, 100));
+	worldAddEntity(gameWorld, copyEntity(eEnemyBase, 200, 100));
 
 	// Instead of drawing the grid everyframe, just draw it once to this
 	Texture *rtRoom = createTexture(renderer, GAME_WIDTH, GAME_HEIGHT);
@@ -193,6 +202,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 
 	// Free up the resources
 	freeTexture(rtRoom);
+	freeWorld(gameWorld);
 	freeAssetHandler(handler);
 
 	return mainMenu;

@@ -48,10 +48,10 @@ typedef struct {
 
 /// \brief Creates/initializes an entity class
 /// \throws ERROR_ALLOC_FAILED
-Entity* createEntity(Sprite* sprite, Hitbox* hitbox, int x, int y, double hitboxOffsetX, double hitboxOffsetY);
+Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double hitboxOffsetX, double hitboxOffsetY);
 
 /// \brief Makes a 1:1 copy of an entity and returns the new copy
-Entity* copyEntity(Entity* baseEntity);
+Entity* copyEntity(Entity* baseEntity, double x, double y);
 
 /// \brief Draws an entity
 /// \throws ERROR_NULL_POINTER

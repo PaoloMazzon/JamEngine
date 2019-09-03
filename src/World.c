@@ -19,13 +19,16 @@ World* createWorld() {
 
 	if (world != NULL) {
 		// We now need to initialize the 8 or so entity lists that come with a world
-		for (i = 0; i < MAX_ENTITY_TYPES; i++)
-			(world->entityTypes[i] = createEntityList()) || (error = true);
-		(world->worldEntities = createEntityList()) || (error = true);
-		(world->entityByRange[ENTITIES_IN_RANGE] = createEntityList()) || (error = true);
-		(world->entityByRange[ENTITIES_OUT_OF_RANGE] = createEntityList()) || (error = true);
+		for (i = 0; i < MAX_ENTITY_TYPES; i++) {
+			world->entityTypes[i] = createEntityList();
+			if (world->entityTypes[i] == NULL)
+				error = true;
+		}
+		world->worldEntities = createEntityList();
+		world->entityByRange[ENTITIES_IN_RANGE] = createEntityList();
+		world->entityByRange[ENTITIES_OUT_OF_RANGE] = createEntityList();
 
-		if (error) {
+		if (error || world->worldEntities == NULL || world->entityByRange[ENTITIES_OUT_OF_RANGE] == NULL || world->entityByRange[ENTITIES_IN_RANGE] == NULL) {
 			fprintf(stderr, "Failed to allocate entity lists (createWorld)\n");
 			jSetError(ERROR_ALLOC_FAILED);
 			// keep on rocking in the
@@ -111,10 +114,10 @@ void worldRemoveEntity(World* world, Entity* entity) {
 					world->entityTypes[type]->entities[i] = NULL;
 			for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++)
 				if (world->entityByRange[ENTITIES_IN_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == entity)
-					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == NULL;
+					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
 			for (i = 0; i < world->entityByRange[ENTITIES_OUT_OF_RANGE]->size; i++)
 				if (world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] == entity)
-					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] == NULL;
+					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] = NULL;
 		}
 	} else {
 		fprintf(stderr, "World does not exist (worldRemoveEntity)\n");
