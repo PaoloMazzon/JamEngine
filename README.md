@@ -1,4 +1,4 @@
-LJE (Light Jam Engine) uses SDL2
+LJE (Light Jam Engine)
 ================================
 
 Important Info
@@ -77,9 +77,8 @@ of cleaning up * amount of strings.
 Major To-Do List
 ----------------
  - Gamepad input
- - Rewrite the window resizing function so it doesn't crash the game if it fails
- - Load this into Windows and make sure everything works okay on MinGW or MSVC or whatever 
- - Alot of Font.c is not verbose and this should be fixed.
+ - Rewrite the window resizing function so it doesn't crash the game if it fails 
+ - A lot of Font.c is not verbose and this should be fixed.
 
 Features
 ========
@@ -116,7 +115,6 @@ To-Do List
  - Drawing functions
     + Let the fill colour thing work with alpha values
     + Draw shapes
-    + Fonts (This implies that the font struct contains practical things only)
  - Hit-box
     + Circle-to-rectangle (Algorithm is written down just don't want to type it out)
  - Tile Maps
