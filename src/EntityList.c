@@ -5,6 +5,7 @@
 #include "EntityList.h"
 #include "JamError.h"
 #include <stdio.h>
+#include <EntityList.h>
 
 ///////////////////////////////////////////////////////////////
 EntityList* createEntityList() {
@@ -24,7 +25,7 @@ void addEntityToList(EntityList* list, Entity* entity) {
 	int i = 0;
 	Entity** newList;
 	bool foundSpot = false;
-	if (list != NULL) {
+	if (list != NULL && entity != NULL) {
 		// First we look for a free spot in the list
 		while (i < list->size && !foundSpot) {
 			if (list->entities[i] == NULL) {
@@ -36,10 +37,9 @@ void addEntityToList(EntityList* list, Entity* entity) {
 
 		// If not, we check for empty space at the end of list between size and capacity
 		if (!foundSpot && list->size < list->capacity) {
-			foundSpot = true;
 			list->entities[list->size] = entity;
 			list->size++;
-		} else {
+		} else if (!foundSpot) {
 			// When all else fails, allocate more memory
 			newList = realloc(list->entities, (list->size + ENTITY_LIST_ALLOCATION_AMOUNT) * sizeof(Entity*));
 
@@ -47,12 +47,13 @@ void addEntityToList(EntityList* list, Entity* entity) {
 				list->entities = newList;
 				list->size++;
 				list->capacity += ENTITY_LIST_ALLOCATION_AMOUNT;
+				newList[list->size - 1] = entity;
 			} else {
 				jSetError(ERROR_REALLOC_FAILED);
 				fprintf(stderr, "Could not reallocate entity list to accommodate for new entity (addEntityToList)\n");
 			}
 		}
-	} else {
+	} else if (list == NULL) {
 		jSetError(ERROR_NULL_POINTER);
 		fprintf(stderr, "List does not exist (addEntityToList)\n");
 	}

@@ -42,6 +42,10 @@ Entity* copyEntity(Entity* baseEntity, double x, double y) {
 
 	if (baseEntity != NULL) {
 		newEnt = createEntity(baseEntity->sprite, baseEntity->hitbox, x, y, baseEntity->hitboxOffsetX, baseEntity->hitboxOffsetY);
+		if (newEnt != NULL) {
+			// Fill out data
+			// TODO: This
+		}
 	} else {
 		fprintf(stderr, "Base entity doesn't exist (copyEntity)\n");
 		jSetError(ERROR_NULL_POINTER);

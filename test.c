@@ -20,6 +20,8 @@
 #include <Vector.h>
 #include "World.h"
 #include <TileMap.h>
+#include <World.h>
+#include <EntityList.h>
 
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
@@ -78,6 +80,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	// Core game pieces
 	bool mainMenu = false; // Weather or not return to main menu
 	bool runLoop = true;
+	int i;
 
 	// Load the asset handler
 	AssetHandler* handler = createAssetHandler();
@@ -188,10 +191,14 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				if (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + 1))
 					ePlayer->sprite = sPlayerJump;
 
+				filterEntitiesByProximity(gameWorld, ePlayer->x - 150, ePlayer->y - 150);
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				renderer->cameraX = clamp(ePlayer->x - GAME_WIDTH / 2 + 8, 0, currentLevel->width * currentLevel->cellWidth - GAME_WIDTH);
 				renderer->cameraY = clamp(ePlayer->y - GAME_HEIGHT / 2 + 16, 0, currentLevel->height * currentLevel->cellHeight - GAME_HEIGHT);
 				drawEntity(renderer, ePlayer);
+				for (i = 0; i < gameWorld->entityByRange[ENTITIES_IN_RANGE]->size; i++)
+					if (gameWorld->entityByRange[ENTITIES_IN_RANGE]->entities[i] != NULL)
+						drawEntity(renderer, gameWorld->entityByRange[ENTITIES_IN_RANGE]->entities[i]);
 				renderFontExt(16, 16, "FPS: %f\n(%f,%f)", font, renderer, 999, round(renderer->framerate), ePlayer->x, ePlayer->y);
 				/////////////////////////////////////////////////////////////////////
 
