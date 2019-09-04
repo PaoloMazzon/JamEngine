@@ -101,8 +101,9 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	// TODO: This
 	World* gameWorld = createWorld();
 	setWorldFilterTypeRectangle(gameWorld, GAME_WIDTH - 100, GAME_HEIGHT - 100);
-	worldAddEntity(gameWorld, copyEntity(eEnemyBase, 100, 100));
-	worldAddEntity(gameWorld, copyEntity(eEnemyBase, 200, 100));
+	Entity* testEntity = copyEntity(eEnemyBase, 90, 500);
+	worldAddEntity(gameWorld, testEntity);
+	worldAddEntity(gameWorld, copyEntity(eEnemyBase, 64, 500));
 
 	// Instead of drawing the grid everyframe, just draw it once to this
 	Texture *rtRoom = createTexture(renderer, GAME_WIDTH, GAME_HEIGHT);
@@ -191,7 +192,11 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				if (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + 1))
 					ePlayer->sprite = sPlayerJump;
 
+				//////////////////////// World Testing ////////////////////////
 				filterEntitiesByProximity(gameWorld, ePlayer->x - 150, ePlayer->y - 150);
+				if (inputCheckKeyPressed(input, SDL_SCANCODE_P))
+					worldRotateEntity(gameWorld, testEntity);
+				
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				renderer->cameraX = clamp(ePlayer->x - GAME_WIDTH / 2 + 8, 0, currentLevel->width * currentLevel->cellWidth - GAME_WIDTH);
 				renderer->cameraY = clamp(ePlayer->y - GAME_HEIGHT / 2 + 16, 0, currentLevel->height * currentLevel->cellHeight - GAME_HEIGHT);
