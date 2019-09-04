@@ -1,5 +1,5 @@
 # Usual CMake stuff
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.1.0)
 set(PROJ_NAME JamEngine)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
 project(${PROJ_NAME} C)
@@ -27,6 +27,5 @@ if (WIN32)
 elseif (UNIX)
 	find_package(SDL2 REQUIRED)
 	find_package(SDL2_image REQUIRED)
-	find_package(SDL2_mixer REQUIRED)
 	target_link_libraries(${PROJ_NAME} m ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
 endif()

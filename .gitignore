@@ -4,3 +4,7 @@ cmake-build-release/
 .idea/
 html/
 *.dll
+CMakeFiles/
+JamEngine
+Makefile
+cmake_install.cmake
