@@ -62,6 +62,13 @@ the INI by the following format:
     playerTexture=playersprite.png
     monsterTexture=monster.png
     key=file
+    
+    [sPlayerSprite]
+    x_in_texture=0
+    y_in_texture=0
+    frame_width=16
+    frame_height=16
+    texture_id=playerTexture
     ...
 
 Where the key is id of the texture and file is the path to the texture in the
@@ -90,7 +97,8 @@ Features
  - Entities, sprites, frames, hitboxes, and textures all different concepts. Different entities can have the same sprite; different sprites can use different regions of the same texture, etc...
  - Entity lists to make handling lots of entities easier
  - Sprites can be loaded from a sprite sheet with a single function
- - Worlds to make level management easier
+ - Worlds (or levels or rooms or whatever you want to call it) for level management
+ - Worlds can automatically sort entities by range and type
  - Font framework that is quite flexible but only bitmap fonts right now
  - Font can do unicode, take varargs like printf (it accepts %f, %c, and %s)
  - Basic hitbox functionality
@@ -98,6 +106,7 @@ Features
  - Pure-C (and thus cross-platform) implementations of atof and ftoa (string to double and double to string respectively)
  - Fair bit of string-manipulation functionality (see StringUtil.h)
  - Tile maps that can be auto tiled, used for collisions, used for enemy positions, etc...
+ - Tested on both Windows and Linux
 
 Possible future additions
 -------------------------
@@ -117,9 +126,5 @@ To-Do List
     + Draw shapes
  - Hit-box
     + Circle-to-rectangle (Algorithm is written down just don't want to type it out)
- - Tile Maps
-    + Auto tile to the grid (write down the sprite's frame as value)
  - Fonts
     + TTF fonts
- - Draw Queues/Events for multi-threading
-    + Queue management
