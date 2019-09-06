@@ -3,25 +3,9 @@
 //
 
 #include <stdio.h>
-#include "Renderer.h"
-#include "Entity.h"
-#include "Font.h"
-#include "Drawing.h"
 #include <time.h>
-#include "File.h"
 #include <math.h>
-#include <Entity.h>
-#include <Sprite.h>
-#include <Hitbox.h>
-#include <Renderer.h>
-#include <Input.h>
-#include "AssetHandler.h"
-#include <JamError.h>
-#include <Vector.h>
-#include "World.h"
-#include <TileMap.h>
-#include <World.h>
-#include <EntityList.h>
+#include "JamEngine.h"
 
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
