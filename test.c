@@ -10,7 +10,7 @@
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
 #define GAME_HEIGHT 360
-#define VIEW_MULTIPLIER 2
+#define VIEW_MULTIPLIER 1
 #define SCREEN_WIDTH GAME_WIDTH * VIEW_MULTIPLIER
 #define SCREEN_HEIGHT GAME_HEIGHT * VIEW_MULTIPLIER
 #define BLOCK_WIDTH 16
