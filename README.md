@@ -87,8 +87,8 @@ Behaviour maps are a tool that can be used to make loading entities and
 their behaviour simple. A behaviour map is stored in `World`s and must be
 made in the C code itself for they need to link the functions they refer
 to to the entities that need them. Each key in the behaviour map corresponds
-to several functions: a frame function, post frame function, draw function,
-creation function, and destruction function.
+to several functions: a pre-frame function, frame function, post-frame 
+function, draw function, creation function, and destruction function.
 
 Major To-Do List
 ----------------

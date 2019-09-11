@@ -6,6 +6,9 @@
 #include "TileMap.h"
 #include "Entity.h"
 #include "EntityList.h"
+#include "Renderer.h"
+
+typedef struct _Behaviour Behaviour;
 
 /// \brief A thing that holds lots of info for convenience
 ///
@@ -74,6 +77,23 @@ typedef struct {
 		uint16 inRangeRadius; ///< For determining if an entity is in range or not
 	};
 } World;
+
+///< The arguments that must be present in every behaviour function
+#define BEHAVIOUR_ARGUMENTS Renderer* renderer, World* world
+
+/// \brief A behaviour that holds a few functions that will be executed at specific times
+///
+/// For any of these functions you can simply use NULL and nothing will be executed. Do
+/// note that if the onDraw function is not NULL, the entity will not be drawn by the world
+/// at all and drawing the entity is now entirely on you.
+struct _Behaviour {
+	void (*onCreation)(BEHAVIOUR_ARGUMENTS); ///< Will be executed when its added to a world using worldAddEntity
+	void (*onDestruction)(BEHAVIOUR_ARGUMENTS); ///< Will be executed when this is freed from a world
+	void (*onPreFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed at the beginning each frame
+	void (*onFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed during each frame
+	void (*onPostFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed at the end of each frame
+	void (*onDraw)(BEHAVIOUR_ARGUMENTS); ///< Will be executed in place of normal world drawing functionality
+};
 
 /// \brief Creates a world to work with
 /// \throws ERROR_ALLOC_FAILED
