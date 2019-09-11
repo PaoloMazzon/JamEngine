@@ -39,7 +39,9 @@ BehaviourMap* createBehaviourMap();
 /// If the entity doesn't need a behaviour for onCreation, for example,
 /// you can just leave it as NULL and nothing will be executed on creation.
 /// 
+/// \warning Strings passed to this function belong to the caller, not the map (It expects just in-code strings)
 /// \throws ERROR_NULL_POINTER
+/// \throws ERROR_REALLOC_FAILED
 void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(BEHAVIOUR_ARGUMENTS), void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onPreFrame)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS), void (*onPostFrame)(BEHAVIOUR_ARGUMENTS), void (*onDraw)(BEHAVIOUR_ARGUMENTS));
 
 /// \brief Frees a behaviour map
