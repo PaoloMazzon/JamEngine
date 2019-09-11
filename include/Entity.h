@@ -11,6 +11,7 @@
 #include "Sprite.h"
 #include "Hitbox.h"
 #include "TileMap.h"
+#include "BehaviourMap.h"
 
 /// \brief Defines an in-game entity
 ///
@@ -28,7 +29,7 @@ typedef struct {
 	double x;             ///< X position in the game world
 	double y;             ///< Y position in the game world
 	int processPriority;  ///< Entities are processed in descending order
-	uint16 behaviour;     ///< Very open-ended, the engine does nothing with this
+	Behaviour* behaviour; ///< Behaviour mapping of this entity (AssetManagers will resolve this)
 	double hitboxOffsetX; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	double hitboxOffsetY; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	float scaleX;         ///< The x scale of the entity (for sprite rendering)

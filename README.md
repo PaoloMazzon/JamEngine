@@ -81,14 +81,26 @@ available can make debugging easier and makes memory management a lot simpler
 as well since the asset loader is just responsible for cleaning up the INI instead
 of cleaning up * amount of strings. 
 
-Behaviour Maps (Yet to be implemented)
---------------------------------------
-Behaviour maps are a tool that can be used to make loading entities and
-their behaviour simple. A behaviour map is stored in `World`s and must be
-made in the C code itself for they need to link the functions they refer
-to to the entities that need them. Each key in the behaviour map corresponds
-to several functions: a pre-frame function, frame function, post-frame 
-function, draw function, creation function, and destruction function.
+Behaviour Maps
+--------------
+Behaviour maps are a tool that is used to make large projects easier to manage.
+You can make a behaviour map before you load with an asset manager and it will
+automatically map the entities to their behaviours (a set of functions that are
+called at different times like when its added to a world or drawn). Then, when
+you use a world the world will automatically call whatever behaviour function
+that needs to be. For example
+
+	BehaviourMap* map = createBehaviourMap();
+	addBehaviourToMap(map, "Slime01", slimeCreated, slimeDies, NULL, slimeFrame, NULL, slimeDraw);
+	addBehaviourToMap(map, "Player", playerCreated, playerDies, playerPreFrame, NULL, NULL, NULL);
+	World* gameWorld = createWorld();
+	// Add a bunch of entities - onCreation is called when you add the entity to a world
+
+	...
+
+	// Now you don't need a big update function, just call
+	worldProcFrames(renderer, gameWorld);
+	// And the preframe, frame, postframe, and draw functions will be called for each entity
 
 Major To-Do List
 ----------------

@@ -8,8 +8,6 @@
 #include "EntityList.h"
 #include "Renderer.h"
 
-typedef struct _Behaviour Behaviour;
-
 /// \brief A thing that holds lots of info for convenience
 ///
 /// This data structure is a bit of a heavier one, so use with caution
@@ -58,7 +56,7 @@ typedef struct _Behaviour Behaviour;
 /// \warning Never change a value in this struct yourself, always use the
 /// funtions for it or you will very quickly be looking at lots of memory
 /// leaks.
-typedef struct {
+typedef struct _World {
 	// Core data
 	TileMap* worldMaps[MAX_TILEMAPS]; ///< This is the struct that represents the collisions in this world
 	EntityList* worldEntities; ///< The full list of entities in this world
@@ -78,23 +76,6 @@ typedef struct {
 	};
 } World;
 
-///< The arguments that must be present in every behaviour function
-#define BEHAVIOUR_ARGUMENTS Renderer* renderer, World* world
-
-/// \brief A behaviour that holds a few functions that will be executed at specific times
-///
-/// For any of these functions you can simply use NULL and nothing will be executed. Do
-/// note that if the onDraw function is not NULL, the entity will not be drawn by the world
-/// at all and drawing the entity is now entirely on you.
-struct _Behaviour {
-	void (*onCreation)(BEHAVIOUR_ARGUMENTS); ///< Will be executed when its added to a world using worldAddEntity
-	void (*onDestruction)(BEHAVIOUR_ARGUMENTS); ///< Will be executed when this is freed from a world
-	void (*onPreFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed at the beginning each frame
-	void (*onFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed during each frame
-	void (*onPostFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed at the end of each frame
-	void (*onDraw)(BEHAVIOUR_ARGUMENTS); ///< Will be executed in place of normal world drawing functionality
-};
-
 /// \brief Creates a world to work with
 /// \throws ERROR_ALLOC_FAILED
 World* createWorld();
@@ -109,12 +90,17 @@ void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius);
 
 /// \brief Adds an entity to the world
 ///
-/// By default, all entities are in range.
+/// By default, all entities are in range. Also, the entity's behaviour
+/// pointer is resolved when it is added through this function
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
 void worldAddEntity(World* world, Entity* entity);
 
+/// \brief Processes and draws the entities in the world
+///
+/// \throws ERROR_NULL_POINTER
+void worldProcFrame(Renderer* renderer, World* world);
 
 /// \brief Moves an entity from in range to out of range
 ///
