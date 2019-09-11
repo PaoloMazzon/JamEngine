@@ -81,6 +81,15 @@ available can make debugging easier and makes memory management a lot simpler
 as well since the asset loader is just responsible for cleaning up the INI instead
 of cleaning up * amount of strings. 
 
+Behaviour Maps (Yet to be implemented)
+--------------------------------------
+Behaviour maps are a tool that can be used to make loading entities and
+their behaviour simple. A behaviour map is stored in `World`s and must be
+made in the C code itself for they need to link the functions they refer
+to to the entities that need them. Each key in the behaviour map corresponds
+to several functions: a frame function, post frame function, draw function,
+creation function, and destruction function.
+
 Major To-Do List
 ----------------
  - Gamepad input
