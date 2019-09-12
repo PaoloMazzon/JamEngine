@@ -12,12 +12,12 @@
 #include "JamError.h"
 
 ///////////////////////////////////////////////////////
-World* createWorld() {
+World* createWorld(Renderer* renderer) {
 	World* world = (World*)calloc(1, sizeof(World));
 	int i;
 	bool error = false;
 
-	if (world != NULL) {
+	if (world != NULL && renderer != NULL) {
 		// We now need to initialize the 8 or so entity lists that come with a world
 		for (i = 0; i < MAX_ENTITY_TYPES; i++) {
 			world->entityTypes[i] = createEntityList();
@@ -27,6 +27,7 @@ World* createWorld() {
 		world->worldEntities = createEntityList();
 		world->entityByRange[ENTITIES_IN_RANGE] = createEntityList();
 		world->entityByRange[ENTITIES_OUT_OF_RANGE] = createEntityList();
+		world->renderer = renderer;
 
 		if (error || world->worldEntities == NULL || world->entityByRange[ENTITIES_OUT_OF_RANGE] == NULL || world->entityByRange[ENTITIES_IN_RANGE] == NULL) {
 			fprintf(stderr, "Failed to allocate entity lists (createWorld)\n");
@@ -35,8 +36,14 @@ World* createWorld() {
 			freeWorld(world);
 		}
 	} else {
-		fprintf(stderr, "Could not allocate world (createWorld)\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		if (world == NULL) {
+			fprintf(stderr, "Could not allocate world (createWorld)\n");
+			jSetError(ERROR_ALLOC_FAILED);
+		} 
+		if (renderer == NULL) {
+			fprintf(stderr, "Renderer does not exist (createWorld)\n");
+			jSetError(ERROR_NULL_POINTER);
+		}
 	}
 
 	return world;
@@ -75,6 +82,10 @@ void worldAddEntity(World* world, Entity* entity) {
 		addEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
 		addEntityToList(world->entityTypes[entity->type], entity);
 		addEntityToList(world->worldEntities, entity);
+
+		// Attempt to call the entity's onCreation function
+		if (entity->behaviour != NULL && entity->behaviour->onCreation != NULL)
+			entity->behaviour->onCreation(world->renderer, world);
 	} else {
 		if (world == NULL) {
 			fprintf(stderr, "World does not exist (worldAddEntity)\n");

@@ -26,6 +26,10 @@ static inline double sign(double number) {
 		return 0.0;
 }
 
+void enemyCreate(Renderer* renderer, World* world) {
+	printf("W\n");
+}
+
 /////////////////////////////////////// The main menu ///////////////////////////////////////
 bool runMenu(Renderer* renderer, Input* input, Font* font) { // Returns false if quit game
 	// Menu-related variables
@@ -66,9 +70,13 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	bool runLoop = true;
 	int i;
 
+	// Setup the behaviour map
+	BehaviourMap* behaviourMap = createBehaviourMap();
+	addBehaviourToMap(behaviourMap, "EnemyBehaviour", &enemyCreate, NULL, NULL, NULL, NULL, NULL);
+
 	// Load the asset handler
 	AssetHandler* handler = createAssetHandler();
-	assetLoadINI(handler, renderer, "assets/level0.ini", NULL);
+	assetLoadINI(handler, renderer, "assets/level0.ini", behaviourMap);
 
 	// Load all the game assets from the handler
 	Sprite* sWallSet = assetGetSprite(handler, "WallTilesetSprite");
@@ -83,7 +91,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 
 	// The world
 	// TODO: This
-	World* gameWorld = createWorld();
+	World* gameWorld = createWorld(renderer);
 	setWorldFilterTypeRectangle(gameWorld, GAME_WIDTH - 100, GAME_HEIGHT - 100);
 	Entity* testEntity = copyEntity(eEnemyBase, 90, 500);
 	worldAddEntity(gameWorld, testEntity);
@@ -200,6 +208,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	freeTexture(rtRoom);
 	freeWorld(gameWorld);
 	freeAssetHandler(handler);
+	freeBehaviourMap(behaviourMap);
 
 	return mainMenu;
 }

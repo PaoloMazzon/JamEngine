@@ -20,3 +20,4 @@
 #include <TileMap.h>
 #include <World.h>
 #include <EntityList.h>
+#include <BehaviourMap.h>

@@ -24,13 +24,12 @@ void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(B
 	if (map != NULL) {
 		newBehaviours = (Behaviour**)realloc(map->behaviours, (map->size + 1) * sizeof(Behaviour*));
 		newNames = (const char**)realloc(map->names, (map->size + 1) * sizeof(const char*));
-		behaviour = (Behaviour*)calloc(1, sizeof(Behaviour));
+		behaviour = (Behaviour*)malloc(sizeof(Behaviour));
 
 		if (behaviour != NULL && newNames != NULL && newBehaviours != NULL) {
-			map->size++;
 			map->behaviours = newBehaviours;
 			map->names = newNames;
-			map->behaviours[map->size - 1] = behaviour;
+			map->behaviours[++map->size] = behaviour;
 
 			behaviour->onCreation = onCreation;
 			behaviour->onDestruction = onDestruction;
