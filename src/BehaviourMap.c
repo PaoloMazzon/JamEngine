@@ -1,23 +1,6 @@
 #include "BehaviourMap.h"
 #include "JamError.h"
-
-/*
-typedef struct {
-	void (*onCreation)(BEHAVIOUR_ARGUMENTS); ///< Will be executed when its added to a world using worldAddEntity
-	void (*onDestruction)(BEHAVIOUR_ARGUMENTS); ///< Will be executed when this is freed from a world
-	void (*onPreFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed at the beginning each frame
-	void (*onFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed during each frame
-	void (*onPostFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed at the end of each frame
-	void (*onDraw)(BEHAVIOUR_ARGUMENTS); ///< Will be executed in place of normal world drawing functionality
-} Behaviour;
-
-/// \brief A dictionary of strings to behaviours
-typedef struct {
-	Behaviour** behaviours; ///< The behaviours
-	const char** names; ///< The names of the behaviours
-	uint32 size; ///< How many behaviours/names in this struct
-} BehaviourMap;
-*/
+#include "string.h"
 
 /////////////////////////////////////////////////////////////////
 BehaviourMap* createBehaviourMap() {
@@ -63,6 +46,24 @@ void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(B
 		jSetError(ERROR_NULL_POINTER);
 		fprintf(stderr, "Map doesn't exist (addBehaviourToMap)\n");
 	}
+}
+/////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////
+Behaviour* getBehaviourFromMap(BehaviourMap* map, const char* name) {
+	Behaviour* returnBehaviour = NULL;
+	int i;
+
+	if (map != NULL) {
+		for (i = 0; i < map->size && returnBehaviour == NULL; i++)
+			if (strcmp(map->names[i], name) == 0)
+				returnBehaviour = map->behaviours[i];
+	} else {
+		jSetError(ERROR_NULL_POINTER);
+		fprintf(stderr, "Map doesn't exist (getBehaviourFromMap)\n");
+	}
+
+	return returnBehaviour;
 }
 /////////////////////////////////////////////////////////////////
 

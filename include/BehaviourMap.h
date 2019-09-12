@@ -44,5 +44,10 @@ BehaviourMap* createBehaviourMap();
 /// \throws ERROR_REALLOC_FAILED
 void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(BEHAVIOUR_ARGUMENTS), void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onPreFrame)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS), void (*onPostFrame)(BEHAVIOUR_ARGUMENTS), void (*onDraw)(BEHAVIOUR_ARGUMENTS));
 
+/// \brief Grabs a behaviour struct (that still belongs to the map) from a map
+/// 
+/// \throws ERROR_NULL_POINTER
+Behaviour* getBehaviourFromMap(BehaviourMap* map, const char* name);
+
 /// \brief Frees a behaviour map
 void freeBehaviourMap(BehaviourMap* map);
