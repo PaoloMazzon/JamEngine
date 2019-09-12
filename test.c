@@ -68,7 +68,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 
 	// Load the asset handler
 	AssetHandler* handler = createAssetHandler();
-	assetLoadINI(handler, renderer, "assets/level0.ini");
+	assetLoadINI(handler, renderer, "assets/level0.ini", NULL);
 
 	// Load all the game assets from the handler
 	Sprite* sWallSet = assetGetSprite(handler, "WallTilesetSprite");

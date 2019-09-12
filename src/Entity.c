@@ -9,7 +9,7 @@
 #include "JamError.h"
 
 //////////////////////////////////////////////////////////
-Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double hitboxOffsetX, double hitboxOffsetY) {
+Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double hitboxOffsetX, double hitboxOffsetY, Behaviour* behaviour) {
 	Entity* ent = (Entity*)malloc(sizeof(Entity));
 
 	// Check that it worked
@@ -27,6 +27,7 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double 
 		ent->friction = 0;
 		ent->processPriority = 0;
 		ent->type = logic;
+		ent->behaviour = behaviour;
 	} else {
 		fprintf(stderr, "Failed to create Entity struct (createEntity).\n");
 		jSetError(ERROR_ALLOC_FAILED);
@@ -41,7 +42,7 @@ Entity* copyEntity(Entity* baseEntity, double x, double y) {
 	Entity* newEnt = NULL;
 
 	if (baseEntity != NULL) {
-		newEnt = createEntity(baseEntity->sprite, baseEntity->hitbox, x, y, baseEntity->hitboxOffsetX, baseEntity->hitboxOffsetY);
+		newEnt = createEntity(baseEntity->sprite, baseEntity->hitbox, x, y, baseEntity->hitboxOffsetX, baseEntity->hitboxOffsetY, baseEntity->behaviour);
 		if (newEnt != NULL) {
 			newEnt->type = baseEntity->type;
 			newEnt->processPriority = baseEntity->processPriority;

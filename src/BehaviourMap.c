@@ -58,9 +58,6 @@ Behaviour* getBehaviourFromMap(BehaviourMap* map, const char* name) {
 		for (i = 0; i < map->size && returnBehaviour == NULL; i++)
 			if (strcmp(map->names[i], name) == 0)
 				returnBehaviour = map->behaviours[i];
-	} else {
-		jSetError(ERROR_NULL_POINTER);
-		fprintf(stderr, "Map doesn't exist (getBehaviourFromMap)\n");
 	}
 
 	return returnBehaviour;

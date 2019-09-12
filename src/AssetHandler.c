@@ -11,6 +11,7 @@
 #include <AssetHandler.h>
 #include <StringUtil.h>
 #include <JamError.h>
+#include "BehaviourMap.h"
 
 // The base key comparison function
 bool keysEqual(AssetKey key1, AssetKey key2) {
@@ -165,7 +166,7 @@ void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerNam
 	}
 }
 
-void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerName) {
+void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerName, BehaviourMap* map) {
 	// Make sure we have all necessary assets
 	if (assetGet(assetHandler, (getKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
 		&& assetGet(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
@@ -179,7 +180,8 @@ void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerNam
 						(int) atof(getKeyINI(ini, headerName, "x", "0")),
 						(int) atof(getKeyINI(ini, headerName, "y", "0")),
 						(int) atof(getKeyINI(ini, headerName, "hitbox_offset_x", "0")),
-						(int) atof(getKeyINI(ini, headerName, "hitbox_offset_y", "0"))
+						(int) atof(getKeyINI(ini, headerName, "hitbox_offset_y", "0")),
+						getBehaviourFromMap(map, getKeyINI(ini, headerName, "behaviour", "default"))
 				), entAsset),
 				(headerName + 1)
 		);
@@ -206,7 +208,7 @@ void assetLoadHitbox(AssetHandler* assetHandler, INI* ini, const char* headerNam
 //////////////////////// End of assetLoadINI support functions ////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename) {
+void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename, BehaviourMap* map) {
 	INI* ini = loadINI(filename);
 	uint32 i, j;
 
@@ -243,7 +245,7 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 				if (ini->headerNames[i][0] == INI_TILEMAP_PREFIX) {
 					assetLoadTileMap(assetHandler, ini, ini->headerNames[i]);
 				} else if (ini->headerNames[i][0] == INI_ENTITY_PREFIX) {
-					assetLoadEntity(assetHandler, ini, ini->headerNames[i]);
+					assetLoadEntity(assetHandler, ini, ini->headerNames[i], map);
 				}
 			}
 		}

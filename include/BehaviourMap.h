@@ -46,7 +46,8 @@ void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(B
 
 /// \brief Grabs a behaviour struct (that still belongs to the map) from a map
 /// 
-/// \throws ERROR_NULL_POINTER
+/// Contrary to other functions like this, it will not set ERROR_NULL_POINTER
+/// if you don't give it a map.
 Behaviour* getBehaviourFromMap(BehaviourMap* map, const char* name);
 
 /// \brief Frees a behaviour map

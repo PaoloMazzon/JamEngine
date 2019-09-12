@@ -2,6 +2,7 @@
 /// \author lugi1
 /// \brief Makes loading lots of things easier
 #pragma once
+
 #include "Sprite.h"
 #include "Texture.h"
 #include "TileMap.h"
@@ -9,6 +10,7 @@
 #include "Entity.h"
 #include "Hitbox.h"
 #include "INI.h"
+#include "BehaviourMap.h"
 
 enum AssetType {texAsset, sprAsset, tileAsset, entAsset, hitAsset};
 
@@ -79,11 +81,12 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id);
 ///
 /// Loads all assets from an INI file. Note that you should never use 0
 /// as an ID for an asset or the loader may not load everything correctly.
+/// If you don't have/want a behaviour map you can just pass NULL.
 ///
 /// \throws ERROR_ASSET_NOT_FOUND
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OPEN_FAILED
-void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename);
+void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename, BehaviourMap* map);
 
 /// \brief Grabs an asset, or returns NULL if the key is not bound
 /// \throws ERROR_NULL_POINTER

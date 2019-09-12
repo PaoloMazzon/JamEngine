@@ -102,6 +102,10 @@ that needs to be. For example
 	worldProcFrames(renderer, gameWorld);
 	// And the preframe, frame, postframe, and draw functions will be called for each entity
 
+As a side note, not defining an entity's behaviour when loaded from an asset handler will
+try and give the entity a behaviour called "default". You can define a "default" behaviour
+that will be given to any entities that haven't been given another behaviour. 
+
 Major To-Do List
 ----------------
  - Gamepad input
