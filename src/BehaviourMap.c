@@ -30,6 +30,7 @@ void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(B
 			map->behaviours = newBehaviours;
 			map->names = newNames;
 			map->behaviours[++map->size] = behaviour;
+			map->names[map->size - 1] = name;
 
 			behaviour->onCreation = onCreation;
 			behaviour->onDestruction = onDestruction;

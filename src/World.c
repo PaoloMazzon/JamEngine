@@ -84,8 +84,9 @@ void worldAddEntity(World* world, Entity* entity) {
 		addEntityToList(world->worldEntities, entity);
 
 		// Attempt to call the entity's onCreation function
-		if (entity->behaviour != NULL && entity->behaviour->onCreation != NULL)
+		if (entity->behaviour != NULL && entity->behaviour->onCreation != NULL) {
 			entity->behaviour->onCreation(world->renderer, world);
+		}
 	} else {
 		if (world == NULL) {
 			fprintf(stderr, "World does not exist (worldAddEntity)\n");
