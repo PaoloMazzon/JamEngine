@@ -34,6 +34,7 @@ typedef struct _Entity {
 	double hitboxOffsetY; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	float scaleX;         ///< The x scale of the entity (for sprite rendering)
 	float scaleY;         ///< The y scale of the entity (for sprite rendering)
+	void* userData;       ///< A place for the programmer to store their own variables and such
 
 #ifdef ENTITY_ENABLE_SPEED
 	double hSpeed;       ///< Horizontal speed (Can be disabled to save memory)

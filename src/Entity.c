@@ -28,6 +28,7 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double 
 		ent->processPriority = 0;
 		ent->type = logic;
 		ent->behaviour = behaviour;
+		ent->userData = NULL;
 	} else {
 		fprintf(stderr, "Failed to create Entity struct (createEntity).\n");
 		jSetError(ERROR_ALLOC_FAILED);
