@@ -26,10 +26,6 @@ static inline double sign(double number) {
 		return 0.0;
 }
 
-void enemyCreate(Renderer* renderer, World* world) {
-	printf("W\n");
-}
-
 /////////////////////////////////////// The main menu ///////////////////////////////////////
 bool runMenu(Renderer* renderer, Input* input, Font* font) { // Returns false if quit game
 	// Menu-related variables
@@ -70,13 +66,9 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	bool runLoop = true;
 	int i;
 
-	// Setup the behaviour map
-	BehaviourMap* behaviourMap = createBehaviourMap();
-	addBehaviourToMap(behaviourMap, "EnemyBehaviour", enemyCreate, NULL, NULL, NULL, NULL, NULL);
-
 	// Load the asset handler
 	AssetHandler* handler = createAssetHandler();
-	assetLoadINI(handler, renderer, "assets/level0.ini", behaviourMap);
+	assetLoadINI(handler, renderer, "assets/level0.ini", NULL);
 
 	// Load all the game assets from the handler
 	Sprite* sWallSet = assetGetSprite(handler, "WallTilesetSprite");
@@ -85,17 +77,8 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	Sprite* sPlayerJump = assetGetSprite(handler, "PlayerJumpingSprite");
 	Texture *tBackground = assetGetTexture(handler, "BackgroundTexture");
 	Entity *ePlayer = assetGetEntity(handler, "PlayerEntity");
-	Entity* eEnemyBase = assetGetEntity(handler, "EnemyEntity");
 	TileMap *tmLevel1 = assetGetTileMap(handler, "Level0Tilemap");
 	TileMap *currentLevel = tmLevel1;
-
-	// The world
-	// TODO: This
-	World* gameWorld = createWorld(renderer);
-	setWorldFilterTypeRectangle(gameWorld, GAME_WIDTH - 100, GAME_HEIGHT - 100);
-	Entity* testEntity = copyEntity(eEnemyBase, 90, 500);
-	worldAddEntity(gameWorld, testEntity);
-	worldAddEntity(gameWorld, copyEntity(eEnemyBase, 64, 500));
 
 	// Instead of drawing the grid everyframe, just draw it once to this
 	Texture *rtRoom = createTexture(renderer, GAME_WIDTH, GAME_HEIGHT);
@@ -184,18 +167,10 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 				if (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + 1))
 					ePlayer->sprite = sPlayerJump;
 
-				//////////////////////// World Testing ////////////////////////
-				filterEntitiesByProximity(gameWorld, ePlayer->x - 150, ePlayer->y - 150);
-				if (inputCheckKeyPressed(input, SDL_SCANCODE_P))
-					worldRotateEntity(gameWorld, testEntity);
-				
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				renderer->cameraX = clamp(ePlayer->x - GAME_WIDTH / 2 + 8, 0, currentLevel->width * currentLevel->cellWidth - GAME_WIDTH);
 				renderer->cameraY = clamp(ePlayer->y - GAME_HEIGHT / 2 + 16, 0, currentLevel->height * currentLevel->cellHeight - GAME_HEIGHT);
 				drawEntity(renderer, ePlayer);
-				for (i = 0; i < gameWorld->entityByRange[ENTITIES_IN_RANGE]->size; i++)
-					if (gameWorld->entityByRange[ENTITIES_IN_RANGE]->entities[i] != NULL)
-						drawEntity(renderer, gameWorld->entityByRange[ENTITIES_IN_RANGE]->entities[i]);
 				renderFontExt(16, 16, "FPS: %f\n(%f,%f)", font, renderer, 999, round(renderer->framerate), ePlayer->x, ePlayer->y);
 				/////////////////////////////////////////////////////////////////////
 
@@ -206,9 +181,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 
 	// Free up the resources
 	freeTexture(rtRoom);
-	freeWorld(gameWorld);
 	freeAssetHandler(handler);
-	freeBehaviourMap(behaviourMap);
 
 	return mainMenu;
 }

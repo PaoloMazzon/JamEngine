@@ -9,6 +9,8 @@
 #include <Vector.h>
 #include <EntityList.h>
 #include <Sprite.h>
+#include <BehaviourMap.h>
+#include <JamEngine.h>
 #include "JamError.h"
 
 ///////////////////////////////////////////////////////
@@ -85,7 +87,7 @@ void worldAddEntity(World* world, Entity* entity) {
 
 		// Attempt to call the entity's onCreation function
 		if (entity->behaviour != NULL && entity->behaviour->onCreation != NULL) {
-			(*entity->behaviour->onCreation)(world->renderer, world);
+			(*entity->behaviour->onCreation)(world->renderer, world, entity);
 		}
 	} else {
 		if (world == NULL) {
@@ -105,8 +107,32 @@ void worldAddEntity(World* world, Entity* entity) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldProcFrame(Renderer* renderer, World* world) {
-	// TODO: This
+void worldProcFrame(World* world) {
+	int i;
+	Entity* ent;
+
+	if (world != NULL) {
+		// Process all the entities in range
+		for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++) {
+			ent = world->entityByRange[ENTITIES_IN_RANGE]->entities[i];
+			if (ent != NULL && ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
+				(*ent->behaviour->onFrame)(world->renderer, world, ent);
+		}
+
+		// Draw all the entities in range
+		for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++) {
+			ent = world->entityByRange[ENTITIES_IN_RANGE]->entities[i];
+			if (ent != NULL && ent->behaviour != NULL) {
+				if (ent->behaviour->onDraw != NULL)
+					(*ent->behaviour->onDraw)(world->renderer, world, ent);
+				else
+					drawEntity(world->renderer, ent);
+			}
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER);
+		fprintf(stderr, "World does not exist (worldProcFrame)\n");
+	}
 }
 ///////////////////////////////////////////////////////
 
@@ -119,6 +145,11 @@ void worldRemoveEntity(World* world, Entity* entity) {
 		// First find it in the master list
 		for (i = 0; i < world->worldEntities->size; i++) {
 			if (world->worldEntities->entities[i] != NULL && world->worldEntities->entities[i] == entity) {
+				// We found it, call its destroy function if applicable
+				if (world->worldEntities->entities[i]->behaviour != NULL && world->worldEntities->entities[i]->behaviour->onDestruction != NULL)
+					(*world->worldEntities->entities[i]->behaviour->onDestruction)(world->renderer, world, world->worldEntities->entities[i]);
+
+				// Record the type and destroy it
 				type = world->worldEntities->entities[i]->type;
 				freeEntity(world->worldEntities->entities[i], false, false, false);
 				world->worldEntities->entities[i] = NULL;
@@ -226,6 +257,11 @@ void filterEntitiesByProximity(World* world, int pointX, int pointY) {
 void freeWorld(World* world) {
 	int i;
 	if (world != NULL) {
+		// Free all the entities first
+		for (i = 0; i < world->worldEntities->size; i++)
+			if (world->worldEntities->entities[i] != NULL)
+				worldRemoveEntity(world, world->worldEntities->entities[i]);
+
 		// There is a lot of lists to free
 		for (i = 0; i < MAX_ENTITY_TYPES; i++)
 			freeEntityList(world->entityTypes[i], false);

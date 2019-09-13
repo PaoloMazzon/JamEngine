@@ -100,8 +100,12 @@ void worldAddEntity(World* world, Entity* entity);
 
 /// \brief Processes and draws the entities in the world
 ///
+/// This function will run all in-range entities onFrame function
+/// and onDraw function (if applicable). That said, every onFrame
+/// function will be ran before the first onDraw function is.
+///
 /// \throws ERROR_NULL_POINTER
-void worldProcFrame(Renderer* renderer, World* world);
+void worldProcFrame(World* world);
 
 /// \brief Moves an entity from in range to out of range
 ///

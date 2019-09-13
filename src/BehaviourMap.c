@@ -16,7 +16,7 @@ BehaviourMap* createBehaviourMap() {
 /////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
-void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(BEHAVIOUR_ARGUMENTS), void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onPreFrame)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS), void (*onPostFrame)(BEHAVIOUR_ARGUMENTS), void (*onDraw)(BEHAVIOUR_ARGUMENTS)) {
+void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(BEHAVIOUR_ARGUMENTS), void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS), void (*onDraw)(BEHAVIOUR_ARGUMENTS)) {
 	Behaviour** newBehaviours;
 	const char** newNames;
 	Behaviour* behaviour;
@@ -35,9 +35,7 @@ void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(B
 
 			behaviour->onCreation = onCreation;
 			behaviour->onDestruction = onDestruction;
-			behaviour->onPreFrame = onPreFrame;
 			behaviour->onFrame = onFrame;
-			behaviour->onPostFrame = onPostFrame;
 			behaviour->onDraw = onDraw;
 		} else {
 			jSetError(ERROR_REALLOC_FAILED);

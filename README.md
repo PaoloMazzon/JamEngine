@@ -81,6 +81,40 @@ available can make debugging easier and makes memory management a lot simpler
 as well since the asset loader is just responsible for cleaning up the INI instead
 of cleaning up * amount of strings. 
 
+Worlds
+------
+Worlds are a tool that allow for you to have lots of entities and tilemaps on
+screen at once without crazy headaches over managing the entities or memory.
+Worlds have a couple key features
+
+ + Entities are automatically sorted into two categories: type and range (although there is still a list of every entity)
+ + filterEntitiesByProximity will automatically sort entities into in-range and out-of-range categories
+ + Integrated `BehaviourMap` support (or more precisely `Behaviour` support)
+ + Automatic memory management for all entities in the world
+ + An array to store tile maps relevant to the world in
+
+There are two important memory-related items to be aware of when using worlds, however.
+Firstly, worlds are meant to be used in conjunction with an asset handler. As
+such, worlds will not clean up the entitys' hitboxes, sprites, behaviour maps, etc...
+This is because an asset handler will clean all of that up itself. As such, this
+also means that under no circumstance can you add an entity from an asset handler
+to a world directly; only add copies of entities from asset handlers to worlds. 
+If you ignore this warning, you are near guaranteed segmentation faults when it comes
+time to clean up the asset handler. This is what you may want adding entities to
+a world to look like
+
+    AssetHandler* handler = createAssetHandler();
+    assetLoadINI(handler, renderer, "assets/mygame.ini", myBehaviourMap);
+    worldAddEntity(gameWorld, copyEntity(assetGetEntity(handler, "EnemyEntity"), 80, 500));
+    worldAddEntity(gameWorld, copyEntity(assetGetEntity(handler, "BirdEntity"), 200, 100));
+    // Now my entity copies will be safely freed by the world, and the "real" entities loaded by
+    // the asset handler (and its associated sprites/whatever) will be freed by the handler.
+
+Second is that worlds do eat quite a bit of ram. An empty world is about 200 bytes, plus about
+24 bytes per entity added (that's not counting how much the entity takes up or the alloc
+cookies). You can expect a world with 1000 entities to eat up as much as 200kb of ram all
+things considered (including entities and alloc cookies).
+
 Behaviour Maps
 --------------
 Behaviour maps are a tool that is used to make large projects easier to manage.
@@ -88,19 +122,27 @@ You can make a behaviour map before you load with an asset manager and it will
 automatically map the entities to their behaviours (a set of functions that are
 called at different times like when its added to a world or drawn). Then, when
 you use a world the world will automatically call whatever behaviour function
-that needs to be. For example
+that needs to be called at that moment. The onCreate function is called when an
+entity is added to a world through `worldAddEntity`, onDestroy is called when it
+is removed from a world via `worldRemoveEntity`, onFrame is called once per frame,
+and onDraw is called once per frame after all of the onFrame's have been called.
+For any of these you just use the value NULL and nothing will be called (and no
+segfaults will visit in your sleep). The parameters for any given `Behaviour`
+function are as follows: `Renderer* renderer, World* world, Entity* self`. This
+means every entity who's behaviour is called has immediate access to the world
+its in, the renderer its being drawn to, and its own internal information.
 
-	BehaviourMap* map = createBehaviourMap();
-	addBehaviourToMap(map, "Slime01", slimeCreated, slimeDies, NULL, slimeFrame, NULL, slimeDraw);
-	addBehaviourToMap(map, "Player", playerCreated, playerDies, playerPreFrame, NULL, NULL, NULL);
-	World* gameWorld = createWorld();
-	// Add a bunch of entities - onCreation is called when you add the entity to a world
+So the general structure of these are as follows
 
-	...
-
-	// Now you don't need a big update function, just call
-	worldProcFrames(renderer, gameWorld);
-	// And the preframe, frame, postframe, and draw functions will be called for each entity
+ + You create a behaviour map and load in all of the behaviour functions
+ + Then call assetLoadINI on your asset handler using your behaviour map
+ + Now you may add copies of entities from the handler to your world where your world will handle the behaviours
+ 
+This means most projects will require you to create 3 pointers when you game begins
+and destroy 3 pointers once your game is over: an `AssetHandler`, `World`, and
+`BehaviourMap`. Keep in mind that any pointers/memory allocated by one of those three
+things will be cleaned up automatically when you free it; you don't have to manually
+free anything but those three. 
 
 As a side note, not defining an entity's behaviour when loaded from an asset handler will
 try and give the entity a behaviour called "default". You can define a "default" behaviour
@@ -110,12 +152,13 @@ Major To-Do List
 ----------------
  - Gamepad input
  - Rewrite the window resizing function so it doesn't crash the game if it fails 
- - A lot of Font.c is not verbose and this should be fixed.
+ - A lot of Font.c is not verbose and should be fixed.
 
 Features
 ========
  - Renderer that handles all timing and rendering 
  - Asset Handler for loading and managing lots of things at once
+ - Behaviour Maps that allow for much more modular and clean programming
  - Buffers that allow for quick binary access (they also handle loading from files)
  - Accurate cross-platform timing
  - Some basic drawing functionality
@@ -129,6 +172,7 @@ Features
  - Basic hitbox functionality
  - Incredibly easy-to-use INI file I/O as well as some other file I/O functionality
  - Pure-C (and thus cross-platform) implementations of atof and ftoa (string to double and double to string respectively)
+ - Very simple and convenient memory management for large amounts of data (`AssetHandler`s and `World`s in particular make it very easy)
  - Fair bit of string-manipulation functionality (see StringUtil.h)
  - Tile maps that can be auto tiled, used for collisions, used for enemy positions, etc...
  - Tested on both Windows and Linux

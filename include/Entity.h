@@ -22,7 +22,7 @@
 /// the engine's problem. Since not every use case needs
 /// these things, you can turn each individually off in the
 /// Constants.h file.
-typedef struct {
+typedef struct _Entity {
 	Sprite* sprite;       ///< This entity's sprite (NULL is safe)
 	Hitbox* hitbox;       ///< This entity's hitbox (NULL is safe)
 	EntityType type;      ///< Type of entity this is

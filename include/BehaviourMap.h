@@ -5,9 +5,10 @@
 #include "Renderer.h"
 
 struct _World;
+struct _Entity;
 
 ///< The arguments that must be present in every behaviour function
-#define BEHAVIOUR_ARGUMENTS Renderer* renderer, struct _World* world
+#define BEHAVIOUR_ARGUMENTS Renderer* renderer, struct _World* world, struct _Entity*
 
 /// \brief A behaviour that holds a few functions that will be executed at specific times
 ///
@@ -17,9 +18,7 @@ struct _World;
 typedef struct {
 	void (*onCreation)(BEHAVIOUR_ARGUMENTS); ///< Will be executed when its added to a world using worldAddEntity
 	void (*onDestruction)(BEHAVIOUR_ARGUMENTS); ///< Will be executed when this is freed from a world
-	void (*onPreFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed at the beginning each frame
 	void (*onFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed during each frame
-	void (*onPostFrame)(BEHAVIOUR_ARGUMENTS); ///< Will be executed at the end of each frame
 	void (*onDraw)(BEHAVIOUR_ARGUMENTS); ///< Will be executed in place of normal world drawing functionality
 } Behaviour;
 
@@ -42,7 +41,7 @@ BehaviourMap* createBehaviourMap();
 /// \warning Strings passed to this function belong to the caller, not the map (It expects just in-code strings)
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_REALLOC_FAILED
-void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(BEHAVIOUR_ARGUMENTS), void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onPreFrame)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS), void (*onPostFrame)(BEHAVIOUR_ARGUMENTS), void (*onDraw)(BEHAVIOUR_ARGUMENTS));
+void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(BEHAVIOUR_ARGUMENTS), void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS), void (*onDraw)(BEHAVIOUR_ARGUMENTS));
 
 /// \brief Grabs a behaviour struct (that still belongs to the map) from a map
 /// 
