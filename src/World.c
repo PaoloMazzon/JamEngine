@@ -85,7 +85,7 @@ void worldAddEntity(World* world, Entity* entity) {
 
 		// Attempt to call the entity's onCreation function
 		if (entity->behaviour != NULL && entity->behaviour->onCreation != NULL) {
-			entity->behaviour->onCreation(world->renderer, world);
+			(*entity->behaviour->onCreation)(world->renderer, world);
 		}
 	} else {
 		if (world == NULL) {

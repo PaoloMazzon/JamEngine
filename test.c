@@ -72,7 +72,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 
 	// Setup the behaviour map
 	BehaviourMap* behaviourMap = createBehaviourMap();
-	addBehaviourToMap(behaviourMap, "EnemyBehaviour", &enemyCreate, NULL, NULL, NULL, NULL, NULL);
+	addBehaviourToMap(behaviourMap, "EnemyBehaviour", enemyCreate, NULL, NULL, NULL, NULL, NULL);
 
 	// Load the asset handler
 	AssetHandler* handler = createAssetHandler();
