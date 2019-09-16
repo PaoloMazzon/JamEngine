@@ -167,24 +167,37 @@ void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerNam
 }
 
 void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerName, BehaviourMap* map) {
+	Entity* ent;
+	const char* typeString;
 	// Make sure we have all necessary assets
 	if (assetGet(assetHandler, (getKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
 		&& assetGet(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
-		loadAssetIntoHandler(
-				assetHandler,
-				createAsset(createEntity(
-						assetGet(assetHandler,
-								 (getKeyINI(ini, headerName, "sprite_id", "0")))->spr,
-						assetGet(assetHandler,
-								 (getKeyINI(ini, headerName, "hitbox_id", "0")))->hitbox,
-						(int) atof(getKeyINI(ini, headerName, "x", "0")),
-						(int) atof(getKeyINI(ini, headerName, "y", "0")),
-						(int) atof(getKeyINI(ini, headerName, "hitbox_offset_x", "0")),
-						(int) atof(getKeyINI(ini, headerName, "hitbox_offset_y", "0")),
-						getBehaviourFromMap(map, getKeyINI(ini, headerName, "behaviour", "default"))
-				), entAsset),
-				(headerName + 1)
-		);
+		ent = createEntity(
+							assetGet(assetHandler,
+							(getKeyINI(ini, headerName, "sprite_id", "0")))->spr,
+							assetGetHitbox(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))),
+							(int) atof(getKeyINI(ini, headerName, "x", "0")),
+							(int) atof(getKeyINI(ini, headerName, "y", "0")),
+							(int) atof(getKeyINI(ini, headerName, "hitbox_offset_x", "0")),
+							(int) atof(getKeyINI(ini, headerName, "hitbox_offset_y", "0")),
+							getBehaviourFromMap(map, getKeyINI(ini, headerName, "behaviour", "default")));
+
+		// Figure out the type
+		typeString = getKeyINI(ini, headerName, "type", "none");
+		if (strcmp(typeString, "Logic") == 0)
+			ent->type = logic;
+		if (strcmp(typeString, "Solid") == 0)
+			ent->type = solid;
+		if (strcmp(typeString, "NPC") == 0)
+			ent->type = npc;
+		if (strcmp(typeString, "Object") == 0)
+			ent->type = object;
+		if (strcmp(typeString, "Item") == 0)
+			ent->type = item;
+		if (strcmp(typeString, "Player") == 0)
+			ent->type = player;
+		
+		loadAssetIntoHandler(assetHandler, createAsset(ent, entAsset), (headerName + 1));
 	} else {
 		fprintf(stderr, "Failed to load entity of id %s (assetLoadINI)\n", headerName + 1);
 		jSetError(ERROR_ASSET_NOT_FOUND);
