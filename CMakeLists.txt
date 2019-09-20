@@ -16,6 +16,10 @@ elseif (UNIX)
 	include_directories(include /usr/include/SDL2)
 endif()
 
+# TMX Related stuff
+include_directories(tmx)
+set(FILES_USED ${FILES_USED} tmx/tmx.c  tmx/tmx_err.c tmx/tmx_hash.c tmx/tmx_mem.c tmx/tmx_utils.c tmx/tmx_xml.c)
+
 if (OUTPUT_LIB)
 	add_library(${PROJ_NAME} ${FILES_USED})
 else ()
