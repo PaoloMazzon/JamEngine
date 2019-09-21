@@ -175,6 +175,7 @@ Features
  - Very simple and convenient memory management for large amounts of data (`AssetHandler`s and `World`s in particular make it very easy)
  - Fair bit of string-manipulation functionality (see StringUtil.h)
  - Tile maps that can be auto tiled, used for collisions, used for enemy positions, etc...
+ - Load Tiled level files (`.tmx`) as worlds for easy level creation
  - Tested on both Windows and Linux
 
 Possible future additions
