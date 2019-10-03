@@ -25,6 +25,8 @@
 World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* tmxFilename) {
 	tmx_map* tmx = tmx_load(tmxFilename);
 	World* world = createWorld(renderer);
+	TileMap* currentTileMap = NULL;
+	Entity* currentEntity = NULL;
 	uint32 tileW, tileH;
 
 	if (handler != NULL && tmx != NULL && world != NULL) {
