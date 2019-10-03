@@ -3,10 +3,29 @@
 #include "JamError.h"
 #include "tmx.h"
 
+/* General tmx loading outline
+ * 1. setup
+ *  a) load .tmx file
+ *  b) create world
+ *  c) store width/height/tile width/tile height for later
+ *
+ * 2. loop through tmx layers
+ *  a) if its an object layer
+ *   i) create a copy of the entity from the asset loader using the tmx object type as the asset name
+ *   ii) load extra data from the map into the entity (like width/height)
+ *   iii) add the entity to the world
+ *  b) if its a tile layer
+ *   i) create a new tileset with denoted width/height
+ *   ii) use the name of the layer to load the sprite from the asset loader into the tilemap
+ *   iii) load the data from the tileset layer into the tilemap
+ *   iv) put the new tilemap into the world
+ */
+
 ///////////////////////////////////////////////////////////////////////////////
 World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* tmxFilename) {
 	tmx_map* tmx = tmx_load(tmxFilename);
 	World* world = createWorld(renderer);
+	uint32 tileW, tileH;
 
 	if (handler != NULL && tmx != NULL && world != NULL) {
 		// TODO: This
