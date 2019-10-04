@@ -1,8 +1,8 @@
-#include "TMXWorldLoader.h"
 #include <stdio.h>
-#include "JamError.h"
 #include <stdlib.h>
-#include <JamEngine.h>
+#include "JamEngine.h"
+#include "TMXWorldLoader.h"
+#include "JamError.h"
 #include "tmx.h"
 
 /* General tmx loading outline
@@ -43,7 +43,26 @@ char* genRandomString() {
 ///////////////////////////////////////////////////////////////////////////////
 // This function is meant for loadWorldFromTMX and is not safe to call
 bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* layer) {
+	Entity* tempEntity;
+	tmx_object* currentObject = layer->tmx_object_group->head;
+	bool failedToLoad = false;
 
+	// Loop the linked list
+	while (currentObject != NULL) {
+		tempEntity = copyEntity(assetGetEntity(handler, currentObject->type), currentObject->x, currentObject->y);
+
+		if (tempEntity != NULL) {
+			worldAddentity(world, tempEntity);
+			// TODO: Add support for tmx custom properties to entity values
+		} else {
+			failedToLoad = true;
+			fprintf(stderr, "Failed to create entity ID %i (loadObjectLayerIntoWorld)\n", currentObject->id);
+		}
+		
+		currentObject = currentObject->next;
+	}
+
+	return !failedToLoad;
 }
 ///////////////////////////////////////////////////////////////////////////////
 
