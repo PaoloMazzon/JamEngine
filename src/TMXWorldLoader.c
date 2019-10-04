@@ -82,6 +82,7 @@ TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint
 		map->collisionRangeEnd = (uint16)src->animationLength;
 
 		// Loop through each tile on this layer and give it to the map
+		// SEGFAULT
 		for (i = 0; i < mapW * mapH; i++)
 			map->grid[i] = (uint16)tmx_get_tile(tmx, (unsigned int)layer->content.gids[i])->id;
 	} else {

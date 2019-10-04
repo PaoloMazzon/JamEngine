@@ -66,112 +66,25 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	bool runLoop = true;
 	int i;
 
-	// Load the asset handler
+	// Create the behaviour map
+	BehaviourMap* bMap = createBehaviourMap();
+
+	// Load the assets and create the world
 	AssetHandler* handler = createAssetHandler();
 	assetLoadINI(handler, renderer, "assets/level0.ini", NULL);
-
-	// Load all the game assets from the handler
-	Sprite* sWallSet = assetGetSprite(handler, "WallTilesetSprite");
-	Sprite* sPlayerMove = assetGetSprite(handler, "PlayerMovingSprite");
-	Sprite* sPlayerStand = assetGetSprite(handler, "PlayerStandingSprite");
-	Sprite* sPlayerJump = assetGetSprite(handler, "PlayerJumpingSprite");
-	Texture *tBackground = assetGetTexture(handler, "BackgroundTexture");
-	Entity *ePlayer = assetGetEntity(handler, "PlayerEntity");
-	TileMap *tmLevel1 = assetGetTileMap(handler, "Level0Tilemap");
-	TileMap *currentLevel = tmLevel1;
-
-	// Instead of drawing the grid everyframe, just draw it once to this
-	Texture *rtRoom = createTexture(renderer, GAME_WIDTH, GAME_HEIGHT);
+	World* gameWorld = loadWorldFromTMX(handler, renderer, "assets/level0.tmx");
 
 	// We don't really care what went wrong, but if something went wrong while
 	// while loading assets, we cannot continue.
 	if (jGetError() == 0) {
-
-		/////////// CREATE THE CURRENT ROOM'S BACKGROUND ///////////
-		/// This beautiful function "drawSortedMap" allows us
-		/// to cook the ingredients "level1.txt" and "walltiles.png"
-		/// into a very good looking set of walls that are all
-		/// properly formatted based on adjacent walls.
-		setRenderTarget(renderer, rtRoom);
-		drawTexture(renderer, tBackground, 0, 0);
-		drawSortedMap(renderer, sWallSet, currentLevel, 0, 0, 0, 0);
-		setRenderTarget(renderer, NULL);
-
 		while (runLoop) {
 			// Update the renderer and check for a quit signal
 			runLoop = rendererProcEvents(renderer, input);
 
 			if (runLoop) {
-				//drawTexture(renderer, rtRoom, 0, 0);
-				drawTexture(renderer, tBackground, (sint32)renderer->cameraX, (sint32)renderer->cameraY);
-				drawTileMap(renderer, currentLevel, 0, 0, 0, 0, 0, 0);
-
-				////////////////////// PLAYER MOVEMENT/PHYSICS //////////////////////
-				// Gravity
-				ePlayer->vSpeed += 0.5;
-
-				// Move left/right
-				/* inputCheckKey returns either 0 or 1, so we add input for the right
-				 * key and negative input for the right key together and multiply it
-				 * by the player's speed. This will either be -speed for left key,
-				 * +speed for the right key, or 0 if neither or both are pressed.
-				 */
-				ePlayer->hSpeed =
-						(inputCheckKey(input, SDL_SCANCODE_RIGHT) + -inputCheckKey(input, SDL_SCANCODE_LEFT)) * 3;
-
-				// Jump - just shoot the player up and let gravity deal with it (only if on the ground)
-				if (inputCheckKeyPressed(input, SDL_SCANCODE_UP) &&
-					checkEntityTileMapCollision(ePlayer, currentLevel, (int) ePlayer->x, (int) ePlayer->y + 1))
-					ePlayer->vSpeed -= 10;
-
-				// Let's not go mach speed
-				if (ePlayer->vSpeed >= BLOCK_HEIGHT)
-					ePlayer->vSpeed = BLOCK_HEIGHT - 1;
-
-				/*******Player Collisions
-				 * The essential idea to a collision here is
-				 * 1. Check if we are going to collide with a wall
-				 * 2. If so, continually move a pixel towards it until you're touching it
-				 * 3. After we inch towards the wall, we correct the decimal place if there is one
-				*/
-				if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + ePlayer->hSpeed, ePlayer->y)) {
-					ePlayer->x -= sign(ePlayer->hSpeed);
-					ePlayer->x = round(ePlayer->x);
-					while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + sign(ePlayer->hSpeed), ePlayer->y))
-						ePlayer->x += sign(ePlayer->hSpeed);
-					ePlayer->hSpeed = 0;
-				}
-				if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + ePlayer->vSpeed)) {
-					ePlayer->y -= sign(ePlayer->vSpeed);
-					ePlayer->y = round(ePlayer->y);
-					while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + sign(ePlayer->vSpeed)))
-						ePlayer->y += sign(ePlayer->vSpeed);
-					ePlayer->vSpeed = 0;
-				}
-				ePlayer->x += ePlayer->hSpeed;
-				ePlayer->y += ePlayer->vSpeed;
-
-				//////////////////////// Player Animations ////////////////////////
-				// We must invert the player if he is going left
-				if (ePlayer->hSpeed > 0)
-					ePlayer->scaleX = 1;
-				else if (ePlayer->hSpeed < 0)
-					ePlayer->scaleX = -1;
-
-				// Walking/standing animations
-				if (ePlayer->hSpeed != 0)
-					ePlayer->sprite = sPlayerMove;
-				else
-					ePlayer->sprite = sPlayerStand;
-
-				if (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + 1))
-					ePlayer->sprite = sPlayerJump;
-
 				/////////////////////////// DRAWING THINGS //////////////////////////
-				renderer->cameraX = clamp(ePlayer->x - GAME_WIDTH / 2 + 8, 0, currentLevel->width * currentLevel->cellWidth - GAME_WIDTH);
-				renderer->cameraY = clamp(ePlayer->y - GAME_HEIGHT / 2 + 16, 0, currentLevel->height * currentLevel->cellHeight - GAME_HEIGHT);
-				drawEntity(renderer, ePlayer);
-				renderFontExt(16, 16, "FPS: %f\n(%f,%f)", font, renderer, 999, round(renderer->framerate), ePlayer->x, ePlayer->y);
+				worldProcFrame(gameWorld);
+				renderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
 				/////////////////////////////////////////////////////////////////////
 
 				rendererProcEndFrame(renderer);
@@ -180,7 +93,8 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	}
 
 	// Free up the resources
-	freeTexture(rtRoom);
+	freeWorld(gameWorld);
+	freeBehaviourMap(bMap);
 	freeAssetHandler(handler);
 
 	return mainMenu;
@@ -211,3 +125,54 @@ int main(int argc, char* argv[]) {
 	freeRenderer(renderer);
 	return 0;
 }
+
+/*
+////////////////////// PLAYER MOVEMENT/PHYSICS //////////////////////
+				// Gravity
+				ePlayer->vSpeed += 0.5;
+
+				ePlayer->hSpeed =
+						(inputCheckKey(input, SDL_SCANCODE_RIGHT) + -inputCheckKey(input, SDL_SCANCODE_LEFT)) * 3;
+
+				// Jump - just shoot the player up and let gravity deal with it (only if on the ground)
+				if (inputCheckKeyPressed(input, SDL_SCANCODE_UP) &&
+					checkEntityTileMapCollision(ePlayer, currentLevel, (int) ePlayer->x, (int) ePlayer->y + 1))
+					ePlayer->vSpeed -= 10;
+
+				// Let's not go mach speed
+				if (ePlayer->vSpeed >= BLOCK_HEIGHT)
+					ePlayer->vSpeed = BLOCK_HEIGHT - 1;
+
+if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + ePlayer->hSpeed, ePlayer->y)) {
+ePlayer->x -= sign(ePlayer->hSpeed);
+ePlayer->x = round(ePlayer->x);
+while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + sign(ePlayer->hSpeed), ePlayer->y))
+ePlayer->x += sign(ePlayer->hSpeed);
+ePlayer->hSpeed = 0;
+}
+if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + ePlayer->vSpeed)) {
+ePlayer->y -= sign(ePlayer->vSpeed);
+ePlayer->y = round(ePlayer->y);
+while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + sign(ePlayer->vSpeed)))
+ePlayer->y += sign(ePlayer->vSpeed);
+ePlayer->vSpeed = 0;
+}
+ePlayer->x += ePlayer->hSpeed;
+ePlayer->y += ePlayer->vSpeed;
+
+//////////////////////// Player Animations ////////////////////////
+// We must invert the player if he is going left
+if (ePlayer->hSpeed > 0)
+ePlayer->scaleX = 1;
+else if (ePlayer->hSpeed < 0)
+ePlayer->scaleX = -1;
+
+// Walking/standing animations
+if (ePlayer->hSpeed != 0)
+ePlayer->sprite = sPlayerMove;
+else
+ePlayer->sprite = sPlayerStand;
+
+if (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + 1))
+ePlayer->sprite = sPlayerJump;
+ * */
