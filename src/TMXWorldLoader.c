@@ -136,7 +136,11 @@ World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* t
 			}
 
 			// Go to the next layer in the list
-			currentLayer = currentLayer->next;
+			if (currentLayer->type == L_GROUP) {
+				currentLayer = currentLayer->content.group_head;
+			} else {
+				currentLayer = currentLayer->next;
+			}
 		}
 	} else {
 		if (handler == NULL) {
