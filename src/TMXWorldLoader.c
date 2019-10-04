@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <TileMap.h>
+#include <Sprite.h>
 #include "JamEngine.h"
 #include "TMXWorldLoader.h"
 #include "JamError.h"
@@ -44,7 +46,7 @@ char* genRandomString() {
 // This function is meant for loadWorldFromTMX and is not safe to call
 bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* layer) {
 	Entity* tempEntity;
-	tmx_object* currentObject = layer->tmx_object_group->head;
+	tmx_object* currentObject = layer->content.objgr->head;
 	bool failedToLoad = false;
 
 	// Loop the linked list
@@ -52,7 +54,7 @@ bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* la
 		tempEntity = copyEntity(assetGetEntity(handler, currentObject->type), currentObject->x, currentObject->y);
 
 		if (tempEntity != NULL) {
-			worldAddentity(world, tempEntity);
+			worldAddEntity(world, tempEntity);
 			// TODO: Add support for tmx custom properties to entity values
 		} else {
 			failedToLoad = true;
@@ -68,8 +70,25 @@ bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* la
 
 ///////////////////////////////////////////////////////////////////////////////
 // This function is meant for loadWorldFromTMX and is not safe to call
-TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH) {
+TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH, tmx_map* tmx) {
+	TileMap* map = createTileMap(mapW, mapH, tileW, tileH);
+	Sprite* src = assetGetSprite(handler, layer->name);
+	uint32 i;
 
+	if (map != NULL && src != NULL) {
+		// Give the map some basic data
+		map->tileSheet = src;
+		map->collisionRangeStart = 1;
+		map->collisionRangeEnd = (uint16)src->animationLength;
+
+		// Loop through each tile on this layer and give it to the map
+		for (i = 0; i < mapW * mapH; i++)
+			map->grid[i] = (uint16)tmx_get_tile(tmx, (unsigned int)layer->content.gids[i])->id;
+	} else {
+		fprintf(stderr, "Failed to create TileMap from name %s (createTileMapFromTMXLayer)\n", layer->name);
+	}
+
+	return map;
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -103,7 +122,7 @@ World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* t
 				}
 			}
 			else if (currentLayer->type == L_LAYER) {
-				currentTileMap = createTileMapFromTMXLayer(handler, currentLayer, mapW, mapH, tileW, tileH);
+				currentTileMap = createTileMapFromTMXLayer(handler, currentLayer, mapW, mapH, tileW, tileH, tmx);
 				if (currentTileMap != NULL) {
 					// Is there room in the world?
 					if (worldLayerPointer < MAX_TILEMAPS - 1) {
