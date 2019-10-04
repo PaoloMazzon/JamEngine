@@ -1,6 +1,8 @@
 #include "TMXWorldLoader.h"
 #include <stdio.h>
 #include "JamError.h"
+#include <stdlib.h>
+#include <JamEngine.h>
 #include "tmx.h"
 
 /* General tmx loading outline
@@ -21,16 +23,90 @@
  *   iv) put the new tilemap into the world
  */
 
+Asset* createAsset(void*, enum AssetType);
+
+///////////////////////////////////////////////////////////////////////////////
+char* genRandomString() {
+	char* output = malloc(10);
+	int i;
+
+	if (output != NULL) {
+		for (i = 0; i < 9; i++)
+			output[i] = (char)(65 + (rand() % (26 * 2)));
+		output[9] = 0;
+	}
+
+	return output;
+}
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// This function is meant for loadWorldFromTMX and is not safe to call
+bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* layer) {
+
+}
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// This function is meant for loadWorldFromTMX and is not safe to call
+TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH) {
+
+}
+///////////////////////////////////////////////////////////////////////////////
+
 ///////////////////////////////////////////////////////////////////////////////
 World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* tmxFilename) {
 	tmx_map* tmx = tmx_load(tmxFilename);
 	World* world = createWorld(renderer);
 	TileMap* currentTileMap = NULL;
-	Entity* currentEntity = NULL;
-	uint32 tileW, tileH;
+	uint32 mapW, mapH, tileW, tileH;
+	tmx_layer* currentLayer;
+	unsigned char worldLayerPointer = 0;
+	char* randomString;
 
 	if (handler != NULL && tmx != NULL && world != NULL) {
-		// TODO: This
+		// Load the preliminary information from the map
+		currentLayer = tmx->ly_head;
+		mapW = tmx->width;
+		mapH = tmx->height;
+		tileW = tmx->tile_width;
+		tileH = tmx->tile_height;
+
+		// Warn the user if they are trying to load anything but an orthogonal map
+		if (tmx->orient != O_ORT)
+			fprintf(stderr, "Warning: loadWorldFromTMX does not support any view besides orthogonal. Attempting to load anyway.\n");
+
+		while (currentLayer != NULL) {
+			if (currentLayer->type == L_OBJGR) {
+				if (!loadObjectLayerIntoWorld(handler, world, currentLayer)) {
+					jSetError(ERROR_TMX_ENTITY_ERROR);
+					fprintf(stderr, "Entity layer %s could not be loaded (loadWorldFromTMX)\n", currentLayer->name);
+				}
+			}
+			else if (currentLayer->type == L_LAYER) {
+				currentTileMap = createTileMapFromTMXLayer(handler, currentLayer, mapW, mapH, tileW, tileH);
+				if (currentTileMap != NULL) {
+					// Is there room in the world?
+					if (worldLayerPointer < MAX_TILEMAPS - 1) {
+						// Put the map into the world and throw it into the asset handler as well so it gets cleaned up later
+						world->worldMaps[++worldLayerPointer] = currentTileMap;
+						randomString = genRandomString();
+						loadAssetIntoHandler(handler, createAsset(currentTileMap, tileAsset), randomString);
+						throwInGarbageINI(handler->localINI, randomString);
+					} else {
+						freeTileMap(currentTileMap);
+						jSetError(ERROR_TMX_TILEMAP_ERROR);
+						fprintf(stderr, "Tile layer %s could not be loaded because the world has no more map slots (loadWorldFromTMX)\n", currentLayer->name);
+					}
+				} else {
+					jSetError(ERROR_TMX_TILEMAP_ERROR);
+					fprintf(stderr, "Tile layer %s could not be loaded (loadWorldFromTMX)\n", currentLayer->name);
+				}
+			}
+
+			// Go to the next layer in the list
+			currentLayer = currentLayer->next;
+		}
 	} else {
 		if (handler == NULL) {
 			fprintf(stderr, "Handler doesn't exist (loadWorldFromTMX)\n");
