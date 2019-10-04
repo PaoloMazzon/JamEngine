@@ -127,6 +127,8 @@ void worldProcFrame(World* world) {
 					(*ent->behaviour->onDraw)(world->renderer, world, ent);
 				else
 					drawEntity(world->renderer, ent);
+			} else if (ent != NULL && ent->behaviour == NULL) {
+				drawEntity(world->renderer, ent);
 			}
 		}
 	} else {

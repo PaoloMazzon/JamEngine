@@ -2,28 +2,11 @@
 #include <stdlib.h>
 #include <TileMap.h>
 #include <Sprite.h>
+#include <Frame.h>
 #include "JamEngine.h"
 #include "TMXWorldLoader.h"
 #include "JamError.h"
 #include "tmx.h"
-
-/* General tmx loading outline
- * 1. setup
- *  a) load .tmx file
- *  b) create world
- *  c) store width/height/tile width/tile height for later
- *
- * 2. loop through tmx layers
- *  a) if its an object layer
- *   i) create a copy of the entity from the asset loader using the tmx object type as the asset name
- *   ii) load extra data from the map into the entity (like width/height)
- *   iii) add the entity to the world
- *  b) if its a tile layer
- *   i) create a new tileset with denoted width/height
- *   ii) use the name of the layer to load the sprite from the asset loader into the tilemap
- *   iii) load the data from the tileset layer into the tilemap
- *   iv) put the new tilemap into the world
- */
 
 Asset* createAsset(void*, enum AssetType);
 
@@ -54,7 +37,11 @@ bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* la
 		tempEntity = copyEntity(assetGetEntity(handler, currentObject->type), currentObject->x, currentObject->y);
 
 		if (tempEntity != NULL) {
-			worldAddEntity(world, tempEntity);
+ 			worldAddEntity(world, tempEntity);
+
+			// Adjust for tiled x/y origin being on bottom left
+			if (tempEntity->sprite->animationLength > 0)
+				tempEntity->y -= tempEntity->sprite->frames[0]->h;
 			// TODO: Add support for tmx custom properties to entity values
 		} else {
 			failedToLoad = true;
@@ -88,7 +75,7 @@ TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint
 			if (tile == NULL)
 				map->grid[i] = 0;
 			else
-				map->grid[i] = (uint16)tile->id;
+				map->grid[i] = (uint16)(tile->id + 1);
 		}
 	} else {
 		fprintf(stderr, "Failed to create TileMap from name %s (createTileMapFromTMXLayer)\n", layer->name);

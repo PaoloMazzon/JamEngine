@@ -83,13 +83,15 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 			runLoop = rendererProcEvents(renderer, input);
 
 			if (runLoop) {
+				drawFillColour(renderer, 0, 0, 0, 255);
+
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				renderer->cameraX = 50;
 				renderer->cameraY = 50;
-				worldProcFrame(gameWorld);
 				for (i = 0; i < MAX_TILEMAPS; i++)
 					if (gameWorld->worldMaps[i] != NULL)
 						drawTileMap(renderer, gameWorld->worldMaps[i], 0, 0, 0, 0, 0, 0);
+				worldProcFrame(gameWorld);
 				renderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
 				/////////////////////////////////////////////////////////////////////
 

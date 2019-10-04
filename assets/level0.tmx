@@ -35,6 +35,6 @@
   <object id="2" type="EnemyEntity" gid="49" x="144" y="208" width="16" height="16"/>
   <object id="3" type="EnemyEntity" gid="49" x="176" y="208" width="16" height="16"/>
   <object id="4" type="EnemyEntity" gid="49" x="112" y="208" width="16" height="16"/>
-  <object id="5" type="PlayerEntity" gid="50" x="64" y="208" width="16" height="32"/>
+  <object id="5" type="PlayerEntity" gid="50" x="80" y="208" width="16" height="32"/>
  </objectgroup>
 </map>
