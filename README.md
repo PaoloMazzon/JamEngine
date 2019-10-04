@@ -151,6 +151,7 @@ that will be given to any entities that haven't been given another behaviour.
 Major To-Do List
 ----------------
  - Gamepad input
+ - Make input static so you don't need an input struct
  - Rewrite the window resizing function so it doesn't crash the game if it fails 
  - A lot of Font.c is not verbose and should be fixed.
 

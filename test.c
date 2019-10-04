@@ -27,6 +27,56 @@ static inline double sign(double number) {
 		return 0.0;
 }
 
+void onPlayerFrame(Renderer* renderer, World* world, Entity* self) {
+	// Gravity
+	self->vSpeed += 0.5;
+
+	self->hSpeed =
+			(inputCheckKey(input, SDL_SCANCODE_RIGHT) + -inputCheckKey(input, SDL_SCANCODE_LEFT)) * 3;
+
+	// Jump - just shoot the player up and let gravity deal with it (only if on the ground)
+	if (inputCheckKeyPressed(input, SDL_SCANCODE_UP) &&
+		checkEntityTileMapCollision(self, world, (int) self->x, (int) self->y + 1))
+		self->vSpeed -= 10;
+
+	// Let's not go mach speed
+	if (self->vSpeed >= BLOCK_HEIGHT)
+		self->vSpeed = BLOCK_HEIGHT - 1;
+
+	if (checkEntityTileMapCollision(self, currentLevel, self->x + self->hSpeed, self->y)) {
+		self->x -= sign(self->hSpeed);
+		self->x = round(self->x);
+		while (!checkEntityTileMapCollision(self, currentLevel, self->x + sign(self->hSpeed), self->y))
+			self->x += sign(self->hSpeed);
+		self->hSpeed = 0;
+	}
+	if (checkEntityTileMapCollision(self, currentLevel, self->x, self->y + self->vSpeed)) {
+		self->y -= sign(self->vSpeed);
+		self->y = round(self->y);
+		while (!checkEntityTileMapCollision(self, currentLevel, self->x, self->y + sign(self->vSpeed)))
+			self->y += sign(self->vSpeed);
+		self->vSpeed = 0;
+	}
+	self->x += self->hSpeed;
+	self->y += self->vSpeed;
+
+//////////////////////// Player Animations ////////////////////////
+// We must invert the player if he is going left
+	if (self->hSpeed > 0)
+		self->scaleX = 1;
+	else if (self->hSpeed < 0)
+		self->scaleX = -1;
+
+// Walking/standing animations
+	if (self->hSpeed != 0)
+		self->sprite = sPlayerMove;
+	else
+		self->sprite = sPlayerStand;
+
+	if (!checkEntityTileMapCollision(self, currentLevel, self->x, self->y + 1))
+		self->sprite = sPlayerJump;
+}
+
 /////////////////////////////////////// The main menu ///////////////////////////////////////
 bool runMenu(Renderer* renderer, Input* input, Font* font) { // Returns false if quit game
 	// Menu-related variables
@@ -133,54 +183,3 @@ int main(int argc, char* argv[]) {
 	freeRenderer(renderer);
 	return 0;
 }
-
-/*
-////////////////////// PLAYER MOVEMENT/PHYSICS //////////////////////
-				// Gravity
-				ePlayer->vSpeed += 0.5;
-
-				ePlayer->hSpeed =
-						(inputCheckKey(input, SDL_SCANCODE_RIGHT) + -inputCheckKey(input, SDL_SCANCODE_LEFT)) * 3;
-
-				// Jump - just shoot the player up and let gravity deal with it (only if on the ground)
-				if (inputCheckKeyPressed(input, SDL_SCANCODE_UP) &&
-					checkEntityTileMapCollision(ePlayer, currentLevel, (int) ePlayer->x, (int) ePlayer->y + 1))
-					ePlayer->vSpeed -= 10;
-
-				// Let's not go mach speed
-				if (ePlayer->vSpeed >= BLOCK_HEIGHT)
-					ePlayer->vSpeed = BLOCK_HEIGHT - 1;
-
-if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + ePlayer->hSpeed, ePlayer->y)) {
-ePlayer->x -= sign(ePlayer->hSpeed);
-ePlayer->x = round(ePlayer->x);
-while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x + sign(ePlayer->hSpeed), ePlayer->y))
-ePlayer->x += sign(ePlayer->hSpeed);
-ePlayer->hSpeed = 0;
-}
-if (checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + ePlayer->vSpeed)) {
-ePlayer->y -= sign(ePlayer->vSpeed);
-ePlayer->y = round(ePlayer->y);
-while (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + sign(ePlayer->vSpeed)))
-ePlayer->y += sign(ePlayer->vSpeed);
-ePlayer->vSpeed = 0;
-}
-ePlayer->x += ePlayer->hSpeed;
-ePlayer->y += ePlayer->vSpeed;
-
-//////////////////////// Player Animations ////////////////////////
-// We must invert the player if he is going left
-if (ePlayer->hSpeed > 0)
-ePlayer->scaleX = 1;
-else if (ePlayer->hSpeed < 0)
-ePlayer->scaleX = -1;
-
-// Walking/standing animations
-if (ePlayer->hSpeed != 0)
-ePlayer->sprite = sPlayerMove;
-else
-ePlayer->sprite = sPlayerStand;
-
-if (!checkEntityTileMapCollision(ePlayer, currentLevel, ePlayer->x, ePlayer->y + 1))
-ePlayer->sprite = sPlayerJump;
- * */
