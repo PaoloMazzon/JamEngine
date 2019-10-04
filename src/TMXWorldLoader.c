@@ -73,6 +73,7 @@ bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* la
 TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH, tmx_map* tmx) {
 	TileMap* map = createTileMap(mapW, mapH, tileW, tileH);
 	Sprite* src = assetGetSprite(handler, layer->name);
+	tmx_tile* tile;
 	uint32 i;
 
 	if (map != NULL && src != NULL) {
@@ -82,9 +83,13 @@ TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint
 		map->collisionRangeEnd = (uint16)src->animationLength;
 
 		// Loop through each tile on this layer and give it to the map
-		// SEGFAULT
-		for (i = 0; i < mapW * mapH; i++)
-			map->grid[i] = (uint16)tmx_get_tile(tmx, (unsigned int)layer->content.gids[i])->id;
+		for (i = 0; i < mapW * mapH; i++) {
+			tile = tmx_get_tile(tmx, (unsigned int) layer->content.gids[i]);
+			if (tile == NULL)
+				map->grid[i] = 0;
+			else
+				map->grid[i] = (uint16)tile->id;
+		}
 	} else {
 		fprintf(stderr, "Failed to create TileMap from name %s (createTileMapFromTMXLayer)\n", layer->name);
 	}

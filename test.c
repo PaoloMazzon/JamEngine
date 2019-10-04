@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
+#include <Renderer.h>
 #include "JamEngine.h"
 
 /////////////////// Constants ///////////////////
@@ -83,7 +84,12 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 
 			if (runLoop) {
 				/////////////////////////// DRAWING THINGS //////////////////////////
+				renderer->cameraX = 50;
+				renderer->cameraY = 50;
 				worldProcFrame(gameWorld);
+				for (i = 0; i < MAX_TILEMAPS; i++)
+					if (gameWorld->worldMaps[i] != NULL)
+						drawTileMap(renderer, gameWorld->worldMaps[i], 0, 0, 0, 0, 0, 0);
 				renderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
 				/////////////////////////////////////////////////////////////////////
 
