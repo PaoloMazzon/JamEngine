@@ -120,7 +120,7 @@ World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* t
 					// Is there room in the world?
 					if (worldLayerPointer < MAX_TILEMAPS - 1) {
 						// Put the map into the world and throw it into the asset handler as well so it gets cleaned up later
-						world->worldMaps[++worldLayerPointer] = currentTileMap;
+						world->worldMaps[worldLayerPointer++] = currentTileMap;
 						randomString = genRandomString();
 						loadAssetIntoHandler(handler, createAsset(currentTileMap, tileAsset), randomString);
 						throwInGarbageINI(handler->localINI, randomString);

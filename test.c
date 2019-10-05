@@ -120,10 +120,11 @@ bool runGame(Renderer* renderer, Font* font) {
 
 	// Create the behaviour map
 	BehaviourMap* bMap = createBehaviourMap();
+	addBehaviourToMap(bMap, "PlayerBehaviour", NULL, NULL, onPlayerFrame, NULL);
 
 	// Load the assets and create the world
 	AssetHandler* handler = createAssetHandler();
-	assetLoadINI(handler, renderer, "assets/level0.ini", NULL);
+	assetLoadINI(handler, renderer, "assets/level0.ini", bMap);
 	World* gameWorld = loadWorldFromTMX(handler, renderer, "assets/level0.tmx");
 
 	// We don't really care what went wrong, but if something went wrong while
