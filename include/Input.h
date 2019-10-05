@@ -30,9 +30,11 @@ typedef struct {
 	uint32 previousMouseState; ///< Last frame's mice buttons
 } Input;
 
+Input* gInputPointer;
+
 /// \brief Creates an input struct for keeping track of user-input
 /// \throws ERROR_ALLOC_FAILED
-Input* createInput();
+void initInput();
 
 /// \brief Updates an input struct
 ///
@@ -40,34 +42,34 @@ Input* createInput();
 /// input class given to rendererProcEvents for input to work properly
 ///
 /// \throws ERROR_NULL_POINTER
-void updateInput(Input* input, double screenMultiplier);
+void updateInput(double screenMultiplier);
 
 /// \brief Checks if a key is currently pressed
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
-bool inputCheckKey(Input* input, SDL_Scancode key);
+bool inputCheckKey(SDL_Scancode key);
 
 /// \brief Checks if a key was just pressed
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
-bool inputCheckKeyPressed(Input* input, SDL_Scancode key);
+bool inputCheckKeyPressed(SDL_Scancode key);
 
 /// \brief Checks if a key was just released
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
-bool inputCheckKeyReleased(Input* input, SDL_Scancode key);
+bool inputCheckKeyReleased(SDL_Scancode key);
 
 /// \brief Checks if a mouse button is currently pressed
 /// \throws ERROR_NULL_POINTER
-bool inputCheckMouseButton(Input* input, uint8 button);
+bool inputCheckMouseButton(uint8 button);
 
 /// \brief Checks if a mouse button was just pressed
 /// \throws ERROR_NULL_POINTER
-bool inputCheckMouseButtonPressed(Input* input, uint8 button);
+bool inputCheckMouseButtonPressed(uint8 button);
 
 /// \brief Checks if a mouse button was just released
 /// \throws ERROR_NULL_POINTER
-bool inputCheckMouseButtonReleased(Input* input, uint8 button);
+bool inputCheckMouseButtonReleased(uint8 button);
 
 /// \brief Clears an Input from memory
-void freeInput(Input* input);
+void quitInput();

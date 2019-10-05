@@ -101,7 +101,7 @@ void windowToScreenBufferCoordinates(Renderer* renderer, int* x, int* y);
 /// run the update function yourself before you run this
 /// function). Pass NULL if you'd rather do it yourself.
 /// \throws ERROR_NULL_POINTER
-bool rendererProcEvents(Renderer* renderer, Input* input);
+bool rendererProcEvents(Renderer* renderer);
 
 /// \brief Run this at the end of a frame to clock and render it
 /// \throws ERROR_NULL_POINTER

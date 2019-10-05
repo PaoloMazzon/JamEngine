@@ -182,7 +182,7 @@ void freeRenderer(Renderer* renderer) {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool rendererProcEvents(Renderer* renderer, Input* input) {
+bool rendererProcEvents(Renderer* renderer) {
 	SDL_Event event;
 	bool ret = true;
 	int wW = 0;
@@ -190,9 +190,10 @@ bool rendererProcEvents(Renderer* renderer, Input* input) {
 	// The preliminary check
 	if (renderer != NULL) {
 		// Check if we are given an input to update
-		if (input != NULL)
+		if (gInputPointer != NULL) {
 			SDL_GetWindowSize(renderer->gameWindow, &wW, NULL);
-			updateInput(input, (double)wW / renderer->screenBuffer->w);
+			updateInput((double) wW / renderer->screenBuffer->w);
+		}
 
 		// Update the events queue and keyboard and etc you get the point
 		SDL_PumpEvents();

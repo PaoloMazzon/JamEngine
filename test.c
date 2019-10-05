@@ -32,60 +32,61 @@ void onPlayerFrame(Renderer* renderer, World* world, Entity* self) {
 	self->vSpeed += 0.5;
 
 	self->hSpeed =
-			(inputCheckKey(input, SDL_SCANCODE_RIGHT) + -inputCheckKey(input, SDL_SCANCODE_LEFT)) * 3;
+			(inputCheckKey(SDL_SCANCODE_RIGHT) + -inputCheckKey(SDL_SCANCODE_LEFT)) * 3;
 
 	// Jump - just shoot the player up and let gravity deal with it (only if on the ground)
-	if (inputCheckKeyPressed(input, SDL_SCANCODE_UP) &&
-		checkEntityTileMapCollision(self, world, (int) self->x, (int) self->y + 1))
+	if (inputCheckKeyPressed(SDL_SCANCODE_UP) &&
+		checkEntityTileMapCollision(self, world->worldMaps[0], (int) self->x, (int) self->y + 1))
 		self->vSpeed -= 10;
 
 	// Let's not go mach speed
 	if (self->vSpeed >= BLOCK_HEIGHT)
 		self->vSpeed = BLOCK_HEIGHT - 1;
 
-	if (checkEntityTileMapCollision(self, currentLevel, self->x + self->hSpeed, self->y)) {
+	if (checkEntityTileMapCollision(self, world->worldMaps[0], self->x + self->hSpeed, self->y)) {
 		self->x -= sign(self->hSpeed);
 		self->x = round(self->x);
-		while (!checkEntityTileMapCollision(self, currentLevel, self->x + sign(self->hSpeed), self->y))
+		while (!checkEntityTileMapCollision(self, world->worldMaps[0], self->x + sign(self->hSpeed), self->y))
 			self->x += sign(self->hSpeed);
 		self->hSpeed = 0;
 	}
-	if (checkEntityTileMapCollision(self, currentLevel, self->x, self->y + self->vSpeed)) {
+	if (checkEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + self->vSpeed)) {
 		self->y -= sign(self->vSpeed);
 		self->y = round(self->y);
-		while (!checkEntityTileMapCollision(self, currentLevel, self->x, self->y + sign(self->vSpeed)))
+		while (!checkEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + sign(self->vSpeed)))
 			self->y += sign(self->vSpeed);
 		self->vSpeed = 0;
 	}
 	self->x += self->hSpeed;
 	self->y += self->vSpeed;
 
-//////////////////////// Player Animations ////////////////////////
-// We must invert the player if he is going left
+	/*
+	//////////////////////// Player Animations ////////////////////////
+	// We must invert the player if he is going left
 	if (self->hSpeed > 0)
 		self->scaleX = 1;
 	else if (self->hSpeed < 0)
 		self->scaleX = -1;
 
-// Walking/standing animations
+	// Walking/standing animations
 	if (self->hSpeed != 0)
 		self->sprite = sPlayerMove;
 	else
 		self->sprite = sPlayerStand;
 
 	if (!checkEntityTileMapCollision(self, currentLevel, self->x, self->y + 1))
-		self->sprite = sPlayerJump;
+		self->sprite = sPlayerJump;*/
 }
 
 /////////////////////////////////////// The main menu ///////////////////////////////////////
-bool runMenu(Renderer* renderer, Input* input, Font* font) { // Returns false if quit game
+bool runMenu(Renderer* renderer, Font* font) { // Returns false if quit game
 	// Menu-related variables
 	bool play = false;
 	bool runLoop = true;
 
 	while (runLoop) {
 		// Update the renderer and check for a quit signal
-		runLoop = rendererProcEvents(renderer, input);
+		runLoop = rendererProcEvents(renderer);
 
 		if (runLoop) {
 			drawFillColour(renderer, 255, 255, 255, 255);
@@ -94,10 +95,10 @@ bool runMenu(Renderer* renderer, Input* input, Font* font) { // Returns false if
 			renderFont(0, 0, "Press <ESC> to quit or <SPACE> to play.", font, renderer);
 
 			// Now check out what the user wants to do
-			if (inputCheckKeyPressed(input, SDL_SCANCODE_ESCAPE)) {
+			if (inputCheckKeyPressed(SDL_SCANCODE_ESCAPE)) {
 				// Just quit the game
 				runLoop = false;
-			} else if (inputCheckKeyPressed(input, SDL_SCANCODE_SPACE)) {
+			} else if (inputCheckKeyPressed(SDL_SCANCODE_SPACE)) {
 				// Play the ever-exciting test game
 				runLoop = false;
 				play = true;
@@ -111,7 +112,7 @@ bool runMenu(Renderer* renderer, Input* input, Font* font) { // Returns false if
 	return play;
 }
 ////////////////////////////////////////// The game /////////////////////////////////////////
-bool runGame(Renderer* renderer, Input* input, Font* font) {
+bool runGame(Renderer* renderer, Font* font) {
 	// Core game pieces
 	bool mainMenu = false; // Weather or not return to main menu
 	bool runLoop = true;
@@ -130,7 +131,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 	if (jGetError() == 0) {
 		while (runLoop) {
 			// Update the renderer and check for a quit signal
-			runLoop = rendererProcEvents(renderer, input);
+			runLoop = rendererProcEvents(renderer);
 
 			if (runLoop) {
 				drawFillColour(renderer, 0, 0, 0, 255);
@@ -161,7 +162,7 @@ bool runGame(Renderer* renderer, Input* input, Font* font) {
 
 int main(int argc, char* argv[]) {
 	Renderer* renderer = createRenderer("Jam Engine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
-	Input* input = createInput();
+	initInput();
 	Font* font = createFont(renderer, "assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;
 	font->characterWidth = 8;
@@ -173,12 +174,12 @@ int main(int argc, char* argv[]) {
 	// A very simple loop that allows the player to bounce between
 	// the menu and the game infinitely
 	while (run) {
-		run = runMenu(renderer, input, font);
+		run = runMenu(renderer, font);
 		if (run)
-			run = runGame(renderer, input, font);
+			run = runGame(renderer, font);
 	}
 
-	freeInput(input);
+	quitInput();
 	freeFont(font);
 	freeRenderer(renderer);
 	return 0;
