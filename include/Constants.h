@@ -32,8 +32,8 @@ typedef enum {none = -1, logic = 0, solid = 1, npc = 2, object = 3, item = 4, pl
 /// \brief Used exclusive in worlds, sets up how to filter entities
 typedef enum {fRectangle, fProximity} FilterType;
 
-// This is used to give unique IDs to whatever
-uint64 globalIDCounter;
+/// \brief The file that error messages will be output to
+#define LOG_FILENAME "jamerrorlog.txt"
 
 // This is the maximum number vertices checkMapCollision is allowed to check
 #define MAX_GRID_VERTICES 16

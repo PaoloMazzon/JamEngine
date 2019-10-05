@@ -52,7 +52,7 @@ uint16 jErrorCode;
 #define ERROR_TMX_ENTITY_ERROR  0b0000100000000000
 
 /// \brief Sets an error flag
-void jSetError(uint16 errorCode);
+void jSetError(uint16 errorCode, const char* format, ...);
 
 /// \brief Grabs all errors and clears them
 ///

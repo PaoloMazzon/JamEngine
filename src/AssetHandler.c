@@ -62,18 +62,15 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id) {
 				// Oh heck go back
 				handler->ids = (AssetKey*)realloc((void*)handler->ids, sizeof(AssetKey) * (handler->size));
 				handler->vals = (Asset**)realloc((void*)handler->vals, sizeof(Asset*) * (handler->size));
-				fprintf(stderr, "Failed to increment handler size (loadAssetIntoHandler with ID %s)\n", id);
-				jSetError(ERROR_REALLOC_FAILED);
+				jSetError(ERROR_REALLOC_FAILED, "Failed to increment handler size (loadAssetIntoHandler with ID %s)\n", id);
 			}
 		}
 	} else {
 		if (handler == NULL) {
-			fprintf(stderr, "Handler does not exist (loadAssetIntoHandler with ID %s)\n", id);
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Handler does not exist (loadAssetIntoHandler with ID %s)\n", id);
 		}
 		if (asset == NULL) {
-			fprintf(stderr, "Asset passed was null (loadAssetIntoHandler with ID %s)\n", id);
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Asset passed was null (loadAssetIntoHandler with ID %s)\n", id);
 		}
 	}
 }
@@ -98,12 +95,10 @@ Asset* createAsset(void* pointer, enum AssetType type) {
 			asset->tileMap = pointer;
 	} else {
 		if (asset == NULL) {
-			fprintf(stderr, "Failed to create asset (createAsset)\n");
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create asset (createAsset)\n");
 		}
 		if (pointer == NULL) {
-			fprintf(stderr, "Pointer does not exist (createAsset)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Pointer does not exist (createAsset)\n");
 		}
 		free(asset);
 		asset = NULL;
@@ -120,8 +115,7 @@ AssetHandler* createAssetHandler() {
 	if (handler != NULL) {
 		// no need to do anything here for now
 	} else {
-		fprintf(stderr, "Failed to create an asset handler (createAssetHandler)\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create an asset handler (createAssetHandler)\n");
 	}
 
 	return handler;
@@ -161,8 +155,7 @@ void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerNam
 				(headerName + 1)
 		);
 	} else {
-		fprintf(stderr, "Failed to load sprite of id %s, tex not found (assetLoadINI)\\n", headerName + 1);
-		jSetError(ERROR_ASSET_NOT_FOUND);
+		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load sprite of id %s, tex not found (assetLoadINI)\\n", headerName + 1);
 	}
 }
 
@@ -199,8 +192,7 @@ void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerNam
 		
 		loadAssetIntoHandler(assetHandler, createAsset(ent, entAsset), (headerName + 1));
 	} else {
-		fprintf(stderr, "Failed to load entity of id %s (assetLoadINI)\n", headerName + 1);
-		jSetError(ERROR_ASSET_NOT_FOUND);
+		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load entity of id %s (assetLoadINI)\n", headerName + 1);
 	}
 }
 
@@ -264,16 +256,13 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 		}
 	} else {
 		if (assetHandler == NULL) {
-			fprintf(stderr, "Asset loader does not exist for file %s (assetLoadINI)\n", filename);
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Asset loader does not exist for file %s (assetLoadINI)\n", filename);
 		}
 		if (renderer == NULL) {
-			fprintf(stderr, "Renderer does not exist for file %s (assetLoadINI)\n", filename);
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Renderer does not exist for file %s (assetLoadINI)\n", filename);
 		}
 		if (ini == NULL) {
-			fprintf(stderr, "Failed to load INI for file %s (assetLoadINI)\n", filename);
-			jSetError(ERROR_OPEN_FAILED);
+			jSetError(ERROR_OPEN_FAILED, "Failed to load INI for file %s (assetLoadINI)\n", filename);
 		}
 	}
 }
@@ -288,8 +277,7 @@ Asset* assetGet(AssetHandler* assetHandler, AssetKey key) {
 			if (keysEqual(assetHandler->ids[i], key))
 				asset = assetHandler->vals[i];
 	} else {
-		fprintf(stderr, "AssetHandler does not exist (assetGet)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist (assetGet)\n");
 	}
 
 	return asset;
@@ -305,15 +293,12 @@ Sprite* assetGetSprite(AssetHandler* handler, AssetKey key) {
 		if (asset != NULL && asset->type == sprAsset) {
 			returnVal = asset->spr;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %s, expected sprite (assetGetSprite)\n", key);
-			jSetError(ERROR_ASSET_WRONG_TYPE);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected sprite (assetGetSprite)\n", key);
 		} else {
-			fprintf(stderr, "Failed to find sprite for key %s (assetGetSprite)\n", key);
-			jSetError(ERROR_ASSET_NOT_FOUND);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find sprite for key %s (assetGetSprite)\n", key);
 		}
 	} else {
-		fprintf(stderr, "AssetHandler does not exist (assetGetSprite)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist (assetGetSprite)\n");
 	}
 
 	return returnVal;
@@ -329,15 +314,12 @@ Entity* assetGetEntity(AssetHandler* handler, AssetKey key) {
 		if (asset != NULL && asset->type == entAsset) {
 			returnVal = asset->entity;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %s, expected entity (assetGetEntity)\n", key);
-			jSetError(ERROR_ASSET_WRONG_TYPE);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected entity (assetGetEntity)\n", key);
 		} else {
-			fprintf(stderr, "Failed to find entity for key %s (assetGetEntity)\n", key);
-			jSetError(ERROR_ASSET_NOT_FOUND);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find entity for key %s (assetGetEntity)\n", key);
 		}
 	} else {
-		fprintf(stderr, "AssetHandler does not exist (assetGetEntity)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist (assetGetEntity)\n");
 	}
 
 	return returnVal;
@@ -353,15 +335,12 @@ Hitbox* assetGetHitbox(AssetHandler* handler, AssetKey key) {
 		if (asset != NULL && asset->type == hitAsset) {
 			returnVal = asset->hitbox;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %s, expected hitbox (assetGetHitbox)\n", key);
-			jSetError(ERROR_ASSET_WRONG_TYPE);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected hitbox (assetGetHitbox)\n", key);
 		} else {
-			fprintf(stderr, "Failed to find hitbox for key %s (assetGetHitbox)\n", key);
-			jSetError(ERROR_ASSET_NOT_FOUND);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find hitbox for key %s (assetGetHitbox)\n", key);
 		}
 	} else {
-		fprintf(stderr, "AssetHandler does not exist (assetGetHitbox)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist (assetGetHitbox)\n");
 	}
 
 	return returnVal;
@@ -377,15 +356,12 @@ Texture* assetGetTexture(AssetHandler* handler, AssetKey key) {
 		if (asset != NULL && asset->type == texAsset) {
 			returnVal = asset->tex;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %s, expected texture (assetGetTexture)\n", key);
-			jSetError(ERROR_ASSET_WRONG_TYPE);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected texture (assetGetTexture)\n", key);
 		} else {
-			fprintf(stderr, "Failed to find texture for key %s (assetGetTexture)\n", key);
-			jSetError(ERROR_ASSET_NOT_FOUND);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find texture for key %s (assetGetTexture)\n", key);
 		}
 	} else {
-		fprintf(stderr, "AssetHandler does not exist(assetGetTexture)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist(assetGetTexture)\n");
 	}
 
 	return returnVal;
@@ -401,15 +377,12 @@ TileMap* assetGetTileMap(AssetHandler* handler, AssetKey key) {
 		if (asset != NULL && asset->type == tileAsset) {
 			returnVal = asset->tileMap;
 		} else if (asset != NULL) {
-			fprintf(stderr, "Incorrect asset type for key %s, expected tileMap (assetGetTileMap)\n", key);
-			jSetError(ERROR_ASSET_WRONG_TYPE);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected tileMap (assetGetTileMap)\n", key);
 		} else {
-			fprintf(stderr, "Failed to find tileMap for key %s (assetGetTileMap)\n", key);
-			jSetError(ERROR_ASSET_NOT_FOUND);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find tileMap for key %s (assetGetTileMap)\n", key);
 		}
 	} else {
-		fprintf(stderr, "AssetHandler does not exist(assetGetTileMap)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist(assetGetTileMap)\n");
 	}
 
 	return returnVal;
