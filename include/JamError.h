@@ -9,7 +9,7 @@
 // Error codes
 
 ///< For warnings
-#define ERROR_WARNING           0b0000000000000000
+#define ERROR_WARNING 0
 
 ///< A malloc/calloc failed; most likely out of memory
 #define ERROR_ALLOC_FAILED      0b0000000000000001

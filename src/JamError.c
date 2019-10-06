@@ -13,11 +13,11 @@ void __jSetError(uint16 errorCode, const char* format, const char* function, int
 	jErrorCode = errorCode | jErrorCode;
 
 	// Output error to file
-	FILE* out = fopen(LOG_FILENAME, "aw");
+	FILE* out = fopen(LOG_FILENAME, "a");
 	va_list* args;
 	va_start(args, format);
-	fprintf(out, "[%s:%i] ", function, line);
-	fprintf(stderr, "[%s:%i] ", function, line);
+	fprintf(out, "\n[%s:%i] ", function, line);
+	fprintf(stderr, "\n[%s:%i] ", function, line);
 	vfprintf(out, format, args);
 	va_start(args, format);
 	vfprintf(stderr, format, args);
