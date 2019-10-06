@@ -2,13 +2,11 @@
 /// \author lugi1
 /// \brief This is a very nice tool that makes precise timing easy
 ///
-/// It should be noted that this is not my code and most credit goes
-/// to the folk over at http://roxlu.com/
-/// That said, I did write the sleep function. I could have just used
-/// the SDL timer and made a neat little wrapper, but this is much
-/// more precise (nanosecond-precision) and easy to use.
+/// The code between the slash blocks is credit to @roxlu on Twitter
+/// or http://roxlu.com/
 #pragma once
 
+//////////////////////////////////////////////////////////////////////
 #include <stdint.h>
 #if defined(__linux)
 #	define HAVE_POSIX_TIMER
@@ -60,6 +58,7 @@ static uint64_t ns() {
 	return (uint64_t) ((1e9 * now.QuadPart) / win_frequency.QuadPart);
 #endif
 }
+//////////////////////////////////////////////////////////////////////
 
 /// \brief Sleeps for a given amount of time (in nanoseconds)
 void sleep(uint64_t nsTime);
