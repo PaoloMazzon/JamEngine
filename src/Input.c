@@ -7,6 +7,8 @@
 #include <Input.h>
 #include <JamError.h>
 
+static Input* gInputPointer;
+
 //////////////////////////////////////////////////////////////
 void initInput() {
 	gInputPointer = (Input*)malloc(sizeof(Input));

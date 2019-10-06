@@ -30,8 +30,6 @@ typedef struct {
 	uint32 previousMouseState; ///< Last frame's mice buttons
 } Input;
 
-Input* gInputPointer;
-
 /// \brief Creates an input struct for keeping track of user-input
 /// \throws ERROR_ALLOC_FAILED
 void initInput();

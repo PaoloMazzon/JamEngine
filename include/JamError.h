@@ -6,10 +6,6 @@
 #pragma once
 #include "Constants.h"
 
-///< The global error code that stores only what errors have happened
-///< If it is 0, there are no recent errors
-uint16 jErrorCode;
-
 // Error codes
 
 ///< A malloc/calloc failed; most likely out of memory

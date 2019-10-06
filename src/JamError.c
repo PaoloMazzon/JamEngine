@@ -5,6 +5,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+static uint16 jErrorCode;
+
 /////////////////////////////////////////////////////////
 void jSetError(uint16 errorCode, const char* format, ...) {
 	// First just add the error flag to the error code
