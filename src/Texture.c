@@ -28,12 +28,10 @@ Texture* createTexture(Renderer* renderer, int w, int h) {
 		} else {
 			free(tex);
 			tex = NULL;
-			fprintf(stderr, "Failed to create SDL texture (createTexture). SDL Error: %s\n", SDL_GetError());
-			jSetError(ERROR_SDL_ERROR);
+			jSetError(ERROR_SDL_ERROR, "Failed to create SDL texture (createTexture). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		fprintf(stderr, "Failed to allocate Texture. SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_SDL_ERROR);
+		jSetError(ERROR_SDL_ERROR, "Failed to allocate Texture. SDL Error: %s\n", SDL_GetError());
 	}
 
 	// If we get a dud back, it returns null which informs the user
@@ -83,26 +81,22 @@ Texture* loadTexture(Renderer* renderer, const char* filename) {
 				} else {
 					free(tex);
 					tex = NULL;
-					fprintf(stderr, "Failed to create texture from surface (loadTexture). SDL Error: %s\n", SDL_GetError());
-					jSetError(ERROR_SDL_ERROR);
+					jSetError(ERROR_SDL_ERROR, "Failed to create texture from surface (loadTexture). SDL Error: %s\n", SDL_GetError());
 				}
 			} else {
 				free(tex);
 				tex = NULL;
-				fprintf(stderr, "Failed to create SDL surface (loadTexture). SDL Error: %s\n", SDL_GetError());
-				jSetError(ERROR_SDL_ERROR);
+				jSetError(ERROR_SDL_ERROR, "Failed to create SDL surface (loadTexture). SDL Error: %s\n", SDL_GetError());
 			}
 		} else {
-			fprintf(stderr, "Failed to allocate Texture. SDL Error: %s\n", SDL_GetError());
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate Texture. SDL Error: %s\n", SDL_GetError());
 
 		}
 	} else {
 		if (renderer == NULL)
-			fprintf(stderr, "Cannot load texture, null renderer passed. SDL Error: %s\n", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "Cannot load texture, null renderer passed. SDL Error: %s\n", SDL_GetError());
 		else
-			fprintf(stderr, "Cannot load texture, renderer contains no internal renderer. SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Cannot load texture, renderer contains no internal renderer. SDL Error: %s\n", SDL_GetError());
 	}
 
 	// If we get a dud back, it returns null which informs the user

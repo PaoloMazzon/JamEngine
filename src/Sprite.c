@@ -33,13 +33,11 @@ Sprite* createSprite(uint32 animationLength, uint16 frameDelay, bool looping) {
 		// Check if list is a dud and shouldn't be
 		if (list == NULL && animationLength > 0) {
 			free(sprite);
-			fprintf(stderr, "Could not allocate list. (createSprite).\n Animation Length: %i\n", animationLength);
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Could not allocate list. (createSprite).\n Animation Length: %i\n", animationLength);
 			sprite = NULL;
 		}
 	} else {
-		fprintf(stderr, "Could not allocate sprite. (createSprite).\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate sprite. (createSprite).\n");
 		free(list);
 	}
 
@@ -73,12 +71,10 @@ void spriteAppendFrame(Sprite* sprite, Frame* frame) {
 			free(sprite->frames);
 			sprite->frames = buffer;
 		} else {
-			fprintf(stderr, "Failed to allocate buffer frame list (spriteAppendFrame).\n");
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate buffer frame list (spriteAppendFrame).\n");
 		}
 	} else {
-		fprintf(stderr, "Sprite does not exist (spriteAppendFrame).\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Sprite does not exist (spriteAppendFrame).\n");
 	}
 }
 ///////////////////////////////////////////////////
@@ -124,19 +120,16 @@ Sprite* loadSpriteFromSheet(Texture* spriteSheet, uint32 cellCount, uint32 xInSh
 
 		// Stop the whole ordeal if a frame could not be grabbed
 		if (failedGrab) {
-			fprintf(stderr, "Failed to load all frames (loadSpriteFromSheet). SDL Error: %s\n", SDL_GetError());
-			jSetError(ERROR_SDL_ERROR);
+			jSetError(ERROR_SDL_ERROR, "Failed to load all frames (loadSpriteFromSheet). SDL Error: %s\n", SDL_GetError());
 			freeSprite(sprite, true, false);
 			sprite = NULL;
 		}
 	} else {
 		if (sprite == NULL) {
-			fprintf(stderr, "Failed to create the sprite (loadSpriteFromSheet).\n");
-			jSetError(ERROR_SDL_ERROR);
+			jSetError(ERROR_SDL_ERROR, "Failed to create the sprite (loadSpriteFromSheet).\n");
 		}
 		if (spriteSheet == NULL) {
-			fprintf(stderr, "Texture does not exist (loadSpriteFromSheet).\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Texture does not exist (loadSpriteFromSheet).\n");
 		}
 		freeSprite(sprite, true, false);
 		sprite = NULL;
@@ -175,8 +168,7 @@ void updateSprite(Sprite* sprite) {
 			}
 		}
 	} else {
-		fprintf(stderr, "Sprite does not exist (updateSprite).\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Sprite does not exist (updateSprite).\n");
 	}
 }
 ///////////////////////////////////////////////////
@@ -205,8 +197,7 @@ void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float sc
 		sprite->frames[sprite->currentFrame]->h
 		);
 	} else {
-		fprintf(stderr, "Sprite does not exist (drawSprite).\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Sprite does not exist (drawSprite).\n");
 	}
 }
 ///////////////////////////////////////////////////
@@ -232,15 +223,12 @@ void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, flo
 		);
 	} else {
 		if (renderer == NULL) {
-			fprintf(stderr, "Renderer does not exist (drawSpriteFrame).\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Renderer does not exist (drawSpriteFrame).\n");
 		}
 		if (sprite == NULL) {
-			fprintf(stderr, "Sprite does not exist (drawSpriteFrame).\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Sprite does not exist (drawSpriteFrame).\n");
 		} else if (frame >= sprite->animationLength) {
-			fprintf(stderr, "Frame %i out of bounds (drawSpriteFrame).\n", (int) frame);
-			jSetError(ERROR_OUT_OF_BOUNDS);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Frame %i out of bounds (drawSpriteFrame).\n", (int) frame);
 		}
 	}
 }

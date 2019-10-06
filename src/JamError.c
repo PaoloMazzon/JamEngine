@@ -8,7 +8,7 @@
 static uint16 jErrorCode;
 
 /////////////////////////////////////////////////////////
-void __jSetError(uint16 errorCode, const char* format, const char* file, const char* function, int line, ...) {
+void __jSetError(uint16 errorCode, const char* format, const char* function, int line, ...) {
 	// First just add the error flag to the error code
 	jErrorCode = errorCode | jErrorCode;
 
@@ -16,9 +16,10 @@ void __jSetError(uint16 errorCode, const char* format, const char* file, const c
 	FILE* out = fopen(LOG_FILENAME, "aw");
 	va_list* args;
 	va_start(args, format);
-	fprintf(out, "[%s:%s:%i] ", file, function, line);
-	fprintf(stderr, "[%s:%s:%i] ", file, function, line);
+	fprintf(out, "[%s:%i] ", function, line);
+	fprintf(stderr, "[%s:%i] ", function, line);
 	vfprintf(out, format, args);
+	va_start(args, format);
 	vfprintf(stderr, format, args);
 	va_end(args);
 }

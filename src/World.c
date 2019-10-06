@@ -32,19 +32,16 @@ World* createWorld(Renderer* renderer) {
 		world->renderer = renderer;
 
 		if (error || world->worldEntities == NULL || world->entityByRange[ENTITIES_OUT_OF_RANGE] == NULL || world->entityByRange[ENTITIES_IN_RANGE] == NULL) {
-			fprintf(stderr, "Failed to allocate entity lists (createWorld)\n");
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate entity lists (createWorld)\n");
 			// keep on rocking in the
 			freeWorld(world);
 		}
 	} else {
 		if (world == NULL) {
-			fprintf(stderr, "Could not allocate world (createWorld)\n");
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Could not allocate world (createWorld)\n");
 		} 
 		if (renderer == NULL) {
-			fprintf(stderr, "Renderer does not exist (createWorld)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Renderer does not exist (createWorld)\n");
 		}
 	}
 
@@ -59,8 +56,7 @@ void setWorldFilterTypeRectangle(World* world, uint16 inRangeRectangleWidth, uin
 		world->inRangeRectangleWidth = inRangeRectangleWidth;
 		world->inRangeRectangleHeight = inRangeRectangleHeight;
 	} else {
-		fprintf(stderr, "World does not exist (setWorldFilterTypeRectangle)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "World does not exist (setWorldFilterTypeRectangle)\n");
 	}
 }
 ///////////////////////////////////////////////////////
@@ -71,8 +67,7 @@ void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius) {
 		world->distanceFilteringType = fProximity;
 		world->inRangeRadius = inRangeRadius;
 	} else {
-		fprintf(stderr, "World does not exist (setWorldFilterTypeCircle)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "World does not exist (setWorldFilterTypeCircle)\n");
 	}
 }
 ///////////////////////////////////////////////////////
@@ -91,16 +86,13 @@ void worldAddEntity(World* world, Entity* entity) {
 		}
 	} else {
 		if (world == NULL) {
-			fprintf(stderr, "World does not exist (worldAddEntity)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "World does not exist (worldAddEntity)\n");
 		}
 		if (entity == NULL) {
-			fprintf(stderr, "Entity does not exist (worldAddEntity)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Entity does not exist (worldAddEntity)\n");
 		}
 		if (entity != NULL && entity->type >= MAX_ENTITY_TYPES) {
-			fprintf(stderr, "Entity type is invalid (worldAddEntity)\n");
-			jSetError(ERROR_INCORRECT_FORMAT);
+			jSetError(ERROR_INCORRECT_FORMAT, "Entity type is invalid (worldAddEntity)\n");
 		}
 	}
 }
@@ -132,8 +124,7 @@ void worldProcFrame(World* world) {
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER);
-		fprintf(stderr, "World does not exist (worldProcFrame)\n");
+		jSetError(ERROR_NULL_POINTER, "World does not exist (worldProcFrame)\n");
 	}
 }
 ///////////////////////////////////////////////////////
@@ -171,8 +162,7 @@ void worldRemoveEntity(World* world, Entity* entity) {
 					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] = NULL;
 		}
 	} else {
-		fprintf(stderr, "World does not exist (worldRemoveEntity)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "World does not exist (worldRemoveEntity)\n");
 	}
 }
 ///////////////////////////////////////////////////////
@@ -193,8 +183,7 @@ void worldRotateEntity(World* world, Entity* entity) {
 			i++;
 		}
 	} else {
-		fprintf(stderr, "World does not exist (worldRotateEntity)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "World does not exist (worldRotateEntity)\n");
 	}
 }
 ///////////////////////////////////////////////////////
@@ -249,8 +238,7 @@ void filterEntitiesByProximity(World* world, int pointX, int pointY) {
 			}
 		}
 	} else {
-		fprintf(stderr, "World does not exist (filterEntitiesByProximity)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "World does not exist (filterEntitiesByProximity)\n");
 	}
 }
 ///////////////////////////////////////////////////////

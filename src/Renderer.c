@@ -17,9 +17,6 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 	Texture* tex;
 	Renderer* renderer = (Renderer*)malloc(sizeof(Renderer));
 
-	// This is why only 1 renderer should exist at a time
-	globalIDCounter = 0;
-
 	// Check if we were given a dud
 	if (renderer != NULL) {
 
@@ -62,24 +59,20 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 					freeRenderer(renderer);
 					renderer = NULL;
 					freeTexture(tex);
-					fprintf(stderr, "Failed to create internal texture (createRenderer). SDL Error: %s\n", SDL_GetError());
-					jSetError(ERROR_SDL_ERROR);
+					jSetError(ERROR_SDL_ERROR, "Failed to create internal texture (createRenderer). SDL Error: %s\n", SDL_GetError());
 				}
 			} else {
 				freeRenderer(renderer);
 				renderer = NULL;
-				fprintf(stderr, "Failed to create SDL renderer (createRenderer). SDL Error: %s\n", SDL_GetError());
-				jSetError(ERROR_SDL_ERROR);
+				jSetError(ERROR_SDL_ERROR, "Failed to create SDL renderer (createRenderer). SDL Error: %s\n", SDL_GetError());
 			}
 		} else {
 			freeRenderer(renderer);
 			renderer = NULL;
-			fprintf(stderr, "Failed to create SDL window (createRenderer). SDL Error: %s\n", SDL_GetError());
-			jSetError(ERROR_SDL_ERROR);
+			jSetError(ERROR_SDL_ERROR, "Failed to create SDL window (createRenderer). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		fprintf(stderr, "Failed to create renderer struct. SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create renderer struct. SDL Error: %s\n", SDL_GetError());
 	}
 
 	return renderer;
@@ -114,8 +107,7 @@ bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool 
 
 			// Check for errors
 			if (renderer->screenBuffer == NULL) {
-				fprintf(stderr, "Failed to create screen buffer in fullscreen (resetWindow). SDL Error: %s\n", SDL_GetError());
-				jSetError(ERROR_SDL_ERROR);
+				jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer in fullscreen (resetWindow). SDL Error: %s\n", SDL_GetError());
 			} else {
 				pass = true;
 			}
@@ -130,15 +122,13 @@ bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool 
 
 			// Check for errors
 			if (renderer->screenBuffer == NULL) {
-				fprintf(stderr, "Failed to create screen buffer (resetWindow). SDL Error: %s\n", SDL_GetError());
-				jSetError(ERROR_SDL_ERROR);
+				jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (resetWindow). SDL Error: %s\n", SDL_GetError());
 			} else {
 				pass = true;
 			}
 		}
 	} else {
-		fprintf(stderr, "Renderer does not exist (rendererProcEvents)");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (rendererProcEvents)");
 	}
 
 	return pass;
@@ -152,8 +142,7 @@ bool rendererIsScreenBuffer(Renderer* renderer) {
 	if (renderer != NULL) {
 		ret = renderer->renderingToScreenBuffer;
 	} else {
-		jSetError(ERROR_NULL_POINTER);
-		fprintf(stderr, "Renderer does not exist (rendererIsScreenBuffer)\n");
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (rendererIsScreenBuffer)\n");
 	}
 
 	return ret;
@@ -189,11 +178,9 @@ bool rendererProcEvents(Renderer* renderer) {
 
 	// The preliminary check
 	if (renderer != NULL) {
-		// Check if we are given an input to update
-		if (gInputPointer != NULL) {
-			SDL_GetWindowSize(renderer->gameWindow, &wW, NULL);
-			updateInput((double) wW / renderer->screenBuffer->w);
-		}
+		// Update input
+		SDL_GetWindowSize(renderer->gameWindow, &wW, NULL);
+		updateInput((double) wW / renderer->screenBuffer->w);
 
 		// Update the events queue and keyboard and etc you get the point
 		SDL_PumpEvents();
@@ -203,8 +190,7 @@ bool rendererProcEvents(Renderer* renderer) {
 				ret = false;
 		}
 	} else {
-		fprintf(stderr, "Renderer does not exist (rendererProcEvents)");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (rendererProcEvents)");
 	}
 
 	return ret;
@@ -223,8 +209,7 @@ void setRenderTarget(Renderer* renderer, Texture* texture) {
 			SDL_SetRenderTarget(renderer->internalRenderer, texture->tex);
 		}
 	} else {
-		fprintf(stderr, "Renderer does not exist (setRenderTarget)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (setRenderTarget)\n");
 	}
 }
 /////////////////////////////////////////////////////////////
@@ -254,12 +239,10 @@ bool configScreenBuffer(Renderer *renderer, uint32 internalWidth, uint32 interna
 			renderer->displayBufferX = (w - displayWidth) / 2;
 			renderer->displayBufferY = (h - displayHeight) / 2;
 		} else {
-			fprintf(stderr, "Failed to create screen buffer (configScreenBuffer).");
-			jSetError(ERROR_SDL_ERROR);
+			jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (configScreenBuffer).");
 		}
 	} else {
-		fprintf(stderr, "Renderer does not exist (configScreenBuffer)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (configScreenBuffer)\n");
 	}
 
 	return pass;
@@ -285,8 +268,7 @@ void windowToScreenBufferCoordinates(Renderer* renderer, int* x, int* y) {
 		*x = (int)(((double)rX - (double)renderer->displayBufferX) * widthRatio);
 		*y = (int)(((double)rY - (double)renderer->displayBufferY) * heightRatio);
 	} else {
-		fprintf(stderr, "Renderer does not exist (windowToScreenBufferCoordinates)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (windowToScreenBufferCoordinates)\n");
 	}
 }
 /////////////////////////////////////////////////////////////
@@ -331,8 +313,7 @@ void rendererProcEndFrame(Renderer* renderer) {
 		// Update the last time
 		renderer->lastTime = ns();
 	} else {
-		fprintf(stderr, "Renderer does not exist (rendererProcEndFrame)");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (rendererProcEndFrame)");
 	}
 }
 /////////////////////////////////////////////////////////////

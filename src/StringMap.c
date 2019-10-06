@@ -21,8 +21,7 @@ SMap* createSMap() {
 		smap->size = 0;
 		smap->sizeOfGarbagePile = 0;
 	} else {
-		fprintf(stderr, "Failed to allocate SMap (createSMap)\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate SMap (createSMap)\n");
 	}
 
 	return smap;
@@ -69,24 +68,20 @@ SMap* loadSMap(const char* filename) {
 							throwAStringIntoTheGarbage(map, key);
 							throwAStringIntoTheGarbage(map, val);
 						} else {
-							fprintf(stderr, "Could not allocate strings, line %i (loadSMap)\n", i + 1);
-							jSetError(ERROR_ALLOC_FAILED);
+							jSetError(ERROR_ALLOC_FAILED, "Could not allocate strings, line %i (loadSMap)\n", i + 1);
 						}
 					} else {
-						fprintf(stderr, "Error in SMap file, line %i '%s' (loadSMap)\n", i + 1, list->strList[i]);
-						jSetError(ERROR_INCORRECT_FORMAT);
+						jSetError(ERROR_INCORRECT_FORMAT, "Error in SMap file, line %i '%s' (loadSMap)\n", i + 1, list->strList[i]);
 					}
 				}
 			}
 		}
 	} else {
 		if (list == NULL) {
-			fprintf(stderr, "File could not be opened (loadSMap)\n");
-			jSetError(ERROR_OPEN_FAILED);
+			jSetError(ERROR_OPEN_FAILED, "File could not be opened (loadSMap)\n");
 		}
 		if (map == NULL) {
-			fprintf(stderr, "SMap could not be allocated (loadSMap)\n");
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "SMap could not be allocated (loadSMap)\n");
 		}
 		freeSMap(map);
 	}
@@ -109,10 +104,9 @@ void outputSMap(SMap* smap, FILE* stream) {
 			fprintf(stream, "%s=%s\n", smap->keys[i], smap->vals[i]);
 	} else {
 		if (smap == NULL)
-			fprintf(stderr, "Passed SMap does not exist (outputSMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Passed SMap does not exist (outputSMap)\n");
 		if (stream == NULL)
-			fprintf(stderr, "Passed FILE does not exist (outputSMap)\n");
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Passed FILE does not exist (outputSMap)\n");
 	}
 }
 ///////////////////////////////////////////////////////////
@@ -142,8 +136,7 @@ void setSMapVal(SMap* smap, const char* key, char* val) {
 			smap->vals[smap->size - 1] = val;
 		}
 	} else {
-		fprintf(stderr, "Passed SMap does not exist (setSMapVal with key %s)\n", key);
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Passed SMap does not exist (setSMapVal with key %s)\n", key);
 	}
 }
 ///////////////////////////////////////////////////////////
@@ -162,8 +155,7 @@ const char* getSMapVal(SMap* smap, const char* key, char* def) {
 			}
 		}
 	} else {
-		fprintf(stderr, "Passed SMap does not exist (getSMapVal for key %s)", key);
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Passed SMap does not exist (getSMapVal for key %s)", key);
 	}
 
 	return ret;
@@ -183,12 +175,10 @@ void throwAStringIntoTheGarbage(SMap* smap, char* garbage) {
 			smap->garbage = tempPointer;
 			smap->garbage[smap->sizeOfGarbagePile - 1] = garbage;
 		} else {
-			fprintf(stderr, "Failed to increase size of garbage pile (throwAStringIntoTheGarbage)\n");
-			jSetError(ERROR_REALLOC_FAILED);
+			jSetError(ERROR_REALLOC_FAILED, "Failed to increase size of garbage pile (throwAStringIntoTheGarbage)\n");
 		}
 	} else {
-		fprintf(stderr, "Passed SMap does not exist (throwAStringIntoTheGarbage)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Passed SMap does not exist (throwAStringIntoTheGarbage)\n");
 	}
 }
 ///////////////////////////////////////////////////////////

@@ -50,10 +50,10 @@
 ///< At least one entity could not be loaded from a tmx
 #define ERROR_TMX_ENTITY_ERROR  0b0000100000000000
 
-#define jSetError(errorCode, format, ...) __jSetError(errorCode, format, __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define jSetError(errorCode, format, ...) __jSetError(errorCode, format, __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 /// \brief Sets an error flag
-void __jSetError(uint16 errorCode, const char* format, const char* file, const char* function, int line,  ...);
+void __jSetError(uint16 errorCode, const char* format, const char* function, int line,  ...);
 
 /// \brief Grabs all errors and clears them
 ///

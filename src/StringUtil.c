@@ -13,8 +13,7 @@ StringBuilder* createStringBuilder() {
 	if (builder != NULL) {
 		builder->allocAmount = DEFAULT_ALLOC_AMOUNT;
 	} else {
-		fprintf(stderr, "Could not create builder (createStringBuilder)\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Could not create builder (createStringBuilder)\n");
 	}
 
 	return builder;
@@ -28,8 +27,7 @@ StringBuilder* createBuilderFromString(const char* string) {
 	if (builder != NULL) {
 		insertStringIntoBuilder(builder, (char*)string, -1);	
 	} else {
-		fprintf(stderr, "Failed to create builder (createBuilderFromString)\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create builder (createBuilderFromString)\n");
 	}
 
 	return builder;
@@ -60,8 +58,7 @@ char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index) {
 				builder->size += builder->allocAmount + stringLen;
 				builder->str[builder->length + stringLen] = 0;
 			} else {
-				fprintf(stderr, "Failed to reallocate builder (insertStringIntoBuilder)\n");
-				jSetError(ERROR_REALLOC_FAILED);
+				jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate builder (insertStringIntoBuilder)\n");
 				goodToProceed = false;
 			}
 		}
@@ -79,10 +76,9 @@ char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index) {
 		}
 	} else {
 		if (builder == NULL)
-			fprintf(stderr, "Builder does not exist (insertStringIntoBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (insertStringIntoBuilder)\n");
 		if (string == NULL)
-			fprintf(stderr, "String does not exist (insertStringIntoBuilder)\n");
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "String does not exist (insertStringIntoBuilder)\n");
 	}
 
 	return string;
@@ -107,11 +103,9 @@ void removeCharFromBuilder(StringBuilder* builder, int index) {
 		}
 	} else {
 		if (builder == NULL) {
-			fprintf(stderr, "Builder does not exist (removeCharFromBuilder)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (removeCharFromBuilder)\n");
 		} else {
-			fprintf(stderr, "Index out of bounds (removeCharFromBuilder)\n");
-			jSetError(ERROR_OUT_OF_BOUNDS);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (removeCharFromBuilder)\n");
 		}
 	}
 }
@@ -148,13 +142,12 @@ int findStringInBuilder(StringBuilder* builder, const char* string, int occurren
 			finalReturn = lastPos;
 	} else {
 		if (builder == NULL)
-			fprintf(stderr, "Builder does not exist (removeCharFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (removeCharFromBuilder)\n");
 		if (occurrencesRequired < -1) {
-			fprintf(stderr, "Occurrences required out of bounds (removeCharFromBuilder)\n");
-			jSetError(ERROR_OUT_OF_BOUNDS);
-		} else jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Occurrences required out of bounds (removeCharFromBuilder)\n");
+		}
 		if (string == NULL)
-			fprintf(stderr, "String does not exist (removeCharFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "String does not exist (removeCharFromBuilder)\n");
 	}
 
 	return finalReturn;
@@ -182,22 +175,18 @@ StringBuilder* substringFromBuilder(StringBuilder* builder, int index, int lengt
 		} else {
 			freeStringBuilder(sub);
 			sub = NULL;
-			fprintf(stderr, "Failed to create internal string (substringFromBuilder)\n");
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create internal string (substringFromBuilder)\n");
 		}
 	} else {
 		freeStringBuilder(sub);
 		if (sub == NULL) {
-			fprintf(stderr, "Failed to create substring (substringFromBuilder)\n");
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create substring (substringFromBuilder)\n");
 		}
 		if (builder == NULL) {
-			fprintf(stderr, "Builder does not exist (substringFromBuilder)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (substringFromBuilder)\n");
 		}
 		if (builder != NULL && sub != NULL) {
-			fprintf(stderr, "Index out of bounds (substringFromBuilder)\n");
-			jSetError(ERROR_OUT_OF_BOUNDS);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (substringFromBuilder)\n");
 		}
 		sub = NULL;
 	}
@@ -220,8 +209,7 @@ void shrinkBuilder(StringBuilder* builder) { // NOTE: UNTESTED
 			}
 		}
 	} else {
-		fprintf(stderr, "Builder does not exist (shrinkBuilder)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Builder does not exist (shrinkBuilder)\n");
 	}
 }
 ///////////////////////////////////////////////////////////////
@@ -237,8 +225,7 @@ int getBuilderLength(StringBuilder* builder) {
 				count++;
 	} else {
 		count = -1;
-		fprintf(stderr, "Builder does not exist (getBuilderLength)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Builder does not exist (getBuilderLength)\n");
 	}
 
 	return count;
@@ -251,8 +238,7 @@ const char* getBuilderArray(StringBuilder* builder) {
 	if (builder != NULL) {
 		ret = (const char*)builder->str;
 	} else {
-		fprintf(stderr, "Builder does not exist (getBuilderArray)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Builder does not exist (getBuilderArray)\n");
 	}
 
 	return ret;
@@ -397,8 +383,7 @@ char* ftoa(double input) {
 			string[0] = '-';
 		}
 	} else {
-		fprintf(stderr, "Failed to allocate string with decimal %f (ftoa)\n", input);
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate string with decimal %f (ftoa)\n", input);
 	}
 
 	return string;

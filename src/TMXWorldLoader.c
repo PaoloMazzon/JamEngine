@@ -110,8 +110,7 @@ World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* t
 		while (currentLayer != NULL) {
 			if (currentLayer->type == L_OBJGR) {
 				if (!loadObjectLayerIntoWorld(handler, world, currentLayer)) {
-					jSetError(ERROR_TMX_ENTITY_ERROR);
-					fprintf(stderr, "Entity layer %s could not be loaded (loadWorldFromTMX)\n", currentLayer->name);
+					jSetError(ERROR_TMX_ENTITY_ERROR, "Entity layer %s could not be loaded (loadWorldFromTMX)\n", currentLayer->name);
 				}
 			}
 			else if (currentLayer->type == L_LAYER) {
@@ -126,12 +125,10 @@ World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* t
 						throwInGarbageINI(handler->localINI, randomString);
 					} else {
 						freeTileMap(currentTileMap);
-						jSetError(ERROR_TMX_TILEMAP_ERROR);
-						fprintf(stderr, "Tile layer %s could not be loaded because the world has no more map slots (loadWorldFromTMX)\n", currentLayer->name);
+						jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded because the world has no more map slots (loadWorldFromTMX)\n", currentLayer->name);
 					}
 				} else {
-					jSetError(ERROR_TMX_TILEMAP_ERROR);
-					fprintf(stderr, "Tile layer %s could not be loaded (loadWorldFromTMX)\n", currentLayer->name);
+					jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded (loadWorldFromTMX)\n", currentLayer->name);
 				}
 			}
 
@@ -144,16 +141,13 @@ World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* t
 		}
 	} else {
 		if (handler == NULL) {
-			fprintf(stderr, "Handler doesn't exist (loadWorldFromTMX)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Handler doesn't exist (loadWorldFromTMX)\n");
 		}
 		if (tmx == NULL) {
-			fprintf(stderr, "Failed to open tmx file [%s] (loadWorldFromTMX)\n", tmx_strerr());
-			jSetError(ERROR_OPEN_FAILED);
+			jSetError(ERROR_OPEN_FAILED, "Failed to open tmx file [%s] (loadWorldFromTMX)\n", tmx_strerr());
 		}
 		if (world == NULL) {
-			fprintf(stderr, "Failed to create the world (loadWorldFromTMX)\n");
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create the world (loadWorldFromTMX)\n");
 		}
 	}
 

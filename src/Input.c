@@ -49,8 +49,6 @@ void updateInput(double screenMultiplier) {
 
 		gInputPointer->mX = (int)((double)gInputPointer->mX / screenMultiplier);
 		gInputPointer->mY = (int)((double)gInputPointer->mY / screenMultiplier);
-	} else {
-		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (updateInput). SDL Error: %s\n", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////
