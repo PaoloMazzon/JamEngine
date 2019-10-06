@@ -14,8 +14,7 @@ void drawSetColour(Renderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
 	if (renderer != NULL) {
 		SDL_SetRenderDrawColor(renderer->internalRenderer, r, g, b, a);
 	} else {
-		fprintf(stderr, "Passed renderer does not exist (drawSetColour).\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawSetColour).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -25,8 +24,7 @@ void drawGetColour(Renderer* renderer, uint8* r, uint8* g, uint8* b, uint8* a) {
 	if (renderer != NULL) {
 		SDL_GetRenderDrawColor(renderer->internalRenderer, r, g, b, a);
 	} else {
-		fprintf(stderr, "Passed renderer does not exist (drawGetColour).\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawGetColour).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -44,8 +42,7 @@ void drawRectangle(Renderer* renderer, int x, int y, int w, int h) {
 		rectangle.h = h;
 		SDL_RenderDrawRect(renderer->internalRenderer, &rectangle);
 	} else {
-		fprintf(stderr, "Passed renderer does not exist (drawRectangle).\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawRectangle).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -55,8 +52,7 @@ void drawCircle(Renderer* renderer, int x, int y, int r) {
 	if (renderer != NULL) {
 		// TODO: This
 	} else {
-		fprintf(stderr, "Passed renderer does not exist (drawCircle).\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawCircle).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -86,8 +82,7 @@ void drawFillColour(Renderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
 		SDL_SetRenderDrawColor(renderer->internalRenderer, oR, oG, oB, oA);
 		SDL_SetTextureBlendMode(renderTarget, texMode);
 	} else {
-		fprintf(stderr, "Passed renderer does not exist (drawFillColour).\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawFillColour).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -106,10 +101,9 @@ void drawTexture(Renderer* renderer, Texture* texture, sint32 x, sint32 y) {
 		SDL_RenderCopy(renderer->internalRenderer, texture->tex, NULL, &dest);
 	} else {
 		if (renderer == NULL)
-			fprintf(stderr, "Renderer not present (drawTexture). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "Renderer not present (drawTexture). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
-			fprintf(stderr, "Texture not present (drawTexture). SDL Error: %s", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Texture not present (drawTexture). SDL Error: %s", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -246,19 +240,15 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 		}
 	} else {
 		if (renderer == NULL) {
-			fprintf(stderr, "Renderer doesn't exist (drawSortedMap)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Renderer doesn't exist (drawSortedMap)\n");
 		}
 		if (map == NULL) {
-			fprintf(stderr, "Map doesn't exist (drawSortedMap)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Map doesn't exist (drawSortedMap)\n");
 		}
 		if (spr == NULL) {
-			fprintf(stderr, "Sprite doesn't exist (drawSortedMap)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Sprite doesn't exist (drawSortedMap)\n");
 		} else if (!(spr->animationLength == 48 || spr->animationLength == 47)) {
-			fprintf(stderr, "Sprite does not contain 48 frames(drawSortedMap)\n");
-			jSetError(ERROR_INCORRECT_FORMAT);
+			jSetError(ERROR_INCORRECT_FORMAT, "Sprite does not contain 48 frames(drawSortedMap)\n");
 		}
 	}
 }
@@ -284,13 +274,12 @@ void drawTileMap(Renderer* renderer, TileMap* map, int x, int y, uint32 xInMapSt
 			y += map->cellHeight;
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER);
 		if (renderer == NULL)
-			fprintf(stderr, "Renderer does not exist (drawTileMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Renderer does not exist (drawTileMap)\n");
 		if (map == NULL)
-			fprintf(stderr, "Map does not exist (drawTileMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (drawTileMap)\n");
 		if (map != NULL && map->tileSheet == NULL)
-			fprintf(stderr, "Internal tilesheet does not exist (drawTileMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Internal tilesheet does not exist (drawTileMap)\n");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -330,15 +319,13 @@ void drawTextureExt(Renderer* renderer, Texture* texture, sint32 x, sint32 y, si
 			SDL_RenderCopyEx(renderer->internalRenderer, texture->tex, NULL, &dest, rot, &origin, flip);
 			SDL_SetTextureAlphaMod(texture->tex, previousAlpha);
 		} else {
-			fprintf(stderr, "Texture does not support alpha (drawTextureExt). SDL Error: %s", SDL_GetError());
-			jSetError(ERROR_SDL_ERROR);
+			jSetError(ERROR_SDL_ERROR, "Texture does not support alpha (drawTextureExt). SDL Error: %s", SDL_GetError());
 		}
 	} else {
 		if (renderer == NULL)
-			fprintf(stderr, "Renderer not present (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "Renderer not present (drawTextureExt). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
-			fprintf(stderr, "Texture not present (drawTextureExt). SDL Error: %s", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Texture not present (drawTextureExt). SDL Error: %s", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -362,10 +349,9 @@ void drawTexturePart(Renderer* renderer, Texture* texture, sint32 x, sint32 y, s
 		SDL_RenderCopy(renderer->internalRenderer, texture->tex, &src, &dest);
 	} else {
 		if (renderer == NULL)
-			fprintf(stderr, "Renderer not present (drawTexturePart). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "Renderer not present (drawTexturePart). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
-			fprintf(stderr, "Texture not present (drawTexturePart). SDL Error: %s", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Texture not present (drawTexturePart). SDL Error: %s", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -410,15 +396,13 @@ void drawTexturePartExt(Renderer* renderer, Texture* texture, sint32 x, sint32 y
 			SDL_RenderCopyEx(renderer->internalRenderer, texture->tex, &src, &dest, rot, &origin, flip);
 			SDL_SetTextureAlphaMod(texture->tex, previousAlpha);
 		} else {
-			fprintf(stderr, "Texture does not support alpha (drawTextureExt). SDL Error: %s", SDL_GetError());
-			jSetError(ERROR_SDL_ERROR);
+			jSetError(ERROR_SDL_ERROR, "Texture does not support alpha (drawTextureExt). SDL Error: %s", SDL_GetError());
 		}
 	} else {
 		if (renderer == NULL)
-			fprintf(stderr, "Renderer not present (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "Renderer not present (drawTextureExt). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
-			fprintf(stderr, "Texture not present (drawTextureExt). SDL Error: %s", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Texture not present (drawTextureExt). SDL Error: %s", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////

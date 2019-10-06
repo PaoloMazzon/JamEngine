@@ -8,6 +8,9 @@
 
 // Error codes
 
+///< For warnings
+#define ERROR_WARNING           0b0000000000000000
+
 ///< A malloc/calloc failed; most likely out of memory
 #define ERROR_ALLOC_FAILED      0b0000000000000001
 
@@ -47,8 +50,10 @@
 ///< At least one entity could not be loaded from a tmx
 #define ERROR_TMX_ENTITY_ERROR  0b0000100000000000
 
+#define jSetError(errorCode, format, ...) __jSetError(errorCode, format, __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 /// \brief Sets an error flag
-void jSetError(uint16 errorCode, const char* format, ...);
+void __jSetError(uint16 errorCode, const char* format, const char* file, const char* function, int line,  ...);
 
 /// \brief Grabs all errors and clears them
 ///

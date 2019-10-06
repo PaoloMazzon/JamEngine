@@ -11,8 +11,7 @@ Buffer* createBuffer(uint64 size) {
 
 	// Check them
 	if (internalBuffer == NULL || buffer == NULL) {
-		fprintf(stderr, "Failed to allocate one of the buffers.\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate one of the buffers.\n");
 
 		if (buffer != NULL)
 			free(buffer);
@@ -55,13 +54,11 @@ Buffer* loadBuffer(const char* filename) {
 		if (ferror(bufferFile) != 0) {
 			freeBuffer(returnBuffer);
 			returnBuffer = NULL;
-			fprintf(stderr, "Failed to read buffer from file '%s'\n", filename);
-			jSetError(ERROR_FILE_FAILED);
+			jSetError(ERROR_FILE_FAILED, "Failed to read buffer from file '%s'\n", filename);
 		}
 		fclose(bufferFile);
 	} else {
-		fprintf(stderr, "Failed to open file '%s'\n", filename);
-		jSetError(ERROR_OPEN_FAILED);
+		jSetError(ERROR_OPEN_FAILED, "Failed to open file '%s'\n", filename);
 	}
 
 	return returnBuffer;
@@ -86,8 +83,7 @@ bool resizeBuffer(Buffer* buffer, uint64 newSize) {
 	// CHECKS
 	if (newBuffer == NULL) {
 		ret = false;
-		fprintf(stderr, "Failed to create new buffer (resizeBuffer)\n");
-		jSetError(ERROR_REALLOC_FAILED);
+		jSetError(ERROR_REALLOC_FAILED, "Failed to create new buffer (resizeBuffer)\n");
 	} else {
 		buffer->buffer = newBuffer;
 		buffer->size = newSize;
@@ -111,7 +107,7 @@ void zeroBuffer(Buffer* buffer) {
 bool addByte1(Buffer* buffer, uint8 byte) {
 	// Run some checks
 	if (buffer->pointer + 1 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS);
+		jSetError(ERROR_OUT_OF_BOUNDS, "");
 		return false;
 	}
 
@@ -128,7 +124,7 @@ bool addByte1(Buffer* buffer, uint8 byte) {
 bool addByte2(Buffer* buffer, uint16 bytes) {
 	// Run some checks
 	if (buffer->pointer + 2 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS);
+		jSetError(ERROR_OUT_OF_BOUNDS, "");
 		return false;
 	}
 
@@ -146,7 +142,7 @@ bool addByte2(Buffer* buffer, uint16 bytes) {
 bool addByte4(Buffer* buffer, uint32 bytes) {
 	// Run some checks
 	if (buffer->pointer + 4 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS);
+		jSetError(ERROR_OUT_OF_BOUNDS, "");
 		return false;
 	}
 
@@ -166,7 +162,7 @@ bool addByte4(Buffer* buffer, uint32 bytes) {
 bool addByte8(Buffer* buffer, uint64 bytes) {
 	// Run some checks
 	if (buffer->pointer + 8 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS);
+		jSetError(ERROR_OUT_OF_BOUNDS, "");
 		return false;
 	}
 

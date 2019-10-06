@@ -6,10 +6,8 @@
 BehaviourMap* createBehaviourMap() {
 	BehaviourMap* map = (BehaviourMap*)calloc(1, sizeof(BehaviourMap));
 
-	if (map == NULL) {
-		jSetError(ERROR_ALLOC_FAILED);
-		fprintf(stderr, "Failed to allocate behaviour map (createBehaviourMap)\n");
-	}
+	if (map == NULL)
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate behaviour map (createBehaviourMap)\n");
 
 	return map;
 }
@@ -38,12 +36,10 @@ void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(B
 			behaviour->onFrame = onFrame;
 			behaviour->onDraw = onDraw;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED);
-			fprintf(stderr, "Failed to reallocate map (addBehaviourToMap)\n");			
+			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate map (addBehaviourToMap)\n");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER);
-		fprintf(stderr, "Map doesn't exist (addBehaviourToMap)\n");
+		jSetError(ERROR_NULL_POINTER, "Map doesn't exist (addBehaviourToMap)\n");
 	}
 }
 /////////////////////////////////////////////////////////////////
