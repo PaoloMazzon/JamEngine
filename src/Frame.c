@@ -20,8 +20,7 @@ Frame* createFrame(Texture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
 		frame->w = w;
 		frame->h = h;
 	} else {
-		fprintf(stderr, "Could not allocate frame. (createFrame).\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate frame. (createFrame).\n");
 	}
 
 	return frame;
@@ -34,10 +33,9 @@ void drawFrame(Frame* frame, Renderer* renderer, sint32 x, sint32 y) {
 		drawTexturePart(renderer, frame->tex, x, y, frame->x, frame->y, frame->w, frame->h);
 	} else {
 		if (frame != NULL)
-			fprintf(stderr, "Frame does not exist. (drawFrame).\n");
+			jSetError(ERROR_NULL_POINTER, "Frame does not exist. (drawFrame).\n");
 		if (renderer != NULL)
-			fprintf(stderr, "Renderer does not exist. (drawFrame).\n");
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Renderer does not exist. (drawFrame).\n");
 	}
 }
 //////////////////////////////////////////////////////////////

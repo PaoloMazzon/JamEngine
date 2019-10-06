@@ -51,8 +51,7 @@ Hitbox* createHitbox(hitboxType type, double radius, double width, double height
 		hitbox->width = width;
 		hitbox->height = height;
 	} else {
-		fprintf(stderr, "Failed to allocate hitbox. (createHitbox)\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate hitbox. (createHitbox)\n");
 	}
 
 	return hitbox;
@@ -80,10 +79,9 @@ bool checkHitboxCollision(Hitbox* hitbox1, double x1, double y1, Hitbox* hitbox2
 		}
 	} else {
 		if (hitbox1 == NULL)
-			fprintf(stderr, "Hitbox 1 does not exist. (checkHitboxCollision)\n");
+			jSetError(ERROR_NULL_POINTER, "Hitbox 1 does not exist. (checkHitboxCollision)\n");
 		if (hitbox2 == NULL)
-			fprintf(stderr, "Hitbox 2 does not exist. (checkHitboxCollision)\n");
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Hitbox 2 does not exist. (checkHitboxCollision)\n");
 	}
 
 	return hit;

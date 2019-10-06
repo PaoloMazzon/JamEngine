@@ -24,13 +24,11 @@ void initInput() {
 		// And again, double check
 		if (gInputPointer->previousInput == NULL) {
 			free(gInputPointer);
-			fprintf(stderr, "Failed to allocate placeholder array (createInput). SDL Error: %s\n", SDL_GetError());
 			gInputPointer = NULL;
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate placeholder array (createInput). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		fprintf(stderr, "Failed to allocate input. SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate input. SDL Error: %s\n", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -52,8 +50,7 @@ void updateInput(double screenMultiplier) {
 		gInputPointer->mX = (int)((double)gInputPointer->mX / screenMultiplier);
 		gInputPointer->mY = (int)((double)gInputPointer->mY / screenMultiplier);
 	} else {
-		fprintf(stderr, "Input doesn't exist (updateInput). SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (updateInput). SDL Error: %s\n", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -67,12 +64,10 @@ bool inputCheckKey(SDL_Scancode key) {
 		if (key > 0 && key < gInputPointer->kbLen) {
 			ret = gInputPointer->currentInput[key];
 		} else {
-			fprintf(stderr, "Scancode out of range (inputCheckKey). SDL Error: %s\n", SDL_GetError());
-			jSetError(ERROR_OUT_OF_BOUNDS);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Scancode out of range (inputCheckKey). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		fprintf(stderr, "Input doesn't exist (inputCheckKey). SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckKey). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -89,12 +84,10 @@ bool inputCheckKeyPressed(SDL_Scancode key) {
 			// If it was just pressed, last frame's value would be 0
 			ret = gInputPointer->currentInput[key] && !gInputPointer->previousInput[key];
 		} else {
-			fprintf(stderr, "Scancode out of range (inputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
-			jSetError(ERROR_OUT_OF_BOUNDS);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Scancode out of range (inputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		fprintf(stderr, "Input doesn't exist (inputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -111,12 +104,10 @@ bool inputCheckKeyReleased(SDL_Scancode key) {
 			// If it was just released, last frame's value would be 1 and the current 0
 			ret = !gInputPointer->currentInput[key] && gInputPointer->previousInput[key];
 		} else {
-			fprintf(stderr, "Scancode out of range (inputCheckKeyReleased). SDL Error: %s\n", SDL_GetError());
-			jSetError(ERROR_OUT_OF_BOUNDS);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Scancode out of range (inputCheckKeyReleased). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		fprintf(stderr, "Input doesn't exist (inputCheckKeyReleased). SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckKeyReleased). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -131,8 +122,7 @@ bool inputCheckMouseButton(uint8 button) {
 	if (gInputPointer != NULL) {
 		ret = gInputPointer->mouseState & button;
 	} else {
-		fprintf(stderr, "Input doesn't exist (inputCheckMouseButton). SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckMouseButton). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -147,8 +137,7 @@ bool inputCheckMouseButtonPressed(uint8 button) {
 	if (gInputPointer != NULL) {
 		ret = !(gInputPointer->previousMouseState & button) && (gInputPointer->mouseState & button);
 	} else {
-		fprintf(stderr, "Input doesn't exist (inputCheckMouseButtonPressed). SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckMouseButtonPressed). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -163,8 +152,7 @@ bool inputCheckMouseButtonReleased(uint8 button) {
 	if (gInputPointer != NULL) {
 		ret = (gInputPointer->previousMouseState & button) && !(gInputPointer->mouseState & button);
 	} else {
-		fprintf(stderr, "Input doesn't exist (inputCheckMouseButtonReleased). SDL Error: %s\n", SDL_GetError());
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckMouseButtonReleased). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;

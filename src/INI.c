@@ -10,8 +10,7 @@ INI* createINI() {
 	INI* ini = (INI*)calloc(1, sizeof(INI));
 
 	if (ini == NULL) {
-		fprintf(stderr, "Failed to create INI. (createINI)\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create INI. (createINI)\n");
 	}
 
 	return ini;
@@ -49,8 +48,7 @@ INI* loadINI(const char* filename) {
 						strncpy(currentHeader, file->strList[i] + 1, lineLength - 2);
 						throwInGarbageINI(ini, currentHeader);
 					} else {
-						fprintf(stderr, "Failed to allocate header (loadINI)\n");
-						jSetError(ERROR_ALLOC_FAILED);
+						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate header (loadINI)\n");
 					}
 				} else if (equalCharPos != NULL && currentHeader != NULL && equalCharPos != file->strList[i]) {
 					// setter
@@ -67,19 +65,16 @@ INI* loadINI(const char* filename) {
 					} else {
 						free(key);
 						free(val);
-						fprintf(stderr, "Failed to allocate key or val (loadINI)\n");
-						jSetError(ERROR_ALLOC_FAILED);
+						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate key or val (loadINI)\n");
 					}
 				}
 			}
 		}
 	} else {
 		if (ini == NULL)
-			fprintf(stderr, "INI could not be created for file [%s] (loadINI)\n", filename);
-		if (file == NULL) {
-			fprintf(stderr, "File [%s] could not be loaded (loadINI)\n", filename);
-			jSetError(ERROR_OPEN_FAILED);
-		}
+			jSetError(ERROR_ALLOC_FAILED, "INI could not be created for file [%s] (loadINI)\n", filename);
+		if (file == NULL)
+			jSetError(ERROR_OPEN_FAILED, "File [%s] could not be loaded (loadINI)\n", filename);
 	}
 	
 	freeStringList(file);
@@ -99,10 +94,9 @@ void outputINI(INI* ini, FILE* stream) {
 		}
 	} else {
 		if (ini == NULL)
-			fprintf(stderr, "INI does not exist (ouputINI)\n");
+			jSetError(ERROR_NULL_POINTER, "INI does not exist (ouputINI)\n");
 		if (stream == NULL)
-			fprintf(stderr, "Stream does not exist (ouputINI)\n");
-		jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "Stream does not exist (ouputINI)\n");
 	}
 }
 //////////////////////////////////////////////////////
@@ -143,13 +137,11 @@ void setKeyINI(INI* ini, const char* header, const char* key, char* val) {
 				ini->headers = newHeaders;
 				ini->headerNames = newHeaderNames;
 			} else {
-				fprintf(stderr, "Failed create header (setKeyINI)\n");
-				jSetError(ERROR_REALLOC_FAILED);
+				jSetError(ERROR_REALLOC_FAILED, "Failed create header (setKeyINI)\n");
 			}
 		}
 	} else {
-		fprintf(stderr, "INI does not exist for header:key pair %s:%s (setKeyINI)\n", header, key);
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "INI does not exist for header:key pair %s:%s (setKeyINI)\n", header, key);
 	}
 }
 //////////////////////////////////////////////////////
@@ -171,8 +163,7 @@ char* getKeyINI(INI* ini, const char* header, const char* key, char* def) {
 				ret = (char*)getSMapVal(ini->headers[i], (const char*)key, def);
 		}
 	} else {
-		fprintf(stderr, "INI does not exist for header:key pair %s:%s (getKeyINI)\n", header, key);
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "INI does not exist for header:key pair %s:%s (getKeyINI)\n", header, key);
 	}
 
 	return ret;
@@ -193,12 +184,10 @@ void throwInGarbageINI(INI* ini, char* string) {
 			ini->garbagePile[ini->sizeOfGarbagePile] = string;
 			ini->sizeOfGarbagePile++;
 		} else {
-			fprintf(stderr, "Failed to resize garbage pile (throwInGarbageINI)\n");
-			jSetError(ERROR_REALLOC_FAILED);
+			jSetError(ERROR_REALLOC_FAILED, "Failed to resize garbage pile (throwInGarbageINI)\n");
 		}
 	} else {
-		fprintf(stderr, "INI does not exist (throwInGarbageINI)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "INI does not exist (throwInGarbageINI)\n");
 	}
 }
 //////////////////////////////////////////////////////

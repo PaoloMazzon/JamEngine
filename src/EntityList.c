@@ -12,8 +12,7 @@ EntityList* createEntityList() {
 	EntityList* list = (EntityList*)calloc(1, sizeof(EntityList));
 
 	if (list == NULL) {
-		fprintf(stderr, "Failed to allocate entity list (createEntityList)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "Failed to allocate entity list (createEntityList)\n");
 	}
 
 	return list;
@@ -49,13 +48,11 @@ void addEntityToList(EntityList* list, Entity* entity) {
 				list->capacity += ENTITY_LIST_ALLOCATION_AMOUNT;
 				newList[list->size - 1] = entity;
 			} else {
-				jSetError(ERROR_REALLOC_FAILED);
-				fprintf(stderr, "Could not reallocate entity list to accommodate for new entity (addEntityToList)\n");
+				jSetError(ERROR_REALLOC_FAILED, "Could not reallocate entity list to accommodate for new entity (addEntityToList)\n");
 			}
 		}
 	} else if (list == NULL) {
-		jSetError(ERROR_NULL_POINTER);
-		fprintf(stderr, "List does not exist (addEntityToList)\n");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (addEntityToList)\n");
 	}
 }
 ///////////////////////////////////////////////////////////////
@@ -124,12 +121,10 @@ void shrinkEntityList(EntityList* list) {
 			list->size = (uint32)posInList;
 			list->capacity = (uint32)posInList;
 		} else {
-			fprintf(stderr, "Failed to reallocate entity list (shrinkEntityList)\n");
-			jSetError(ERROR_REALLOC_FAILED);
+			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate entity list (shrinkEntityList)\n");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER);
-		fprintf(stderr, "List does not exist (shrinkEntityList)\n");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (shrinkEntityList)\n");
 	}
 }
 ///////////////////////////////////////////////////////////////
@@ -147,8 +142,7 @@ void emptyEntityList(EntityList* list, bool destroyEntities) {
 		list->size = 0;
 		list->capacity = 0;
 	} else {
-		fprintf(stderr, "List does not exist (emptyEntityList)\n");
-		jSetError(ERROR_NULL_POINTER);
+		jSetError(ERROR_NULL_POINTER, "List does not exist (emptyEntityList)\n");
 	}
 }
 ///////////////////////////////////////////////////////////////

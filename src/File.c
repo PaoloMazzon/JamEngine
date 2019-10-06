@@ -16,8 +16,7 @@ StringList* createStringList() {
 
 	// Check that it worked alright
 	if (list == NULL) {
-		fprintf(stderr, "Could not allocate string list (createStringList)\n");
-		jSetError(ERROR_ALLOC_FAILED);
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate string list (createStringList)\n");
 	}
 
 	return list;
@@ -70,22 +69,19 @@ StringList* loadStringList(const char* fname) {
 			currentString = (char*)calloc(1, sizeOfLine);
 			if (currentString != NULL) {
 				// Get the string, then throw it in the list
-				fgets(currentString, sizeOfLine, file); // TODO: Fix this not working on last line of a file
+				fgets(currentString, (int)sizeOfLine, file); // TODO: Fix this not working on last line of a file
 				appendStringToStringList(list, currentString, true);
 			} else {
-				fprintf(stderr, "Failed to create string (loadStringList)\n");
-				jSetError(ERROR_ALLOC_FAILED);
+				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (loadStringList)\n");
 				quit = true;
 			}
 		}
 	} else {
 		if (list == NULL) {
-			fprintf(stderr, "List could not be allocated (loadStringList)\n");
-			jSetError(ERROR_ALLOC_FAILED);
+			jSetError(ERROR_ALLOC_FAILED, "List could not be allocated (loadStringList)\n");
 		}
 		if (file == NULL) {
-			fprintf(stderr, "File could not be opened (loadStringList)\n");
-			jSetError(ERROR_OPEN_FAILED);
+			jSetError(ERROR_OPEN_FAILED, "File could not be opened (loadStringList)\n");
 		}
 	}
 
@@ -116,20 +112,17 @@ void appendStringToStringList(StringList* list, char* string, bool heapBased) {
 			list->dynamic[list->size] = heapBased;
 			list->size++;
 		} else {
-			fprintf(stderr, "Could not reallocate string list(s) (appendStringToStringList)\n");
-			jSetError(ERROR_REALLOC_FAILED);
+			jSetError(ERROR_REALLOC_FAILED, "Could not reallocate string list(s) (appendStringToStringList)\n");
 			// Just in case one was initialized and the other wasn't
 			free(newBools);
 			free(newList);
 		}
 	} else {
 		if (list == NULL) {
-			fprintf(stderr, "List does not exist (appendStringToStringList)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "List does not exist (appendStringToStringList)\n");
 		}
 		if (string == NULL) {
-			fprintf(stderr, "String does not exist (appendStringToStringList)\n");
-			jSetError(ERROR_NULL_POINTER);
+			jSetError(ERROR_NULL_POINTER, "String does not exist (appendStringToStringList)\n");
 		}
 	}
 }
@@ -173,8 +166,7 @@ StringList* explodeString(const char* string, char delim, bool ignoreQuotes) {
 				appendStringToStringList(list, currentBuffer, true);
 				cameFromQuotes = false;
 			} else {
-				fprintf(stderr, "Failed to create string (explodeString)\n");
-				jSetError(ERROR_ALLOC_FAILED);
+				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (explodeString)\n");
 			}
 			lastLocation = i + 1;
 		}
