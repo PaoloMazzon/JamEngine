@@ -19,15 +19,8 @@
  */
 
 //////////////////////////////////////////////////
-// Doesn't work
-static inline bool _circleRectVertexCheck(double x, double y, double r, double rx, double ry) {
-	register double pd = pointDistance(x, y, rx, ry);
-	if (pd < r) return true;
-	if (y >  ry)
-		if (pd * sin(pointAngle(x, y, rx, ry)) < r) return true;
-	else
-		if (pd * cos(pointAngle(x, y, rx, ry)) < r) return true;
-	return false;
+static inline bool _isInBetween(double x, double min, double max) {
+	return x >= min && x <= max;
 }
 //////////////////////////////////////////////////
 
@@ -37,12 +30,15 @@ static bool _circRectColl(double cX, double cY, double cR, double rX, double rY,
 	if (pointInRectangle(cX, cY, rX, rY, rW, rH))
 		return true;
 
-	// Check things base on the vectors of the rectangle
-	if (_circleRectVertexCheck(cX, cY, cR, rX, rY)) return true;
-	if (_circleRectVertexCheck(cX, cY, cR, rX + rW, rY)) return true;
-	if (_circleRectVertexCheck(cX, cY, cR, rX, rY + rH)) return true;
-	if (_circleRectVertexCheck(cX, cY, cR, rX + rW, rY + rH)) return true;
+	// Check if the circle is touching a vertex of the rectangle
+	if (pointDistance(cX, cY, rX, rY) < cR) return true;
+	if (pointDistance(cX, cY, rX + rW, rY) < cR) return true;
+	if (pointDistance(cX, cY, rX, rY + rH) < cR) return true;
+	if (pointDistance(cX, cY, rX + rW, rY + rH) < cR) return true;
 
+	// Now if the circle is along the edge
+	if (pointInRectangle(cX, cY, rX - cR + 1, rY + 1, rH + cR * 2 - 2, rH - 2)) return true;
+	if (pointInRectangle(cX, cY, rX + 1, rY - cR + 1, rH - 2, rH + cR * 2 - 2)) return true;
 	return false;
 }
 //////////////////////////////////////////////////
