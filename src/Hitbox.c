@@ -17,12 +17,8 @@ static bool _circRectColl(double cX, double cY, double cR, double rX, double rY,
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-static double _cast1DShadow(double x, double y, double m) {
-	double a, i, j;
-	a = (y - (m * x)) * sin(M_PI_4);
-	i = a * cos(M_PI_4);
-	j = a * sin(M_PI_4);
-	return sqrt((i * i) + (j * j));
+static inline double _cast1DShadow(double x, double y, double m) {
+	return y - m * x;
 }
 //////////////////////////////////////////////////
 
