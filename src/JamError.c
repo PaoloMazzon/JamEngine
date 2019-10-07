@@ -14,12 +14,13 @@ void __jSetError(uint16 errorCode, const char* format, const char* function, int
 
 	// Output error to file
 	FILE* out = fopen(LOG_FILENAME, "a");
-	va_list* args;
-	va_start(args, format);
+	va_list args;
+	va_start(args, line);
 	fprintf(out, "\n[%s:%i] ", function, line);
 	fprintf(stderr, "\n[%s:%i] ", function, line);
 	vfprintf(out, format, args);
-	va_start(args, format);
+	va_end(args);
+	va_start(args, line);
 	vfprintf(stderr, format, args);
 	va_end(args);
 }

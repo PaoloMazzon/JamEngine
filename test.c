@@ -140,6 +140,10 @@ bool runGame(Renderer* renderer, Font* font) {
 	addVertexToPolygon(poly2, 48, 48);
 	addVertexToPolygon(poly2, 10, 50);
 
+	// Test cirlce-rectangle collisions
+	Hitbox* circle = createHitbox(hitCircle, 16, 0, 0, NULL);
+	Hitbox* rect = createHitbox(hitRectangle, 0, 64, 64, NULL);
+	Texture* circleTex = loadTexture(renderer, "/home/plo/Pictures/circle.png");
 
 	// Some setup
 	renderer->cameraX = 50;
@@ -164,6 +168,14 @@ bool runGame(Renderer* renderer, Font* font) {
 					drawSetColour(renderer, 255, 255, 255, 255);
 				drawPolygon(renderer, poly1, 100, 100);
 				drawPolygon(renderer, poly2, inputGetMouseX(), inputGetMouseY());
+				drawSetColour(renderer, 0, 0, 0, 255);
+
+				if (checkHitboxCollision(circle, inputGetMouseX(), inputGetMouseY(), rect, 200, 100))
+					drawSetColour(renderer, 255, 0, 0, 255);
+				else
+					drawSetColour(renderer, 255, 255, 255, 255);
+				drawRectangle(renderer, 200, 100, 64, 64);
+				drawTexture(renderer, circleTex, inputGetMouseX() - 16, inputGetMouseY() - 16);
 				drawSetColour(renderer, 0, 0, 0, 255);
 
 				// Draw the game world

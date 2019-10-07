@@ -6,13 +6,44 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <math.h>
-#include <Hitbox.h>
-#include <Vector.h>
+#include "Hitbox.h"
+#include "Vector.h"
 #include "JamError.h"
+
+/* The following functions mostly break the "don't use a return
+ * statement anywhere but the last line rule" for the sake of
+ * performance since collisions are generally quite heavy. Just
+ * know that anytime a return happens in the middle of a function
+ * it is strictly because the function knows for certain that either
+ * a collision is or isn't taking place.
+ */
+
+//////////////////////////////////////////////////
+// Doesn't work
+static inline bool _circleRectVertexCheck(double x, double y, double r, double rx, double ry) {
+	register double pd = pointDistance(x, y, rx, ry);
+	if (pd < r) return true;
+	if (y >  ry)
+		if (pd * sin(pointAngle(x, y, rx, ry)) < r) return true;
+	else
+		if (pd * cos(pointAngle(x, y, rx, ry)) < r) return true;
+	return false;
+}
+//////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
 static bool _circRectColl(double cX, double cY, double cR, double rX, double rY, double rW, double rH) {
-	return false; // TODO: This
+	// Is the circle's centre in the rectangle
+	if (pointInRectangle(cX, cY, rX, rY, rW, rH))
+		return true;
+
+	// Check things base on the vectors of the rectangle
+	if (_circleRectVertexCheck(cX, cY, cR, rX, rY)) return true;
+	if (_circleRectVertexCheck(cX, cY, cR, rX + rW, rY)) return true;
+	if (_circleRectVertexCheck(cX, cY, cR, rX, rY + rH)) return true;
+	if (_circleRectVertexCheck(cX, cY, cR, rX + rW, rY + rH)) return true;
+
+	return false;
 }
 //////////////////////////////////////////////////
 
