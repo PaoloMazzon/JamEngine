@@ -1,5 +1,4 @@
-LJE (Light Jam Engine)
-================================
+![JamEngine](https://i.imgur.com/BRmHpKP.png)
 
 Important Info
 --------------
@@ -37,6 +36,14 @@ in what order they are defined in the INI, the asset loader will load
 specifically in this order: textures -> sprites and hitboxes -> tilemaps
 and entities. This way, no matter what assets rely on other assets, there
 will never be an asset that is loaded before its dependencies.
+
+Right now JamEngine is only tested on Windows and Linux (and to be
+honest I only test on Windows every couple months). Theoretically, JamEngine
+should be compatible with any platform that SDL2 supports, but I can't
+say for certain without testing it myself. The biggest thing is just
+the functions `ns()` (Which the renderer uses) exclusively supports Windows,
+Linux, and OSX; so that would have to be rewritten were you to use another
+platform.
 
 Asset Loading System
 --------------------
@@ -156,33 +163,24 @@ Major To-Do List
 
 Features
 ========
- - Renderer that handles all timing and rendering 
- - Asset Handler for loading and managing lots of things at once
- - Behaviour Maps that allow for much more modular and clean programming
- - Buffers that allow for quick binary access (they also handle loading from files)
- - Accurate cross-platform timing
- - Some basic drawing functionality
- - Entities, sprites, frames, hitboxes, and textures all different concepts. Different entities can have the same sprite; different sprites can use different regions of the same texture, etc...
- - Entity lists to make handling lots of entities easier
- - Sprites can be loaded from a sprite sheet with a single function
- - Worlds (or levels or rooms or whatever you want to call it) for level management
- - Worlds can automatically sort entities by range and type
- - Font framework that is quite flexible but only bitmap fonts right now
- - Font can do unicode, take varargs like printf (it accepts %f, %c, and %s)
- - Basic hitbox functionality
- - Incredibly easy-to-use INI file I/O as well as some other file I/O functionality
- - Pure-C (and thus cross-platform) implementations of atof and ftoa (string to double and double to string respectively)
- - Very simple and convenient memory management for large amounts of data (`AssetHandler`s and `World`s in particular make it very easy)
- - Fair bit of string-manipulation functionality (see StringUtil.h)
- - Tile maps that can be auto tiled, used for collisions, used for enemy positions, etc...
- - Load Tiled level files (`.tmx`) as worlds for easy level creation
- - Tested on both Windows and Linux
+ - Extremely easy API to use, all headers documented with doxygen (`$ doxygen doxyconfig.txt`)
+ - Load many assets at once with an `AssetHandler`
+ - Manage many entities at a time with a `World`
+ - Between `World`s and `AssetHandler`s, memory management is quite simple as well
+ - `BehaviourMap`s to automate most of each frame
+ - Supports the use of [Tiled](https://www.mapeditor.org/) as a level editor
+ - Written purely in C and thus cross platform
+ - INI file I/O built in and extremely easy to use
+ - Unicode text rendering (although bitmap fonts only at the moment)
+ - Cross-platform implementations of atof and ftoa (string to double and vice-versa)
+ - SAT collisions and simple rectangle/circle collisions are interchangeable
+ - Collision grids (`TileMap`) for lightning-fast grid-to-rectangle collisions (or just rendering tiles (or both))
 
-Possible future additions
--------------------------
- - SAT Collisions
+Possible future additions (in no order)
+---------------------------------------
  - Vector images
  - Tweening
+ - Audio support through OpenAL
 
 To-Do List
 ==========
@@ -195,6 +193,6 @@ To-Do List
     + Let the fill colour thing work with alpha values
     + Draw shapes
  - Hit-box
-    + Circle-to-rectangle (Algorithm is written down just don't want to type it out)
+    + Circle-to-rectangle
  - Fonts
     + TTF fonts
