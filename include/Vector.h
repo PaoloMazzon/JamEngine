@@ -5,6 +5,27 @@
 #pragma once
 #include <stdbool.h>
 
+/// \brief A polygon struct that is very to-the-point
+typedef struct {
+	double* xVerts; ///< X component of the vertices
+	double* yVerts; ///< Y component of the vertices
+	unsigned int vertices; ///< The total number of vertices in this polygon
+} Polygon;
+
+/// \brief Creates a polygon
+///
+/// \throws ERROR_ALLOC_FAILED
+Polygon* createPolygon(unsigned int vertices);
+
+/// \brief Adds a vertex to a polygon (appending it)
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_REALLOC_FAILED
+void addVertexToPolygon(Polygon* poly, double x, double y);
+
+/// \brief Frees a polygon from memory
+void freePolygon(Polygon* poly);
+
 /// \brief Checks the distance between two points
 double pointDistance(double x1, double y1, double x2, double y2);
 
