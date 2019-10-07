@@ -16,19 +16,15 @@
 
 //////////////////////////////////////////////////
 Polygon* createPolygon(unsigned int vertices) {
-	double* xVerts = (double*)malloc(sizeof(double) * vertices);
-	double* yVerts = (double*)malloc(sizeof(double) * vertices);
 	Polygon* poly = (Polygon*)malloc(sizeof(Polygon));
 
-	if (poly != NULL && xVerts != NULL && yVerts != NULL) {
+	if (poly != NULL) {
+		poly->xVerts = (double*)malloc(sizeof(double) * vertices);
+		poly->yVerts = (double*)malloc(sizeof(double) * vertices);
 		poly->vertices = vertices;
-		poly->xVerts = xVerts;
-		poly->yVerts = yVerts;
 	} else {
 		jSetError(ERROR_ALLOC_FAILED, "Memory could not be allocated.");
 		free(poly);
-		free(xVerts);
-		free(yVerts);
 	}
 
 	return poly;
@@ -45,8 +41,9 @@ void addVertexToPolygon(Polygon* poly, double x, double y) {
 		yVerts = (double*)realloc(poly->yVerts, sizeof(double) * (poly->vertices + 1));
 
 		if (xVerts != NULL && yVerts != NULL) {
-			xVerts[poly->vertices++] = x;
+			xVerts[poly->vertices] = x;
 			yVerts[poly->vertices] = y;
+			poly->vertices++;
 			poly->xVerts = xVerts;
 			poly->yVerts = yVerts;
 		} else {

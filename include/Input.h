@@ -57,6 +57,14 @@ bool inputCheckKeyPressed(SDL_Scancode key);
 /// \throws ERROR_NULL_POINTER
 bool inputCheckKeyReleased(SDL_Scancode key);
 
+/// \brief Grabs the mouse's X position
+/// \throws ERROR_NULL_POINTER
+int inputGetMouseX();
+
+/// \brief Grabs the mouse's Y position
+/// \throws ERROR_NULL_POINTER
+int inputGetMouseY();
+
 /// \brief Checks if a mouse button is currently pressed
 /// \throws ERROR_NULL_POINTER
 bool inputCheckMouseButton(uint8 button);

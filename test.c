@@ -127,6 +127,25 @@ bool runGame(Renderer* renderer, Font* font) {
 	assetLoadINI(handler, renderer, "assets/level0.ini", bMap);
 	World* gameWorld = loadWorldFromTMX(handler, renderer, "assets/level0.tmx");
 
+	Polygon* poly1 = createPolygon(0);
+	addVertexToPolygon(poly1, 1, 1);
+	addVertexToPolygon(poly1, 69, 5);
+	addVertexToPolygon(poly1, 55, 46);
+	addVertexToPolygon(poly1, 5, 51);
+	addVertexToPolygon(poly1, 0, 16);
+	Polygon* poly2 = createPolygon(0);
+	addVertexToPolygon(poly2, 3, 1);
+	addVertexToPolygon(poly2, 51, 11);
+	addVertexToPolygon(poly2, 65, 39);
+	addVertexToPolygon(poly2, 48, 48);
+	addVertexToPolygon(poly2, 10, 50);
+
+
+	// Some setup
+	renderer->cameraX = 50;
+	renderer->cameraY = 50;
+
+
 	// We don't really care what went wrong, but if something went wrong while
 	// while loading assets, we cannot continue.
 	if (jGetError() == 0) {
@@ -138,12 +157,22 @@ bool runGame(Renderer* renderer, Font* font) {
 				drawFillColour(renderer, 0, 0, 0, 255);
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
-				renderer->cameraX = 50;
-				renderer->cameraY = 50;
+				// Draw polygons
+				if (checkConvexPolygonCollision(poly1, poly2, 100, 100, inputGetMouseX(), inputGetMouseY()))
+					drawSetColour(renderer, 255, 0, 0, 255);
+				else
+					drawSetColour(renderer, 255, 255, 255, 255);
+				drawPolygon(renderer, poly1, 100, 100);
+				drawPolygon(renderer, poly2, inputGetMouseX(), inputGetMouseY());
+				drawSetColour(renderer, 0, 0, 0, 255);
+
+				// Draw the game world
 				for (i = 0; i < MAX_TILEMAPS; i++)
 					if (gameWorld->worldMaps[i] != NULL)
 						drawTileMap(renderer, gameWorld->worldMaps[i], 0, 0, 0, 0, 0, 0);
 				worldProcFrame(gameWorld);
+
+				// Debug
 				renderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
 				/////////////////////////////////////////////////////////////////////
 

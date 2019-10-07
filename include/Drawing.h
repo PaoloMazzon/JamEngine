@@ -8,6 +8,7 @@
 #include "Constants.h"
 #include "Sprite.h"
 #include "TileMap.h"
+#include "Vector.h"
 
 /// \brief Sets the current colour of the renderer
 /// \throws ERROR_NULL_POINTER
@@ -28,6 +29,10 @@ void drawRectangle(Renderer* renderer, int x, int y, int w, int h);
 /// \brief Draws a circle with the current colour
 /// \throws ERROR_NULL_POINTER
 void drawCircle(Renderer* renderer, int x, int y, int r);
+
+/// \brief Draws a polygon
+/// \throws ERROR_NULL_POINTER
+void drawPolygon(Renderer* renderer, Polygon* poly, int x, int y);
 
 /// \breif Draws a texture to the current target
 /// \throws ERROR_NULL_POINTER

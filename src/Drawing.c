@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <Renderer.h>
 #include <TileMap.h>
+#include <Vector.h>
 #include "JamError.h"
 
 
@@ -53,6 +54,25 @@ void drawCircle(Renderer* renderer, int x, int y, int r) {
 		// TODO: This
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawCircle).\n");
+	}
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+void drawPolygon(Renderer* renderer, Polygon* poly, int x, int y) {
+	unsigned int i;
+	if (renderer != NULL && poly != NULL) {
+		for (i = 0; i < poly->vertices; i++) {
+			if (i == 0)
+				SDL_RenderDrawLine(renderer->internalRenderer, x + (int)poly->xVerts[poly->vertices - 1], y + (int)poly->yVerts[poly->vertices - 1], x + (int)poly->xVerts[0], y + (int)poly->yVerts[0]);
+			else
+				SDL_RenderDrawLine(renderer->internalRenderer, x + (int)poly->xVerts[i - 1], y + (int)poly->yVerts[i - 1], x + (int)poly->xVerts[i], y + (int)poly->yVerts[i]);
+		}
+	} else {
+		if (renderer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Renderer does not exist.");
+		if (poly == NULL)
+			jSetError(ERROR_NULL_POINTER, "Polygon does not exist.");
 	}
 }
 //////////////////////////////////////////////////////////////

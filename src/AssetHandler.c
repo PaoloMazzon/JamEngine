@@ -205,7 +205,7 @@ void assetLoadHitbox(AssetHandler* assetHandler, INI* ini, const char* headerNam
 					hType,
 					atof(getKeyINI(ini, headerName, "radius", "0")),
 					atof(getKeyINI(ini, headerName, "width", "0")),
-					atof(getKeyINI(ini, headerName, "height", "0"))
+					atof(getKeyINI(ini, headerName, "height", "0")), NULL
 			), hitAsset),
 			(headerName + 1)
 	);

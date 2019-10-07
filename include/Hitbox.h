@@ -9,7 +9,7 @@
 /// \brief A simple enum to making checking collisions easier
 typedef enum {
 	hitCircle,
-	hitRectangle
+	hitRectangle,
 	hitConvexPolygon
 } hitboxType;
 
