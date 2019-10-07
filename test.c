@@ -130,9 +130,9 @@ bool runGame(Renderer* renderer, Font* font) {
 	Polygon* poly1 = createPolygon(0);
 	addVertexToPolygon(poly1, 1, 1);
 	addVertexToPolygon(poly1, 69, 5);
-	addVertexToPolygon(poly1, 55, 46);
+	addVertexToPolygon(poly1, 69, 46);
 	addVertexToPolygon(poly1, 5, 51);
-	addVertexToPolygon(poly1, 0, 16);
+	addVertexToPolygon(poly1, 1, 16);
 	Polygon* poly2 = createPolygon(0);
 	addVertexToPolygon(poly2, 3, 1);
 	addVertexToPolygon(poly2, 51, 11);

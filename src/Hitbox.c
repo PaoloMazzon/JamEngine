@@ -27,61 +27,62 @@ static double _cast1DShadow(double x, double y, double m) {
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-static bool _satCheckPoly1Edges(Polygon* poly1, Polygon* poly2, double x1, double y1, double x2, double y2) {
+static bool _satCheckGap(Polygon* p1, Polygon* p2, double x1, double y1, double x2, double y2) {
 	unsigned int i, j;
 	double slope;
 	double min1, min2, max1, max2;
-	register unsigned char done1 = 0;
-	register unsigned char done2 = 0;
+	register bool done1;
+	register bool done2;
 	register double currentVal;
 
 	// For each edge on polygon 1
-	for (i = 0; i < poly1->vertices; i++) {
+	for (i = 0; i < p1->vertices; i++) {
+		done1 = false;
+		done2 = false;
+
 		if (i == 0)
-			slope = ((poly1->yVerts[0]) - (poly1->yVerts[poly1->vertices - 1])) / ((poly1->xVerts[0]) - (poly1->xVerts[poly1->vertices - 1]));
+			slope = (p1->yVerts[0] - p1->yVerts[p1->vertices - 1]) / (p1->xVerts[0] - p1->xVerts[p1->vertices - 1]);
 		else
-			slope = ((poly1->yVerts[i]) - (poly1->yVerts[i - 1])) / ((poly1->xVerts[i]) - (poly1->xVerts[i - 1]));
+			slope = (p1->yVerts[i] - p1->yVerts[i - 1]) / (p1->xVerts[i] - p1->xVerts[i - 1]);
 
 		// Record min/max of polygon 1
-		for (j = 0; j < poly1->vertices; j++) {
-			currentVal = _cast1DShadow(poly1->xVerts[j] + x1, poly1->yVerts[j] + y1, slope);
+		for (j = 0; j < p1->vertices; j++) {
+			currentVal = _cast1DShadow(p1->xVerts[j] + x1, p1->yVerts[j] + y1, slope);
 			if (currentVal > max1 || !done1)
 				max1 = currentVal;
 			if (currentVal < min1 || !done1)
 				min1 = currentVal;
-			done1++;
+			done1 = true;
 		}
 
 		// Record min/max of polygon 2
-		for (j = 0; j < poly2->vertices; j++) {
-			currentVal = _cast1DShadow(poly2->xVerts[j] + x2, poly2->yVerts[j] + y2, slope);
+		for (j = 0; j < p2->vertices; j++) {
+			currentVal = _cast1DShadow(p2->xVerts[j] + x2, p2->yVerts[j] + y2, slope);
 			if (currentVal > max2 || !done2)
 				max2 = currentVal;
 			if (currentVal < min2 || !done2)
 				min2 = currentVal;
-			done2++;
+			done2 = true;
 		}
 
 		// Check if the two ranges intersect
-		if (!((max1 >= min2 && min1 <= min2) || (max2 >= min1 && min2 <= min1)))
-			return false;
+		if (max1 < min2 || max2 < min1)
+			return true;
 	}
 
-	return true;
+	return false;
 }
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
 bool checkConvexPolygonCollision(Polygon* poly1, Polygon* poly2, double x1, double y1, double x2, double y2) {
-	bool coll = false;
-	unsigned int i, j;
-	double slope;
-
 	// Make sure the polygons exist and they are at least a triangle
 	if (poly1 != NULL && poly2 != NULL) {
 		if (poly1->vertices >= 3 && poly2->vertices >= 3) {
-			if (_satCheckPoly1Edges(poly1, poly2, x1, y1, x2, y2)) coll = true;
-			if (!coll && _satCheckPoly1Edges(poly2, poly1, x2, y2, x1, y1)) coll = true;
+			if (_satCheckGap(poly1, poly2, x1, y1, x2, y2) || _satCheckGap(poly2, poly1, x2, y2, x1, y1))
+				return false;
+			else
+				return true;
 		} else {
 			if (poly1->vertices < 3)
 				jSetError(ERROR_INCORRECT_FORMAT, "Polygon 1 needs at least 3 vertices.");
@@ -95,8 +96,6 @@ bool checkConvexPolygonCollision(Polygon* poly1, Polygon* poly2, double x1, doub
 		if (poly2 == NULL)
 			jSetError(ERROR_NULL_POINTER, "Polygon 2 does not exist.");
 	}
-
-	return coll;
 }
 //////////////////////////////////////////////////
 
