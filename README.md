@@ -1,4 +1,4 @@
-![JamEngine](https://i.imgur.com/BRmHpKP.png)
+![JamEngine](https://i.imgur.com/eF0nArB.png)
 
 Important Info
 --------------
