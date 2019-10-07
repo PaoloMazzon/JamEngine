@@ -17,6 +17,16 @@ static bool _circRectColl(double cX, double cY, double cR, double rX, double rY,
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
+static double _cast1DShadow(double x, double y, double m) {
+	double a, i, j;
+	a = (y - (m * x)) * sin(M_PI_4);
+	i = a * cos(M_PI_4);
+	j = a * sin(M_PI_4);
+	return sqrt((i * i) + (j * j));
+}
+//////////////////////////////////////////////////
+
+//////////////////////////////////////////////////
 static bool _satCheckPoly1Edges(Polygon* poly1, Polygon* poly2, double x1, double y1, double x2, double y2) {
 	unsigned int i, j;
 	double slope;
@@ -28,13 +38,13 @@ static bool _satCheckPoly1Edges(Polygon* poly1, Polygon* poly2, double x1, doubl
 	// For each edge on polygon 1
 	for (i = 0; i < poly1->vertices; i++) {
 		if (i == 0)
-			slope = (poly1->yVerts[0] - poly1->yVerts[poly1->vertices - 1]) / (poly1->xVerts[0] - poly1->xVerts[poly1->vertices - 1]);
+			slope = ((poly1->yVerts[0]) - (poly1->yVerts[poly1->vertices - 1])) / ((poly1->xVerts[0]) - (poly1->xVerts[poly1->vertices - 1]));
 		else
-			slope = (poly1->yVerts[i] - poly1->yVerts[i - 1]) / (poly1->xVerts[i] - poly1->xVerts[i - 1]);
+			slope = ((poly1->yVerts[i]) - (poly1->yVerts[i - 1])) / ((poly1->xVerts[i]) - (poly1->xVerts[i - 1]));
 
 		// Record min/max of polygon 1
 		for (j = 0; j < poly1->vertices; j++) {
-			currentVal = poly1->yVerts[j] - (poly1->xVerts[j] * slope);
+			currentVal = _cast1DShadow(poly1->xVerts[j] + x1, poly1->yVerts[j] + y1, slope);
 			if (currentVal > max1 || !done1)
 				max1 = currentVal;
 			if (currentVal < min1 || !done1)
@@ -44,7 +54,7 @@ static bool _satCheckPoly1Edges(Polygon* poly1, Polygon* poly2, double x1, doubl
 
 		// Record min/max of polygon 2
 		for (j = 0; j < poly2->vertices; j++) {
-			currentVal = poly2->yVerts[j] - (poly2->xVerts[j] * slope);
+			currentVal = _cast1DShadow(poly2->xVerts[j] + x2, poly2->yVerts[j] + y2, slope);
 			if (currentVal > max2 || !done2)
 				max2 = currentVal;
 			if (currentVal < min2 || !done2)
@@ -53,11 +63,11 @@ static bool _satCheckPoly1Edges(Polygon* poly1, Polygon* poly2, double x1, doubl
 		}
 
 		// Check if the two ranges intersect
-		if ((max1 >= min2 && min1 <= min2) || (max2 >= min1 && min2 <= min1))
-			return true;
+		if (!((max1 >= min2 && min1 <= min2) || (max2 >= min1 && min2 <= min1)))
+			return false;
 	}
 
-	return false;
+	return true;
 }
 //////////////////////////////////////////////////
 
@@ -71,7 +81,7 @@ bool checkConvexPolygonCollision(Polygon* poly1, Polygon* poly2, double x1, doub
 	if (poly1 != NULL && poly2 != NULL) {
 		if (poly1->vertices >= 3 && poly2->vertices >= 3) {
 			if (_satCheckPoly1Edges(poly1, poly2, x1, y1, x2, y2)) coll = true;
-			if (_satCheckPoly1Edges(poly2, poly1, x1, y1, x2, y2)) coll = true;
+			if (!coll && _satCheckPoly1Edges(poly2, poly1, x2, y2, x1, y1)) coll = true;
 		} else {
 			if (poly1->vertices < 3)
 				jSetError(ERROR_INCORRECT_FORMAT, "Polygon 1 needs at least 3 vertices.");
@@ -85,6 +95,8 @@ bool checkConvexPolygonCollision(Polygon* poly1, Polygon* poly2, double x1, doub
 		if (poly2 == NULL)
 			jSetError(ERROR_NULL_POINTER, "Polygon 2 does not exist.");
 	}
+
+	return coll;
 }
 //////////////////////////////////////////////////
 
