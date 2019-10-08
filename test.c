@@ -6,6 +6,7 @@
 #include <time.h>
 #include <math.h>
 #include <Renderer.h>
+#include <Hitbox.h>
 #include "JamEngine.h"
 
 /////////////////// Constants ///////////////////
@@ -127,18 +128,18 @@ bool runGame(Renderer* renderer, Font* font) {
 	assetLoadINI(handler, renderer, "assets/level0.ini", bMap);
 	World* gameWorld = loadWorldFromTMX(handler, renderer, "assets/level0.tmx");
 
-	Polygon* poly1 = createPolygon(0);
-	addVertexToPolygon(poly1, 1, 1);
-	addVertexToPolygon(poly1, 69, 5);
-	addVertexToPolygon(poly1, 69, 46);
-	addVertexToPolygon(poly1, 5, 51);
-	addVertexToPolygon(poly1, 1, 16);
-	Polygon* poly2 = createPolygon(0);
-	addVertexToPolygon(poly2, 3, 1);
-	addVertexToPolygon(poly2, 51, 11);
-	addVertexToPolygon(poly2, 65, 39);
-	addVertexToPolygon(poly2, 48, 48);
-	addVertexToPolygon(poly2, 10, 50);
+	Hitbox* poly1 = createHitbox(hitConvexPolygon, 0, 0, 0, createPolygon(0));
+	addVertexToPolygon(poly1->polygon, 1, 1);
+	addVertexToPolygon(poly1->polygon, 69, 5);
+	addVertexToPolygon(poly1->polygon, 69, 46);
+	addVertexToPolygon(poly1->polygon, 5, 51);
+	addVertexToPolygon(poly1->polygon, 1, 16);
+	Hitbox* poly2 = createHitbox(hitConvexPolygon, 0, 0, 0, createPolygon(0));
+	addVertexToPolygon(poly2->polygon, 3, 1);
+	addVertexToPolygon(poly2->polygon, 51, 11);
+	addVertexToPolygon(poly2->polygon, 65, 39);
+	addVertexToPolygon(poly2->polygon, 48, 48);
+	addVertexToPolygon(poly2->polygon, 10, 50);
 
 	// Test cirlce-rectangle collisions
 	Hitbox* circle = createHitbox(hitCircle, 16, 0, 0, NULL);
@@ -162,20 +163,20 @@ bool runGame(Renderer* renderer, Font* font) {
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				// Draw polygons
-				if (checkConvexPolygonCollision(poly1, poly2, 100, 100, inputGetMouseX(), inputGetMouseY()))
+				if (checkHitboxCollision(poly1, 100, 100, circle, inputGetMouseX(), inputGetMouseY()))
 					drawSetColour(renderer, 255, 0, 0, 255);
 				else
 					drawSetColour(renderer, 255, 255, 255, 255);
-				drawPolygon(renderer, poly1, 100, 100);
-				drawPolygon(renderer, poly2, inputGetMouseX(), inputGetMouseY());
-				drawSetColour(renderer, 0, 0, 0, 255);
+				drawPolygon(renderer, poly1->polygon, 100, 100);
 
-				if (checkHitboxCollision(circle, inputGetMouseX(), inputGetMouseY(), rect, 200, 100))
+				if (checkHitboxCollision(poly2, inputGetMouseX(), inputGetMouseY(), rect, 200, 100))
 					drawSetColour(renderer, 255, 0, 0, 255);
 				else
 					drawSetColour(renderer, 255, 255, 255, 255);
 				drawRectangle(renderer, 200, 100, 64, 64);
+
 				drawTexture(renderer, circleTex, inputGetMouseX() - 16, inputGetMouseY() - 16);
+				drawPolygon(renderer, poly2->polygon, inputGetMouseX(), inputGetMouseY());
 				drawSetColour(renderer, 0, 0, 0, 255);
 
 				// Draw the game world

@@ -6,6 +6,8 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <math.h>
+#include <Vector.h>
+#include <Hitbox.h>
 #include "Hitbox.h"
 #include "Vector.h"
 #include "JamError.h"
@@ -17,6 +19,13 @@
  * it is strictly because the function knows for certain that either
  * a collision is or isn't taking place.
  */
+
+// This is made automatically when you try to check a poly-to-rectangle
+// collision. It stores a 4-sides polygon whos values are updated instead
+// of making a new polygon every time a poly-rect collision is checked.
+// It is freed whenever a hitbox is freed.
+// tl;dr micro-optimizations
+static Polygon* gRectPolyCache;
 
 //////////////////////////////////////////////////
 static inline bool _isInBetween(double x, double min, double max) {
@@ -123,6 +132,35 @@ bool checkConvexPolygonCollision(Polygon* poly1, Polygon* poly2, double x1, doub
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
+static bool _satToCircleCollisions(Polygon* p, double r, double x1, double y1, double x2, double y2) {
+	return false;
+}
+//////////////////////////////////////////////////
+
+//////////////////////////////////////////////////
+static bool _satToRectangleCollisions(Polygon* p, double w, double h, double x1, double y1, double x2, double y2) {
+	if (gRectPolyCache == NULL) {
+		gRectPolyCache = createPolygon(4);
+		if (gRectPolyCache == NULL) {
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create polygon cache.");
+			return false;
+		}
+	}
+
+	// We now know for certain the polygon cache exists
+	gRectPolyCache->xVerts[0] = 0;
+	gRectPolyCache->yVerts[0] = 0;
+	gRectPolyCache->xVerts[1] = w;
+	gRectPolyCache->yVerts[1] = 0;
+	gRectPolyCache->xVerts[2] = w;
+	gRectPolyCache->yVerts[2] = h;
+	gRectPolyCache->xVerts[3] = 0;
+	gRectPolyCache->yVerts[3] = h;
+	return checkConvexPolygonCollision(gRectPolyCache, p, x2, y2, x1, y1);
+}
+//////////////////////////////////////////////////
+
+//////////////////////////////////////////////////
 Hitbox* createHitbox(hitboxType type, double radius, double width, double height, Polygon* polygon) {
 	Hitbox* hitbox = (Hitbox*)malloc(sizeof(Hitbox));
 
@@ -165,8 +203,21 @@ bool checkHitboxCollision(Hitbox* hitbox1, double x1, double y1, Hitbox* hitbox2
 			// Circle-to-rectangle
 			hit = _circRectColl(x1, y1, hitbox1->radius, x2, y2, hitbox2->width, hitbox2->height);
 		} else if (hitbox1->type == hitConvexPolygon && hitbox2->type == hitConvexPolygon) {
+			// Poly-to-poly
 			hit = checkConvexPolygonCollision(hitbox1->polygon, hitbox2->polygon, x1, y1, x2, y2);
-		} // TODO: Add support for circle-poly and rect-poly collisions
+		} else if (hitbox1->type == hitConvexPolygon && hitbox2->type == hitRectangle) {
+			// Poly-to-rectangle
+			hit = _satToRectangleCollisions(hitbox1->polygon, hitbox2->width, hitbox2->height, x1, y1, x2, y2);
+		} else if (hitbox1->type == hitRectangle && hitbox2->type == hitConvexPolygon) {
+			// Rectangle-to-poly
+			hit = _satToRectangleCollisions(hitbox2->polygon, hitbox1->width, hitbox2->height, x2, y2, x1, y1);
+		} else if (hitbox1->type == hitConvexPolygon && hitbox2->type == hitCircle) {
+			// Poly-to-circle
+			hit = _satToCircleCollisions(hitbox1->polygon, hitbox2->radius, x1, y1, x2, y2);
+		} else if (hitbox1->type == hitCircle && hitbox2->type == hitConvexPolygon) {
+			// Circle-to-poly
+			hit = _satToCircleCollisions(hitbox2->polygon, hitbox2->radius, x2, y2, x1, y1);
+		}
 	} else {
 		if (hitbox1 == NULL)
 			jSetError(ERROR_NULL_POINTER, "Hitbox 1 does not exist. (checkHitboxCollision)\n");
@@ -184,6 +235,11 @@ void freeHitbox(Hitbox* hitbox) {
 		if (hitbox->type == hitConvexPolygon)
 			freePolygon(hitbox->polygon);
 		free(hitbox);
+	}
+
+	if (gRectPolyCache != NULL) {
+		freePolygon(gRectPolyCache);
+		gRectPolyCache = NULL;
 	}
 }
 //////////////////////////////////////////////////
