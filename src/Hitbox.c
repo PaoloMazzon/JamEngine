@@ -28,12 +28,6 @@
 static Polygon* gRectPolyCache;
 
 //////////////////////////////////////////////////
-static inline bool _isInBetween(double x, double min, double max) {
-	return x >= min && x <= max;
-}
-//////////////////////////////////////////////////
-
-//////////////////////////////////////////////////
 static bool _circRectColl(double cX, double cY, double cR, double rX, double rY, double rW, double rH) {
 	// Is the circle's centre in the rectangle
 	if (pointInRectangle(cX, cY, rX, rY, rW, rH))
@@ -97,7 +91,7 @@ static bool _satCheckGap(Polygon* p1, Polygon* p2, double x1, double y1, double 
 			done2 = true;
 		}
 
-		// Check if the two ranges intersect
+		// Check if the two ranges don't intersect
 		if (max1 < min2 || max2 < min1)
 			return true;
 	}
@@ -132,7 +126,7 @@ bool checkConvexPolygonCollision(Polygon* poly1, Polygon* poly2, double x1, doub
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-static bool _satToCircleCollisions(Polygon* p, double r, double x1, double y1, double x2, double y2) {
+static bool _satToCircleCollisions(Polygon* p1, double r, double x1, double y1, double x2, double y2) {
 	return false;
 }
 //////////////////////////////////////////////////
@@ -217,7 +211,7 @@ bool checkHitboxCollision(Hitbox* hitbox1, double x1, double y1, Hitbox* hitbox2
 		} else if (hitbox1->type == hitCircle && hitbox2->type == hitConvexPolygon) {
 			// Circle-to-poly
 			hit = _satToCircleCollisions(hitbox2->polygon, hitbox2->radius, x2, y2, x1, y1);
-		}
+		} // TODO: Implement cirlce-to-poly collisions
 	} else {
 		if (hitbox1 == NULL)
 			jSetError(ERROR_NULL_POINTER, "Hitbox 1 does not exist. (checkHitboxCollision)\n");
