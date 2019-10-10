@@ -128,28 +128,9 @@ bool runGame(Renderer* renderer, Font* font) {
 	assetLoadINI(handler, renderer, "assets/level0.ini", bMap);
 	World* gameWorld = loadWorldFromTMX(handler, renderer, "assets/level0.tmx");
 
-	Hitbox* poly1 = createHitbox(hitConvexPolygon, 0, 0, 0, createPolygon(0));
-	addVertexToPolygon(poly1->polygon, 1, 1);
-	addVertexToPolygon(poly1->polygon, 69, 5);
-	addVertexToPolygon(poly1->polygon, 69, 46);
-	addVertexToPolygon(poly1->polygon, 5, 51);
-	addVertexToPolygon(poly1->polygon, 1, 16);
-	Hitbox* poly2 = createHitbox(hitConvexPolygon, 0, 0, 0, createPolygon(0));
-	addVertexToPolygon(poly2->polygon, 3, 1);
-	addVertexToPolygon(poly2->polygon, 51, 11);
-	addVertexToPolygon(poly2->polygon, 65, 39);
-	addVertexToPolygon(poly2->polygon, 48, 48);
-	addVertexToPolygon(poly2->polygon, 10, 50);
-
-	// Test cirlce-rectangle collisions
-	Hitbox* circle = createHitbox(hitCircle, 16, 0, 0, NULL);
-	Hitbox* rect = createHitbox(hitRectangle, 0, 64, 64, NULL);
-	Texture* circleTex = loadTexture(renderer, "/home/plo/Pictures/circle.png");
-
 	// Some setup
 	renderer->cameraX = 50;
 	renderer->cameraY = 50;
-
 
 	// We don't really care what went wrong, but if something went wrong while
 	// while loading assets, we cannot continue.
@@ -162,23 +143,6 @@ bool runGame(Renderer* renderer, Font* font) {
 				drawFillColour(renderer, 0, 0, 0, 255);
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
-				// Draw polygons
-				if (checkHitboxCollision(poly1, 100, 100, circle, inputGetMouseX(), inputGetMouseY()))
-					drawSetColour(renderer, 255, 0, 0, 255);
-				else
-					drawSetColour(renderer, 255, 255, 255, 255);
-				drawPolygon(renderer, poly1->polygon, 100, 100);
-
-				if (checkHitboxCollision(poly2, inputGetMouseX(), inputGetMouseY(), rect, 200, 100))
-					drawSetColour(renderer, 255, 0, 0, 255);
-				else
-					drawSetColour(renderer, 255, 255, 255, 255);
-				drawRectangle(renderer, 200, 100, 64, 64);
-
-				drawTexture(renderer, circleTex, inputGetMouseX() - 16, inputGetMouseY() - 16);
-				drawPolygon(renderer, poly2->polygon, inputGetMouseX(), inputGetMouseY());
-				drawSetColour(renderer, 0, 0, 0, 255);
-
 				// Draw the game world
 				for (i = 0; i < MAX_TILEMAPS; i++)
 					if (gameWorld->worldMaps[i] != NULL)

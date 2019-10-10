@@ -198,7 +198,10 @@ void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerNam
 
 void assetLoadHitbox(AssetHandler* assetHandler, INI* ini, const char* headerName) {
 	hitboxType hType = hitRectangle;
-	if (getKeyINI(ini, headerName, "type", "rectangle") == "circle") hType = hitCircle;
+	const char* key = getKeyINI(ini, headerName, "type", "rectangle");
+	if (key == "rectangle") hType = hitRectangle;
+	else if (key == "cirlce") hType = hitCircle;
+	else if (key == "polygon") hType = hitConvexPolygon;
 	loadAssetIntoHandler(
 			assetHandler,
 			createAsset(createHitbox(
