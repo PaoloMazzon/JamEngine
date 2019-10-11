@@ -14,49 +14,6 @@ the functions `ns()` (Which the renderer uses) exclusively supports Windows,
 Linux, and OSX; so that would have to be rewritten were you to use another
 platform.
 
-Asset Loading System
---------------------
-The asset loader will load a single INI file at a time. This INI file is
-expected to follow a certain format; every asset should have its own header
-with a single-character prefix denoting the type, followed by an ID for the
-asset. For example, a sprite header would look something like `[sPlayerSprite]`. You
-could of course, also put a comment (with #) before every header to make it
-clear what the asset is too.
-
-By default, the prefixes are as follows:
-
- + `e` for entities
- + `s` for sprites
- + `m` for tile maps
- + `h` for hitboxes
-
-Do note that textures are a special case. All textures should be denoted in
-the INI by the following format:
-
-    [texture_ids]
-    imageTexture=path/to/image.png
-    playerTexture=playersprite.png
-    monsterTexture=monster.png
-    key=file
-    
-    [sPlayerSprite]
-    x_in_texture=0
-    y_in_texture=0
-    frame_width=16
-    frame_height=16
-    texture_id=playerTexture
-    ...
-
-Where the key is id of the texture and file is the path to the texture in the
-disk. *NOTE:* Do not use 0 as an ID as the loader needs that specific ID for
-error checking. Furthermore, it is vital that you never attempt to load an INI
-more than once for each instance of `AssetLoader`. This is due to how it
-manages memory (specifically the keys used as strings) and the fact that each
-loader will hold on to its original INI until destruction. Having the old INI
-available can make debugging easier and makes memory management a lot simpler
-as well since the asset loader is just responsible for cleaning up the INI instead
-of cleaning up * amount of strings. 
-
 Worlds
 ------
 Worlds are a tool that allow for you to have lots of entities and tilemaps on
@@ -90,39 +47,6 @@ Second is that worlds do eat quite a bit of ram. An empty world is about 200 byt
 24 bytes per entity added (that's not counting how much the entity takes up or the alloc
 cookies). You can expect a world with 1000 entities to eat up as much as 200kb of ram all
 things considered (including entities and alloc cookies).
-
-Behaviour Maps
---------------
-Behaviour maps are a tool that is used to make large projects easier to manage.
-You can make a behaviour map before you load with an asset manager and it will
-automatically map the entities to their behaviours (a set of functions that are
-called at different times like when its added to a world or drawn). Then, when
-you use a world the world will automatically call whatever behaviour function
-that needs to be called at that moment. The onCreate function is called when an
-entity is added to a world through `worldAddEntity`, onDestroy is called when it
-is removed from a world via `worldRemoveEntity`, onFrame is called once per frame,
-and onDraw is called once per frame after all of the onFrame's have been called.
-For any of these you just use the value NULL and nothing will be called (and no
-segfaults will visit in your sleep). The parameters for any given `Behaviour`
-function are as follows: `Renderer* renderer, World* world, Entity* self`. This
-means every entity who's behaviour is called has immediate access to the world
-its in, the renderer its being drawn to, and its own internal information.
-
-So the general structure of these are as follows
-
- + You create a behaviour map and load in all of the behaviour functions
- + Then call assetLoadINI on your asset handler using your behaviour map
- + Now you may add copies of entities from the handler to your world where your world will handle the behaviours
- 
-This means most projects will require you to create 3 pointers when you game begins
-and destroy 3 pointers once your game is over: an `AssetHandler`, `World`, and
-`BehaviourMap`. Keep in mind that any pointers/memory allocated by one of those three
-things will be cleaned up automatically when you free it; you don't have to manually
-free anything but those three. 
-
-As a side note, not defining an entity's behaviour when loaded from an asset handler will
-try and give the entity a behaviour called "default". You can define a "default" behaviour
-that will be given to any entities that haven't been given another behaviour. 
 
 Major To-Do List
 ----------------
