@@ -84,4 +84,6 @@ Behaviours are covered in another document.
 Warning
 -------
 Don't use 0 as an id, the handler needs it for handling NULL pointers
-and default values.
+and default values. Also, asset names exclude their prefix. For example
+an asset might have the header `[sPlayerSprite]` in the .ini file, but
+its actual asset name is `PlayerSprite`.`
