@@ -14,12 +14,6 @@ the functions `ns()` (Which the renderer uses) exclusively supports Windows,
 Linux, and OSX; so that would have to be rewritten were you to use another
 platform.
 
-Major To-Do List
-----------------
- - Gamepad input
- - Rewrite the window resizing function so it doesn't crash the game if it fails 
- - A lot of Font.c is not verbose and should be fixed.
-
 Features
 ========
  - Extremely easy API to use, all headers documented with doxygen (`$ doxygen doxyconfig.txt`)
@@ -41,6 +35,7 @@ To-Do List
     + Gamepad input
  - Renderer
     + Delta timing
+    + Rewrite window resizing function
  - Drawing functions
     + Let the fill colour thing work with alpha values
     + Draw shapes
