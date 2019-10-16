@@ -11,6 +11,7 @@
 #include <AssetHandler.h>
 #include <StringUtil.h>
 #include <JamError.h>
+#include <Sprite.h>
 #include "BehaviourMap.h"
 
 // The base key comparison function
@@ -137,22 +138,22 @@ void assetLoadTileMap(AssetHandler* assetHandler, INI* ini, const char* headerNa
 }
 
 void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerName) {
+	Sprite* spr = loadSpriteFromSheet(
+			assetGet(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0")))->tex,
+			(uint32) atof(getKeyINI(ini, headerName, "animation_length", "1")),
+			(uint32) atof(getKeyINI(ini, headerName, "x_in_texture", "0")),
+			(uint32) atof(getKeyINI(ini, headerName, "y_in_texture", "0")),
+			(uint32) atof(getKeyINI(ini, headerName, "frame_width", "16")),
+			(uint32) atof(getKeyINI(ini, headerName, "frame_height", "16")),
+			(uint32) atof(getKeyINI(ini, headerName, "padding_width", "0")),
+			(uint32) atof(getKeyINI(ini, headerName, "padding_height", "0")),
+			(uint32) atof(getKeyINI(ini, headerName, "x_align", "0")),
+			(uint16) atof(getKeyINI(ini, headerName, "frame_delay", "0")),
+			(bool) atof(getKeyINI(ini, headerName, "looping", "0")));
+	spr->originX = (sint32) atof(getKeyINI(ini, headerName, "x_origin", "0"));
+	spr->originY = (sint32) atof(getKeyINI(ini, headerName, "y_origin", "0"));
 	if (assetGet(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
-		loadAssetIntoHandler(
-				assetHandler,
-				createAsset(loadSpriteFromSheet(
-						assetGet(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0")))->tex,
-						(uint32) atof(getKeyINI(ini, headerName, "animation_length", "1")),
-						(uint32) atof(getKeyINI(ini, headerName, "x_in_texture", "0")),
-						(uint32) atof(getKeyINI(ini, headerName, "y_in_texture", "0")),
-						(uint32) atof(getKeyINI(ini, headerName, "frame_width", "16")),
-						(uint32) atof(getKeyINI(ini, headerName, "frame_height", "16")),
-						(uint32) atof(getKeyINI(ini, headerName, "padding_width", "0")),
-						(uint32) atof(getKeyINI(ini, headerName, "padding_height", "0")),
-						(uint32) atof(getKeyINI(ini, headerName, "x_align", "0")),
-						(uint16) atof(getKeyINI(ini, headerName, "frame_delay", "0")),
-						(bool) atof(getKeyINI(ini, headerName, "looping", "0"))), sprAsset),
-				(headerName + 1)
+		loadAssetIntoHandler(assetHandler, createAsset(spr, sprAsset), (headerName + 1)
 		);
 	} else {
 		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load sprite of id %s, tex not found (assetLoadINI)\\n", headerName + 1);

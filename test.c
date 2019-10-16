@@ -7,6 +7,7 @@
 #include <math.h>
 #include <Renderer.h>
 #include <Hitbox.h>
+#include <Sprite.h>
 #include "JamEngine.h"
 
 /////////////////// Constants ///////////////////
@@ -61,14 +62,13 @@ void onPlayerFrame(Renderer* renderer, World* world, Entity* self) {
 	self->x += self->hSpeed;
 	self->y += self->vSpeed;
 
-	/*
 	//////////////////////// Player Animations ////////////////////////
 	// We must invert the player if he is going left
 	if (self->hSpeed > 0)
 		self->scaleX = 1;
 	else if (self->hSpeed < 0)
 		self->scaleX = -1;
-
+	/*
 	// Walking/standing animations
 	if (self->hSpeed != 0)
 		self->sprite = sPlayerMove;

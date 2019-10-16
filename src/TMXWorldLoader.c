@@ -39,9 +39,14 @@ bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* la
 		if (tempEntity != NULL) {
  			worldAddEntity(world, tempEntity);
 
-			// Adjust for tiled x/y origin being on bottom left
-			if (tempEntity->sprite->animationLength > 0)
-				tempEntity->y -= tempEntity->sprite->frames[0]->h;
+			// Adjust scale
+			if (tempEntity->sprite != NULL && tempEntity->sprite->animationLength > 0) {
+				tempEntity->scaleX = (float)currentObject->width  / tempEntity->sprite->frames[0]->w;
+				tempEntity->scaleY = (float)currentObject->height / tempEntity->sprite->frames[0]->h;
+			}
+
+			// This is to account for the difference in sprite origins between JamEngine and Tiled
+			tempEntity->y -= currentObject->height;
 
 			// Load properties of the object into the new entity
 			if (currentObject->visible)
@@ -49,7 +54,6 @@ bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* la
 			else
 				tempEntity->alpha = 0;
 			tempEntity->rot = currentObject->rotation;
-			// TODO: This
 		} else {
 			failedToLoad = true;
 			fprintf(stderr, "Failed to create entity ID %i (loadObjectLayerIntoWorld)\n", currentObject->id);

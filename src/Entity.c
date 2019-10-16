@@ -6,7 +6,13 @@
 #include "TileMap.h"
 #include <stdio.h>
 #include <Entity.h>
+#include <Sprite.h>
 #include "JamError.h"
+
+int roundToInt(double x) {
+	x += 0.5;
+	return (int)(x);
+}
 
 //////////////////////////////////////////////////////////
 Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double hitboxOffsetX, double hitboxOffsetY, Behaviour* behaviour) {
@@ -76,7 +82,8 @@ Entity* copyEntity(Entity* baseEntity, double x, double y) {
 //////////////////////////////////////////////////////////
 void drawEntity(Renderer* renderer, Entity* entity) {
 	if (entity != NULL && renderer != NULL) {
-		drawSprite(renderer, entity->sprite, (sint32)entity->x, (sint32)entity->y, entity->scaleX, entity->scaleY, entity->rot, entity->alpha, entity->updateOnDraw);
+		if (entity->sprite != NULL)
+		drawSprite(renderer, entity->sprite, (sint32)entity->x - entity->sprite->originX, (sint32)entity->y - entity->sprite->originY, entity->scaleX, entity->scaleY, entity->rot, entity->alpha, entity->updateOnDraw);
 	} else {
 		if (entity == NULL)
 			jSetError(ERROR_NULL_POINTER, "Entity does not exist (drawEntity).\n");
@@ -138,11 +145,6 @@ bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2) {
 	return coll;
 }
 //////////////////////////////////////////////////////////
-
-int roundToInt(double x) {
-	x += 0.5;
-	return (int)(x);
-}
 
 //////////////////////////////////////////////////////////
 bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, double ry) {
