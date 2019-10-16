@@ -10,17 +10,7 @@
 #include "Constants.h"
 #include "Input.h"
 
-/// \brief Simple texture class with some basic info
-///
-/// Weather or not a texture is able to be rendered
-/// to depends on if it was used to load a file or
-/// created without loading a file
-typedef struct {
-	SDL_Texture* tex; ///< The internal SDL2 texture
-	uint32 w; ///< Texture's width
-	uint32 h; ///< Texture's height
-	bool renderTarget; ///< Weather or not this texture can be rendered to
-} Texture;
+typedef struct _Texture Texture;
 
 /// \brief The core renderer required for a game
 ///

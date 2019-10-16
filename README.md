@@ -2,10 +2,6 @@
 
 Important Info
 --------------
-The struct definition for the Textures is held in the renderer
-to avoid circular references, while the functions for textures
-are stored in the Texture.h and Texture.c
-
 Right now JamEngine is only tested on Windows and Linux (and to be
 honest I only test on Windows every couple months). Theoretically, JamEngine
 should be compatible with any platform that SDL2 supports, but I can't
