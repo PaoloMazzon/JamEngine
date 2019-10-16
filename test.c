@@ -142,6 +142,12 @@ bool runGame(Renderer* renderer, Font* font) {
 			if (runLoop) {
 				drawFillColour(renderer, 0, 0, 0, 255);
 
+				// Mess around with the renderer reset
+				if (inputCheckKeyPressed(SDL_SCANCODE_F))
+					resetWindow(renderer, "JamEngine", GAME_WIDTH, GAME_HEIGHT, true, 60);
+				if (inputCheckKeyPressed(SDL_SCANCODE_G))
+					resetWindow(renderer, "JamEngine", GAME_WIDTH, GAME_HEIGHT, false, 60);
+
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				// Draw the game world
 				for (i = 0; i < MAX_TILEMAPS; i++)
@@ -168,7 +174,7 @@ bool runGame(Renderer* renderer, Font* font) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char* argv[]) {
-	Renderer* renderer = createRenderer("Jam Engine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
+	Renderer* renderer = createRenderer("JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	initInput();
 	Font* font = createFont(renderer, "assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;

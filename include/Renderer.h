@@ -55,6 +55,7 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 /// Also, if it fails, you will be left without a screen buffer and will
 /// crash if you do not shut down the game yourself. In other words, if
 /// this function returns false, do not continue program execution.
+/// 
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
 bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool fullscreen, double framerate);
@@ -90,6 +91,7 @@ void windowToScreenBufferCoordinates(Renderer* renderer, int* x, int* y);
 /// this function update it for you (otherwise you must
 /// run the update function yourself before you run this
 /// function). Pass NULL if you'd rather do it yourself.
+/// 
 /// \throws ERROR_NULL_POINTER
 bool rendererProcEvents(Renderer* renderer);
 
