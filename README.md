@@ -35,15 +35,8 @@ Features
  - SAT collisions and simple rectangle/circle collisions are interchangeable
  - Collision grids (`TileMap`) for lightning-fast grid-to-rectangle collisions (or just rendering tiles (or both))
 
-Possible future additions (in no order)
----------------------------------------
- - Vector images
- - Tweening
- - Audio support through OpenAL
-
 To-Do List
 ==========
-
  - Input System
     + Gamepad input
  - Renderer
@@ -51,7 +44,11 @@ To-Do List
  - Drawing functions
     + Let the fill colour thing work with alpha values
     + Draw shapes
+    + Vector images
+    + Tweening
  - Hit-box
     + Circle-to-polygon
  - Fonts
     + TTF fonts
+ - Audio support
+    + Everything
