@@ -254,7 +254,7 @@ void drawSortedMap(Renderer* renderer, Sprite* spr, TileMap* map, int x, int y, 
 					}
 
 					setMapPos(map, (uint16)j, (uint16)i, (uint16)(frame + 1));
-					drawSpriteFrame(renderer, spr, x + (j * map->cellWidth + startingCellX), y + (i * map->cellHeight + startingCellY), 1, 1, (uint32)frame);
+					drawSpriteFrame(renderer, spr, x + (j * map->cellWidth + startingCellX), y + (i * map->cellHeight + startingCellY), 1, 1, 0, 255, (uint32)frame);
 				}
 			}
 		}
@@ -287,7 +287,7 @@ void drawTileMap(Renderer* renderer, TileMap* map, int x, int y, uint32 xInMapSt
 			for (j = xInMapStart; j <= xInMapFinish; j++) {
 				val = (uint32)getMapPos(map, (uint16)j, (uint16)i);
 				if (val > 0)
-					drawSpriteFrame(renderer, map->tileSheet, x, y, 1, 1, val - 1);
+					drawSpriteFrame(renderer, map->tileSheet, x, y, 1, 1, 0, 255, val - 1);
 				x += map->cellWidth;
 			}
 			x = originalX;

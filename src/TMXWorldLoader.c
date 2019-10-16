@@ -42,7 +42,14 @@ bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* la
 			// Adjust for tiled x/y origin being on bottom left
 			if (tempEntity->sprite->animationLength > 0)
 				tempEntity->y -= tempEntity->sprite->frames[0]->h;
-			// TODO: Add support for tmx custom properties to entity values
+
+			// Load properties of the object into the new entity
+			if (currentObject->visible)
+				tempEntity->alpha = 255;
+			else
+				tempEntity->alpha = 0;
+			tempEntity->rot = currentObject->rotation;
+			// TODO: This
 		} else {
 			failedToLoad = true;
 			fprintf(stderr, "Failed to create entity ID %i (loadObjectLayerIntoWorld)\n", currentObject->id);

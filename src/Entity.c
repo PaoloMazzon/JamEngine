@@ -20,12 +20,14 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double 
 		ent->y = y;
 		ent->scaleX = 1;
 		ent->scaleY = 1;
+		ent->alpha = 1;
+		ent->rot = 0;
+		ent->updateOnDraw = true;
 		ent->hitboxOffsetX = hitboxOffsetX;
 		ent->hitboxOffsetY = hitboxOffsetY;
 		ent->hSpeed = 0;
 		ent->vSpeed = 0;
 		ent->friction = 0;
-		ent->processPriority = 0;
 		ent->type = logic;
 		ent->behaviour = behaviour;
 		ent->userData = NULL;
@@ -45,7 +47,9 @@ Entity* copyEntity(Entity* baseEntity, double x, double y) {
 		newEnt = createEntity(baseEntity->sprite, baseEntity->hitbox, x, y, baseEntity->hitboxOffsetX, baseEntity->hitboxOffsetY, baseEntity->behaviour);
 		if (newEnt != NULL) {
 			newEnt->type = baseEntity->type;
-			newEnt->processPriority = baseEntity->processPriority;
+			newEnt->rot = baseEntity->rot;
+			newEnt->alpha = baseEntity->alpha;
+			newEnt->updateOnDraw = baseEntity->updateOnDraw;
 			newEnt->behaviour = baseEntity->behaviour;
 			newEnt->scaleX = baseEntity->scaleX;
 			newEnt->scaleY = baseEntity->scaleY;
@@ -72,7 +76,7 @@ Entity* copyEntity(Entity* baseEntity, double x, double y) {
 //////////////////////////////////////////////////////////
 void drawEntity(Renderer* renderer, Entity* entity) {
 	if (entity != NULL && renderer != NULL) {
-		drawSprite(renderer, entity->sprite, (sint32)entity->x, (sint32)entity->y, entity->scaleX, entity->scaleY);
+		drawSprite(renderer, entity->sprite, (sint32)entity->x, (sint32)entity->y, entity->scaleX, entity->scaleY, entity->rot, entity->alpha, entity->updateOnDraw);
 	} else {
 		if (entity == NULL)
 			jSetError(ERROR_NULL_POINTER, "Entity does not exist (drawEntity).\n");

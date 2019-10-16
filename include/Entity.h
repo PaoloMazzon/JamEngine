@@ -28,13 +28,17 @@ typedef struct _Entity {
 	EntityType type;      ///< Type of entity this is
 	double x;             ///< X position in the game world
 	double y;             ///< Y position in the game world
-	int processPriority;  ///< Entities are processed in descending order
 	Behaviour* behaviour; ///< Behaviour mapping of this entity (AssetManagers will resolve this)
 	double hitboxOffsetX; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	double hitboxOffsetY; ///< The hitbox's offset from the entity, this ignore the sprite's origin
+	void* userData;       ///< A place for the programmer to store their own variables and such
+
+	// Drawing control
+	double rot;           ///< The rotation of the entity when drawn
+	uint8 alpha;          ///< The alpha of the entity when drawn
+	bool updateOnDraw;    ///< Weather or not the sprite will update on drawing
 	float scaleX;         ///< The x scale of the entity (for sprite rendering)
 	float scaleY;         ///< The y scale of the entity (for sprite rendering)
-	void* userData;       ///< A place for the programmer to store their own variables and such
 
 #ifdef ENTITY_ENABLE_SPEED
 	double hSpeed;       ///< Horizontal speed (Can be disabled to save memory)

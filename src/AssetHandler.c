@@ -189,7 +189,9 @@ void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerNam
 			ent->type = item;
 		if (strcmp(typeString, "Player") == 0)
 			ent->type = player;
-		
+		ent->rot = atof(getKeyINI(ini, headerName, "rotation", "0"));
+		ent->alpha = (uint8)atof(getKeyINI(ini, headerName, "alpha", "255"));
+		ent->updateOnDraw = (bool)atof(getKeyINI(ini, headerName, "update_on_draw", "1"));
 		loadAssetIntoHandler(assetHandler, createAsset(ent, entAsset), (headerName + 1));
 	} else {
 		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load entity of id %s (assetLoadINI)\n", headerName + 1);

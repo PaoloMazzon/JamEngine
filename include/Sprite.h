@@ -26,9 +26,6 @@ typedef struct {
 	// Things for the sprite to draw properly
 	sint32 originX; ///< The x origin of the sprite
 	sint32 originY; ///< The y origin of the sprite
-	double rot; ///< The rotation of the sprite
-	uint8 alpha; ///< The alpha of the sprite
-	bool updateOnDraw; ///< Weather or not the sprite will update on drawing
 } Sprite;
 
 /// \brief Creates a sprite
@@ -73,12 +70,12 @@ void updateSprite(Sprite* sprite);
 
 /// \brief Draws a sprite on screen
 /// \throws ERROR_NULL_POINTER
-void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY);
+void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, bool updateOnDraw);
 
 /// \brief Draws a specific frame of a sprite without screwing with the animation
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
-void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, uint32 frame);
+void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, uint32 frame);
 
 /// \brief Frees a sprite
 void freeSprite(Sprite* sprite, bool freeFrames, bool freeTextures);

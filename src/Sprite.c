@@ -26,9 +26,6 @@ Sprite* createSprite(uint32 animationLength, uint16 frameDelay, bool looping) {
 		sprite->looping = looping;
 		sprite->originX = 0;
 		sprite->originY = 0;
-		sprite->rot = 0;
-		sprite->alpha = 255;
-		sprite->updateOnDraw = true;
 
 		// Check if list is a dud and shouldn't be
 		if (list == NULL && animationLength > 0) {
@@ -174,10 +171,10 @@ void updateSprite(Sprite* sprite) {
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY) {
+void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, bool updateOnDraw) {
 	if (sprite != NULL) {
 		// Update the sprite if that is to be done before drawing
-		if (sprite->updateOnDraw)
+		if (updateOnDraw)
 			updateSprite(sprite);
 
 		// Draw it to the screen with all the crazy parameters
@@ -189,8 +186,8 @@ void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float sc
 		sprite->originY,
 		scaleX,
 		scaleY,
-		sprite->rot,
-		sprite->alpha,
+		rot,
+		alpha,
 		sprite->frames[sprite->currentFrame]->x,
 		sprite->frames[sprite->currentFrame]->y,
 		sprite->frames[sprite->currentFrame]->w,
@@ -203,7 +200,7 @@ void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float sc
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, uint32 frame) {
+void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, uint32 frame) {
 	if (renderer != NULL && sprite != NULL && frame < sprite->animationLength) {
 		// Draw it to the screen with all the crazy parameters
 		drawTexturePartExt(renderer,
@@ -214,8 +211,8 @@ void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, flo
 						   sprite->originY,
 						   scaleX,
 						   scaleY,
-						   sprite->rot,
-						   sprite->alpha,
+						   rot,
+						   alpha,
 						   sprite->frames[frame]->x,
 						   sprite->frames[frame]->y,
 						   sprite->frames[frame]->w,
