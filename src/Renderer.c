@@ -80,45 +80,46 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool fullscreen, double framerate) { // TODO: Fix this mess
+bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, uint8 fullscreen) {
 	SDL_DisplayMode mode;
 	bool pass = false;
+	int w, h;
 
 	// The preliminary check
 	if (renderer != NULL) {
-		// Just run through the list of things to update
-		renderer->timePerFrame = 1000000000 / (uint64_t) framerate;
-		renderer->fps = (uint64_t) framerate;
-		SDL_SetWindowSize(renderer->gameWindow, w, h);
-		SDL_SetWindowTitle(renderer->gameWindow, name);
 
-		if (fullscreen) {
-			// We need to find the screen's width and height for the internal renderer
-			SDL_GetWindowDisplayMode(renderer->gameWindow, &mode);
+		if (fullscreen != 0) {
+			if (fullscreen == 1) {
+				SDL_SetWindowFullscreen(renderer->gameWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			} else if (fullscreen == 2) {
+				// We have to manually set the window to monitor size before going fullscreen
+				SDL_GetDesktopDisplayMode(0, &mode);
+				SDL_SetWindowFullscreen(renderer->gameWindow, SDL_WINDOW_FULLSCREEN);
+				SDL_SetWindowDisplayMode(renderer->gameWindow, &mode);
+			}
 
-			// Free the old screen buffer, then make a new one
-			freeTexture(renderer->screenBuffer);
-			renderer->screenBuffer = createTexture(renderer, (uint32)mode.w, (uint32)mode.h);
-			renderer->displayBufferW = (uint32)mode.w;
-			renderer->displayBufferW = (uint32)mode.h;
-			renderer->renderingToScreenBuffer = true;
+			if (fullscreen < 3) {
+				// Calculate where on the screen the display buffer should be drawn (center the display buffer)
+				SDL_GetWindowSize(renderer->gameWindow, &w, &h);
+				renderer->displayBufferX = (w - renderer->screenBuffer->w) / 2;
+				renderer->displayBufferY = (h - renderer->screenBuffer->h) / 2;
 
-			SDL_SetWindowFullscreen(renderer->gameWindow, SDL_WINDOW_FULLSCREEN);
-
-			// Check for errors
-			if (renderer->screenBuffer == NULL) {
-				jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer in fullscreen (resetWindow). SDL Error: %s\n", SDL_GetError());
-			} else {
-				pass = true;
+				// Check for errors
+				if (renderer->screenBuffer == NULL) {
+					jSetError(ERROR_SDL_ERROR,
+							  "Failed to create screen buffer in fullscreen (resetWindow). SDL Error: %s\n",
+							  SDL_GetError());
+				} else {
+					pass = true;
+				}
 			}
 		} else {
+			// Take it out of full screen and handle sizing and position
 			SDL_SetWindowFullscreen(renderer->gameWindow, 0);
-
-			// Free the old screen buffer, then make a new one
-			freeTexture(renderer->screenBuffer);
-			renderer->screenBuffer = createTexture(renderer, w, h);
-			renderer->displayBufferW = w;
-			renderer->displayBufferW = h;
+			SDL_SetWindowSize(renderer->gameWindow, windowWidth, windowHeight);
+			SDL_SetWindowPosition(renderer->gameWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+			renderer->displayBufferX = 0;
+			renderer->displayBufferY = 0;
 
 			// Check for errors
 			if (renderer->screenBuffer == NULL) {
@@ -132,6 +133,59 @@ bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool 
 	}
 
 	return pass;
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+void rendererMaximizeScreenBufferInteger(Renderer* renderer) {
+	// TODO: This
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+void rendererSetVerticalSync(Renderer* renderer, bool vsync) {
+	if (renderer != NULL) {
+		if (vsync)
+			SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
+		else
+			SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+	}
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+void rendererSetAA(Renderer* renderer, bool aa) {
+	if (renderer != NULL) {
+		if (aa)
+			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+		else
+			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+	}
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+void rendererSetWindowTitle(Renderer* renderer, const char* name) {
+	if (renderer != NULL) {
+		SDL_SetWindowTitle(renderer->gameWindow, name);
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+	}
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+void rendererSetFramerate(Renderer* renderer, double framerate) {
+	if (renderer != NULL) {
+		renderer->timePerFrame = 1000000000 / (uint64_t) framerate;
+		renderer->fps = (uint64_t) framerate;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+	}
 }
 /////////////////////////////////////////////////////////////
 
@@ -228,7 +282,7 @@ bool configScreenBuffer(Renderer *renderer, uint32 internalWidth, uint32 interna
 		// Check that it worked
 		if (tempTex != NULL) {
 			// Get display info
-			SDL_GetRendererOutputSize(renderer->internalRenderer, &w, &h);
+			SDL_GetWindowSize(renderer->gameWindow, &w, &h);
 
 			// Free the old one, then update values
 			freeTexture(renderer->screenBuffer);

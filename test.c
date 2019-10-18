@@ -143,10 +143,12 @@ bool runGame(Renderer* renderer, Font* font) {
 				drawFillColour(renderer, 0, 0, 0, 255);
 
 				// Mess around with the renderer reset
-				if (inputCheckKeyPressed(SDL_SCANCODE_F))
-					resetWindow(renderer, "JamEngine", GAME_WIDTH, GAME_HEIGHT, true, 60);
-				if (inputCheckKeyPressed(SDL_SCANCODE_G))
-					resetWindow(renderer, "JamEngine", GAME_WIDTH, GAME_HEIGHT, false, 60);
+				if (inputCheckKeyPressed(SDL_SCANCODE_F)) {
+					resetWindow(renderer, 0, 0, RENDERER_FULLSCREEN);
+				}
+				if (inputCheckKeyPressed(SDL_SCANCODE_G)) {
+					resetWindow(renderer, GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
+				}
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				// Draw the game world
@@ -154,6 +156,11 @@ bool runGame(Renderer* renderer, Font* font) {
 					if (gameWorld->worldMaps[i] != NULL)
 						drawTileMap(renderer, gameWorld->worldMaps[i], 0, 0, 0, 0, 0, 0);
 				worldProcFrame(gameWorld);
+
+				// Draw a border around the screen
+				drawSetColour(renderer, 255, 255, 255, 255);
+				drawRectangle(renderer, 0, 0, GAME_WIDTH, GAME_HEIGHT);
+				drawSetColour(renderer, 0, 0, 0, 255);
 
 				// Debug
 				renderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
@@ -175,6 +182,7 @@ bool runGame(Renderer* renderer, Font* font) {
 
 int main(int argc, char* argv[]) {
 	Renderer* renderer = createRenderer("JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
+	rendererSetAA(renderer, false);
 	initInput();
 	Font* font = createFont(renderer, "assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;

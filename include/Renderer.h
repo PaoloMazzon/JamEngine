@@ -10,6 +10,10 @@
 #include "Constants.h"
 #include "Input.h"
 
+#define RENDERER_WINDOWED 0
+#define RENDERER_BORDERLESS_FULLSCREEN 1
+#define RENDERER_FULLSCREEN 2
+
 typedef struct _Texture Texture;
 
 /// \brief The core renderer required for a game
@@ -55,10 +59,45 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 /// Also, if it fails, you will be left without a screen buffer and will
 /// crash if you do not shut down the game yourself. In other words, if
 /// this function returns false, do not continue program execution.
-/// 
+/// This function also does not change the screen buffer, size, if you
+/// want that done you will have to do that separately via `configScreenBuffer`.
+///
+/// windowWidth and windowHeight do not matter if fullscreen is true.
+///
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
-bool resetWindow(Renderer* renderer, const char* name, uint32 w, uint32 h, bool fullscreen, double framerate);
+bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, uint8 fullscreen);
+
+/// \brief Upscales your screen buffer as much as it can while retaining its aspect ratio and integer scaling
+///
+/// This function takes your screen buffer and pixel-perfectly scales it to
+/// the maximum size it can be given the current window resolution
+///
+/// \throws ERROR_NULL_POINTER
+void rendererMaximizeScreenBufferInteger(Renderer* renderer);
+
+/// \brief Sets the title of the window for the renderer
+void rendererSetWindowTitle(Renderer* renderer, const char* name);
+
+/// \brief Enables or disables anti-aliasing
+///
+/// Certain platforms may not support anti-aliasing, so just make
+/// sure your platform does before turning it on (Most do).
+///
+/// \throws ERROR_NULL_POINTER
+void rendererSetAA(Renderer* renderer, bool aa);
+
+/// \brief Enables or disables vertical synchronization
+///
+/// Vertical synchronization (vsync) prevents programs from getting
+/// screen tear at the cost of a bit of performance.
+///
+/// \throws ERROR_NULL_POINTER
+void rendererSetVerticalSync(Renderer* renderer, bool vsync);
+
+/// \brief Sets the renderer's framerate
+/// \throws ERROR_NULL_POINTER
+void rendererSetFramerate(Renderer* renderer, double framerate);
 
 /// \brief Checks if the render target is the screen buffer or not
 /// \throws ERROR_NULL_POINTER
