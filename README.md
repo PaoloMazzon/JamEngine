@@ -31,7 +31,6 @@ To-Do List
     + Gamepad input
  - Renderer
     + Delta timing
-    + Rewrite window resizing function
  - Drawing functions
     + Let the fill colour thing work with alpha values
     + Draw shapes
