@@ -144,10 +144,12 @@ bool runGame(Renderer* renderer, Font* font) {
 
 				// Mess around with the renderer reset
 				if (inputCheckKeyPressed(SDL_SCANCODE_F)) {
-					resetWindow(renderer, 0, 0, RENDERER_FULLSCREEN);
+					resetWindow(renderer, 0, 0, RENDERER_BORDERLESS_FULLSCREEN);
+					rendererMaximizeScreenBufferInteger(renderer);
 				}
 				if (inputCheckKeyPressed(SDL_SCANCODE_G)) {
 					resetWindow(renderer, GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
+					rendererMaximizeScreenBufferInteger(renderer);
 				}
 
 				/////////////////////////// DRAWING THINGS //////////////////////////

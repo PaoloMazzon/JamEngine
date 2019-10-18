@@ -101,8 +101,8 @@ bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, ui
 			if (fullscreen < 3) {
 				// Calculate where on the screen the display buffer should be drawn (center the display buffer)
 				SDL_GetWindowSize(renderer->gameWindow, &w, &h);
-				renderer->displayBufferX = (w - renderer->screenBuffer->w) / 2;
-				renderer->displayBufferY = (h - renderer->screenBuffer->h) / 2;
+				renderer->displayBufferX = (w - renderer->displayBufferW) / 2;
+				renderer->displayBufferY = (h - renderer->displayBufferH) / 2;
 
 				// Check for errors
 				if (renderer->screenBuffer == NULL) {
@@ -138,7 +138,23 @@ bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, ui
 
 /////////////////////////////////////////////////////////////
 void rendererMaximizeScreenBufferInteger(Renderer* renderer) {
-	// TODO: This
+	int w, h;
+	uint32 scale = 1;
+
+	if (renderer != NULL) {
+		// Get the window size and find the highest scale
+		SDL_GetWindowSize(renderer->gameWindow, &w, &h);
+		while ((scale + 1) * renderer->screenBuffer->w < w && (scale + 1) * renderer->screenBuffer->h < h)
+			scale++;
+
+		// Scale the buffer to max and adjust the display coordinates
+		renderer->displayBufferW = renderer->screenBuffer->w * scale;
+		renderer->displayBufferH = renderer->screenBuffer->h * scale;
+		renderer->displayBufferX = (w - renderer->displayBufferW) / 2; // Problem
+		renderer->displayBufferY = (h - renderer->displayBufferH) / 2;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+	}
 }
 /////////////////////////////////////////////////////////////
 
