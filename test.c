@@ -185,7 +185,6 @@ bool runGame(Renderer* renderer, Font* font) {
 int main(int argc, char* argv[]) {
 	Renderer* renderer = createRenderer("JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	rendererSetAA(renderer, false);
-	initInput();
 	Font* font = createFont(renderer, "assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;
 	font->characterWidth = 8;

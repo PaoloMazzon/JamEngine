@@ -34,6 +34,9 @@ typedef struct {
 /// \throws ERROR_ALLOC_FAILED
 void initInput();
 
+/// \brief Returns true if input was initialized properly or false otherwise
+bool inputIsInitialized();
+
 /// \brief Updates an input struct
 ///
 /// This must either be ran before you run rendererProcEvents or the

@@ -16,9 +16,10 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 	SDL_Window* window;
 	Texture* tex;
 	Renderer* renderer = (Renderer*)malloc(sizeof(Renderer));
+	initInput();
 
 	// Check if we were given a dud
-	if (renderer != NULL) {
+	if (renderer != NULL && inputIsInitialized()) {
 
 		// Ignore any complaints valgrind gives about this, its out
 		// of my control
@@ -72,6 +73,7 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 			jSetError(ERROR_SDL_ERROR, "Failed to create SDL window (createRenderer). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
+		free(renderer);
 		jSetError(ERROR_ALLOC_FAILED, "Failed to create renderer struct. SDL Error: %s\n", SDL_GetError());
 	}
 
