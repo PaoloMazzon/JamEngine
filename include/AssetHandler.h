@@ -12,14 +12,14 @@
 #include "INI.h"
 #include "BehaviourMap.h"
 
-enum AssetType {texAsset, sprAsset, tileAsset, entAsset, hitAsset};
+enum JamAssetType {at_Texture, at_Sprite, at_TileMap, at_Entity, at_Hitbox};
 
 /// \brief A struct that can hold any of the assets the asset handler needs
 ///
 /// This struct utilizes an anonymous union inside it so it can hold
 /// any of the needed assets without using a bunch of extra storage.
 typedef struct {
-	enum AssetType type; ///< The type of asset this thing holds
+	enum JamAssetType type; ///< The type of asset this thing holds
 
 	union {
 		JamTexture* tex; ///< The internal texture
@@ -28,9 +28,10 @@ typedef struct {
 		Entity* entity; ///< The internal entity
 		Hitbox* hitbox; ///< The internal hitbox
 	};
-} Asset;
+} JamAsset;
 
-typedef const char* AssetKey;
+/// \brief In case you wish to change what type of keys are used
+typedef const char* JamAssetKey;
 
 /// \brief Loads lots of assets at once from files
 /// to manage large projects
@@ -55,14 +56,14 @@ typedef const char* AssetKey;
 /// being loaded in first.
 typedef struct {
 	int size; ///< The size of the map
-	AssetKey* ids; ///< The keys that match up with the values
-	Asset** vals; ///< The actual assets
+	JamAssetKey* ids; ///< The keys that match up with the values
+	JamAsset** vals; ///< The actual assets
 	INI* localINI; ///< Let the INI keep track of internal string's memory
-} AssetHandler;
+} JamAssetHandler;
 
 /// \brief Creates an asset handler
 /// \throws ERROR_ALLOC_FAILED
-AssetHandler* createAssetHandler();
+JamAssetHandler* jamCreateAssetHandler();
 
 /// \brief Throws an asset into the handler
 ///
@@ -75,7 +76,7 @@ AssetHandler* createAssetHandler();
 /// you will more than likely get a segfault and if not at least a memory leak.
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NUULL_POINTER
-void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id);
+void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAssetKey id);
 
 /// \brief Loads all recognized assets from a directory
 ///
@@ -86,36 +87,36 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id);
 /// \throws ERROR_ASSET_NOT_FOUND
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OPEN_FAILED
-void assetLoadINI(AssetHandler* assetHandler, JamRenderer* renderer, const char* filename, BehaviourMap* map);
+void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const char *filename, BehaviourMap *map);
 
 /// \brief Grabs an asset, or returns NULL if the key is not bound
 /// \throws ERROR_NULL_POINTER
-Asset* assetGet(AssetHandler* assetHandler, AssetKey key);
+JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, JamAssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Sprite* assetGetSprite(AssetHandler* handler, AssetKey key);
+Sprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Entity* assetGetEntity(AssetHandler* handler, AssetKey key);
+Entity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Hitbox* assetGetHitbox(AssetHandler* handler, AssetKey key);
+Hitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamTexture* assetGetTexture(AssetHandler* handler, AssetKey key);
+JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-TileMap* assetGetTileMap(AssetHandler* handler, AssetKey key);
+TileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Frees an asset handler and all of its components
-AssetHandler* freeAssetHandler(AssetHandler* handler);
+JamAssetHandler* jamFreeAssetHandler(JamAssetHandler *handler);

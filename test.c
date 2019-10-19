@@ -124,8 +124,8 @@ bool runGame(JamRenderer* renderer, Font* font) {
 	addBehaviourToMap(bMap, "PlayerBehaviour", NULL, NULL, onPlayerFrame, NULL);
 
 	// Load the assets and create the world
-	AssetHandler* handler = createAssetHandler();
-	assetLoadINI(handler, renderer, "assets/level0.ini", bMap);
+	JamAssetHandler* handler = jamCreateAssetHandler();
+	jamAssetLoadINI(handler, renderer, "assets/level0.ini", bMap);
 	World* gameWorld = loadWorldFromTMX(handler, renderer, "assets/level0.tmx");
 
 	// Some setup
@@ -176,7 +176,7 @@ bool runGame(JamRenderer* renderer, Font* font) {
 	// Free up the resources
 	freeWorld(gameWorld);
 	freeBehaviourMap(bMap);
-	freeAssetHandler(handler);
+	jamFreeAssetHandler(handler);
 
 	return mainMenu;
 }

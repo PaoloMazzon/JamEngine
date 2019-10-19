@@ -15,9 +15,9 @@ platform.
 Features
 ========
  - Extremely easy API to use, all headers documented with doxygen (`$ doxygen doxyconfig.txt`)
- - Load many assets at once with an `AssetHandler`
+ - Load many assets at once with an `JamAssetHandler`
  - Manage many entities at a time with a `World`
- - Between `World`s and `AssetHandler`s, memory management is quite simple as well
+ - Between `World`s and `JamAssetHandler`s, memory management is quite simple as well
  - `BehaviourMap`s to automate most of each frame
  - Supports the use of [Tiled](https://www.mapeditor.org/) as a level editor
  - Written purely in C and thus cross platform

@@ -31,9 +31,9 @@ As a simple example,
 	addBehaviourToMap(bMap, "PlayerBehaviour", onPlayerCreate, onPlayerDestroy, onPlayerFrame, NULL);
 	addBehaviourToMap(bMap, "EnemyBehaviour", onEnemyCreate, onEnemyDestroy, onEnemyFrame, onEnemyDraw);
 	
-	// Create and then load our asset handler, passing the behaviour map to assetLoadINI
-	AssetHandler* handler = createAssetHandler();
-	assetLoadINI(handler, renderer, "assets/level0.ini", bMap);
+	// Create and then load our asset handler, passing the behaviour map to jamAssetLoadINI
+	JamAssetHandler* handler = jamCreateAssetHandler();
+	jamAssetLoadINI(handler, renderer, "assets/level0.ini", bMap);
 	
 	// Now we load a world from a tmx file and when we do, all of the assets' onCreate will be called
 	World* gameWorld = loadWorldFromTMX(handler, renderer, "assets/level0.tmx");

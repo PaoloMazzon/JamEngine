@@ -15,16 +15,16 @@
 #include "BehaviourMap.h"
 
 // The base key comparison function
-bool keysEqual(AssetKey key1, AssetKey key2) {
+bool keysEqual(JamAssetKey key1, JamAssetKey key2) {
 	return strcmp(key1, key2) == 0;
 }
 
 ///////////////////////////////////////////////////////////////
-void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id) {
+void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAssetKey id) {
 	int i;
 	int exists = -1;
-	AssetKey* newInts = NULL;
-	Asset** newAssets = NULL;
+	JamAssetKey* newInts = NULL;
+	JamAsset** newAssets = NULL;
 	if (handler != NULL && asset != NULL) {
 		// Look and check if the ID already exists
 		for (i = 0; i < handler->size; i++)
@@ -34,13 +34,13 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id) {
 		// Either throw it in its spot or make a new spot
 		if (exists != -1) {
 			// First we must free the value there
-			if (handler->vals[exists]->type == texAsset)
+			if (handler->vals[exists]->type == at_Texture)
 				freeTexture(handler->vals[exists]->tex);
-			else if (handler->vals[exists]->type == hitAsset)
+			else if (handler->vals[exists]->type == at_Hitbox)
 				freeHitbox(handler->vals[exists]->hitbox);
-			else if (handler->vals[exists]->type == sprAsset)
+			else if (handler->vals[exists]->type == at_Sprite)
 				freeSprite(handler->vals[exists]->spr, true, false);
-			else if (handler->vals[exists]->type == entAsset)
+			else if (handler->vals[exists]->type == at_Entity)
 				freeEntity(handler->vals[exists]->entity, false, false, false);
 			else
 				freeTileMap(handler->vals[exists]->tileMap);
@@ -49,8 +49,8 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id) {
 			handler->vals[exists] = asset;
 		} else {
 			// We must make room for a new piece
-			newInts = (AssetKey*)realloc((void*)handler->ids, sizeof(AssetKey) * (handler->size + 1));
-			newAssets = (Asset**)realloc((void*)handler->vals, sizeof(Asset*) * (handler->size + 1));
+			newInts = (JamAssetKey*)realloc((void*)handler->ids, sizeof(JamAssetKey) * (handler->size + 1));
+			newAssets = (JamAsset**)realloc((void*)handler->vals, sizeof(JamAsset*) * (handler->size + 1));
 
 			if (newAssets != NULL && newInts != NULL) {
 				// Set the new values and increment the size
@@ -61,38 +61,38 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id) {
 				handler->size++;
 			} else {
 				// Oh heck go back
-				handler->ids = (AssetKey*)realloc((void*)handler->ids, sizeof(AssetKey) * (handler->size));
-				handler->vals = (Asset**)realloc((void*)handler->vals, sizeof(Asset*) * (handler->size));
-				jSetError(ERROR_REALLOC_FAILED, "Failed to increment handler size (loadAssetIntoHandler with ID %s)\n", id);
+				handler->ids = (JamAssetKey*)realloc((void*)handler->ids, sizeof(JamAssetKey) * (handler->size));
+				handler->vals = (JamAsset**)realloc((void*)handler->vals, sizeof(JamAsset*) * (handler->size));
+				jSetError(ERROR_REALLOC_FAILED, "Failed to increment handler size (jamLoadAssetIntoHandler with ID %s)\n", id);
 			}
 		}
 	} else {
 		if (handler == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Handler does not exist (loadAssetIntoHandler with ID %s)\n", id);
+			jSetError(ERROR_NULL_POINTER, "Handler does not exist (jamLoadAssetIntoHandler with ID %s)\n", id);
 		}
 		if (asset == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Asset passed was null (loadAssetIntoHandler with ID %s)\n", id);
+			jSetError(ERROR_NULL_POINTER, "JamAsset passed was null (jamLoadAssetIntoHandler with ID %s)\n", id);
 		}
 	}
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Asset* createAsset(void* pointer, enum AssetType type) {
-	Asset* asset = (Asset*)malloc(sizeof(Asset));
+JamAsset* createAsset(void* pointer, enum JamAssetType type) {
+	JamAsset* asset = (JamAsset*)malloc(sizeof(JamAsset));
 
 	if (asset != NULL && pointer != NULL) {
 		asset->type = type;
 
-		if (type == texAsset)
+		if (type == at_Texture)
 			asset->tex = pointer;
-		if (type == sprAsset)
+		if (type == at_Sprite)
 			asset->spr = pointer;
-		if (type == hitAsset)
+		if (type == at_Hitbox)
 			asset->hitbox = pointer;
-		if (type == entAsset)
+		if (type == at_Entity)
 			asset->entity = pointer;
-		if (type == tileAsset)
+		if (type == at_TileMap)
 			asset->tileMap = pointer;
 	} else {
 		if (asset == NULL) {
@@ -110,13 +110,13 @@ Asset* createAsset(void* pointer, enum AssetType type) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-AssetHandler* createAssetHandler() {
-	AssetHandler* handler = (AssetHandler*)calloc(1, sizeof(AssetHandler));
+JamAssetHandler* jamCreateAssetHandler() {
+	JamAssetHandler* handler = (JamAssetHandler*)calloc(1, sizeof(JamAssetHandler));
 
 	if (handler != NULL) {
 		// no need to do anything here for now
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to create an asset handler (createAssetHandler)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create an asset handler (jamCreateAssetHandler)\n");
 	}
 
 	return handler;
@@ -124,22 +124,22 @@ AssetHandler* createAssetHandler() {
 ///////////////////////////////////////////////////////////////
 
 //////////////////////// Functions that load individual pieces ////////////////////////
-void assetLoadTileMap(AssetHandler* assetHandler, INI* ini, const char* headerName) {
-	loadAssetIntoHandler(
+void assetLoadTileMap(JamAssetHandler* assetHandler, INI* ini, const char* headerName) {
+	jamLoadAssetIntoHandler(
 			assetHandler,
 			createAsset(loadTileMap(
 					getKeyINI(ini, headerName, "file", ""),
-					(uint32)atof(getKeyINI(ini, headerName, "grid_width", "0")),
-					(uint32)atof(getKeyINI(ini, headerName, "grid_height", "0")),
-					(uint32)atof(getKeyINI(ini, headerName, "cell_width", "0")),
-					(uint32)atof(getKeyINI(ini, headerName, "cell_height", "0"))), tileAsset),
+					(uint32) atof(getKeyINI(ini, headerName, "grid_width", "0")),
+					(uint32) atof(getKeyINI(ini, headerName, "grid_height", "0")),
+					(uint32) atof(getKeyINI(ini, headerName, "cell_width", "0")),
+					(uint32) atof(getKeyINI(ini, headerName, "cell_height", "0"))), at_TileMap),
 			(headerName + 1)
 	);
 }
 
-void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerName) {
+void assetLoadSprite(JamAssetHandler* assetHandler, INI* ini, const char* headerName) {
 	Sprite* spr = loadSpriteFromSheet(
-			assetGet(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0")))->tex,
+			jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0")))->tex,
 			(uint32) atof(getKeyINI(ini, headerName, "animation_length", "1")),
 			(uint32) atof(getKeyINI(ini, headerName, "x_in_texture", "0")),
 			(uint32) atof(getKeyINI(ini, headerName, "y_in_texture", "0")),
@@ -152,24 +152,24 @@ void assetLoadSprite(AssetHandler* assetHandler, INI* ini, const char* headerNam
 			(bool) atof(getKeyINI(ini, headerName, "looping", "0")));
 	spr->originX = (sint32) atof(getKeyINI(ini, headerName, "x_origin", "0"));
 	spr->originY = (sint32) atof(getKeyINI(ini, headerName, "y_origin", "0"));
-	if (assetGet(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
-		loadAssetIntoHandler(assetHandler, createAsset(spr, sprAsset), (headerName + 1)
+	if (jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
+		jamLoadAssetIntoHandler(assetHandler, createAsset(spr, at_Sprite), (headerName + 1)
 		);
 	} else {
-		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load sprite of id %s, tex not found (assetLoadINI)\\n", headerName + 1);
+		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load sprite of id %s, tex not found (jamAssetLoadINI)\\n", headerName + 1);
 	}
 }
 
-void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerName, BehaviourMap* map) {
+void assetLoadEntity(JamAssetHandler* assetHandler, INI* ini, const char* headerName, BehaviourMap* map) {
 	Entity* ent;
 	const char* typeString;
 	// Make sure we have all necessary assets
-	if (assetGet(assetHandler, (getKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
-		&& assetGet(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
+	if (jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
+		&& jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
 		ent = createEntity(
-							assetGet(assetHandler,
-							(getKeyINI(ini, headerName, "sprite_id", "0")))->spr,
-							assetGetHitbox(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))),
+				jamGetAssetFromHandler(assetHandler,
+									   (getKeyINI(ini, headerName, "sprite_id", "0")))->spr,
+				jamGetHitboxFromHandler(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))),
 							(int) atof(getKeyINI(ini, headerName, "x", "0")),
 							(int) atof(getKeyINI(ini, headerName, "y", "0")),
 							(int) atof(getKeyINI(ini, headerName, "hitbox_offset_x", "0")),
@@ -193,33 +193,33 @@ void assetLoadEntity(AssetHandler* assetHandler, INI* ini, const char* headerNam
 		ent->rot = atof(getKeyINI(ini, headerName, "rotation", "0"));
 		ent->alpha = (uint8)atof(getKeyINI(ini, headerName, "alpha", "255"));
 		ent->updateOnDraw = (bool)atof(getKeyINI(ini, headerName, "update_on_draw", "1"));
-		loadAssetIntoHandler(assetHandler, createAsset(ent, entAsset), (headerName + 1));
+		jamLoadAssetIntoHandler(assetHandler, createAsset(ent, at_Entity), (headerName + 1));
 	} else {
-		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load entity of id %s (assetLoadINI)\n", headerName + 1);
+		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load entity of id %s (jamAssetLoadINI)\n", headerName + 1);
 	}
 }
 
-void assetLoadHitbox(AssetHandler* assetHandler, INI* ini, const char* headerName) {
+void assetLoadHitbox(JamAssetHandler* assetHandler, INI* ini, const char* headerName) {
 	hitboxType hType = hitRectangle;
 	const char* key = getKeyINI(ini, headerName, "type", "rectangle");
 	if (key == "rectangle") hType = hitRectangle;
 	else if (key == "cirlce") hType = hitCircle;
 	else if (key == "polygon") hType = hitConvexPolygon;
-	loadAssetIntoHandler(
+	jamLoadAssetIntoHandler(
 			assetHandler,
 			createAsset(createHitbox(
 					hType,
 					atof(getKeyINI(ini, headerName, "radius", "0")),
 					atof(getKeyINI(ini, headerName, "width", "0")),
 					atof(getKeyINI(ini, headerName, "height", "0")), NULL
-			), hitAsset),
+			), at_Hitbox),
 			(headerName + 1)
 	);
 }
 //////////////////////// End of assetLoadINI support functions ////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void assetLoadINI(AssetHandler* assetHandler, JamRenderer* renderer, const char* filename, BehaviourMap* map) {
+void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const char *filename, BehaviourMap *map) {
 	INI* ini = loadINI(filename);
 	uint32 i, j;
 
@@ -231,9 +231,9 @@ void assetLoadINI(AssetHandler* assetHandler, JamRenderer* renderer, const char*
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
 				for (j = 0; j < ini->headers[i]->size; j++)
-					loadAssetIntoHandler(
+					jamLoadAssetIntoHandler(
 							assetHandler,
-							createAsset(loadTexture(renderer, ini->headers[i]->vals[j]), texAsset),
+							createAsset(loadTexture(renderer, ini->headers[i]->vals[j]), at_Texture),
 							(ini->headers[i]->keys[j])
 					);
 			}
@@ -262,28 +262,28 @@ void assetLoadINI(AssetHandler* assetHandler, JamRenderer* renderer, const char*
 		}
 	} else {
 		if (assetHandler == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Asset loader does not exist for file %s (assetLoadINI)\n", filename);
+			jSetError(ERROR_NULL_POINTER, "JamAsset loader does not exist for file %s (jamAssetLoadINI)\n", filename);
 		}
 		if (renderer == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist for file %s (assetLoadINI)\n", filename);
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist for file %s (jamAssetLoadINI)\n", filename);
 		}
 		if (ini == NULL) {
-			jSetError(ERROR_OPEN_FAILED, "Failed to load INI for file %s (assetLoadINI)\n", filename);
+			jSetError(ERROR_OPEN_FAILED, "Failed to load INI for file %s (jamAssetLoadINI)\n", filename);
 		}
 	}
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Asset* assetGet(AssetHandler* assetHandler, AssetKey key) {
+JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, JamAssetKey key) {
 	int i;
-	Asset* asset = NULL;
+	JamAsset* asset = NULL;
 	if (assetHandler != NULL) {
 		for (i = 0; i < assetHandler->size; i++)
 			if (keysEqual(assetHandler->ids[i], key))
 				asset = assetHandler->vals[i];
 	} else {
-		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist (assetGet)\n");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetAssetFromHandler)\n");
 	}
 
 	return asset;
@@ -291,20 +291,20 @@ Asset* assetGet(AssetHandler* assetHandler, AssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Sprite* assetGetSprite(AssetHandler* handler, AssetKey key) {
-	Asset* asset = assetGet(handler, key);
+Sprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	Sprite* returnVal = NULL;
 
 	if (handler != NULL) {
-		if (asset != NULL && asset->type == sprAsset) {
+		if (asset != NULL && asset->type == at_Sprite) {
 			returnVal = asset->spr;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected sprite (assetGetSprite)\n", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected sprite (jamGetSpriteFromHandler)\n", key);
 		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find sprite for key %s (assetGetSprite)\n", key);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find sprite for key %s (jamGetSpriteFromHandler)\n", key);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist (assetGetSprite)\n");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetSpriteFromHandler)\n");
 	}
 
 	return returnVal;
@@ -312,20 +312,20 @@ Sprite* assetGetSprite(AssetHandler* handler, AssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Entity* assetGetEntity(AssetHandler* handler, AssetKey key) {
-	Asset* asset = assetGet(handler, key);
+Entity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	Entity* returnVal = NULL;
 
 	if (handler != NULL) {
-		if (asset != NULL && asset->type == entAsset) {
+		if (asset != NULL && asset->type == at_Entity) {
 			returnVal = asset->entity;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected entity (assetGetEntity)\n", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected entity (jamGetEntityFromHandler)\n", key);
 		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find entity for key %s (assetGetEntity)\n", key);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find entity for key %s (jamGetEntityFromHandler)\n", key);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist (assetGetEntity)\n");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetEntityFromHandler)\n");
 	}
 
 	return returnVal;
@@ -333,20 +333,20 @@ Entity* assetGetEntity(AssetHandler* handler, AssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Hitbox* assetGetHitbox(AssetHandler* handler, AssetKey key) {
-	Asset* asset = assetGet(handler, key);
+Hitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	Hitbox* returnVal = NULL;
 
 	if (handler != NULL) {
-		if (asset != NULL && asset->type == hitAsset) {
+		if (asset != NULL && asset->type == at_Hitbox) {
 			returnVal = asset->hitbox;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected hitbox (assetGetHitbox)\n", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected hitbox (jamGetHitboxFromHandler)\n", key);
 		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find hitbox for key %s (assetGetHitbox)\n", key);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find hitbox for key %s (jamGetHitboxFromHandler)\n", key);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist (assetGetHitbox)\n");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetHitboxFromHandler)\n");
 	}
 
 	return returnVal;
@@ -354,20 +354,20 @@ Hitbox* assetGetHitbox(AssetHandler* handler, AssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamTexture* assetGetTexture(AssetHandler* handler, AssetKey key) {
-	Asset* asset = assetGet(handler, key);
+JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamTexture* returnVal = NULL;
 
 	if (handler != NULL) {
-		if (asset != NULL && asset->type == texAsset) {
+		if (asset != NULL && asset->type == at_Texture) {
 			returnVal = asset->tex;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected texture (assetGetTexture)\n", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected texture (jamGetTextureFromHandler)\n", key);
 		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find texture for key %s (assetGetTexture)\n", key);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find texture for key %s (jamGetTextureFromHandler)\n", key);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist(assetGetTexture)\n");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist(jamGetTextureFromHandler)\n");
 	}
 
 	return returnVal;
@@ -375,20 +375,20 @@ JamTexture* assetGetTexture(AssetHandler* handler, AssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-TileMap* assetGetTileMap(AssetHandler* handler, AssetKey key) {
-	Asset* asset = assetGet(handler, key);
+TileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	TileMap* returnVal = NULL;
 
 	if (handler != NULL) {
-		if (asset != NULL && asset->type == tileAsset) {
+		if (asset != NULL && asset->type == at_TileMap) {
 			returnVal = asset->tileMap;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected tileMap (assetGetTileMap)\n", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected tileMap (jamGetTileMapFromHandler)\n", key);
 		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find tileMap for key %s (assetGetTileMap)\n", key);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find tileMap for key %s (jamGetTileMapFromHandler)\n", key);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "AssetHandler does not exist(assetGetTileMap)\n");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist(jamGetTileMapFromHandler)\n");
 	}
 
 	return returnVal;
@@ -396,18 +396,18 @@ TileMap* assetGetTileMap(AssetHandler* handler, AssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-AssetHandler* freeAssetHandler(AssetHandler* handler) {
+JamAssetHandler* jamFreeAssetHandler(JamAssetHandler *handler) {
 	int i;
 	if (handler != NULL) {
 		for (i = 0; i < handler->size; i++) {
 			// Now dump whatever asset is here
-			if (handler->vals[i]->type == texAsset)
+			if (handler->vals[i]->type == at_Texture)
 				freeTexture(handler->vals[i]->tex);
-			else if (handler->vals[i]->type == sprAsset)
+			else if (handler->vals[i]->type == at_Sprite)
 				freeSprite(handler->vals[i]->spr, true, false);
-			else if (handler->vals[i]->type == hitAsset)
+			else if (handler->vals[i]->type == at_Hitbox)
 				freeHitbox(handler->vals[i]->hitbox);
-			else if (handler->vals[i]->type == entAsset)
+			else if (handler->vals[i]->type == at_Entity)
 				freeEntity(handler->vals[i]->entity, false, false, false);
 			else
 				freeTileMap(handler->vals[i]->tileMap);

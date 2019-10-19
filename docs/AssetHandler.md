@@ -1,7 +1,7 @@
-Asset Handler & Asset Loading
+JamAsset Handler & JamAsset Loading
 =============================
 To make loading many assets at once easier and more flexible,
-JamEngine provides the `AssetHandler`. Each (individual) handler
+JamEngine provides the `JamAssetHandler`. Each (individual) handler
 can load a single .ini file containing all the data that handler
 needs to load for whatever scene you're on. As of right now, 
 handlers can load entities, textures, sprites, tilemaps, and
@@ -13,7 +13,7 @@ This format is as follows
 
  + All textures must be a `key=val` pair of `id=path/to/file` under the header `[texture_ids]`
  + Each asset is under its own header of `[assetprefixASSET_ID]` followed by asset-type-specifc keys
- + Asset prefixes (by default) are e, s, m, and h for entities, sprites, tilemaps, and hitboxes respectively
+ + JamAsset prefixes (by default) are e, s, m, and h for entities, sprites, tilemaps, and hitboxes respectively
  + Each asset has a set of keys the handler will recognize and parse, any other keys will be ignored (see below)
  + It does not matter what order you list the assets, the handler will load it properly
  + No asset is required to have any key, you can leave any field blank

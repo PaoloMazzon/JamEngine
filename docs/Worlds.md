@@ -20,10 +20,10 @@ If you ignore this warning, you are near guaranteed segmentation faults when it 
 time to clean up the asset handler. This is what you may want adding entities to
 a world to look like
 
-    AssetHandler* handler = createAssetHandler();
-    assetLoadINI(handler, renderer, "assets/mygame.ini", myBehaviourMap);
-    worldAddEntity(gameWorld, copyEntity(assetGetEntity(handler, "EnemyEntity"), 80, 500));
-    worldAddEntity(gameWorld, copyEntity(assetGetEntity(handler, "BirdEntity"), 200, 100));
+    JamAssetHandler* handler = jamCreateAssetHandler();
+    jamAssetLoadINI(handler, renderer, "assets/mygame.ini", myBehaviourMap);
+    worldAddEntity(gameWorld, copyEntity(jamGetEntityFromHandler(handler, "EnemyEntity"), 80, 500));
+    worldAddEntity(gameWorld, copyEntity(jamGetEntityFromHandler(handler, "BirdEntity"), 200, 100));
     // Now my entity copies will be safely freed by the world, and the "real" entities loaded by
     // the asset handler (and its associated sprites/whatever) will be freed by the handler.
 

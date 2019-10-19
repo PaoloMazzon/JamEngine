@@ -8,7 +8,7 @@
 #include "JamError.h"
 #include "tmx.h"
 
-Asset* createAsset(void*, enum AssetType);
+JamAsset* createAsset(void*, enum JamAssetType);
 
 ///////////////////////////////////////////////////////////////////////////////
 char* genRandomString() {
@@ -27,14 +27,14 @@ char* genRandomString() {
 
 ///////////////////////////////////////////////////////////////////////////////
 // This function is meant for loadWorldFromTMX and is not safe to call
-bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* layer) {
+bool loadObjectLayerIntoWorld(JamAssetHandler* handler, World* world, tmx_layer* layer) {
 	Entity* tempEntity;
 	tmx_object* currentObject = layer->content.objgr->head;
 	bool failedToLoad = false;
 
 	// Loop the linked list
 	while (currentObject != NULL) {
-		tempEntity = copyEntity(assetGetEntity(handler, currentObject->type), currentObject->x, currentObject->y);
+		tempEntity = copyEntity(jamGetEntityFromHandler(handler, currentObject->type), currentObject->x, currentObject->y);
 
 		if (tempEntity != NULL) {
  			worldAddEntity(world, tempEntity);
@@ -68,9 +68,9 @@ bool loadObjectLayerIntoWorld(AssetHandler* handler, World* world, tmx_layer* la
 
 ///////////////////////////////////////////////////////////////////////////////
 // This function is meant for loadWorldFromTMX and is not safe to call
-TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH, tmx_map* tmx) {
+TileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH, tmx_map* tmx) {
 	TileMap* map = createTileMap(mapW, mapH, tileW, tileH);
-	Sprite* src = assetGetSprite(handler, layer->name);
+	Sprite* src = jamGetSpriteFromHandler(handler, layer->name);
 	tmx_tile* tile;
 	uint32 i;
 
@@ -97,7 +97,7 @@ TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-World* loadWorldFromTMX(AssetHandler* handler, JamRenderer* renderer, const char* tmxFilename) {
+World* loadWorldFromTMX(JamAssetHandler* handler, JamRenderer* renderer, const char* tmxFilename) {
 	tmx_map* tmx = tmx_load(tmxFilename);
 	World* world = createWorld(renderer);
 	TileMap* currentTileMap = NULL;
@@ -132,7 +132,7 @@ World* loadWorldFromTMX(AssetHandler* handler, JamRenderer* renderer, const char
 						// Put the map into the world and throw it into the asset handler as well so it gets cleaned up later
 						world->worldMaps[worldLayerPointer++] = currentTileMap;
 						randomString = genRandomString();
-						loadAssetIntoHandler(handler, createAsset(currentTileMap, tileAsset), randomString);
+						jamLoadAssetIntoHandler(handler, createAsset(currentTileMap, at_TileMap), randomString);
 						throwInGarbageINI(handler->localINI, randomString);
 					} else {
 						freeTileMap(currentTileMap);
