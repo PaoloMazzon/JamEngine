@@ -14,34 +14,34 @@
 #include "JamError.h"
 
 ///////////////////////////////////////////////////////
-World* createWorld(JamRenderer* renderer) {
-	World* world = (World*)calloc(1, sizeof(World));
+JamWorld* jamCreateWorld(JamRenderer *renderer) {
+	JamWorld* world = (JamWorld*)calloc(1, sizeof(JamWorld));
 	int i;
 	bool error = false;
 
 	if (world != NULL && renderer != NULL) {
 		// We now need to initialize the 8 or so entity lists that come with a world
 		for (i = 0; i < MAX_ENTITY_TYPES; i++) {
-			world->entityTypes[i] = createEntityList();
+			world->entityTypes[i] = jamCreateEntityList();
 			if (world->entityTypes[i] == NULL)
 				error = true;
 		}
-		world->worldEntities = createEntityList();
-		world->entityByRange[ENTITIES_IN_RANGE] = createEntityList();
-		world->entityByRange[ENTITIES_OUT_OF_RANGE] = createEntityList();
+		world->worldEntities = jamCreateEntityList();
+		world->entityByRange[ENTITIES_IN_RANGE] = jamCreateEntityList();
+		world->entityByRange[ENTITIES_OUT_OF_RANGE] = jamCreateEntityList();
 		world->renderer = renderer;
 
 		if (error || world->worldEntities == NULL || world->entityByRange[ENTITIES_OUT_OF_RANGE] == NULL || world->entityByRange[ENTITIES_IN_RANGE] == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate entity lists (createWorld)\n");
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate entity lists (jamCreateWorld)\n");
 			// keep on rocking in the
-			freeWorld(world);
+			jamFreeWorld(world);
 		}
 	} else {
 		if (world == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "Could not allocate world (createWorld)\n");
+			jSetError(ERROR_ALLOC_FAILED, "Could not allocate world (jamCreateWorld)\n");
 		} 
 		if (renderer == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (createWorld)\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamCreateWorld)\n");
 		}
 	}
 
@@ -50,35 +50,35 @@ World* createWorld(JamRenderer* renderer) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void setWorldFilterTypeRectangle(World* world, uint16 inRangeRectangleWidth, uint16 inRangeRectangleHeight) {
+void jamSetWorldFilterTypeRectangle(JamWorld *world, uint16 inRangeRectangleWidth, uint16 inRangeRectangleHeight) {
 	if (world != NULL) {
 		world->distanceFilteringType = ft_Rectangle;
 		world->inRangeRectangleWidth = inRangeRectangleWidth;
 		world->inRangeRectangleHeight = inRangeRectangleHeight;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "World does not exist (setWorldFilterTypeRectangle)\n");
+		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamSetWorldFilterTypeRectangle)\n");
 	}
 }
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius) {
+void jamSetWorldFilterTypeCircle(JamWorld *world, uint16 inRangeRadius) {
 	if (world != NULL) {
 		world->distanceFilteringType = ft_Proximity;
 		world->inRangeRadius = inRangeRadius;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "World does not exist (setWorldFilterTypeCircle)\n");
+		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamSetWorldFilterTypeCircle)\n");
 	}
 }
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldAddEntity(World* world, JamEntity* entity) {
+void jamWorldAddEntity(JamWorld *world, JamEntity *entity) {
 	if (world != NULL && entity != NULL && entity->type < MAX_ENTITY_TYPES) {
 		// Put the entity in each of the three lists it belongs to
-		addEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
-		addEntityToList(world->entityTypes[entity->type], entity);
-		addEntityToList(world->worldEntities, entity);
+		jamAddEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
+		jamAddEntityToList(world->entityTypes[entity->type], entity);
+		jamAddEntityToList(world->worldEntities, entity);
 
 		// Attempt to call the entity's onCreation function
 		if (entity->behaviour != NULL && entity->behaviour->onCreation != NULL) {
@@ -86,20 +86,20 @@ void worldAddEntity(World* world, JamEntity* entity) {
 		}
 	} else {
 		if (world == NULL) {
-			jSetError(ERROR_NULL_POINTER, "World does not exist (worldAddEntity)\n");
+			jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldAddEntity)\n");
 		}
 		if (entity == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamEntity does not exist (worldAddEntity)\n");
+			jSetError(ERROR_NULL_POINTER, "JamEntity does not exist (jamWorldAddEntity)\n");
 		}
 		if (entity != NULL && entity->type >= MAX_ENTITY_TYPES) {
-			jSetError(ERROR_INCORRECT_FORMAT, "JamEntity type is invalid (worldAddEntity)\n");
+			jSetError(ERROR_INCORRECT_FORMAT, "JamEntity type is invalid (jamWorldAddEntity)\n");
 		}
 	}
 }
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldProcFrame(World* world) {
+void jamWorldProcFrame(JamWorld *world) {
 	int i;
 	JamEntity* ent;
 
@@ -124,13 +124,13 @@ void worldProcFrame(World* world) {
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "World does not exist (worldProcFrame)\n");
+		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldProcFrame)\n");
 	}
 }
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldRemoveEntity(World* world, JamEntity* entity) {
+void jamWorldRemoveEntity(JamWorld *world, JamEntity *entity) {
 	int i;
 	JamEntityType type = et_None;
 
@@ -162,13 +162,13 @@ void worldRemoveEntity(World* world, JamEntity* entity) {
 					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] = NULL;
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "World does not exist (worldRemoveEntity)\n");
+		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldRemoveEntity)\n");
 	}
 }
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldRotateEntity(World* world, JamEntity* entity) {
+void jamWorldRotateEntity(JamWorld *world, JamEntity *entity) {
 	int i = 0;
 	bool found = false;
 
@@ -177,19 +177,19 @@ void worldRotateEntity(World* world, JamEntity* entity) {
 		while (i < world->entityByRange[ENTITIES_IN_RANGE]->size && !found) {
 			if (world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == entity) {
 				world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
-				addEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
+				jamAddEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
 				found = true;
 			}
 			i++;
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "World does not exist (worldRotateEntity)\n");
+		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldRotateEntity)\n");
 	}
 }
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void filterEntitiesByProximity(World* world, int pointX, int pointY) {
+void jamFilterEntitiesByProximity(JamWorld *world, int pointX, int pointY) {
 	uint32 i;
 	JamEntity* entity;
 
@@ -203,7 +203,7 @@ void filterEntitiesByProximity(World* world, int pointX, int pointY) {
 				if (entity != NULL && !pointInRectangle(entity->x + entity->sprite->originX, entity->y + entity->sprite->originY,
 														pointX, pointY, world->inRangeRectangleWidth, world->inRangeRectangleHeight)) {
 					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
-					addEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
+					jamAddEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
 				}
 			}
 
@@ -213,7 +213,7 @@ void filterEntitiesByProximity(World* world, int pointX, int pointY) {
 				if (entity != NULL && pointInRectangle(entity->x + entity->sprite->originX, entity->y + entity->sprite->originY,
 														pointX, pointY, world->inRangeRectangleWidth, world->inRangeRectangleHeight)) {
 					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] = NULL;
-					addEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
+					jamAddEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
 				}
 			}
 		} else {
@@ -223,7 +223,7 @@ void filterEntitiesByProximity(World* world, int pointX, int pointY) {
 				if (entity != NULL && !pointInCircle(entity->x + entity->sprite->originX, entity->y + entity->sprite->originY,
 														pointX, pointY, world->inRangeRadius)) {
 					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
-					addEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
+					jamAddEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
 				}
 			}
 
@@ -233,31 +233,31 @@ void filterEntitiesByProximity(World* world, int pointX, int pointY) {
 				if (entity != NULL && pointInCircle(entity->x + entity->sprite->originX, entity->y + entity->sprite->originY,
 													   pointX, pointY, world->inRangeRadius)) {
 					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] = NULL;
-					addEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
+					jamAddEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
 				}
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "World does not exist (filterEntitiesByProximity)\n");
+		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamFilterEntitiesByProximity)\n");
 	}
 }
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void freeWorld(World* world) {
+void jamFreeWorld(JamWorld *world) {
 	int i;
 	if (world != NULL) {
 		// Free all the entities first
 		for (i = 0; i < world->worldEntities->size; i++)
 			if (world->worldEntities->entities[i] != NULL)
-				worldRemoveEntity(world, world->worldEntities->entities[i]);
+				jamWorldRemoveEntity(world, world->worldEntities->entities[i]);
 
 		// There is a lot of lists to free
 		for (i = 0; i < MAX_ENTITY_TYPES; i++)
-			freeEntityList(world->entityTypes[i], false);
-		freeEntityList(world->entityByRange[ENTITIES_IN_RANGE], false);
-		freeEntityList(world->entityByRange[ENTITIES_OUT_OF_RANGE], false);
-		freeEntityList(world->worldEntities, true);
+			jamFreeEntityList(world->entityTypes[i], false);
+		jamFreeEntityList(world->entityByRange[ENTITIES_IN_RANGE], false);
+		jamFreeEntityList(world->entityByRange[ENTITIES_OUT_OF_RANGE], false);
+		jamFreeEntityList(world->worldEntities, true);
 		free(world->worldMaps);
 	}
 }

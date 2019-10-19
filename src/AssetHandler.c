@@ -35,15 +35,15 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAsset
 		if (exists != -1) {
 			// First we must free the value there
 			if (handler->vals[exists]->type == at_Texture)
-				freeTexture(handler->vals[exists]->tex);
+				jamFreeTexture(handler->vals[exists]->tex);
 			else if (handler->vals[exists]->type == at_Hitbox)
-				freeHitbox(handler->vals[exists]->hitbox);
+				jamFreeHitbox(handler->vals[exists]->hitbox);
 			else if (handler->vals[exists]->type == at_Sprite)
-				freeSprite(handler->vals[exists]->spr, true, false);
+				jamFreeSprite(handler->vals[exists]->spr, true, false);
 			else if (handler->vals[exists]->type == at_Entity)
 				jamFreeEntity(handler->vals[exists]->entity, false, false, false);
 			else
-				freeTileMap(handler->vals[exists]->tileMap);
+				jamFreeTileMap(handler->vals[exists]->tileMap);
 
 			// Finally, we set the new value
 			handler->vals[exists] = asset;
@@ -124,35 +124,37 @@ JamAssetHandler* jamCreateAssetHandler() {
 ///////////////////////////////////////////////////////////////
 
 //////////////////////// Functions that load individual pieces ////////////////////////
-void assetLoadTileMap(JamAssetHandler* assetHandler, INI* ini, const char* headerName) {
+void assetLoadTileMap(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	jamLoadAssetIntoHandler(
 			assetHandler,
-			createAsset(loadTileMap(
-					getKeyINI(ini, headerName, "file", ""),
-					(uint32) atof(getKeyINI(ini, headerName, "grid_width", "0")),
-					(uint32) atof(getKeyINI(ini, headerName, "grid_height", "0")),
-					(uint32) atof(getKeyINI(ini, headerName, "cell_width", "0")),
-					(uint32) atof(getKeyINI(ini, headerName, "cell_height", "0"))), at_TileMap),
+			createAsset(jamLoadTileMap(
+					jamGetKeyINI(ini, headerName, "file", ""),
+					(uint32) atof(jamGetKeyINI(ini, headerName, "grid_width", "0")),
+					(uint32) atof(jamGetKeyINI(ini, headerName, "grid_height", "0")),
+					(uint32) atof(jamGetKeyINI(ini, headerName, "cell_width", "0")),
+					(uint32) atof(jamGetKeyINI(ini, headerName, "cell_height", "0"))), at_TileMap),
 			(headerName + 1)
 	);
 }
 
-void assetLoadSprite(JamAssetHandler* assetHandler, INI* ini, const char* headerName) {
-	Sprite* spr = loadSpriteFromSheet(
-			jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0")))->tex,
-			(uint32) atof(getKeyINI(ini, headerName, "animation_length", "1")),
-			(uint32) atof(getKeyINI(ini, headerName, "x_in_texture", "0")),
-			(uint32) atof(getKeyINI(ini, headerName, "y_in_texture", "0")),
-			(uint32) atof(getKeyINI(ini, headerName, "frame_width", "16")),
-			(uint32) atof(getKeyINI(ini, headerName, "frame_height", "16")),
-			(uint32) atof(getKeyINI(ini, headerName, "padding_width", "0")),
-			(uint32) atof(getKeyINI(ini, headerName, "padding_height", "0")),
-			(uint32) atof(getKeyINI(ini, headerName, "x_align", "0")),
-			(uint16) atof(getKeyINI(ini, headerName, "frame_delay", "0")),
-			(bool) atof(getKeyINI(ini, headerName, "looping", "0")));
-	spr->originX = (sint32) atof(getKeyINI(ini, headerName, "x_origin", "0"));
-	spr->originY = (sint32) atof(getKeyINI(ini, headerName, "y_origin", "0"));
-	if (jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
+void assetLoadSprite(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
+	JamSprite* spr = jamLoadSpriteFromSheet(
+			jamGetTextureFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))),
+			(uint32) atof(jamGetKeyINI(ini, headerName, "animation_length", "1")),
+			(uint32) atof(jamGetKeyINI(ini, headerName, "x_in_texture", "0")),
+			(uint32) atof(jamGetKeyINI(ini, headerName, "y_in_texture", "0")),
+			(uint32) atof(jamGetKeyINI(ini, headerName, "frame_width", "16")),
+			(uint32) atof(jamGetKeyINI(ini, headerName, "frame_height", "16")),
+			(uint32) atof(jamGetKeyINI(ini, headerName, "padding_width", "0")),
+			(uint32) atof(jamGetKeyINI(ini, headerName, "padding_height", "0")),
+			(uint32) atof(jamGetKeyINI(ini, headerName, "x_align", "0")),
+			(uint16) atof(jamGetKeyINI(ini, headerName, "frame_delay", "0")),
+			(bool) atof(jamGetKeyINI(ini, headerName, "looping", "0")));
+	if (spr != NULL) {
+		spr->originX = (sint32) atof(jamGetKeyINI(ini, headerName, "x_origin", "0"));
+		spr->originY = (sint32) atof(jamGetKeyINI(ini, headerName, "y_origin", "0"));
+	}
+	if (jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
 		jamLoadAssetIntoHandler(assetHandler, createAsset(spr, at_Sprite), (headerName + 1)
 		);
 	} else {
@@ -160,24 +162,24 @@ void assetLoadSprite(JamAssetHandler* assetHandler, INI* ini, const char* header
 	}
 }
 
-void assetLoadEntity(JamAssetHandler* assetHandler, INI* ini, const char* headerName, JamBehaviourMap* map) {
+void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName, JamBehaviourMap* map) {
 	JamEntity* ent;
 	const char* typeString;
 	// Make sure we have all necessary assets
-	if (jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
-		&& jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
+	if (jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
+		&& jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
 		ent = jamCreateEntity(
 				jamGetAssetFromHandler(assetHandler,
-									   (getKeyINI(ini, headerName, "sprite_id", "0")))->spr,
-				jamGetHitboxFromHandler(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))),
-				(int) atof(getKeyINI(ini, headerName, "x", "0")),
-				(int) atof(getKeyINI(ini, headerName, "y", "0")),
-				(int) atof(getKeyINI(ini, headerName, "hitbox_offset_x", "0")),
-				(int) atof(getKeyINI(ini, headerName, "hitbox_offset_y", "0")),
-				jamGetBehaviourFromMap(map, getKeyINI(ini, headerName, "behaviour", "default")));
+									   (jamGetKeyINI(ini, headerName, "sprite_id", "0")))->spr,
+				jamGetHitboxFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "hitbox_id", "0"))),
+				(int) atof(jamGetKeyINI(ini, headerName, "x", "0")),
+				(int) atof(jamGetKeyINI(ini, headerName, "y", "0")),
+				(int) atof(jamGetKeyINI(ini, headerName, "hitbox_offset_x", "0")),
+				(int) atof(jamGetKeyINI(ini, headerName, "hitbox_offset_y", "0")),
+				jamGetBehaviourFromMap(map, jamGetKeyINI(ini, headerName, "behaviour", "default")));
 
 		// Figure out the type
-		typeString = getKeyINI(ini, headerName, "type", "none");
+		typeString = jamGetKeyINI(ini, headerName, "type", "none");
 		if (strcmp(typeString, "Logic") == 0)
 			ent->type = et_Logic;
 		if (strcmp(typeString, "Solid") == 0)
@@ -190,28 +192,28 @@ void assetLoadEntity(JamAssetHandler* assetHandler, INI* ini, const char* header
 			ent->type = et_Item;
 		if (strcmp(typeString, "Player") == 0)
 			ent->type = et_Player;
-		ent->rot = atof(getKeyINI(ini, headerName, "rotation", "0"));
-		ent->alpha = (uint8)atof(getKeyINI(ini, headerName, "alpha", "255"));
-		ent->updateOnDraw = (bool)atof(getKeyINI(ini, headerName, "update_on_draw", "1"));
+		ent->rot = atof(jamGetKeyINI(ini, headerName, "rotation", "0"));
+		ent->alpha = (uint8)atof(jamGetKeyINI(ini, headerName, "alpha", "255"));
+		ent->updateOnDraw = (bool)atof(jamGetKeyINI(ini, headerName, "update_on_draw", "1"));
 		jamLoadAssetIntoHandler(assetHandler, createAsset(ent, at_Entity), (headerName + 1));
 	} else {
 		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load entity of id %s (jamAssetLoadINI)\n", headerName + 1);
 	}
 }
 
-void assetLoadHitbox(JamAssetHandler* assetHandler, INI* ini, const char* headerName) {
-	hitboxType hType = hitRectangle;
-	const char* key = getKeyINI(ini, headerName, "type", "rectangle");
-	if (key == "rectangle") hType = hitRectangle;
-	else if (key == "cirlce") hType = hitCircle;
-	else if (key == "polygon") hType = hitConvexPolygon;
+void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
+	JamHitboxType hType = ht_Rectangle;
+	const char* key = jamGetKeyINI(ini, headerName, "type", "rectangle");
+	if (key == "rectangle") hType = ht_Rectangle;
+	else if (key == "cirlce") hType = ht_Circle;
+	else if (key == "polygon") hType = ht_ConvexPolygon;
 	jamLoadAssetIntoHandler(
 			assetHandler,
-			createAsset(createHitbox(
+			createAsset(jamCreateHitbox(
 					hType,
-					atof(getKeyINI(ini, headerName, "radius", "0")),
-					atof(getKeyINI(ini, headerName, "width", "0")),
-					atof(getKeyINI(ini, headerName, "height", "0")), NULL
+					atof(jamGetKeyINI(ini, headerName, "radius", "0")),
+					atof(jamGetKeyINI(ini, headerName, "width", "0")),
+					atof(jamGetKeyINI(ini, headerName, "height", "0")), NULL
 			), at_Hitbox),
 			(headerName + 1)
 	);
@@ -220,7 +222,7 @@ void assetLoadHitbox(JamAssetHandler* assetHandler, INI* ini, const char* header
 
 ///////////////////////////////////////////////////////////////
 void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const char *filename, JamBehaviourMap *map) {
-	INI* ini = loadINI(filename);
+	JamINI* ini = jamLoadINI(filename);
 	uint32 i, j;
 
 	if (assetHandler != NULL && renderer != NULL && ini != NULL) {
@@ -233,7 +235,7 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const
 				for (j = 0; j < ini->headers[i]->size; j++)
 					jamLoadAssetIntoHandler(
 							assetHandler,
-							createAsset(loadTexture(renderer, ini->headers[i]->vals[j]), at_Texture),
+							createAsset(jamLoadTexture(renderer, ini->headers[i]->vals[j]), at_Texture),
 							(ini->headers[i]->keys[j])
 					);
 			}
@@ -268,7 +270,7 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const
 			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist for file %s (jamAssetLoadINI)\n", filename);
 		}
 		if (ini == NULL) {
-			jSetError(ERROR_OPEN_FAILED, "Failed to load INI for file %s (jamAssetLoadINI)\n", filename);
+			jSetError(ERROR_OPEN_FAILED, "Failed to load JamINI for file %s (jamAssetLoadINI)\n", filename);
 		}
 	}
 }
@@ -291,9 +293,9 @@ JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, JamAssetKey key)
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Sprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
-	Sprite* returnVal = NULL;
+	JamSprite* returnVal = NULL;
 
 	if (handler != NULL) {
 		if (asset != NULL && asset->type == at_Sprite) {
@@ -333,9 +335,9 @@ JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Hitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
-	Hitbox* returnVal = NULL;
+	JamHitbox* returnVal = NULL;
 
 	if (handler != NULL) {
 		if (asset != NULL && asset->type == at_Hitbox) {
@@ -375,9 +377,9 @@ JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key) 
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-TileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamTileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
-	TileMap* returnVal = NULL;
+	JamTileMap* returnVal = NULL;
 
 	if (handler != NULL) {
 		if (asset != NULL && asset->type == at_TileMap) {
@@ -402,20 +404,20 @@ JamAssetHandler* jamFreeAssetHandler(JamAssetHandler *handler) {
 		for (i = 0; i < handler->size; i++) {
 			// Now dump whatever asset is here
 			if (handler->vals[i]->type == at_Texture)
-				freeTexture(handler->vals[i]->tex);
+				jamFreeTexture(handler->vals[i]->tex);
 			else if (handler->vals[i]->type == at_Sprite)
-				freeSprite(handler->vals[i]->spr, true, false);
+				jamFreeSprite(handler->vals[i]->spr, true, false);
 			else if (handler->vals[i]->type == at_Hitbox)
-				freeHitbox(handler->vals[i]->hitbox);
+				jamFreeHitbox(handler->vals[i]->hitbox);
 			else if (handler->vals[i]->type == at_Entity)
 				jamFreeEntity(handler->vals[i]->entity, false, false, false);
 			else
-				freeTileMap(handler->vals[i]->tileMap);
+				jamFreeTileMap(handler->vals[i]->tileMap);
 			free(handler->vals[i]);
 		}
 		free(handler->vals);
 		free(handler->ids);
-		freeINI(handler->localINI);
+		jamFreeINI(handler->localINI);
 		free(handler);
 	}
 }

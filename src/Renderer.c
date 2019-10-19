@@ -16,10 +16,10 @@ JamRenderer* jamCreateRenderer(const char *name, uint32 w, uint32 h, double fram
 	SDL_Window* window;
 	JamTexture* tex;
 	JamRenderer* renderer = (JamRenderer*)malloc(sizeof(JamRenderer));
-	initInput();
+	jamInitInput();
 
 	// Check if we were given a dud
-	if (renderer != NULL && inputIsInitialized()) {
+	if (renderer != NULL && jamInputIsInitialized()) {
 
 		// Ignore any complaints valgrind gives about this, its out
 		// of my control
@@ -40,7 +40,7 @@ JamRenderer* jamCreateRenderer(const char *name, uint32 w, uint32 h, double fram
 			// Once again, check for a dud
 			if (sdlRenderer != NULL) {
 				// Last piece - create the internal texture to draw to
-				tex = createTexture(renderer, w, h);
+				tex = jamCreateTexture(renderer, w, h);
 
 				// More dud checks
 				if (tex != NULL) {
@@ -59,7 +59,7 @@ JamRenderer* jamCreateRenderer(const char *name, uint32 w, uint32 h, double fram
 				} else {
 					jamFreeRenderer(renderer);
 					renderer = NULL;
-					freeTexture(tex);
+					jamFreeTexture(tex);
 					jSetError(ERROR_SDL_ERROR, "Failed to create internal texture (jamCreateRenderer). SDL Error: %s\n", SDL_GetError());
 				}
 			} else {
@@ -233,7 +233,7 @@ void jamCalculateForCamera(JamRenderer *renderer, int *x, int *y) {
 /////////////////////////////////////////////////////////////
 void jamFreeRenderer(JamRenderer *renderer) {
 	if (renderer != NULL) {
-		freeTexture(renderer->screenBuffer);
+		jamFreeTexture(renderer->screenBuffer);
 		SDL_DestroyRenderer(renderer->internalRenderer);
 		SDL_DestroyWindow(renderer->gameWindow);
 		SDL_Quit();
@@ -252,7 +252,7 @@ bool jamProcEvents(JamRenderer *renderer) {
 	if (renderer != NULL) {
 		// Update input
 		SDL_GetWindowSize(renderer->gameWindow, &wW, NULL);
-		updateInput((double) wW / renderer->screenBuffer->w);
+		jamUpdateInput((double) wW / renderer->screenBuffer->w);
 
 		// Update the events queue and keyboard and etc you get the point
 		SDL_PumpEvents();
@@ -296,7 +296,7 @@ bool jamConfigScreenBuffer(JamRenderer *renderer, uint32 internalWidth, uint32 i
 	// Check for renderer
 	if (renderer != NULL) {
 		// Create the texture that will likely become the new screen buffer
-		tempTex = createTexture(renderer, internalWidth, internalHeight);
+		tempTex = jamCreateTexture(renderer, internalWidth, internalHeight);
 
 		// Check that it worked
 		if (tempTex != NULL) {
@@ -304,7 +304,7 @@ bool jamConfigScreenBuffer(JamRenderer *renderer, uint32 internalWidth, uint32 i
 			SDL_GetWindowSize(renderer->gameWindow, &w, &h);
 
 			// Free the old one, then update values
-			freeTexture(renderer->screenBuffer);
+			jamFreeTexture(renderer->screenBuffer);
 
 			renderer->screenBuffer = tempTex;
 			renderer->displayBufferW = displayWidth;

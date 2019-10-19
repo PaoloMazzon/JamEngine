@@ -21,13 +21,13 @@ struct _JamTexture {
 
 /// \brief Creates a texture that can be rendered to
 /// \throws ERROR_SDL_ERROR
-JamTexture* createTexture(JamRenderer* renderer, int w, int h);
+JamTexture* jamCreateTexture(JamRenderer *renderer, int w, int h);
 
 /// \brief Loads a texture from a file
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
-JamTexture* loadTexture(JamRenderer* renderer, const char* filename);
+JamTexture* jamLoadTexture(JamRenderer *renderer, const char *filename);
 
 /// \brief Frees a texture from memory
-void freeTexture(JamTexture* tex);
+void jamFreeTexture(JamTexture *tex);

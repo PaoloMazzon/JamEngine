@@ -59,7 +59,7 @@ void jamDrawCircle(JamRenderer *renderer, int x, int y, int r) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamDrawPolygon(JamRenderer *renderer, Polygon *poly, int x, int y) {
+void jamDrawPolygon(JamRenderer *renderer, JamPolygon *poly, int x, int y) {
 	unsigned int i;
 	if (renderer != NULL && poly != NULL) {
 		for (i = 0; i < poly->vertices; i++) {
@@ -72,7 +72,7 @@ void jamDrawPolygon(JamRenderer *renderer, Polygon *poly, int x, int y) {
 		if (renderer == NULL)
 			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist.");
 		if (poly == NULL)
-			jSetError(ERROR_NULL_POINTER, "Polygon does not exist.");
+			jSetError(ERROR_NULL_POINTER, "JamPolygon does not exist.");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ void jamDrawTexture(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamDrawSortedMap(JamRenderer *renderer, Sprite *spr, TileMap *map, int x, int y, uint32 startingCellX,
+void jamDrawSortedMap(JamRenderer *renderer, JamSprite *spr, JamTileMap *map, int x, int y, uint32 startingCellX,
 					  uint32 startingCellY) {
 	int i, j;
 	bool n, e, s, w, ne, nw, se, sw;
@@ -146,16 +146,24 @@ void jamDrawSortedMap(JamRenderer *renderer, Sprite *spr, TileMap *map, int x, i
 		// We gotta run through every cell
 		for (i = map->height - 1; i >= 0; i--) {
 			for (j = 0; j < map->width; j++) {
-				if (getMapPos(map, (uint32)j, (uint32)i)) {
+				if (jamGetMapPos(map, (uint32) j, (uint32) i)) {
 					// Where there are adjacent tiles
-					w = (getMapPos(map, (uint32)j - 1, (uint32)i) >= map->collisionRangeStart && getMapPos(map, (uint32)j - 1, (uint32)i) <= map->collisionRangeEnd);
-					e = (getMapPos(map, (uint32)j + 1, (uint32)i) >= map->collisionRangeStart && getMapPos(map, (uint32)j + 1, (uint32)i) <= map->collisionRangeEnd);
-					n = (getMapPos(map, (uint32)j, (uint32)i - 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j, (uint32)i - 1) <= map->collisionRangeEnd);
-					s = (getMapPos(map, (uint32)j, (uint32)i + 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j, (uint32)i + 1) <= map->collisionRangeEnd);
-					ne = (getMapPos(map, (uint32)j + 1, (uint32)i - 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j + 1, (uint32)i - 1) <= map->collisionRangeEnd);
-					nw = (getMapPos(map, (uint32)j - 1, (uint32)i - 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j - 1, (uint32)i - 1) <= map->collisionRangeEnd);
-					se = (getMapPos(map, (uint32)j + 1, (uint32)i + 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j + 1, (uint32)i + 1) <= map->collisionRangeEnd);
-					sw = (getMapPos(map, (uint32)j - 1, (uint32)i + 1) >= map->collisionRangeStart && getMapPos(map, (uint32)j - 1, (uint32)i + 1) <= map->collisionRangeEnd);
+					w = (jamGetMapPos(map, (uint32) j - 1, (uint32) i) >= map->collisionRangeStart &&
+							jamGetMapPos(map, (uint32) j - 1, (uint32) i) <= map->collisionRangeEnd);
+					e = (jamGetMapPos(map, (uint32) j + 1, (uint32) i) >= map->collisionRangeStart &&
+							jamGetMapPos(map, (uint32) j + 1, (uint32) i) <= map->collisionRangeEnd);
+					n = (jamGetMapPos(map, (uint32) j, (uint32) i - 1) >= map->collisionRangeStart &&
+							jamGetMapPos(map, (uint32) j, (uint32) i - 1) <= map->collisionRangeEnd);
+					s = (jamGetMapPos(map, (uint32) j, (uint32) i + 1) >= map->collisionRangeStart &&
+							jamGetMapPos(map, (uint32) j, (uint32) i + 1) <= map->collisionRangeEnd);
+					ne = (jamGetMapPos(map, (uint32) j + 1, (uint32) i - 1) >= map->collisionRangeStart &&
+							jamGetMapPos(map, (uint32) j + 1, (uint32) i - 1) <= map->collisionRangeEnd);
+					nw = (jamGetMapPos(map, (uint32) j - 1, (uint32) i - 1) >= map->collisionRangeStart &&
+							jamGetMapPos(map, (uint32) j - 1, (uint32) i - 1) <= map->collisionRangeEnd);
+					se = (jamGetMapPos(map, (uint32) j + 1, (uint32) i + 1) >= map->collisionRangeStart &&
+							jamGetMapPos(map, (uint32) j + 1, (uint32) i + 1) <= map->collisionRangeEnd);
+					sw = (jamGetMapPos(map, (uint32) j - 1, (uint32) i + 1) >= map->collisionRangeStart &&
+							jamGetMapPos(map, (uint32) j - 1, (uint32) i + 1) <= map->collisionRangeEnd);
 
 					// Calculate the tile
 					if (!w && !e && !s && n/* && !nw && !ne && !se && !sw*/) {
@@ -254,8 +262,9 @@ void jamDrawSortedMap(JamRenderer *renderer, Sprite *spr, TileMap *map, int x, i
 						frame = 44;
 					}
 
-					setMapPos(map, (uint16)j, (uint16)i, (uint16)(frame + 1));
-					drawSpriteFrame(renderer, spr, x + (j * map->cellWidth + startingCellX), y + (i * map->cellHeight + startingCellY), 1, 1, 0, 255, (uint32)frame);
+					jamSetMapPos(map, (uint16) j, (uint16) i, (uint16) (frame + 1));
+					jamDrawSpriteFrame(renderer, spr, x + (j * map->cellWidth + startingCellX),
+									   y + (i * map->cellHeight + startingCellY), 1, 1, 0, 255, (uint32) frame);
 				}
 			}
 		}
@@ -267,16 +276,16 @@ void jamDrawSortedMap(JamRenderer *renderer, Sprite *spr, TileMap *map, int x, i
 			jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamDrawSortedMap)\n");
 		}
 		if (spr == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Sprite doesn't exist (jamDrawSortedMap)\n");
+			jSetError(ERROR_NULL_POINTER, "JamSprite doesn't exist (jamDrawSortedMap)\n");
 		} else if (!(spr->animationLength == 48 || spr->animationLength == 47)) {
-			jSetError(ERROR_INCORRECT_FORMAT, "Sprite does not contain 48 frames(jamDrawSortedMap)\n");
+			jSetError(ERROR_INCORRECT_FORMAT, "JamSprite does not contain 48 frames(jamDrawSortedMap)\n");
 		}
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamDrawTileMap(JamRenderer *renderer, TileMap *map, int x, int y, uint32 xInMapStart, uint32 yInMapStart,
+void jamDrawTileMap(JamRenderer *renderer, JamTileMap *map, int x, int y, uint32 xInMapStart, uint32 yInMapStart,
 					uint32 xInMapFinish, uint32 yInMapFinish) {
 	int i, j, originalX;
 	originalX = x;
@@ -287,9 +296,9 @@ void jamDrawTileMap(JamRenderer *renderer, TileMap *map, int x, int y, uint32 xI
 
 		for (i = yInMapStart; i <= yInMapFinish; i++) {
 			for (j = xInMapStart; j <= xInMapFinish; j++) {
-				val = (uint32)getMapPos(map, (uint16)j, (uint16)i);
+				val = (uint32) jamGetMapPos(map, (uint16) j, (uint16) i);
 				if (val > 0)
-					drawSpriteFrame(renderer, map->tileSheet, x, y, 1, 1, 0, 255, val - 1);
+					jamDrawSpriteFrame(renderer, map->tileSheet, x, y, 1, 1, 0, 255, val - 1);
 				x += map->cellWidth;
 			}
 			x = originalX;

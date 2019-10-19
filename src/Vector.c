@@ -12,11 +12,11 @@
 	double* xVerts; ///< X component of the vertices
 	double* yVerts; ///< Y component of the vertices
 	unsigned int vertices; ///< The total number of vertices in this polygon
-} Polygon;*/
+} JamPolygon;*/
 
 //////////////////////////////////////////////////
-Polygon* createPolygon(unsigned int vertices) {
-	Polygon* poly = (Polygon*)malloc(sizeof(Polygon));
+JamPolygon* jamCreatePolygon(unsigned int vertices) {
+	JamPolygon* poly = (JamPolygon*)malloc(sizeof(JamPolygon));
 
 	if (poly != NULL) {
 		poly->xVerts = (double*)malloc(sizeof(double) * vertices);
@@ -32,7 +32,7 @@ Polygon* createPolygon(unsigned int vertices) {
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-void addVertexToPolygon(Polygon* poly, double x, double y) {
+void jamAddVertexToPolygon(JamPolygon *poly, double x, double y) {
 	double* xVerts;
 	double* yVerts;
 
@@ -50,13 +50,13 @@ void addVertexToPolygon(Polygon* poly, double x, double y) {
 			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate vertex arrays.");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Polygon does not exist.");
+		jSetError(ERROR_NULL_POINTER, "JamPolygon does not exist.");
 	}
 }
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-void freePolygon(Polygon* poly) {
+void jamFreePolygon(JamPolygon *poly) {
 	if (poly != NULL) {
 		free(poly->xVerts);
 		free(poly->yVerts);

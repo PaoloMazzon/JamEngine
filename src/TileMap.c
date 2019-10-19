@@ -10,8 +10,8 @@
 #include <math.h>
 
 //////////////////////////////////////////////////////////
-TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
-	TileMap* map = (TileMap*)malloc(sizeof(TileMap));
+JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
+	JamTileMap* map = (JamTileMap*)malloc(sizeof(JamTileMap));
 
 	// Check it worked
 	if (map != NULL) {
@@ -42,11 +42,11 @@ TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cel
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-TileMap* loadTileMap(const char* filename, uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
+JamTileMap* jamLoadTileMap(const char *filename, uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
 	// Open the file and create the line for temporary storage and create the tile map
 	uint32 x, y;
 	FILE* file = fopen(filename, "r");
-	TileMap* map = createTileMap(width, height, cellWidth, cellHeight);
+	JamTileMap* map = jamCreateTileMap(width, height, cellWidth, cellHeight);
 
 	// Check it worked
 	if (map != NULL && file != NULL) {
@@ -54,7 +54,7 @@ TileMap* loadTileMap(const char* filename, uint32 width, uint32 height, uint32 c
 		for (y = 0; y < height; y++) {
 			for (x = 0; x < width; x++) {
 				if (fgetc(file) == '*')
-					setMapPos(map, x, y, true);
+					jamSetMapPos(map, x, y, true);
 			}
 			if (fgetc(file) == '\r')
 				fgetc(file);
@@ -62,17 +62,17 @@ TileMap* loadTileMap(const char* filename, uint32 width, uint32 height, uint32 c
 
 		// Check if the file screwed up somehow
 		if (ferror(file) != 0) {
-			jSetError(ERROR_FILE_FAILED, "Could not load tile map from file (loadTileMap).\n");
-			freeTileMap(map);
+			jSetError(ERROR_FILE_FAILED, "Could not load tile map from file (jamLoadTileMap).\n");
+			jamFreeTileMap(map);
 		}
 	} else {
 		if (map == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "Map could not be allocated (loadTileMap).\n");
+			jSetError(ERROR_ALLOC_FAILED, "Map could not be allocated (jamLoadTileMap).\n");
 		}
 		if (file == NULL) {
-			jSetError(ERROR_OPEN_FAILED, "File could not be opened (loadTileMap).\n");
+			jSetError(ERROR_OPEN_FAILED, "File could not be opened (jamLoadTileMap).\n");
 		}
-		freeTileMap(map);
+		jamFreeTileMap(map);
 	}
 
 	fclose(file);
@@ -82,7 +82,7 @@ TileMap* loadTileMap(const char* filename, uint32 width, uint32 height, uint32 c
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, uint16 val) {
+bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, uint16 val) {
 	bool worked = false;
 
 	// Make sure the map is here
@@ -97,9 +97,9 @@ bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, uint16 val) {
 		}
 	} else {
 		if (tileMap != NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (setMapPos).\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamSetMapPos).\n");
 		else
-			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (setMapPos).\n");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamSetMapPos).\n");
 	}
 
 	return worked;
@@ -107,7 +107,7 @@ bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, uint16 val) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y) {
+uint16 jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y) {
 	uint16 val = 0;
 
 	// Make sure the map is here
@@ -117,9 +117,9 @@ uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y) {
 			val = tileMap->grid[y * tileMap->width + x];
 	} else {
 		if (tileMap != NULL)
-			fprintf(stderr, "Map does not exist (getMapPos).\n");
+			fprintf(stderr, "Map does not exist (jamGetMapPos).\n");
 		else
-			fprintf(stderr, "Map grid does not exist (getMapPos).\n");
+			fprintf(stderr, "Map grid does not exist (jamGetMapPos).\n");
 	}
 
 	return val;
@@ -127,7 +127,7 @@ uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h) {
+bool jamCheckMapCollFast(JamTileMap *tileMap, int x, int y, int w, int h) {
 	bool coll = false;
 	int x1, y1, x2, y2;
 
@@ -148,9 +148,9 @@ bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h) {
 					(tileMap->grid[y2 * tileMap->width + x2] >= tileMap->collisionRangeStart && tileMap->grid[y2 * tileMap->width + x2] <= tileMap->collisionRangeEnd));
 	} else {
 		if (tileMap != NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (checkMapCollFast).\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamCheckMapCollFast).\n");
 		else
-			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (checkMapCollFast).\n");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamCheckMapCollFast).\n");
 	}
 
 	return coll;
@@ -158,7 +158,7 @@ bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool checkMapCollision(TileMap* tileMap, int x, int y, int w, int h) {
+bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
 	// I have no idea why this is needed but it is so whatever
 	w--;
 	h--;
@@ -206,14 +206,14 @@ bool checkMapCollision(TileMap* tileMap, int x, int y, int w, int h) {
 					coll = tileMap->grid[verticesY[i] * tileMap->width + verticesX[i]] >= tileMap->collisionRangeStart && tileMap->grid[verticesY[i] * tileMap->width + verticesX[i]] <= tileMap->collisionRangeEnd;
 			}
 		} else {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Rectangle  [%i, %i, %i, %i] requires too many vertices (checkMapCollision)\n", x, y, w, h);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Rectangle  [%i, %i, %i, %i] requires too many vertices (jamCheckMapCollision)\n", x, y, w, h);
 		}
 
 	} else {
 		if (tileMap != NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (checkMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamCheckMapCollision).\n");
 		else
-			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (checkMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamCheckMapCollision).\n");
 	}
 
 	return coll;
@@ -221,7 +221,7 @@ bool checkMapCollision(TileMap* tileMap, int x, int y, int w, int h) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void freeTileMap(TileMap* tileMap) {
+void jamFreeTileMap(JamTileMap *tileMap) {
 	if (tileMap != NULL) {
 		free(tileMap->grid);
 		free(tileMap);

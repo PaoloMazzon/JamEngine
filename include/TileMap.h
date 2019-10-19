@@ -29,15 +29,15 @@ typedef struct {
 	uint16* grid;               ///< The internal grid of size w * h
 	uint16 collisionRangeStart; ///< The start of the range of collide-able tiles
 	uint16 collisionRangeEnd;   ///< The end of the range of collide-able tiles
-	Sprite* tileSheet;          ///< The sprite sheet holding all tiles
-} TileMap;
+	JamSprite* tileSheet;          ///< The sprite sheet holding all tiles
+} JamTileMap;
 
 /// \brief Creates a tile map
 ///
 /// Tile maps are initialized with false as every value
 ///
 /// \throws ERROR_ALLOC_FAILED
-TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight);
+JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight);
 
 /// \brief Loads a tile map from file
 ///
@@ -53,17 +53,17 @@ TileMap* createTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cel
 /// \throws ERROR_FILE_FAILED
 /// \throws ERROR_OPEN_FAILED
 /// \throws ERROR_ALLOC_FAILED
-TileMap* loadTileMap(const char* filename, uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight);
+JamTileMap* jamLoadTileMap(const char *filename, uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight);
 
 /// \brief Sets a position in a tile map
 /// Returns true if it worked
 ///
 /// \throws ERROR_NULL_POINTER
-bool setMapPos(TileMap* tileMap, uint32 x, uint32 y, uint16 val);
+bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, uint16 val);
 
 /// \brief Gets a position in a tile map
 /// \throws ERROR_NULL_POINTER
-uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y);
+uint16 jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y);
 
 /// \brief Checks For a collision
 ///
@@ -74,7 +74,7 @@ uint16 getMapPos(TileMap* tileMap, uint32 x, uint32 y);
 /// check as the fast one will not find all.
 ///
 /// \throws ERROR_NULL_POINTER
-bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h);
+bool jamCheckMapCollFast(JamTileMap *tileMap, int x, int y, int w, int h);
 
 /// \brief Checks for a collision in a tile map
 ///
@@ -86,7 +86,7 @@ bool checkMapCollFast(TileMap* tileMap, int x, int y, int w, int h);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OUT_OF_BOUNDS
-bool checkMapCollision(TileMap* tileMap, int x, int y, int w, int h);
+bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h);
 
 /// \brief Frees a tile map from memory
-void freeTileMap(TileMap* tileMap);
+void jamFreeTileMap(JamTileMap *tileMap);

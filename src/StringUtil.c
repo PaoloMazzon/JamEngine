@@ -7,13 +7,13 @@
 #include "JamError.h"
 
 ///////////////////////////////////////////////////////////////
-StringBuilder* createStringBuilder() {
-	StringBuilder* builder = calloc(sizeof(StringBuilder), 1);
+JamStringBuilder* jamCreateStringBuilder() {
+	JamStringBuilder* builder = calloc(sizeof(JamStringBuilder), 1);
 
 	if (builder != NULL) {
 		builder->allocAmount = DEFAULT_ALLOC_AMOUNT;
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Could not create builder (createStringBuilder)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Could not create builder (jamCreateStringBuilder)\n");
 	}
 
 	return builder;
@@ -21,13 +21,13 @@ StringBuilder* createStringBuilder() {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-StringBuilder* createBuilderFromString(const char* string) {
-	StringBuilder* builder = createStringBuilder();
+JamStringBuilder* jamCreateBuilderFromString(const char *string) {
+	JamStringBuilder* builder = jamCreateStringBuilder();
 
 	if (builder != NULL) {
-		insertStringIntoBuilder(builder, (char*)string, -1);	
+		jamInsertStringIntoBuilder(builder, (char *) string, -1);
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to create builder (createBuilderFromString)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create builder (jamCreateBuilderFromString)\n");
 	}
 
 	return builder;
@@ -35,7 +35,7 @@ StringBuilder* createBuilderFromString(const char* string) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index) {
+char* jamInsertStringIntoBuilder(JamStringBuilder *builder, char *string, int index) {
 	int stringLen;
 	int i;
 	char* newString;
@@ -58,7 +58,7 @@ char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index) {
 				builder->size += builder->allocAmount + stringLen;
 				builder->str[builder->length + stringLen] = 0;
 			} else {
-				jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate builder (insertStringIntoBuilder)\n");
+				jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate builder (jamInsertStringIntoBuilder)\n");
 				goodToProceed = false;
 			}
 		}
@@ -76,9 +76,9 @@ char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index) {
 		}
 	} else {
 		if (builder == NULL)
-			jSetError(ERROR_NULL_POINTER, "Builder does not exist (insertStringIntoBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamInsertStringIntoBuilder)\n");
 		if (string == NULL)
-			jSetError(ERROR_NULL_POINTER, "String does not exist (insertStringIntoBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "String does not exist (jamInsertStringIntoBuilder)\n");
 	}
 
 	return string;
@@ -86,7 +86,7 @@ char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void removeCharFromBuilder(StringBuilder* builder, int index) {
+void jamRemoveCharFromBuilder(JamStringBuilder *builder, int index) {
 	int i;
 	if (builder != NULL && index < builder->length && index >= -1) {
 		if (builder->length > 0) {
@@ -103,16 +103,16 @@ void removeCharFromBuilder(StringBuilder* builder, int index) {
 		}
 	} else {
 		if (builder == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Builder does not exist (removeCharFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamRemoveCharFromBuilder)\n");
 		} else {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (removeCharFromBuilder)\n");
+			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (jamRemoveCharFromBuilder)\n");
 		}
 	}
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-int findStringInBuilder(StringBuilder* builder, const char* string, int occurrencesRequired) {
+int jamFindStringInBuilder(JamStringBuilder *builder, const char *string, int occurrencesRequired) {
 	int i = 0;
 	int count = 0;
 	int finalReturn = STRING_NOT_FOUND;
@@ -142,12 +142,12 @@ int findStringInBuilder(StringBuilder* builder, const char* string, int occurren
 			finalReturn = lastPos;
 	} else {
 		if (builder == NULL)
-			jSetError(ERROR_NULL_POINTER, "Builder does not exist (removeCharFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamRemoveCharFromBuilder)\n");
 		if (occurrencesRequired < -1) {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Occurrences required out of bounds (removeCharFromBuilder)\n");
+			jSetError(ERROR_OUT_OF_BOUNDS, "Occurrences required out of bounds (jamRemoveCharFromBuilder)\n");
 		}
 		if (string == NULL)
-			jSetError(ERROR_NULL_POINTER, "String does not exist (removeCharFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "String does not exist (jamRemoveCharFromBuilder)\n");
 	}
 
 	return finalReturn;
@@ -155,8 +155,8 @@ int findStringInBuilder(StringBuilder* builder, const char* string, int occurren
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-StringBuilder* substringFromBuilder(StringBuilder* builder, int index, int length) {
-	StringBuilder* sub = createStringBuilder();
+JamStringBuilder* jamSubstringFromBuilder(JamStringBuilder *builder, int index, int length) {
+	JamStringBuilder* sub = jamCreateStringBuilder();
 	int i;
 
 	if (builder != NULL && sub != NULL && index >= 0 && index + length <= builder->length && length > -2) {
@@ -173,20 +173,20 @@ StringBuilder* substringFromBuilder(StringBuilder* builder, int index, int lengt
 			sub->size = length;
 			sub->length = length;
 		} else {
-			freeStringBuilder(sub);
+			jamFreeStringBuilder(sub);
 			sub = NULL;
-			jSetError(ERROR_ALLOC_FAILED, "Failed to create internal string (substringFromBuilder)\n");
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create internal string (jamSubstringFromBuilder)\n");
 		}
 	} else {
-		freeStringBuilder(sub);
+		jamFreeStringBuilder(sub);
 		if (sub == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "Failed to create substring (substringFromBuilder)\n");
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create substring (jamSubstringFromBuilder)\n");
 		}
 		if (builder == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Builder does not exist (substringFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamSubstringFromBuilder)\n");
 		}
 		if (builder != NULL && sub != NULL) {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (substringFromBuilder)\n");
+			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (jamSubstringFromBuilder)\n");
 		}
 		sub = NULL;
 	}
@@ -196,7 +196,7 @@ StringBuilder* substringFromBuilder(StringBuilder* builder, int index, int lengt
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void shrinkBuilder(StringBuilder* builder) { // NOTE: UNTESTED
+void jamShrinkBuilder(JamStringBuilder *builder) { // NOTE: UNTESTED
 	char* newArray;
 	if (builder != NULL) {
 		if (builder->size > builder->length + 1) {
@@ -209,13 +209,13 @@ void shrinkBuilder(StringBuilder* builder) { // NOTE: UNTESTED
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Builder does not exist (shrinkBuilder)\n");
+		jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamShrinkBuilder)\n");
 	}
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-int getBuilderLength(StringBuilder* builder) {
+int jamGetBuilderLength(JamStringBuilder *builder) {
 	int i;
 	int count = 0;
 	if (builder != NULL) {
@@ -225,7 +225,7 @@ int getBuilderLength(StringBuilder* builder) {
 				count++;
 	} else {
 		count = -1;
-		jSetError(ERROR_NULL_POINTER, "Builder does not exist (getBuilderLength)\n");
+		jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamGetBuilderLength)\n");
 	}
 
 	return count;
@@ -233,12 +233,12 @@ int getBuilderLength(StringBuilder* builder) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-const char* getBuilderArray(StringBuilder* builder) {
+const char* jamGetBuilderArray(JamStringBuilder *builder) {
 	const char* ret = NULL;
 	if (builder != NULL) {
 		ret = (const char*)builder->str;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Builder does not exist (getBuilderArray)\n");
+		jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamGetBuilderArray)\n");
 	}
 
 	return ret;
@@ -246,7 +246,7 @@ const char* getBuilderArray(StringBuilder* builder) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void freeStringBuilder(StringBuilder* builder) {
+void jamFreeStringBuilder(JamStringBuilder *builder) {
 	if (builder != NULL) {
 		free(builder->str);
 		free(builder);

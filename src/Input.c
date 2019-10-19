@@ -7,11 +7,11 @@
 #include <Input.h>
 #include <JamError.h>
 
-static Input* gInputPointer;
+static JamInput* gInputPointer;
 
 //////////////////////////////////////////////////////////////
-void initInput() {
-	gInputPointer = (Input*)malloc(sizeof(Input));
+void jamInitInput() {
+	gInputPointer = (JamInput*)malloc(sizeof(JamInput));
 
 	// Double check, of course
 	if (gInputPointer != NULL) {
@@ -34,13 +34,13 @@ void initInput() {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool inputIsInitialized() {
+bool jamInputIsInitialized() {
 	return gInputPointer != NULL;
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void updateInput(double screenMultiplier) {
+void jamUpdateInput(double screenMultiplier) {
 	int i, wx, wy;
 
 	// Check that the gInputPointer exists
@@ -60,7 +60,7 @@ void updateInput(double screenMultiplier) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool inputCheckKey(SDL_Scancode key) {
+bool jamInputCheckKey(SDL_Scancode key) {
 	bool ret = false;
 
 	// Check input exists
@@ -68,10 +68,10 @@ bool inputCheckKey(SDL_Scancode key) {
 		if (key > 0 && key < gInputPointer->kbLen) {
 			ret = gInputPointer->currentInput[key];
 		} else {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Scancode out of range (inputCheckKey). SDL Error: %s\n", SDL_GetError());
+			jSetError(ERROR_OUT_OF_BOUNDS, "Scancode out of range (jamInputCheckKey). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckKey). SDL Error: %s\n", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER, "JamInput doesn't exist (jamInputCheckKey). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -79,7 +79,7 @@ bool inputCheckKey(SDL_Scancode key) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool inputCheckKeyPressed(SDL_Scancode key) {
+bool jamInputCheckKeyPressed(SDL_Scancode key) {
 	bool ret = false;
 
 	// Check input exists
@@ -88,10 +88,10 @@ bool inputCheckKeyPressed(SDL_Scancode key) {
 			// If it was just pressed, last frame's value would be 0
 			ret = gInputPointer->currentInput[key] && !gInputPointer->previousInput[key];
 		} else {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Scancode out of range (inputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
+			jSetError(ERROR_OUT_OF_BOUNDS, "Scancode out of range (jamInputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER, "JamInput doesn't exist (jamInputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -99,7 +99,7 @@ bool inputCheckKeyPressed(SDL_Scancode key) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool inputCheckKeyReleased(SDL_Scancode key) {
+bool jamInputCheckKeyReleased(SDL_Scancode key) {
 	bool ret = false;
 
 	// Check input exists
@@ -108,10 +108,10 @@ bool inputCheckKeyReleased(SDL_Scancode key) {
 			// If it was just released, last frame's value would be 1 and the current 0
 			ret = !gInputPointer->currentInput[key] && gInputPointer->previousInput[key];
 		} else {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Scancode out of range (inputCheckKeyReleased). SDL Error: %s\n", SDL_GetError());
+			jSetError(ERROR_OUT_OF_BOUNDS, "Scancode out of range (jamInputCheckKeyReleased). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckKeyReleased). SDL Error: %s\n", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER, "JamInput doesn't exist (jamInputCheckKeyReleased). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -119,11 +119,11 @@ bool inputCheckKeyReleased(SDL_Scancode key) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-int inputGetMouseX() {
+int jamInputGetMouseX() {
 	if (gInputPointer != NULL) {
 		return gInputPointer->mX;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Input has not been initialized.");
+		jSetError(ERROR_NULL_POINTER, "JamInput has not been initialized.");
 	}
 
 	return 0;
@@ -131,11 +131,11 @@ int inputGetMouseX() {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-int inputGetMouseY() {
+int jamInputGetMouseY() {
 	if (gInputPointer != NULL) {
 		return gInputPointer->mY;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Input has not been initialized.");
+		jSetError(ERROR_NULL_POINTER, "JamInput has not been initialized.");
 	}
 
 	return 0;
@@ -143,14 +143,14 @@ int inputGetMouseY() {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool inputCheckMouseButton(uint8 button) {
+bool jamInputCheckMouseButton(uint8 button) {
 	bool ret = false;
 
 	// Check input exists
 	if (gInputPointer != NULL) {
 		ret = gInputPointer->mouseState & button;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckMouseButton). SDL Error: %s\n", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER, "JamInput doesn't exist (jamInputCheckMouseButton). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -158,14 +158,14 @@ bool inputCheckMouseButton(uint8 button) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool inputCheckMouseButtonPressed(uint8 button) {
+bool jamInputCheckMouseButtonPressed(uint8 button) {
 	bool ret = false;
 
 	// Check input exists
 	if (gInputPointer != NULL) {
 		ret = !(gInputPointer->previousMouseState & button) && (gInputPointer->mouseState & button);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckMouseButtonPressed). SDL Error: %s\n", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER, "JamInput doesn't exist (jamInputCheckMouseButtonPressed). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -173,14 +173,14 @@ bool inputCheckMouseButtonPressed(uint8 button) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool inputCheckMouseButtonReleased(uint8 button) {
+bool jamInputCheckMouseButtonReleased(uint8 button) {
 	bool ret = false;
 
 	// Check input exists
 	if (gInputPointer != NULL) {
 		ret = (gInputPointer->previousMouseState & button) && !(gInputPointer->mouseState & button);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Input doesn't exist (inputCheckMouseButtonReleased). SDL Error: %s\n", SDL_GetError());
+		jSetError(ERROR_NULL_POINTER, "JamInput doesn't exist (jamInputCheckMouseButtonReleased). SDL Error: %s\n", SDL_GetError());
 	}
 
 	return ret;
@@ -188,7 +188,7 @@ bool inputCheckMouseButtonReleased(uint8 button) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void quitInput() {
+void jamQuitInput() {
 	if (gInputPointer != NULL) {
 		free(gInputPointer->previousInput);
 		free(gInputPointer);

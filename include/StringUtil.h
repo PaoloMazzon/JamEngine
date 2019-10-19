@@ -19,13 +19,13 @@ typedef struct {
 	int length; ///< How many characters are currently in use
 	int size; ///< Total size of the array
 	short allocAmount; ///< How many characters to allocate at a time
-} StringBuilder;
+} JamStringBuilder;
 
 /// \brief Creates a string builder
 /// 
 /// \return Returns the new builder or NULL if it failed
 /// \throws ERROR_ALLOC_FAILED
-StringBuilder* createStringBuilder();
+JamStringBuilder* jamCreateStringBuilder();
 
 /// \brief Creates a string builder with a string pre loaded into it
 /// 
@@ -33,7 +33,7 @@ StringBuilder* createStringBuilder();
 /// 
 /// \return Returns the new builder or NULL if it failed
 /// \throws ERROR_ALLOC_FAILED
-StringBuilder* createBuilderFromString(const char* string);
+JamStringBuilder* jamCreateBuilderFromString(const char *string);
 
 /// \brief Inserts a string into a string builder starting at index
 /// 
@@ -52,7 +52,7 @@ StringBuilder* createBuilderFromString(const char* string);
 ///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index);
+char* jamInsertStringIntoBuilder(JamStringBuilder *builder, char *string, int index);
 
 /// \brief Removes something from the builder
 ///
@@ -60,7 +60,7 @@ char* insertStringIntoBuilder(StringBuilder* builder, char* string, int index);
 /// \param index The index of the character to remove or END_OF_STRING for the end of the string
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OUT_OF_BOUNDS
-void removeCharFromBuilder(StringBuilder* builder, int index);
+void jamRemoveCharFromBuilder(JamStringBuilder *builder, int index);
 
 /// \brief Finds a string in a string builder and returns it
 /// 
@@ -79,7 +79,7 @@ void removeCharFromBuilder(StringBuilder* builder, int index);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OUT_OF_BOUNDS
-int findStringInBuilder(StringBuilder* builder, const char* string, int occurrencesRequired);
+int jamFindStringInBuilder(JamStringBuilder *builder, const char *string, int occurrencesRequired);
 
 /// \brief Grabs a substring and returns it as a new builder
 /// 
@@ -91,7 +91,7 @@ int findStringInBuilder(StringBuilder* builder, const char* string, int occurren
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OUT_OF_BOUNDS
-StringBuilder* substringFromBuilder(StringBuilder* builder, int index, int length);
+JamStringBuilder* jamSubstringFromBuilder(JamStringBuilder *builder, int index, int length);
 
 /// \brief Shrinks a string builder so it doesn't have any extra memory on the end
 /// \param builder The builder to shrink
@@ -101,7 +101,7 @@ StringBuilder* substringFromBuilder(StringBuilder* builder, int index, int lengt
 /// allocAmount is 1, this function will do nothing.
 ///
 /// \throws ERROR_NULL_POINTER
-void shrinkBuilder(StringBuilder* builder);
+void jamShrinkBuilder(JamStringBuilder *builder);
 
 /// \brief Pulls a c-string from a builder
 /// 
@@ -112,7 +112,7 @@ void shrinkBuilder(StringBuilder* builder);
 ///
 /// The string this returns belongs to the builder and as
 /// such it will be destroyed with the builder.
-const char* getBuilderArray(StringBuilder* builder);
+const char* jamGetBuilderArray(JamStringBuilder *builder);
 
 /// \brief Counts the total characters in the builder
 /// 
@@ -126,12 +126,12 @@ const char* getBuilderArray(StringBuilder* builder);
 /// a single emoji or whatever as 4 characters.
 ///
 /// \throws ERROR_NULL_POINTER
-int getBuilderLength(StringBuilder* builder);
+int jamGetBuilderLength(JamStringBuilder *builder);
 
 /// \brief Frees a string builder
 /// 
 /// \param builder The builder to free
-void freeStringBuilder(StringBuilder* builder);
+void jamFreeStringBuilder(JamStringBuilder *builder);
 
 #ifdef atof
 #undef atof

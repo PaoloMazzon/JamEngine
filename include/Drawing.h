@@ -32,7 +32,7 @@ void jamDrawCircle(JamRenderer *renderer, int x, int y, int r);
 
 /// \brief Draws a polygon
 /// \throws ERROR_NULL_POINTER
-void jamDrawPolygon(JamRenderer *renderer, Polygon *poly, int x, int y);
+void jamDrawPolygon(JamRenderer *renderer, JamPolygon *poly, int x, int y);
 
 /// \breif Draws a texture to the current target
 /// \throws ERROR_NULL_POINTER
@@ -51,7 +51,7 @@ void jamDrawTexture(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-void jamDrawSortedMap(JamRenderer *renderer, Sprite *spr, TileMap *map, int x, int y, uint32 startingCellX,
+void jamDrawSortedMap(JamRenderer *renderer, JamSprite *spr, JamTileMap *map, int x, int y, uint32 startingCellX,
 					  uint32 startingCellY);
 
 /// \brief Draws a tilemap using its map as it's sprite frames
@@ -66,7 +66,7 @@ void jamDrawSortedMap(JamRenderer *renderer, Sprite *spr, TileMap *map, int x, i
 /// frame 0 should be 1 in the grid). This is so zero is still considered empty
 /// in the grid itself.
 /// \throws ERROR_NULL_POINTER
-void jamDrawTileMap(JamRenderer *renderer, TileMap *tileMap, int x, int y, uint32 xInMapStart, uint32 yInMapStart,
+void jamDrawTileMap(JamRenderer *renderer, JamTileMap *tileMap, int x, int y, uint32 xInMapStart, uint32 yInMapStart,
 					uint32 xInMapFinish, uint32 yInMapFinish);
 
 /// \breif Draws a texture to the current target with a bunch of extra preferences

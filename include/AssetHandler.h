@@ -23,10 +23,10 @@ typedef struct {
 
 	union {
 		JamTexture* tex; ///< The internal texture
-		Sprite* spr; ///< The internal sprite
-		TileMap* tileMap; ///< The internal tile map
+		JamSprite* spr; ///< The internal sprite
+		JamTileMap* tileMap; ///< The internal tile map
 		JamEntity* entity; ///< The internal entity
-		Hitbox* hitbox; ///< The internal hitbox
+		JamHitbox* hitbox; ///< The internal hitbox
 	};
 } JamAsset;
 
@@ -58,7 +58,7 @@ typedef struct {
 	int size; ///< The size of the map
 	JamAssetKey* ids; ///< The keys that match up with the values
 	JamAsset** vals; ///< The actual assets
-	INI* localINI; ///< Let the INI keep track of internal string's memory
+	JamINI* localINI; ///< Let the INI keep track of internal string's memory
 } JamAssetHandler;
 
 /// \brief Creates an asset handler
@@ -96,7 +96,7 @@ JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, JamAssetKey key)
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Sprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
@@ -106,7 +106,7 @@ JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key);
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Hitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
@@ -116,7 +116,7 @@ JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key);
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-TileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamTileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Frees an asset handler and all of its components
 JamAssetHandler* jamFreeAssetHandler(JamAssetHandler *handler);

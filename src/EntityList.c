@@ -8,11 +8,11 @@
 #include <EntityList.h>
 
 ///////////////////////////////////////////////////////////////
-EntityList* createEntityList() {
-	EntityList* list = (EntityList*)calloc(1, sizeof(EntityList));
+JamEntityList* jamCreateEntityList() {
+	JamEntityList* list = (JamEntityList*)calloc(1, sizeof(JamEntityList));
 
 	if (list == NULL) {
-		jSetError(ERROR_NULL_POINTER, "Failed to allocate entity list (createEntityList)\n");
+		jSetError(ERROR_NULL_POINTER, "Failed to allocate entity list (jamCreateEntityList)\n");
 	}
 
 	return list;
@@ -20,7 +20,7 @@ EntityList* createEntityList() {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void addEntityToList(EntityList* list, JamEntity* entity) {
+void jamAddEntityToList(JamEntityList *list, JamEntity *entity) {
 	int i = 0;
 	JamEntity** newList;
 	bool foundSpot = false;
@@ -48,17 +48,17 @@ void addEntityToList(EntityList* list, JamEntity* entity) {
 				list->capacity += ENTITY_LIST_ALLOCATION_AMOUNT;
 				newList[list->size - 1] = entity;
 			} else {
-				jSetError(ERROR_REALLOC_FAILED, "Could not reallocate entity list to accommodate for new entity (addEntityToList)\n");
+				jSetError(ERROR_REALLOC_FAILED, "Could not reallocate entity list to accommodate for new entity (jamAddEntityToList)\n");
 			}
 		}
 	} else if (list == NULL) {
-		jSetError(ERROR_NULL_POINTER, "List does not exist (addEntityToList)\n");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (jamAddEntityToList)\n");
 	}
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamEntity* popEntityFromList(EntityList* list, JamEntity* entity) {
+JamEntity* jamPopEntityFromList(JamEntityList *list, JamEntity *entity) {
 	int i = 0;
 	bool found = false;
 	if (list != NULL) {
@@ -87,7 +87,7 @@ JamEntity* popEntityFromList(EntityList* list, JamEntity* entity) {
  * 4. One the loop is done, loop until you hit a NULL, and resize the list to that size
  * 5. Adjust size and capacity accordingly
 */
-void shrinkEntityList(EntityList* list) {
+void jamShrinkEntityList(JamEntityList *list) {
 	int i, j, posInList;
 	JamEntity** newList;
 	if (list != NULL) {
@@ -121,36 +121,36 @@ void shrinkEntityList(EntityList* list) {
 			list->size = (uint32)posInList;
 			list->capacity = (uint32)posInList;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate entity list (shrinkEntityList)\n");
+			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate entity list (jamShrinkEntityList)\n");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "List does not exist (shrinkEntityList)\n");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (jamShrinkEntityList)\n");
 	}
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void emptyEntityList(EntityList* list, bool destroyEntities) {
+void jamEmptyEntityList(JamEntityList *list, bool destroyEntities) {
 	int i;
 
 	if (list != NULL) {
 		if (destroyEntities)
 			for (i = 0; i < list->size; i++)
-				freeEntity(list->entities[i], false, false, false);
+				jamFreeEntity(list->entities[i], false, false, false);
 		free(list->entities);
 		list->entities = NULL;
 		list->size = 0;
 		list->capacity = 0;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "List does not exist (emptyEntityList)\n");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (jamEmptyEntityList)\n");
 	}
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void freeEntityList(EntityList* list, bool destroyEntities) {
+void jamFreeEntityList(JamEntityList *list, bool destroyEntities) {
 	if (list != NULL) {
-		emptyEntityList(list, destroyEntities);
+		jamEmptyEntityList(list, destroyEntities);
 		free(list);
 	}
 }

@@ -25,7 +25,7 @@
 // of making a new polygon every time a poly-rect collision is checked.
 // It is freed whenever a hitbox is freed.
 // tl;dr micro-optimizations
-static Polygon* gRectPolyCache;
+static JamPolygon* gRectPolyCache;
 
 //////////////////////////////////////////////////
 static bool _circRectColl(double cX, double cY, double cR, double rX, double rY, double rW, double rH) {
@@ -53,7 +53,7 @@ static inline double _cast1DShadow(double x, double y, double m) {
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-static bool _satCheckGap(Polygon* p1, Polygon* p2, double x1, double y1, double x2, double y2) {
+static bool _satCheckGap(JamPolygon* p1, JamPolygon* p2, double x1, double y1, double x2, double y2) {
 	unsigned int i, j;
 	double slope;
 	double min1, min2, max1, max2;
@@ -101,7 +101,7 @@ static bool _satCheckGap(Polygon* p1, Polygon* p2, double x1, double y1, double 
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-bool checkConvexPolygonCollision(Polygon* poly1, Polygon* poly2, double x1, double y1, double x2, double y2) {
+bool jamCheckConvexPolygonCollision(JamPolygon *poly1, JamPolygon *poly2, double x1, double y1, double x2, double y2) {
 	// Make sure the polygons exist and they are at least a triangle
 	if (poly1 != NULL && poly2 != NULL) {
 		if (poly1->vertices >= 3 && poly2->vertices >= 3) {
@@ -111,30 +111,30 @@ bool checkConvexPolygonCollision(Polygon* poly1, Polygon* poly2, double x1, doub
 				return true;
 		} else {
 			if (poly1->vertices < 3)
-				jSetError(ERROR_INCORRECT_FORMAT, "Polygon 1 needs at least 3 vertices.");
+				jSetError(ERROR_INCORRECT_FORMAT, "JamPolygon 1 needs at least 3 vertices.");
 			if (poly2->vertices < 3)
-				jSetError(ERROR_INCORRECT_FORMAT, "Polygon 2 needs at least 3 vertices.");
+				jSetError(ERROR_INCORRECT_FORMAT, "JamPolygon 2 needs at least 3 vertices.");
 
 		}
 	} else {
 		if (poly1 == NULL)
-			jSetError(ERROR_NULL_POINTER, "Polygon 1 does not exist.");
+			jSetError(ERROR_NULL_POINTER, "JamPolygon 1 does not exist.");
 		if (poly2 == NULL)
-			jSetError(ERROR_NULL_POINTER, "Polygon 2 does not exist.");
+			jSetError(ERROR_NULL_POINTER, "JamPolygon 2 does not exist.");
 	}
 }
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-static bool _satToCircleCollisions(Polygon* p1, double r, double x1, double y1, double x2, double y2) {
+static bool _satToCircleCollisions(JamPolygon* p1, double r, double x1, double y1, double x2, double y2) {
 	return false;
 }
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-static bool _satToRectangleCollisions(Polygon* p, double w, double h, double x1, double y1, double x2, double y2) {
+static bool _satToRectangleCollisions(JamPolygon* p, double w, double h, double x1, double y1, double x2, double y2) {
 	if (gRectPolyCache == NULL) {
-		gRectPolyCache = createPolygon(4);
+		gRectPolyCache = jamCreatePolygon(4);
 		if (gRectPolyCache == NULL) {
 			jSetError(ERROR_ALLOC_FAILED, "Failed to create polygon cache.");
 			return false;
@@ -150,28 +150,28 @@ static bool _satToRectangleCollisions(Polygon* p, double w, double h, double x1,
 	gRectPolyCache->yVerts[2] = h;
 	gRectPolyCache->xVerts[3] = 0;
 	gRectPolyCache->yVerts[3] = h;
-	return checkConvexPolygonCollision(gRectPolyCache, p, x2, y2, x1, y1);
+	return jamCheckConvexPolygonCollision(gRectPolyCache, p, x2, y2, x1, y1);
 }
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-Hitbox* createHitbox(hitboxType type, double radius, double width, double height, Polygon* polygon) {
-	Hitbox* hitbox = (Hitbox*)malloc(sizeof(Hitbox));
+JamHitbox* jamCreateHitbox(JamHitboxType type, double radius, double width, double height, JamPolygon *polygon) {
+	JamHitbox* hitbox = (JamHitbox*)malloc(sizeof(JamHitbox));
 
 	// Check if it worked of course
 	if (hitbox != NULL) {
 		hitbox->type = type;
 
-		if (type == hitCircle) {
+		if (type == ht_Circle) {
 			hitbox->radius = radius;
-		} else if (type == hitRectangle) {
+		} else if (type == ht_Rectangle) {
 			hitbox->width = width;
 			hitbox->height = height;
-		} else if (type == hitConvexPolygon) {
+		} else if (type == ht_ConvexPolygon) {
 			hitbox->polygon = polygon;
 		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate hitbox. (createHitbox)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate hitbox. (jamCreateHitbox)\n");
 	}
 
 	return hitbox;
@@ -179,44 +179,44 @@ Hitbox* createHitbox(hitboxType type, double radius, double width, double height
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-bool checkHitboxCollision(Hitbox* hitbox1, double x1, double y1, Hitbox* hitbox2, double x2, double y2) {
+bool jamCheckHitboxCollision(JamHitbox *hitbox1, double x1, double y1, JamHitbox *hitbox2, double x2, double y2) {
 	bool hit = false;
 
 	// Double check it's there
 	if (hitbox1 != NULL && hitbox2 != NULL) {
-		if (hitbox1->type == hitCircle && hitbox2->type == hitCircle) {
+		if (hitbox1->type == ht_Circle && hitbox2->type == ht_Circle) {
 			// Circle-to-circle
 			hit = (pointDistance(x1, y1, x2, y2) < hitbox1->radius + hitbox2->radius);
-		} else if (hitbox1->type == hitRectangle && hitbox2->type == hitRectangle) {
+		} else if (hitbox1->type == ht_Rectangle && hitbox2->type == ht_Rectangle) {
 			// Rectangle-to-rectangle
 			hit = (y1 + hitbox1->height >= y2 && y1 <= y2 + hitbox2->height && x1 + hitbox1->width >= x2 && x1 <= x2 + hitbox2->width);
-		} else if (hitbox1->type == hitRectangle && hitbox2->type == hitCircle) {
+		} else if (hitbox1->type == ht_Rectangle && hitbox2->type == ht_Circle) {
 			// Rectangle-to-circle
 			hit = _circRectColl(x2, y2, hitbox2->radius, x1, y1, hitbox1->width, hitbox1->height);
-		} else if (hitbox1->type == hitCircle && hitbox2->type == hitRectangle) {
+		} else if (hitbox1->type == ht_Circle && hitbox2->type == ht_Rectangle) {
 			// Circle-to-rectangle
 			hit = _circRectColl(x1, y1, hitbox1->radius, x2, y2, hitbox2->width, hitbox2->height);
-		} else if (hitbox1->type == hitConvexPolygon && hitbox2->type == hitConvexPolygon) {
+		} else if (hitbox1->type == ht_ConvexPolygon && hitbox2->type == ht_ConvexPolygon) {
 			// Poly-to-poly
-			hit = checkConvexPolygonCollision(hitbox1->polygon, hitbox2->polygon, x1, y1, x2, y2);
-		} else if (hitbox1->type == hitConvexPolygon && hitbox2->type == hitRectangle) {
+			hit = jamCheckConvexPolygonCollision(hitbox1->polygon, hitbox2->polygon, x1, y1, x2, y2);
+		} else if (hitbox1->type == ht_ConvexPolygon && hitbox2->type == ht_Rectangle) {
 			// Poly-to-rectangle
 			hit = _satToRectangleCollisions(hitbox1->polygon, hitbox2->width, hitbox2->height, x1, y1, x2, y2);
-		} else if (hitbox1->type == hitRectangle && hitbox2->type == hitConvexPolygon) {
+		} else if (hitbox1->type == ht_Rectangle && hitbox2->type == ht_ConvexPolygon) {
 			// Rectangle-to-poly
 			hit = _satToRectangleCollisions(hitbox2->polygon, hitbox1->width, hitbox2->height, x2, y2, x1, y1);
-		} else if (hitbox1->type == hitConvexPolygon && hitbox2->type == hitCircle) {
+		} else if (hitbox1->type == ht_ConvexPolygon && hitbox2->type == ht_Circle) {
 			// Poly-to-circle
 			hit = _satToCircleCollisions(hitbox1->polygon, hitbox2->radius, x1, y1, x2, y2);
-		} else if (hitbox1->type == hitCircle && hitbox2->type == hitConvexPolygon) {
+		} else if (hitbox1->type == ht_Circle && hitbox2->type == ht_ConvexPolygon) {
 			// Circle-to-poly
 			hit = _satToCircleCollisions(hitbox2->polygon, hitbox2->radius, x2, y2, x1, y1);
 		} // TODO: Implement cirlce-to-poly collisions
 	} else {
 		if (hitbox1 == NULL)
-			jSetError(ERROR_NULL_POINTER, "Hitbox 1 does not exist. (checkHitboxCollision)\n");
+			jSetError(ERROR_NULL_POINTER, "JamHitbox 1 does not exist. (jamCheckHitboxCollision)\n");
 		if (hitbox2 == NULL)
-			jSetError(ERROR_NULL_POINTER, "Hitbox 2 does not exist. (checkHitboxCollision)\n");
+			jSetError(ERROR_NULL_POINTER, "JamHitbox 2 does not exist. (jamCheckHitboxCollision)\n");
 	}
 
 	return hit;
@@ -224,15 +224,15 @@ bool checkHitboxCollision(Hitbox* hitbox1, double x1, double y1, Hitbox* hitbox2
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-void freeHitbox(Hitbox* hitbox) {
+void jamFreeHitbox(JamHitbox *hitbox) {
 	if (hitbox != NULL) {
-		if (hitbox->type == hitConvexPolygon)
-			freePolygon(hitbox->polygon);
+		if (hitbox->type == ht_ConvexPolygon)
+			jamFreePolygon(hitbox->polygon);
 		free(hitbox);
 	}
 
 	if (gRectPolyCache != NULL) {
-		freePolygon(gRectPolyCache);
+		jamFreePolygon(gRectPolyCache);
 		gRectPolyCache = NULL;
 	}
 }

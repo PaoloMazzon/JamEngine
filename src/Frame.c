@@ -9,8 +9,8 @@
 #include <JamError.h>
 
 //////////////////////////////////////////////////////////////
-Frame* createFrame(JamTexture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
-	Frame* frame = (Frame*)malloc(sizeof(Frame));
+JamFrame* jamCreateFrame(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h) {
+	JamFrame* frame = (JamFrame*)malloc(sizeof(JamFrame));
 
 	// Check for its validity
 	if (frame != NULL) {
@@ -20,7 +20,7 @@ Frame* createFrame(JamTexture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
 		frame->w = w;
 		frame->h = h;
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Could not allocate frame. (createFrame).\n");
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate frame. (jamCreateFrame).\n");
 	}
 
 	return frame;
@@ -28,23 +28,23 @@ Frame* createFrame(JamTexture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawFrame(Frame* frame, JamRenderer* renderer, sint32 x, sint32 y) {
+void jamDrawFrame(JamFrame *frame, JamRenderer *renderer, sint32 x, sint32 y) {
 	if (frame != NULL && renderer != NULL) {
 		jamDrawTexturePart(renderer, frame->tex, x, y, frame->x, frame->y, frame->w, frame->h);
 	} else {
 		if (frame != NULL)
-			jSetError(ERROR_NULL_POINTER, "Frame does not exist. (drawFrame).\n");
+			jSetError(ERROR_NULL_POINTER, "JamFrame does not exist. (jamDrawFrame).\n");
 		if (renderer != NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist. (drawFrame).\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist. (jamDrawFrame).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void freeFrame(Frame* frame, bool destroyTexture) {
+void jamFreeFrame(JamFrame *frame, bool destroyTexture) {
 	if (frame != NULL) {
 		if (destroyTexture) {
-			freeTexture(frame->tex);
+			jamFreeTexture(frame->tex);
 		}
 		free(frame);
 	}

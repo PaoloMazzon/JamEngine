@@ -23,7 +23,7 @@ typedef struct {
 	sint32 y; ///< The top left corner of the drawn area
 	sint32 w; ///< The width of the drawn area
 	sint32 h; ///< The height of the drawn area
-} Frame;
+} JamFrame;
 
 /// \brief Creates a frame
 ///
@@ -31,7 +31,7 @@ typedef struct {
 /// for that is completely redundant
 ///
 /// \throws ERROR_ALLOC_FAILED
-Frame* createFrame(JamTexture* tex, sint32 x, sint32 y, sint32 w, sint32 h);
+JamFrame* jamCreateFrame(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h);
 
 /// \brief Draws a frame
 ///
@@ -39,7 +39,7 @@ Frame* createFrame(JamTexture* tex, sint32 x, sint32 y, sint32 w, sint32 h);
 /// just a convenience for users
 ///
 /// \throws ERROR_NULL_POINTER
-void drawFrame(Frame* frame, JamRenderer* renderer, sint32 x, sint32 y);
+void jamDrawFrame(JamFrame *frame, JamRenderer *renderer, sint32 x, sint32 y);
 
 /// \brief Empties a frame from memory
-void freeFrame(Frame* frame, bool destroyTexture);
+void jamFreeFrame(JamFrame *frame, bool destroyTexture);

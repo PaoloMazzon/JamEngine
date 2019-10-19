@@ -10,13 +10,13 @@
 #include "JamError.h"
 
 /////////////////////////////////////////////////////////
-StringList* createStringList() {
-	StringList* list;
-	list = (StringList*)calloc(1, sizeof(StringList));
+JamStringList* jamCreateStringList() {
+	JamStringList* list;
+	list = (JamStringList*)calloc(1, sizeof(JamStringList));
 
 	// Check that it worked alright
 	if (list == NULL) {
-		jSetError(ERROR_ALLOC_FAILED, "Could not allocate string list (createStringList)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate string list (jamCreateStringList)\n");
 	}
 
 	return list;
@@ -24,8 +24,8 @@ StringList* createStringList() {
 /////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////
-StringList* loadStringList(const char* fname) {
-	StringList* list = createStringList();
+JamStringList* jamLoadStringList(const char *fname) {
+	JamStringList* list = jamCreateStringList();
 	FILE* file = fopen(fname, "r");
 	char* currentString;
 	fpos_t startOfLine;
@@ -70,18 +70,18 @@ StringList* loadStringList(const char* fname) {
 			if (currentString != NULL) {
 				// Get the string, then throw it in the list
 				fgets(currentString, (int)sizeOfLine, file); // TODO: Fix this not working on last line of a file
-				appendStringToStringList(list, currentString, true);
+				jamAppendStringToList(list, currentString, true);
 			} else {
-				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (loadStringList)\n");
+				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (jamLoadStringList)\n");
 				quit = true;
 			}
 		}
 	} else {
 		if (list == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "List could not be allocated (loadStringList)\n");
+			jSetError(ERROR_ALLOC_FAILED, "List could not be allocated (jamLoadStringList)\n");
 		}
 		if (file == NULL) {
-			jSetError(ERROR_OPEN_FAILED, "File could not be opened (loadStringList)\n");
+			jSetError(ERROR_OPEN_FAILED, "File could not be opened (jamLoadStringList)\n");
 		}
 	}
 
@@ -91,7 +91,7 @@ StringList* loadStringList(const char* fname) {
 /////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////
-void appendStringToStringList(StringList* list, char* string, bool heapBased) {
+void jamAppendStringToList(JamStringList *list, char *string, bool heapBased) {
 	char** newList = NULL;
 	bool* newBools = NULL;
 
@@ -112,27 +112,27 @@ void appendStringToStringList(StringList* list, char* string, bool heapBased) {
 			list->dynamic[list->size] = heapBased;
 			list->size++;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Could not reallocate string list(s) (appendStringToStringList)\n");
+			jSetError(ERROR_REALLOC_FAILED, "Could not reallocate string list(s) (jamAppendStringToList)\n");
 			// Just in case one was initialized and the other wasn't
 			free(newBools);
 			free(newList);
 		}
 	} else {
 		if (list == NULL) {
-			jSetError(ERROR_NULL_POINTER, "List does not exist (appendStringToStringList)\n");
+			jSetError(ERROR_NULL_POINTER, "List does not exist (jamAppendStringToList)\n");
 		}
 		if (string == NULL) {
-			jSetError(ERROR_NULL_POINTER, "String does not exist (appendStringToStringList)\n");
+			jSetError(ERROR_NULL_POINTER, "String does not exist (jamAppendStringToList)\n");
 		}
 	}
 }
 /////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////
-StringList* explodeString(const char* string, char delim, bool ignoreQuotes) {
+JamStringList* jamExplodeString(const char *string, char delim, bool ignoreQuotes) {
 	int i;
 	bool inQuotes = false;
-	StringList* list = createStringList();
+	JamStringList* list = jamCreateStringList();
 	int lastLocation = 0;
 	char* currentBuffer;
 	int stringLength = (int)strlen(string);
@@ -163,10 +163,10 @@ StringList* explodeString(const char* string, char delim, bool ignoreQuotes) {
 				else
 					memcpy((void*)currentBuffer, (const void*)(string + lastLocation + 1), i - lastLocation - 2);
 				currentBuffer[lastLocation - i] = 0;
-				appendStringToStringList(list, currentBuffer, true);
+				jamAppendStringToList(list, currentBuffer, true);
 				cameFromQuotes = false;
 			} else {
-				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (explodeString)\n");
+				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (jamExplodeString)\n");
 			}
 			lastLocation = i + 1;
 		}
@@ -177,7 +177,7 @@ StringList* explodeString(const char* string, char delim, bool ignoreQuotes) {
 /////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////
-void freeStringList(StringList* list) {
+void jamFreeStringList(JamStringList *list) {
 	int i;
 	if (list != NULL) {
 		for (i = 0; i < list->size; i++)

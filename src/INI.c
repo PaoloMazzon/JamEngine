@@ -6,11 +6,11 @@
 #include "JamError.h"
 
 //////////////////////////////////////////////////////
-INI* createINI() {
-	INI* ini = (INI*)calloc(1, sizeof(INI));
+JamINI* jamCreateINI() {
+	JamINI* ini = (JamINI*)calloc(1, sizeof(JamINI));
 
 	if (ini == NULL) {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to create INI. (createINI)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamINI. (jamCreateINI)\n");
 	}
 
 	return ini;
@@ -18,13 +18,13 @@ INI* createINI() {
 //////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////
-INI* loadINI(const char* filename) {
+JamINI* jamLoadINI(const char *filename) {
 	char *currentHeader, *key, *val;
 	char* equalCharPos;
 	int lineLength;
 	int i;
-	INI* ini = createINI();
-	StringList* file = loadStringList(filename);
+	JamINI* ini = jamCreateINI();
+	JamStringList* file = jamLoadStringList(filename);
 	currentHeader = NULL;
 
 	if (ini != NULL && file != NULL) {
@@ -46,9 +46,9 @@ INI* loadINI(const char* filename) {
 
 					if (currentHeader != NULL) {
 						strncpy(currentHeader, file->strList[i] + 1, lineLength - 2);
-						throwInGarbageINI(ini, currentHeader);
+						jamThrowInGarbageINI(ini, currentHeader);
 					} else {
-						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate header (loadINI)\n");
+						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate header (jamLoadINI)\n");
 					}
 				} else if (equalCharPos != NULL && currentHeader != NULL && equalCharPos != file->strList[i]) {
 					// setter
@@ -59,42 +59,42 @@ INI* loadINI(const char* filename) {
 						// We're clear, copy strings and throw into garbage pile
 						strncpy(key, file->strList[i], equalCharPos - file->strList[i]);
 						strncpy(val, equalCharPos + 1, lineLength - (equalCharPos - file->strList[i]));
-						throwInGarbageINI(ini, key);
-						throwInGarbageINI(ini, val);
-						setKeyINI(ini, currentHeader, key, val);
+						jamThrowInGarbageINI(ini, key);
+						jamThrowInGarbageINI(ini, val);
+						jamSetKeyINI(ini, currentHeader, key, val);
 					} else {
 						free(key);
 						free(val);
-						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate key or val (loadINI)\n");
+						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate key or val (jamLoadINI)\n");
 					}
 				}
 			}
 		}
 	} else {
 		if (ini == NULL)
-			jSetError(ERROR_ALLOC_FAILED, "INI could not be created for file [%s] (loadINI)\n", filename);
+			jSetError(ERROR_ALLOC_FAILED, "JamINI could not be created for file [%s] (jamLoadINI)\n", filename);
 		if (file == NULL)
-			jSetError(ERROR_OPEN_FAILED, "File [%s] could not be loaded (loadINI)\n", filename);
+			jSetError(ERROR_OPEN_FAILED, "File [%s] could not be loaded (jamLoadINI)\n", filename);
 	}
-	
-	freeStringList(file);
+
+	jamFreeStringList(file);
 	return ini;
 }
 //////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////
-void outputINI(INI* ini, FILE* stream) {
+void jamOutputINI(JamINI *ini, FILE *stream) {
 	int i;
 
 	if (ini != NULL && stream != NULL) {
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			fprintf(stream, "[%s]\n", ini->headerNames[i]);
-			outputSMap(ini->headers[i], stream);
+			jamOutputStringMap(ini->headers[i], stream);
 			fprintf(stream, "\n");
 		}
 	} else {
 		if (ini == NULL)
-			jSetError(ERROR_NULL_POINTER, "INI does not exist (ouputINI)\n");
+			jSetError(ERROR_NULL_POINTER, "JamINI does not exist (ouputINI)\n");
 		if (stream == NULL)
 			jSetError(ERROR_NULL_POINTER, "Stream does not exist (ouputINI)\n");
 	}
@@ -102,12 +102,12 @@ void outputINI(INI* ini, FILE* stream) {
 //////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////
-void setKeyINI(INI* ini, const char* header, const char* key, char* val) {
+void jamSetKeyINI(JamINI *ini, const char *header, const char *key, char *val) {
 	// -1 at the end of the loop implies the header
 	// does not yet exist
 	int index = -1;
-	SMap* tempSMap = NULL; // If the header doesn't exist
-	SMap** newHeaders;
+	JamStringMap* tempSMap = NULL; // If the header doesn't exist
+	JamStringMap** newHeaders;
 	char** newHeaderNames;
 	int i;
 	
@@ -119,51 +119,51 @@ void setKeyINI(INI* ini, const char* header, const char* key, char* val) {
 
 		// Did we find the header or not?
 		if (index != -1) {
-			setSMapVal(ini->headers[index], key, val);
+			jamSetStringMapVal(ini->headers[index], key, val);
 		} else {
 			// We are now going to try and make the header
-			// list 1 bigger and throw a new SMap to the
+			// list 1 bigger and throw a new JamStringMap to the
 			// end of it.
-			tempSMap = createSMap();
-			newHeaders = (SMap**)realloc(ini->headers, (ini->numberOfHeaders + 1) * sizeof(SMap));
+			tempSMap = jamCreateStringMap();
+			newHeaders = (JamStringMap**)realloc(ini->headers, (ini->numberOfHeaders + 1) * sizeof(JamStringMap));
 			newHeaderNames = (char**)realloc(ini->headerNames, (ini->numberOfHeaders + 1) * sizeof(char*));
 			
 			if (tempSMap != NULL && newHeaders != NULL && newHeaderNames != NULL) {
 
 				newHeaders[ini->numberOfHeaders] = tempSMap;
 				newHeaderNames[ini->numberOfHeaders] = (char*)header;
-				setSMapVal(tempSMap, key, val);
+				jamSetStringMapVal(tempSMap, key, val);
 				ini->numberOfHeaders++;
 				ini->headers = newHeaders;
 				ini->headerNames = newHeaderNames;
 			} else {
-				jSetError(ERROR_REALLOC_FAILED, "Failed create header (setKeyINI)\n");
+				jSetError(ERROR_REALLOC_FAILED, "Failed create header (jamSetKeyINI)\n");
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "INI does not exist for header:key pair %s:%s (setKeyINI)\n", header, key);
+		jSetError(ERROR_NULL_POINTER, "JamINI does not exist for header:key pair %s:%s (jamSetKeyINI)\n", header, key);
 	}
 }
 //////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////
-char* getKeyINI(INI* ini, const char* header, const char* key, char* def) {
+char* jamGetKeyINI(JamINI *ini, const char *header, const char *key, char *def) {
 	int i;
 	char* ret = def;
 
 	if (ini != NULL) {
 		// We loop through the headers and find the right
-		// one by comparing strings. We then queue the SMap
+		// one by comparing strings. We then queue the JamStringMap
 		// function to do the rest for us. We don't break
 		// the loop because I don't like spaghetti and
 		// if the user is using only these functions then
 		// every header will have a unique name.
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], header) == 0)
-				ret = (char*)getSMapVal(ini->headers[i], (const char*)key, def);
+				ret = (char*) jamGetStringMapVal(ini->headers[i], (const char *) key, def);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "INI does not exist for header:key pair %s:%s (getKeyINI)\n", header, key);
+		jSetError(ERROR_NULL_POINTER, "JamINI does not exist for header:key pair %s:%s (jamGetKeyINI)\n", header, key);
 	}
 
 	return ret;
@@ -171,7 +171,7 @@ char* getKeyINI(INI* ini, const char* header, const char* key, char* def) {
 //////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////
-void throwInGarbageINI(INI* ini, char* string) {
+void jamThrowInGarbageINI(JamINI *ini, char *string) {
 	char** tempList;
 	
 	if (ini != NULL) {
@@ -184,22 +184,22 @@ void throwInGarbageINI(INI* ini, char* string) {
 			ini->garbagePile[ini->sizeOfGarbagePile] = string;
 			ini->sizeOfGarbagePile++;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Failed to resize garbage pile (throwInGarbageINI)\n");
+			jSetError(ERROR_REALLOC_FAILED, "Failed to resize garbage pile (jamThrowInGarbageINI)\n");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "INI does not exist (throwInGarbageINI)\n");
+		jSetError(ERROR_NULL_POINTER, "JamINI does not exist (jamThrowInGarbageINI)\n");
 	}
 }
 //////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////
-void freeINI(INI* ini) {
+void jamFreeINI(JamINI *ini) {
 	int i;
 	if (ini != NULL) {
 		for (i = 0; i < ini->sizeOfGarbagePile; i++)
 			free(ini->garbagePile[i]);
 		for (i = 0; i < ini->numberOfHeaders; i++)
-			freeSMap(ini->headers[i]);
+			jamFreeStringMap(ini->headers[i]);
 		free(ini->headers);
 		free(ini->headerNames);
 		free(ini->garbagePile);

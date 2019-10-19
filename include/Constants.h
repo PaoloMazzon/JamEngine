@@ -17,7 +17,7 @@ typedef signed short sint16;
 typedef signed int sint32;
 typedef signed long long sint64;
 
-// World things
+// JamWorld things
 #define ENTITY_LIST_ALLOCATION_AMOUNT 5
 #define ENTITIES_IN_RANGE 1
 #define ENTITIES_OUT_OF_RANGE 0
@@ -35,7 +35,7 @@ typedef enum {ft_Rectangle, ft_Proximity} JamFilterType;
 /// \brief The file that error messages will be output to
 #define LOG_FILENAME "jamerrorlog.txt"
 
-// This is the maximum number vertices checkMapCollision is allowed to check
+// This is the maximum number vertices jamCheckMapCollision is allowed to check
 #define MAX_GRID_VERTICES 16
 
 // Optimization options - comment  out anything here to turn it off
@@ -43,7 +43,7 @@ typedef enum {ft_Rectangle, ft_Proximity} JamFilterType;
 #define ENTITY_ENABLE_SPEED
 #define ENTITY_ENABLE_FRICTION
 
-// The names of INI headers for assets
+// The names of JamINI headers for assets
 #define INI_SPRITE_PREFIX 's'
 #define INI_ENTITY_PREFIX 'e'
 #define INI_HITBOX_PREFIX 'h'

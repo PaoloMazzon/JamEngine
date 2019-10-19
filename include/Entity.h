@@ -23,8 +23,8 @@
 /// these things, you can turn each individually off in the
 /// Constants.h file.
 typedef struct _JamEntity {
-	Sprite* sprite;       ///< This entity's sprite (NULL is safe)
-	Hitbox* hitbox;       ///< This entity's hitbox (NULL is safe)
+	JamSprite* sprite;       ///< This entity's sprite (NULL is safe)
+	JamHitbox* hitbox;       ///< This entity's hitbox (NULL is safe)
 	JamEntityType type;      ///< Type of entity this is
 	double x;             ///< X position in the game world
 	double y;             ///< Y position in the game world
@@ -54,7 +54,7 @@ typedef struct _JamEntity {
 
 /// \brief Creates/initializes an entity class
 /// \throws ERROR_ALLOC_FAILED
-JamEntity* jamCreateEntity(Sprite *sprite, Hitbox *hitbox, double x, double y, double hitboxOffsetX,
+JamEntity* jamCreateEntity(JamSprite *sprite, JamHitbox *hitbox, double x, double y, double hitboxOffsetX,
 						   double hitboxOffsetY, JamBehaviour *behaviour);
 
 /// \brief Makes a 1:1 copy of an entity and returns the new copy
@@ -76,7 +76,7 @@ bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity
 /// This function uses the rx/ry coordinates for the entity, no the entity's x/y
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-bool jamCheckEntityTileMapCollision(JamEntity *entity, TileMap *tileMap, double rx, double ry);
+bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry);
 
 /// \brief Frees an entity from memory
 ///

@@ -15,7 +15,7 @@ int roundToInt(double x) {
 }
 
 //////////////////////////////////////////////////////////
-JamEntity* jamCreateEntity(Sprite *sprite, Hitbox *hitbox, double x, double y, double hitboxOffsetX,
+JamEntity* jamCreateEntity(JamSprite *sprite, JamHitbox *hitbox, double x, double y, double hitboxOffsetX,
 						   double hitboxOffsetY, JamBehaviour *behaviour) {
 	JamEntity* ent = (JamEntity*)malloc(sizeof(JamEntity));
 
@@ -85,7 +85,9 @@ JamEntity* jamCopyEntity(JamEntity *baseEntity, double x, double y) {
 void jamDrawEntity(JamRenderer *renderer, JamEntity *entity) {
 	if (entity != NULL && renderer != NULL) {
 		if (entity->sprite != NULL)
-		drawSprite(renderer, entity->sprite, (sint32)entity->x - entity->sprite->originX, (sint32)entity->y - entity->sprite->originY, entity->scaleX, entity->scaleY, entity->rot, entity->alpha, entity->updateOnDraw);
+			jamDrawSprite(renderer, entity->sprite, (sint32) entity->x - entity->sprite->originX,
+						  (sint32) entity->y - entity->sprite->originY, entity->scaleX, entity->scaleY, entity->rot,
+						  entity->alpha, entity->updateOnDraw);
 	} else {
 		if (entity == NULL)
 			jSetError(ERROR_NULL_POINTER, "JamEntity does not exist (jamDrawEntity).\n");
@@ -110,17 +112,17 @@ bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity
 		y2 = entity2->y;
 
 		// Account for rectangular origins
-		if (entity1->hitbox->type == hitRectangle) {
+		if (entity1->hitbox->type == ht_Rectangle) {
 			x1 -= entity1->hitboxOffsetX;
 			y1 -= entity1->hitboxOffsetY;
 		}
-		if (entity2->hitbox->type == hitRectangle) {
+		if (entity2->hitbox->type == ht_Rectangle) {
 			x2 -= entity2->hitboxOffsetX;
 			y2 -= entity2->hitboxOffsetY;
 		}
 
 		// Now check the collision itself
-		coll = checkHitboxCollision(entity1->hitbox, x1, y1, entity2->hitbox, x2, y2);
+		coll = jamCheckHitboxCollision(entity1->hitbox, x1, y1, entity2->hitbox, x2, y2);
 	} else {
 		if (entity1 == NULL) {
 			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (jamCheckEntityCollision).\n");
@@ -149,7 +151,7 @@ bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool jamCheckEntityTileMapCollision(JamEntity *entity, TileMap *tileMap, double rx, double ry) {
+bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry) {
 	bool coll = false;
 	double x, y; // Accounting for origins
 
@@ -159,7 +161,8 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, TileMap *tileMap, double 
 		y = ry + entity->hitboxOffsetY;
 
 		// Now check the collision itself
-		coll = checkMapCollision(tileMap, roundToInt(x), roundToInt(y), (int)entity->hitbox->width, (int)entity->hitbox->height);
+		coll = jamCheckMapCollision(tileMap, roundToInt(x), roundToInt(y), (int) entity->hitbox->width,
+									(int) entity->hitbox->height);
 	} else {
 		if (entity == NULL) {
 			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (jamCheckEntityTileMapCollision).\n");
@@ -184,9 +187,9 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, TileMap *tileMap, double 
 void jamFreeEntity(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames) {
 	if (entity != NULL) {
 		if (destroyHitbox)
-			freeHitbox(entity->hitbox);
+			jamFreeHitbox(entity->hitbox);
 		if (destroySprite)
-			freeSprite(entity->sprite, destroyFrames, false);
+			jamFreeSprite(entity->sprite, destroyFrames, false);
 		free(entity);
 	}
 }

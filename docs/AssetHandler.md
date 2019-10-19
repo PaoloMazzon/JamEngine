@@ -29,7 +29,7 @@ And here is a list of recognized keys for every asset type
    + `hitbox_offset_y` Default hitbox offset in the y direction (default=0)
    + `behaviour` The entity's behaviour to load from a `JamBehaviourMap` is the handler is given one (default="default")
    + `type` Type of entity this is (default="et_None") (types are Player, Item, Object, NPC, Solid, and Logic)
- + Sprites (the handler internally calls `loadSpriteFromSheet` for every sprite)
+ + Sprites (the handler internally calls `jamLoadSpriteFromSheet` for every sprite)
    + `texture_id` JamTexture to pull the sprite's frames from (default=0 (NULL pointer))
    + `animation_length` How many frames need to be loaded from the sheet (default=1)
    + `x_in_texture` X in the texture the spritesheet starts (default=0)
@@ -42,7 +42,7 @@ And here is a list of recognized keys for every asset type
    + `frame_delay` In-game frames between each animation frame
    + `looping` Weather or not the animation loops
  + Tile Maps (You're generall better off using tmx files if you want good tilemaps)
-   + `file` The file to load the map from (default="") (see `loadTileMap`)
+   + `file` The file to load the map from (default="") (see `jamLoadTileMap`)
    + `grid_width` How many tiles horizontally
    + `grid_height` How many tiles vertically
    + `cell_width` Width in pixels of each tile

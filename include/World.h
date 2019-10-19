@@ -56,15 +56,15 @@
 /// \warning Never change a value in this struct yourself, always use the
 /// funtions for it or you will very quickly be looking at lots of memory
 /// leaks.
-typedef struct _World {
+typedef struct _JamWorld {
 	// Core data
-	TileMap* worldMaps[MAX_TILEMAPS]; ///< This is the struct that represents the collisions in this world
-	EntityList* worldEntities; ///< The full list of entities in this world
+	JamTileMap* worldMaps[MAX_TILEMAPS]; ///< This is the struct that represents the collisions in this world
+	JamEntityList* worldEntities; ///< The full list of entities in this world
 	JamRenderer* renderer; ///< This is just held in this struct so it can pass this pointer to entities inside it as needed
 
 	// Higher-level abstractions - everything here is stored in core data
-	EntityList* entityByRange[2]; ///< List of lists of entities that are in or out of range
-	EntityList* entityTypes[MAX_ENTITY_TYPES]; ///< List of lists of entities by type, sorted by the world
+	JamEntityList* entityByRange[2]; ///< List of lists of entities that are in or out of range
+	JamEntityList* entityTypes[MAX_ENTITY_TYPES]; ///< List of lists of entities by type, sorted by the world
 	JamFilterType distanceFilteringType; ///< Do we filter entities by ones on screen or by a given distance?
 
 	// Information needed for filtering entities
@@ -75,19 +75,19 @@ typedef struct _World {
 		};
 		uint16 inRangeRadius; ///< For determining if an entity is in range or not
 	};
-} World;
+} JamWorld;
 
 /// \brief Creates a world to work with
 /// \throws ERROR_ALLOC_FAILED
-World* createWorld(JamRenderer* renderer);
+JamWorld* jamCreateWorld(JamRenderer *renderer);
 
 /// \brief Sets up a rectangular filter in a world
 /// \throws ERROR_NULL_POINTER
-void setWorldFilterTypeRectangle(World* world, uint16 inRangeRectangleWidth, uint16 inRangeRectangleHeight);
+void jamSetWorldFilterTypeRectangle(JamWorld *world, uint16 inRangeRectangleWidth, uint16 inRangeRectangleHeight);
 
 /// \brief Sets up a circular filter in a world
 /// \throws ERROR_NULL_POINTER
-void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius);
+void jamSetWorldFilterTypeCircle(JamWorld *world, uint16 inRangeRadius);
 
 /// \brief Adds an entity to the world
 ///
@@ -96,7 +96,7 @@ void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-void worldAddEntity(World* world, JamEntity* entity);
+void jamWorldAddEntity(JamWorld *world, JamEntity *entity);
 
 /// \brief Processes and draws the entities in the world
 ///
@@ -105,7 +105,7 @@ void worldAddEntity(World* world, JamEntity* entity);
 /// function will be ran before the first onDraw function is.
 ///
 /// \throws ERROR_NULL_POINTER
-void worldProcFrame(World* world);
+void jamWorldProcFrame(JamWorld *world);
 
 /// \brief Moves an entity from in range to out of range
 ///
@@ -116,7 +116,7 @@ void worldProcFrame(World* world);
 /// up later. This function does nothing if the entity is not in range.
 ///
 /// \throws ERROR_NULL_POINTER
-void worldRotateEntity(World* world, JamEntity* entity);
+void jamWorldRotateEntity(JamWorld *world, JamEntity *entity);
 
 /// \brief Removes an entity from the world
 ///
@@ -126,7 +126,7 @@ void worldRotateEntity(World* world, JamEntity* entity);
 /// it will loop over at least 3 different entity lists trying to
 /// find all references to the specific entity
 /// \throws ERROR_NULL_POINTER
-void worldRemoveEntity(World* world, JamEntity* entity);
+void jamWorldRemoveEntity(JamWorld *world, JamEntity *entity);
 
 /// \brief Sorts a world's entities into lists filtered by distance
 ///
@@ -136,7 +136,7 @@ void worldRemoveEntity(World* world, JamEntity* entity);
 ///
 /// \warning This function is very heavy on the CPU
 /// \throws ERROR_NULL_POINTER
-void filterEntitiesByProximity(World* world, int pointX, int pointY);
+void jamFilterEntitiesByProximity(JamWorld *world, int pointX, int pointY);
 
 /// \brief Frees a world
 ///
@@ -144,4 +144,4 @@ void filterEntitiesByProximity(World* world, int pointX, int pointY);
 /// it holds and things that createWorld allocated itself. This is because
 /// tile maps are typically handled by an asset handler where as entities
 /// in a world should be copies of entities from an asset handler.
-void freeWorld(World* world);
+void jamFreeWorld(JamWorld *world);

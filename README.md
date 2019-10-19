@@ -16,20 +16,20 @@ Features
 ========
  - Extremely easy API to use, all headers documented with doxygen (`$ doxygen doxyconfig.txt`)
  - Load many assets at once with an `JamAssetHandler`
- - Manage many entities at a time with a `World`
- - Between `World`s and `JamAssetHandler`s, memory management is quite simple as well
+ - Manage many entities at a time with a `JamWorld`
+ - Between `JamWorld`s and `JamAssetHandler`s, memory management is quite simple as well
  - `JamBehaviourMap`s to automate most of each frame
  - Supports the use of [Tiled](https://www.mapeditor.org/) as a level editor
  - Written purely in C and thus cross platform
- - INI file I/O built in and extremely easy to use
+ - JamINI file I/O built in and extremely easy to use
  - Unicode text rendering (although bitmap fonts only at the moment)
  - Cross-platform implementations of atof and ftoa (string to double and vice-versa)
  - SAT collisions and simple rectangle/circle collisions are interchangeable
- - Collision grids (`TileMap`) for lightning-fast grid-to-rectangle collisions (or just rendering tiles (or both))
+ - Collision grids (`JamTileMap`) for lightning-fast grid-to-rectangle collisions (or just rendering tiles (or both))
 
 To-Do List
 ==========
- - Input System
+ - JamInput System
     + Gamepad input
  - Renderer
     + Delta timing

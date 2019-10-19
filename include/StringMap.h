@@ -16,29 +16,29 @@ typedef struct {
 	char** keys; ///< The keys
 	char** vals; ///< The values
 	char** garbage; ///< Heap-based strings that need to be freed upon destruction
-} SMap;
+} JamStringMap;
 
 /// \brief Creates an empty map
 /// \throws ERROR_ALLOC_FAILED
-SMap* createSMap();
+JamStringMap* jamCreateStringMap();
 
 /// \brief Loads a map from an smap file
 /// \throws ERROR_OPEN_FAILED
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_INCORRECT_FORMAT
-SMap* loadSMap(const char* filename);
+JamStringMap* jamLoadStringMap(const char *filename);
 
 /// \brief Prints the map in INI format to the given stream
 /// \throws ERROR_NULL_POINTER
-void outputSMap(SMap* smap, FILE* stream);
+void jamOutputStringMap(JamStringMap *smap, FILE *stream);
 
 /// \brief Sets a value to a key in a map
 /// \throws ERROR_NULL_POINTER
-void setSMapVal(SMap* smap, const char* key, char* val);
+void jamSetStringMapVal(JamStringMap *smap, const char *key, char *val);
 
 /// \brief Gets a value from a map
 /// \throws ERROR_NULL_POINTER
-const char* getSMapVal(SMap* smap, const char* key, char* def);
+const char* jamGetStringMapVal(JamStringMap *smap, const char *key, char *def);
 
 /// \brief Throws a string into the garbage
 ///
@@ -47,7 +47,7 @@ const char* getSMapVal(SMap* smap, const char* key, char* def);
 ///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-void throwAStringIntoTheGarbage(SMap* smap, char* garbage);
+void jamThrowInGarbageStringMap(JamStringMap *smap, char *garbage);
 
 /// \brief Frees the map
-void freeSMap(SMap* smap);
+void jamFreeStringMap(JamStringMap *smap);

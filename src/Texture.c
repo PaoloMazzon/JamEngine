@@ -9,7 +9,7 @@
 #include "JamError.h"
 
 ////////////////////////////////////////////////////////////////
-JamTexture* createTexture(JamRenderer* renderer, int w, int h) {
+JamTexture* jamCreateTexture(JamRenderer *renderer, int w, int h) {
 	// Create the basic tex struct
 	JamTexture* tex = (JamTexture*)malloc(sizeof(JamTexture));
 
@@ -28,7 +28,7 @@ JamTexture* createTexture(JamRenderer* renderer, int w, int h) {
 		} else {
 			free(tex);
 			tex = NULL;
-			jSetError(ERROR_SDL_ERROR, "Failed to create SDL texture (createTexture). SDL Error: %s\n", SDL_GetError());
+			jSetError(ERROR_SDL_ERROR, "Failed to create SDL texture (jamCreateTexture). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
 		jSetError(ERROR_SDL_ERROR, "Failed to allocate JamTexture. SDL Error: %s\n", SDL_GetError());
@@ -43,7 +43,7 @@ JamTexture* createTexture(JamRenderer* renderer, int w, int h) {
 ////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////
-JamTexture* loadTexture(JamRenderer* renderer, const char* filename) {
+JamTexture* jamLoadTexture(JamRenderer *renderer, const char *filename) {
 	JamTexture* tex = NULL;
 
 	// Check that the renderer isn't a dud
@@ -81,12 +81,12 @@ JamTexture* loadTexture(JamRenderer* renderer, const char* filename) {
 				} else {
 					free(tex);
 					tex = NULL;
-					jSetError(ERROR_SDL_ERROR, "Failed to create texture from surface (loadTexture). SDL Error: %s\n", SDL_GetError());
+					jSetError(ERROR_SDL_ERROR, "Failed to create texture from surface (jamLoadTexture). SDL Error: %s\n", SDL_GetError());
 				}
 			} else {
 				free(tex);
 				tex = NULL;
-				jSetError(ERROR_SDL_ERROR, "Failed to create SDL surface (loadTexture). SDL Error: %s\n", SDL_GetError());
+				jSetError(ERROR_SDL_ERROR, "Failed to create SDL surface (jamLoadTexture). SDL Error: %s\n", SDL_GetError());
 			}
 		} else {
 			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate JamTexture. SDL Error: %s\n", SDL_GetError());
@@ -108,7 +108,7 @@ JamTexture* loadTexture(JamRenderer* renderer, const char* filename) {
 ////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////
-void freeTexture(JamTexture* tex) {
+void jamFreeTexture(JamTexture *tex) {
 	if (tex != NULL) {
 		SDL_DestroyTexture(tex->tex);
 		free(tex);

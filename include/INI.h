@@ -11,21 +11,21 @@
 
 /// \brief Holds information pertaining to INI files
 typedef struct {
-	SMap** headers; ///< Each one is a different header
+	JamStringMap** headers; ///< Each one is a different header
 	char** headerNames; ///< Corrosponding name of each header
 	int numberOfHeaders; ///< How many headers we have
 	char** garbagePile; ///< Pointers that need to be freed
 	int sizeOfGarbagePile; ///< Number of things in the garbage pile
-} INI;
+} JamINI;
 
 /// \brief Creates a new INI struct
 /// \throws ERROR_ALLOC_FAILED
-INI* createINI();
+JamINI* jamCreateINI();
 
 /// \brief Loads an INI from a file
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPEN_FAILED
-INI* loadINI(const char* filename);
+JamINI* jamLoadINI(const char *filename);
 
 /// \brief This will print the INI file to a stream
 /// 
@@ -37,16 +37,16 @@ INI* loadINI(const char* filename);
 /// to stdout/stderr/whatever.
 ///
 /// \throws ERROR_NULL_POINTER
-void outputINI(INI* ini, FILE* stream);
+void jamOutputINI(JamINI *ini, FILE *stream);
 
 /// \brief Set a key in an INI
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-void setKeyINI(INI* ini, const char* header, const char* key, char* val);
+void jamSetKeyINI(JamINI *ini, const char *header, const char *key, char *val);
 
 /// \brief Gets a key from an INI
 /// \throws ERROR_NULL_POINTER
-char* getKeyINI(INI* ini, const char* header, const char* key, char* def);
+char* jamGetKeyINI(JamINI *ini, const char *header, const char *key, char *def);
 
 /// \brief Puts something to the garbage pile to be freed on destruction
 ///
@@ -56,7 +56,7 @@ char* getKeyINI(INI* ini, const char* header, const char* key, char* def);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_REALLOC_FAILED
-void throwInGarbageINI(INI* ini, char* string);
+void jamThrowInGarbageINI(JamINI *ini, char *string);
 
 /// \brief Destroys an INI and all memory it allocated
-void freeINI(INI* ini);
+void jamFreeINI(JamINI *ini);

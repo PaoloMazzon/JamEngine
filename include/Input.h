@@ -28,14 +28,14 @@ typedef struct {
 	int mY; ///< The mouse's current y position
 	uint32 mouseState; ///< Current frame's mice buttons
 	uint32 previousMouseState; ///< Last frame's mice buttons
-} Input;
+} JamInput;
 
 /// \brief Creates an input struct for keeping track of user-input
 /// \throws ERROR_ALLOC_FAILED
-void initInput();
+void jamInitInput();
 
 /// \brief Returns true if input was initialized properly or false otherwise
-bool inputIsInitialized();
+bool jamInputIsInitialized();
 
 /// \brief Updates an input struct
 ///
@@ -43,42 +43,42 @@ bool inputIsInitialized();
 /// input class given to rendererProcEvents for input to work properly
 ///
 /// \throws ERROR_NULL_POINTER
-void updateInput(double screenMultiplier);
+void jamUpdateInput(double screenMultiplier);
 
 /// \brief Checks if a key is currently pressed
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
-bool inputCheckKey(SDL_Scancode key);
+bool jamInputCheckKey(SDL_Scancode key);
 
 /// \brief Checks if a key was just pressed
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
-bool inputCheckKeyPressed(SDL_Scancode key);
+bool jamInputCheckKeyPressed(SDL_Scancode key);
 
 /// \brief Checks if a key was just released
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
-bool inputCheckKeyReleased(SDL_Scancode key);
+bool jamInputCheckKeyReleased(SDL_Scancode key);
 
 /// \brief Grabs the mouse's X position
 /// \throws ERROR_NULL_POINTER
-int inputGetMouseX();
+int jamInputGetMouseX();
 
 /// \brief Grabs the mouse's Y position
 /// \throws ERROR_NULL_POINTER
-int inputGetMouseY();
+int jamInputGetMouseY();
 
 /// \brief Checks if a mouse button is currently pressed
 /// \throws ERROR_NULL_POINTER
-bool inputCheckMouseButton(uint8 button);
+bool jamInputCheckMouseButton(uint8 button);
 
 /// \brief Checks if a mouse button was just pressed
 /// \throws ERROR_NULL_POINTER
-bool inputCheckMouseButtonPressed(uint8 button);
+bool jamInputCheckMouseButtonPressed(uint8 button);
 
 /// \brief Checks if a mouse button was just released
 /// \throws ERROR_NULL_POINTER
-bool inputCheckMouseButtonReleased(uint8 button);
+bool jamInputCheckMouseButtonReleased(uint8 button);
 
 /// \brief Clears an Input from memory
-void quitInput();
+void jamQuitInput();

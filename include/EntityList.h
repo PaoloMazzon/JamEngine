@@ -35,11 +35,11 @@ typedef struct {
 	JamEntity** entities; ///< All the entities in the list
 	uint32 size; ///< The size of the entity list
 	uint32 capacity; ///< Total memory slots allocated
-} EntityList;
+} JamEntityList;
 
 /// \brief Creates an entity list
 /// \throws ERROR_NULL_POINTER
-EntityList* createEntityList();
+JamEntityList* jamCreateEntityList();
 
 /// \brief Puts an entity into the list, making it bigger or possibly using a free spot
 ///
@@ -51,21 +51,21 @@ EntityList* createEntityList();
 ///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-void addEntityToList(EntityList* list, JamEntity* entity);
+void jamAddEntityToList(JamEntityList *list, JamEntity *entity);
 
 /// \brief Removes an entity from the list and returns it
 /// \return Returns NULL if it was not found
 /// \throws ERROR_NULL_POINTER
-JamEntity* popEntityFromList(EntityList* list, JamEntity* entity);
+JamEntity* jamPopEntityFromList(JamEntityList *list, JamEntity *entity);
 
 /// \brief Shrinks an entity list down to no bigger than needed
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-void shrinkEntityList(EntityList* list);
+void jamShrinkEntityList(JamEntityList *list);
 
 /// \brief Removes all entities from the list
 /// \throws ERROR_NULL_POINTER
-void emptyEntityList(EntityList* list, bool destroyEntities);
+void jamEmptyEntityList(JamEntityList *list, bool destroyEntities);
 
 /// \brief Destroys an entity list
 ///
@@ -73,4 +73,4 @@ void emptyEntityList(EntityList* list, bool destroyEntities);
 /// \param destroyEntities Weather or not to also free the entities
 ///
 /// destroyEntities does not free any of the entities' sprites/hitboxes/whatever.
-void freeEntityList(EntityList* list, bool destroyEntities);
+void jamFreeEntityList(JamEntityList *list, bool destroyEntities);

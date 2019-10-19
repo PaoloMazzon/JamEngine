@@ -10,7 +10,7 @@ general form of using behaviour maps is as follows:
 
 An individual behaviour in a map consists of 4 function pointers: onCreate, onDestroy, onFrame,
 onDraw. As you might guess, onCreate and onDestroy are called when an entity is added to a
-world and removed respectively. onFrame is called each frame by the world when you call `worldProcFrame`
+world and removed respectively. onFrame is called each frame by the world when you call `jamWorldProcFrame`
 is called, and onDraw is a bit more tricky. If onDraw is a null pointer, the world will just draw
 the entity as normal, but if onDraw is not null, the world will not draw the entity at all and that
 responsibility then falls to the function. This allows you to render certain entities differently
@@ -18,7 +18,7 @@ than other without wasting time rendering the entity via `jamDrawEntity`.
 
 The function pointers that behaviour maps expect should be as follows
 
-    void functionName(JamRenderer*, World*, JamEntity*);
+    void functionName(JamRenderer*, JamWorld*, JamEntity*);
 
 This is true for all 4 different functions. The renderer is passed to every entity, the world
 that called the function is passed, and the entity who's being processed gets access to its
@@ -36,6 +36,6 @@ As a simple example,
 	jamAssetLoadINI(handler, renderer, "assets/level0.ini", bMap);
 	
 	// Now we load a world from a tmx file and when we do, all of the assets' onCreate will be called
-	World* gameWorld = loadWorldFromTMX(handler, renderer, "assets/level0.tmx");
+	JamWorld* gameWorld = jamLoadWorldFromTMX(handler, renderer, "assets/level0.tmx");
 
-TMX loading is covered in the World documentation.
+TMX loading is covered in the JamWorld documentation.
