@@ -219,7 +219,7 @@ void assetLoadHitbox(AssetHandler* assetHandler, INI* ini, const char* headerNam
 //////////////////////// End of assetLoadINI support functions ////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename, BehaviourMap* map) {
+void assetLoadINI(AssetHandler* assetHandler, JamRenderer* renderer, const char* filename, BehaviourMap* map) {
 	INI* ini = loadINI(filename);
 	uint32 i, j;
 
@@ -265,7 +265,7 @@ void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* fi
 			jSetError(ERROR_NULL_POINTER, "Asset loader does not exist for file %s (assetLoadINI)\n", filename);
 		}
 		if (renderer == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Renderer does not exist for file %s (assetLoadINI)\n", filename);
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist for file %s (assetLoadINI)\n", filename);
 		}
 		if (ini == NULL) {
 			jSetError(ERROR_OPEN_FAILED, "Failed to load INI for file %s (assetLoadINI)\n", filename);
@@ -354,9 +354,9 @@ Hitbox* assetGetHitbox(AssetHandler* handler, AssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Texture* assetGetTexture(AssetHandler* handler, AssetKey key) {
+JamTexture* assetGetTexture(AssetHandler* handler, AssetKey key) {
 	Asset* asset = assetGet(handler, key);
-	Texture* returnVal = NULL;
+	JamTexture* returnVal = NULL;
 
 	if (handler != NULL) {
 		if (asset != NULL && asset->type == texAsset) {

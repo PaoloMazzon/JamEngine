@@ -8,7 +8,7 @@ struct _World;
 struct _Entity;
 
 ///< The arguments that must be present in every behaviour function
-#define BEHAVIOUR_ARGUMENTS Renderer* renderer, struct _World* world, struct _Entity*
+#define BEHAVIOUR_ARGUMENTS JamRenderer* renderer, struct _World* world, struct _Entity*
 
 /// \brief A behaviour that holds a few functions that will be executed at specific times
 ///

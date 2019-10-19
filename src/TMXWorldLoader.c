@@ -97,7 +97,7 @@ TileMap* createTileMapFromTMXLayer(AssetHandler* handler, tmx_layer* layer, uint
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* tmxFilename) {
+World* loadWorldFromTMX(AssetHandler* handler, JamRenderer* renderer, const char* tmxFilename) {
 	tmx_map* tmx = tmx_load(tmxFilename);
 	World* world = createWorld(renderer);
 	TileMap* currentTileMap = NULL;

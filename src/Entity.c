@@ -80,7 +80,7 @@ Entity* copyEntity(Entity* baseEntity, double x, double y) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void drawEntity(Renderer* renderer, Entity* entity) {
+void drawEntity(JamRenderer* renderer, Entity* entity) {
 	if (entity != NULL && renderer != NULL) {
 		if (entity->sprite != NULL)
 		drawSprite(renderer, entity->sprite, (sint32)entity->x - entity->sprite->originX, (sint32)entity->y - entity->sprite->originY, entity->scaleX, entity->scaleY, entity->rot, entity->alpha, entity->updateOnDraw);
@@ -88,7 +88,7 @@ void drawEntity(Renderer* renderer, Entity* entity) {
 		if (entity == NULL)
 			jSetError(ERROR_NULL_POINTER, "Entity does not exist (drawEntity).\n");
 		if (renderer == NULL)
-			jSetError(ERROR_NULL_POINTER, "Renderer does not exist (drawEntity).\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (drawEntity).\n");
 	}
 }
 //////////////////////////////////////////////////////////

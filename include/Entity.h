@@ -61,7 +61,7 @@ Entity* copyEntity(Entity* baseEntity, double x, double y);
 
 /// \brief Draws an entity
 /// \throws ERROR_NULL_POINTER
-void drawEntity(Renderer* renderer, Entity* entity);
+void drawEntity(JamRenderer* renderer, Entity* entity);
 
 /// \brief Checks if two entities are colliding with one another
 ///

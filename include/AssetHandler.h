@@ -22,7 +22,7 @@ typedef struct {
 	enum AssetType type; ///< The type of asset this thing holds
 
 	union {
-		Texture* tex; ///< The internal texture
+		JamTexture* tex; ///< The internal texture
 		Sprite* spr; ///< The internal sprite
 		TileMap* tileMap; ///< The internal tile map
 		Entity* entity; ///< The internal entity
@@ -86,7 +86,7 @@ void loadAssetIntoHandler(AssetHandler* handler, Asset* asset, AssetKey id);
 /// \throws ERROR_ASSET_NOT_FOUND
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OPEN_FAILED
-void assetLoadINI(AssetHandler* assetHandler, Renderer* renderer, const char* filename, BehaviourMap* map);
+void assetLoadINI(AssetHandler* assetHandler, JamRenderer* renderer, const char* filename, BehaviourMap* map);
 
 /// \brief Grabs an asset, or returns NULL if the key is not bound
 /// \throws ERROR_NULL_POINTER
@@ -110,7 +110,7 @@ Hitbox* assetGetHitbox(AssetHandler* handler, AssetKey key);
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Texture* assetGetTexture(AssetHandler* handler, AssetKey key);
+JamTexture* assetGetTexture(AssetHandler* handler, AssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER

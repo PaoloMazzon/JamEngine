@@ -18,7 +18,7 @@ than other without wasting time rendering the entity via `drawEntity`.
 
 The function pointers that behaviour maps expect should be as follows
 
-    void functionName(Renderer*, World*, Entity*);
+    void functionName(JamRenderer*, World*, Entity*);
 
 This is true for all 4 different functions. The renderer is passed to every entity, the world
 that called the function is passed, and the entity who's being processed gets access to its

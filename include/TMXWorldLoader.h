@@ -25,4 +25,4 @@
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OPEN_FAILED
 /// \throws ERROR_ALLOC_FAILED
-World* loadWorldFromTMX(AssetHandler* handler, Renderer* renderer, const char* tmxFilename);
+World* loadWorldFromTMX(AssetHandler* handler, JamRenderer* renderer, const char* tmxFilename);

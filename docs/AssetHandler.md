@@ -30,7 +30,7 @@ And here is a list of recognized keys for every asset type
    + `behaviour` The entity's behaviour to load from a `BehaviourMap` is the handler is given one (default="default")
    + `type` Type of entity this is (default="none") (types are Player, Item, Object, NPC, Solid, and Logic)
  + Sprites (the handler internally calls `loadSpriteFromSheet` for every sprite)
-   + `texture_id` Texture to pull the sprite's frames from (default=0 (NULL pointer))
+   + `texture_id` JamTexture to pull the sprite's frames from (default=0 (NULL pointer))
    + `animation_length` How many frames need to be loaded from the sheet (default=1)
    + `x_in_texture` X in the texture the spritesheet starts (default=0)
    + `y_in_texture` Y in the texture the spritesheet starts (default=0)

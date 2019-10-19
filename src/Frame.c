@@ -9,7 +9,7 @@
 #include <JamError.h>
 
 //////////////////////////////////////////////////////////////
-Frame* createFrame(Texture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
+Frame* createFrame(JamTexture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
 	Frame* frame = (Frame*)malloc(sizeof(Frame));
 
 	// Check for its validity
@@ -28,14 +28,14 @@ Frame* createFrame(Texture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawFrame(Frame* frame, Renderer* renderer, sint32 x, sint32 y) {
+void drawFrame(Frame* frame, JamRenderer* renderer, sint32 x, sint32 y) {
 	if (frame != NULL && renderer != NULL) {
 		drawTexturePart(renderer, frame->tex, x, y, frame->x, frame->y, frame->w, frame->h);
 	} else {
 		if (frame != NULL)
 			jSetError(ERROR_NULL_POINTER, "Frame does not exist. (drawFrame).\n");
 		if (renderer != NULL)
-			jSetError(ERROR_NULL_POINTER, "Renderer does not exist. (drawFrame).\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist. (drawFrame).\n");
 	}
 }
 //////////////////////////////////////////////////////////////

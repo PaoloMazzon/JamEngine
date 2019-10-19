@@ -29,7 +29,7 @@ static inline double sign(double number) {
 		return 0.0;
 }
 
-void onPlayerFrame(Renderer* renderer, World* world, Entity* self) {
+void onPlayerFrame(JamRenderer* renderer, World* world, Entity* self) {
 	// Gravity
 	self->vSpeed += 0.5;
 
@@ -80,14 +80,14 @@ void onPlayerFrame(Renderer* renderer, World* world, Entity* self) {
 }
 
 /////////////////////////////////////// The main menu ///////////////////////////////////////
-bool runMenu(Renderer* renderer, Font* font) { // Returns false if quit game
+bool runMenu(JamRenderer* renderer, Font* font) { // Returns false if quit game
 	// Menu-related variables
 	bool play = false;
 	bool runLoop = true;
 
 	while (runLoop) {
 		// Update the renderer and check for a quit signal
-		runLoop = rendererProcEvents(renderer);
+		runLoop = jamProcEvents(renderer);
 
 		if (runLoop) {
 			drawFillColour(renderer, 255, 255, 255, 255);
@@ -105,7 +105,7 @@ bool runMenu(Renderer* renderer, Font* font) { // Returns false if quit game
 				play = true;
 			}
 
-			rendererProcEndFrame(renderer);
+			jamProcEndFrame(renderer);
 		}
 	}
 
@@ -113,7 +113,7 @@ bool runMenu(Renderer* renderer, Font* font) { // Returns false if quit game
 	return play;
 }
 ////////////////////////////////////////// The game /////////////////////////////////////////
-bool runGame(Renderer* renderer, Font* font) {
+bool runGame(JamRenderer* renderer, Font* font) {
 	// Core game pieces
 	bool mainMenu = false; // Weather or not return to main menu
 	bool runLoop = true;
@@ -137,19 +137,19 @@ bool runGame(Renderer* renderer, Font* font) {
 	if (jGetError() == 0) {
 		while (runLoop) {
 			// Update the renderer and check for a quit signal
-			runLoop = rendererProcEvents(renderer);
+			runLoop = jamProcEvents(renderer);
 
 			if (runLoop) {
 				drawFillColour(renderer, 0, 0, 0, 255);
 
 				// Mess around with the renderer reset
 				if (inputCheckKeyPressed(SDL_SCANCODE_F)) {
-					resetWindow(renderer, 0, 0, RENDERER_BORDERLESS_FULLSCREEN);
-					rendererMaximizeScreenBufferInteger(renderer);
+					jamResetRenderer(renderer, 0, 0, RENDERER_BORDERLESS_FULLSCREEN);
+					jamIntegerMaximizeScreenBuffer(renderer);
 				}
 				if (inputCheckKeyPressed(SDL_SCANCODE_G)) {
-					resetWindow(renderer, GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
-					rendererMaximizeScreenBufferInteger(renderer);
+					jamResetRenderer(renderer, GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
+					jamIntegerMaximizeScreenBuffer(renderer);
 				}
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
@@ -168,7 +168,7 @@ bool runGame(Renderer* renderer, Font* font) {
 				renderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
 				/////////////////////////////////////////////////////////////////////
 
-				rendererProcEndFrame(renderer);
+				jamProcEndFrame(renderer);
 			}
 		}
 	}
@@ -183,15 +183,15 @@ bool runGame(Renderer* renderer, Font* font) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char* argv[]) {
-	Renderer* renderer = createRenderer("JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
-	rendererSetAA(renderer, false);
+	JamRenderer* renderer = jamCreateRenderer("JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
+	jamSetAA(renderer, false);
 	Font* font = createFont(renderer, "assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;
 	font->characterWidth = 8;
 	bool run = true;
 
 	// Setup the screen
-	configScreenBuffer(renderer, GAME_WIDTH, GAME_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+	jamConfigScreenBuffer(renderer, GAME_WIDTH, GAME_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// A very simple loop that allows the player to bounce between
 	// the menu and the game infinitely
@@ -203,6 +203,6 @@ int main(int argc, char* argv[]) {
 
 	quitInput();
 	freeFont(font);
-	freeRenderer(renderer);
+	jamFreeRenderer(renderer);
 	return 0;
 }

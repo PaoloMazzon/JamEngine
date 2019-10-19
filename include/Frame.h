@@ -18,7 +18,7 @@
 /// need to tell the frame where on the spritesheet to gather its
 /// info.
 typedef struct {
-	Texture* tex; ///< The texture this frame is using
+	JamTexture* tex; ///< The texture this frame is using
 	sint32 x; ///< The top left corner of the drawn area
 	sint32 y; ///< The top left corner of the drawn area
 	sint32 w; ///< The width of the drawn area
@@ -31,7 +31,7 @@ typedef struct {
 /// for that is completely redundant
 ///
 /// \throws ERROR_ALLOC_FAILED
-Frame* createFrame(Texture* tex, sint32 x, sint32 y, sint32 w, sint32 h);
+Frame* createFrame(JamTexture* tex, sint32 x, sint32 y, sint32 w, sint32 h);
 
 /// \brief Draws a frame
 ///
@@ -39,7 +39,7 @@ Frame* createFrame(Texture* tex, sint32 x, sint32 y, sint32 w, sint32 h);
 /// just a convenience for users
 ///
 /// \throws ERROR_NULL_POINTER
-void drawFrame(Frame* frame, Renderer* renderer, sint32 x, sint32 y);
+void drawFrame(Frame* frame, JamRenderer* renderer, sint32 x, sint32 y);
 
 /// \brief Empties a frame from memory
 void freeFrame(Frame* frame, bool destroyTexture);

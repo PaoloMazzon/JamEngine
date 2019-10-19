@@ -77,7 +77,7 @@ void spriteAppendFrame(Sprite* sprite, Frame* frame) {
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-Sprite* loadSpriteFromSheet(Texture* spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet, uint32 cellW, uint32 cellH, uint32 paddingW, uint32 paddingH, uint32 xAlign, uint16 frameDelay, bool looping) {
+Sprite* loadSpriteFromSheet(JamTexture* spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet, uint32 cellW, uint32 cellH, uint32 paddingW, uint32 paddingH, uint32 xAlign, uint16 frameDelay, bool looping) {
 	Sprite* sprite;
 	bool continueGrabbing = true; // Encompasses a few different conditions
 	uint32 currentFrame = 0;      // The current frame to grab
@@ -126,7 +126,7 @@ Sprite* loadSpriteFromSheet(Texture* spriteSheet, uint32 cellCount, uint32 xInSh
 			jSetError(ERROR_SDL_ERROR, "Failed to create the sprite (loadSpriteFromSheet).\n");
 		}
 		if (spriteSheet == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Texture does not exist (loadSpriteFromSheet).\n");
+			jSetError(ERROR_NULL_POINTER, "JamTexture does not exist (loadSpriteFromSheet).\n");
 		}
 		freeSprite(sprite, true, false);
 		sprite = NULL;
@@ -171,7 +171,7 @@ void updateSprite(Sprite* sprite) {
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, bool updateOnDraw) {
+void drawSprite(JamRenderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, bool updateOnDraw) {
 	if (sprite != NULL) {
 		// Update the sprite if that is to be done before drawing
 		if (updateOnDraw)
@@ -200,7 +200,7 @@ void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float sc
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, uint32 frame) {
+void drawSpriteFrame(JamRenderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, uint32 frame) {
 	if (renderer != NULL && sprite != NULL && frame < sprite->animationLength) {
 		// Draw it to the screen with all the crazy parameters
 		drawTexturePartExt(renderer,
@@ -220,7 +220,7 @@ void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, flo
 		);
 	} else {
 		if (renderer == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Renderer does not exist (drawSpriteFrame).\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (drawSpriteFrame).\n");
 		}
 		if (sprite == NULL) {
 			jSetError(ERROR_NULL_POINTER, "Sprite does not exist (drawSpriteFrame).\n");

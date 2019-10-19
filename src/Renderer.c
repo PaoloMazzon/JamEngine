@@ -11,11 +11,11 @@
 #include "JamError.h"
 
 /////////////////////////////////////////////////////////////
-Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate) {
+JamRenderer* jamCreateRenderer(const char *name, uint32 w, uint32 h, double framerate) {
 	SDL_Renderer* sdlRenderer;
 	SDL_Window* window;
-	Texture* tex;
-	Renderer* renderer = (Renderer*)malloc(sizeof(Renderer));
+	JamTexture* tex;
+	JamRenderer* renderer = (JamRenderer*)malloc(sizeof(JamRenderer));
 	initInput();
 
 	// Check if we were given a dud
@@ -57,20 +57,20 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 					renderer->cameraY = 0;
 					SDL_SetRenderTarget(sdlRenderer, tex->tex);
 				} else {
-					freeRenderer(renderer);
+					jamFreeRenderer(renderer);
 					renderer = NULL;
 					freeTexture(tex);
-					jSetError(ERROR_SDL_ERROR, "Failed to create internal texture (createRenderer). SDL Error: %s\n", SDL_GetError());
+					jSetError(ERROR_SDL_ERROR, "Failed to create internal texture (jamCreateRenderer). SDL Error: %s\n", SDL_GetError());
 				}
 			} else {
-				freeRenderer(renderer);
+				jamFreeRenderer(renderer);
 				renderer = NULL;
-				jSetError(ERROR_SDL_ERROR, "Failed to create SDL renderer (createRenderer). SDL Error: %s\n", SDL_GetError());
+				jSetError(ERROR_SDL_ERROR, "Failed to create SDL renderer (jamCreateRenderer). SDL Error: %s\n", SDL_GetError());
 			}
 		} else {
-			freeRenderer(renderer);
+			jamFreeRenderer(renderer);
 			renderer = NULL;
-			jSetError(ERROR_SDL_ERROR, "Failed to create SDL window (createRenderer). SDL Error: %s\n", SDL_GetError());
+			jSetError(ERROR_SDL_ERROR, "Failed to create SDL window (jamCreateRenderer). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
 		free(renderer);
@@ -82,7 +82,7 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, uint8 fullscreen) {
+bool jamResetRenderer(JamRenderer *renderer, uint32 windowWidth, uint32 windowHeight, uint8 fullscreen) {
 	SDL_DisplayMode mode;
 	bool pass = false;
 	int w, h;
@@ -109,7 +109,7 @@ bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, ui
 				// Check for errors
 				if (renderer->screenBuffer == NULL) {
 					jSetError(ERROR_SDL_ERROR,
-							  "Failed to create screen buffer in fullscreen (resetWindow). SDL Error: %s\n",
+							  "Failed to create screen buffer in fullscreen (jamResetRenderer). SDL Error: %s\n",
 							  SDL_GetError());
 				} else {
 					pass = true;
@@ -125,13 +125,13 @@ bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, ui
 
 			// Check for errors
 			if (renderer->screenBuffer == NULL) {
-				jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (resetWindow). SDL Error: %s\n", SDL_GetError());
+				jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (jamResetRenderer). SDL Error: %s\n", SDL_GetError());
 			} else {
 				pass = true;
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (rendererProcEvents)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamProcEvents)");
 	}
 
 	return pass;
@@ -139,7 +139,7 @@ bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, ui
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void rendererMaximizeScreenBufferInteger(Renderer* renderer) {
+void jamIntegerMaximizeScreenBuffer(JamRenderer *renderer) {
 	int w, h;
 	uint32 scale = 1;
 
@@ -155,66 +155,66 @@ void rendererMaximizeScreenBufferInteger(Renderer* renderer) {
 		renderer->displayBufferX = (w - renderer->displayBufferW) / 2; // Problem
 		renderer->displayBufferY = (h - renderer->displayBufferH) / 2;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist");
 	}
 }
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void rendererSetVerticalSync(Renderer* renderer, bool vsync) {
+void jamSetVSync(JamRenderer *renderer, bool vsync) {
 	if (renderer != NULL) {
 		if (vsync)
 			SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
 		else
 			SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist");
 	}
 }
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void rendererSetAA(Renderer* renderer, bool aa) {
+void jamSetAA(JamRenderer *renderer, bool aa) {
 	if (renderer != NULL) {
 		if (aa)
 			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 		else
 			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist");
 	}
 }
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void rendererSetWindowTitle(Renderer* renderer, const char* name) {
+void jamSetWindowTitle(JamRenderer *renderer, const char *name) {
 	if (renderer != NULL) {
 		SDL_SetWindowTitle(renderer->gameWindow, name);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist");
 	}
 }
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void rendererSetFramerate(Renderer* renderer, double framerate) {
+void jamSetFramerate(JamRenderer *renderer, double framerate) {
 	if (renderer != NULL) {
 		renderer->timePerFrame = 1000000000 / (uint64_t) framerate;
 		renderer->fps = (uint64_t) framerate;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist");
 	}
 }
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool rendererIsScreenBuffer(Renderer* renderer) {
+bool jamRendererTargetIsScreenBuffer(JamRenderer *renderer) {
 	bool ret = false;
 
 	if (renderer != NULL) {
 		ret = renderer->renderingToScreenBuffer;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (rendererIsScreenBuffer)\n");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamRendererTargetIsScreenBuffer)\n");
 	}
 
 	return ret;
@@ -222,8 +222,8 @@ bool rendererIsScreenBuffer(Renderer* renderer) {
 /////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void calculateForCamera(Renderer* renderer, int* x, int* y) {
-	if (rendererIsScreenBuffer(renderer)) {
+void jamCalculateForCamera(JamRenderer *renderer, int *x, int *y) {
+	if (jamRendererTargetIsScreenBuffer(renderer)) {
 		*x -= renderer->cameraX;
 		*y -= renderer->cameraY;
 	}
@@ -231,7 +231,7 @@ void calculateForCamera(Renderer* renderer, int* x, int* y) {
 //////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void freeRenderer(Renderer* renderer) {
+void jamFreeRenderer(JamRenderer *renderer) {
 	if (renderer != NULL) {
 		freeTexture(renderer->screenBuffer);
 		SDL_DestroyRenderer(renderer->internalRenderer);
@@ -243,7 +243,7 @@ void freeRenderer(Renderer* renderer) {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool rendererProcEvents(Renderer* renderer) {
+bool jamProcEvents(JamRenderer *renderer) {
 	SDL_Event event;
 	bool ret = true;
 	int wW = 0;
@@ -262,7 +262,7 @@ bool rendererProcEvents(Renderer* renderer) {
 				ret = false;
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (rendererProcEvents)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamProcEvents)");
 	}
 
 	return ret;
@@ -270,7 +270,7 @@ bool rendererProcEvents(Renderer* renderer) {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void setRenderTarget(Renderer* renderer, Texture* texture) {
+void jamSetRenderTarget(JamRenderer *renderer, JamTexture *texture) {
 	// The preliminary check
 	if (renderer != NULL) {
 		if (texture == NULL) {
@@ -281,15 +281,16 @@ void setRenderTarget(Renderer* renderer, Texture* texture) {
 			SDL_SetRenderTarget(renderer->internalRenderer, texture->tex);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (setRenderTarget)\n");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamSetRenderTarget)\n");
 	}
 }
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool configScreenBuffer(Renderer *renderer, uint32 internalWidth, uint32 internalHeight, uint32 displayWidth, uint32 displayHeight) {
+bool jamConfigScreenBuffer(JamRenderer *renderer, uint32 internalWidth, uint32 internalHeight, uint32 displayWidth,
+						   uint32 displayHeight) {
 	bool pass = false;
-	Texture* tempTex;
+	JamTexture* tempTex;
 	int w, h;
 
 	// Check for renderer
@@ -311,10 +312,10 @@ bool configScreenBuffer(Renderer *renderer, uint32 internalWidth, uint32 interna
 			renderer->displayBufferX = (w - displayWidth) / 2;
 			renderer->displayBufferY = (h - displayHeight) / 2;
 		} else {
-			jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (configScreenBuffer).");
+			jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (jamConfigScreenBuffer).");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (configScreenBuffer)\n");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamConfigScreenBuffer)\n");
 	}
 
 	return pass;
@@ -322,7 +323,7 @@ bool configScreenBuffer(Renderer *renderer, uint32 internalWidth, uint32 interna
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void windowToScreenBufferCoordinates(Renderer* renderer, int* x, int* y) {
+void jamConvertCoords(JamRenderer *renderer, int *x, int *y) {
 	SDL_DisplayMode mode;
 	double widthRatio, heightRatio;
 	int rX = *x;
@@ -340,13 +341,13 @@ void windowToScreenBufferCoordinates(Renderer* renderer, int* x, int* y) {
 		*x = (int)(((double)rX - (double)renderer->displayBufferX) * widthRatio);
 		*y = (int)(((double)rY - (double)renderer->displayBufferY) * heightRatio);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (windowToScreenBufferCoordinates)\n");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamConvertCoords)\n");
 	}
 }
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void rendererProcEndFrame(Renderer* renderer) {
+void jamProcEndFrame(JamRenderer *renderer) {
 	SDL_Rect rect;
 
 	// The preliminary check
@@ -385,7 +386,7 @@ void rendererProcEndFrame(Renderer* renderer) {
 		// Update the last time
 		renderer->lastTime = ns();
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer does not exist (rendererProcEndFrame)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamProcEndFrame)");
 	}
 }
 /////////////////////////////////////////////////////////////

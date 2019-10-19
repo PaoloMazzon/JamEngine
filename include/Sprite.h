@@ -58,7 +58,7 @@ void spriteAppendFrame(Sprite* sprite, Frame* frame);
 /// \param looping Does the animation loop?
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_SDL_ERROR
-Sprite* loadSpriteFromSheet(Texture* spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet, uint32 cellW, uint32 cellH, uint32 paddingW, uint32 paddingH, uint32 xAlign, uint16 frameDelay, bool looping);
+Sprite* loadSpriteFromSheet(JamTexture* spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet, uint32 cellW, uint32 cellH, uint32 paddingW, uint32 paddingH, uint32 xAlign, uint16 frameDelay, bool looping);
 
 /// \brief Updates a sprite's animation
 ///
@@ -70,12 +70,12 @@ void updateSprite(Sprite* sprite);
 
 /// \brief Draws a sprite on screen
 /// \throws ERROR_NULL_POINTER
-void drawSprite(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, bool updateOnDraw);
+void drawSprite(JamRenderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, bool updateOnDraw);
 
 /// \brief Draws a specific frame of a sprite without screwing with the animation
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
-void drawSpriteFrame(Renderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, uint32 frame);
+void drawSpriteFrame(JamRenderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, uint32 frame);
 
 /// \brief Frees a sprite
 void freeSprite(Sprite* sprite, bool freeFrames, bool freeTextures);

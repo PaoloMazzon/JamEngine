@@ -60,7 +60,7 @@ typedef struct _World {
 	// Core data
 	TileMap* worldMaps[MAX_TILEMAPS]; ///< This is the struct that represents the collisions in this world
 	EntityList* worldEntities; ///< The full list of entities in this world
-	Renderer* renderer; ///< This is just held in this struct so it can pass this pointer to entities inside it as needed
+	JamRenderer* renderer; ///< This is just held in this struct so it can pass this pointer to entities inside it as needed
 
 	// Higher-level abstractions - everything here is stored in core data
 	EntityList* entityByRange[2]; ///< List of lists of entities that are in or out of range
@@ -79,7 +79,7 @@ typedef struct _World {
 
 /// \brief Creates a world to work with
 /// \throws ERROR_ALLOC_FAILED
-World* createWorld(Renderer* renderer);
+World* createWorld(JamRenderer* renderer);
 
 /// \brief Sets up a rectangular filter in a world
 /// \throws ERROR_NULL_POINTER

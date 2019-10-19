@@ -14,7 +14,7 @@
 #include "JamError.h"
 
 ///////////////////////////////////////////////////////
-World* createWorld(Renderer* renderer) {
+World* createWorld(JamRenderer* renderer) {
 	World* world = (World*)calloc(1, sizeof(World));
 	int i;
 	bool error = false;
@@ -41,7 +41,7 @@ World* createWorld(Renderer* renderer) {
 			jSetError(ERROR_ALLOC_FAILED, "Could not allocate world (createWorld)\n");
 		} 
 		if (renderer == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Renderer does not exist (createWorld)\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (createWorld)\n");
 		}
 	}
 

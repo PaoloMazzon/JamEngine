@@ -10,6 +10,8 @@ the functions `ns()` (Which the renderer uses) exclusively supports Windows,
 Linux, and OSX; so that would have to be rewritten were you to use another
 platform.
 
+**Dependencies:** libxml2, sdl2
+
 Features
 ========
  - Extremely easy API to use, all headers documented with doxygen (`$ doxygen doxyconfig.txt`)

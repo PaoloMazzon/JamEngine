@@ -42,7 +42,7 @@ typedef struct {
 /// \throws ERROR_OPEN_FAILED
 /// \throws ERROR_ALLOC_FAILED
 /////////////////////////////////////////////////////
-Font* createFont(Renderer* renderer, const char* latinFname, const char* fontFname);
+Font* createFont(JamRenderer* renderer, const char* latinFname, const char* fontFname);
 
 /////////////////////////////////////////////////////
 /// \brief Frees a font
@@ -62,7 +62,7 @@ void freeFont(Font* font);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
-void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer);
+void renderFont(int x, int y, const char* string, Font* font, JamRenderer* renderer);
 
 /////////////////////////////////////////////////////
 /// \brief Renders text to a renderer with wrapping
@@ -79,7 +79,7 @@ void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
 /////////////////////////////////////////////////////
-void renderFontExt(int x, int y, const char* string, Font* font, Renderer* renderer, int w, ...);
+void renderFontExt(int x, int y, const char* string, Font* font, JamRenderer* renderer, int w, ...);
 
 /////////////////////////////////////////////////////
 /// \brief Renders text to a renderer with wrapping
@@ -93,7 +93,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
-void renderFontWrap(int x, int y, uint16 w, const char* string, Font* font, Renderer* renderer);
+void renderFontWrap(int x, int y, uint16 w, const char* string, Font* font, JamRenderer* renderer);
 
 /////////////////////////////////////////////////////
 /// \brief Gets the width of a given string

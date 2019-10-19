@@ -14,7 +14,7 @@
 #define RENDERER_BORDERLESS_FULLSCREEN 1
 #define RENDERER_FULLSCREEN 2
 
-typedef struct _Texture Texture;
+typedef struct _JamTexture JamTexture;
 
 /// \brief The core renderer required for a game
 ///
@@ -32,7 +32,7 @@ typedef struct _Texture Texture;
 typedef struct {
 	SDL_Renderer* internalRenderer; ///< The SDL2 internal renderer
 	SDL_Window* gameWindow; ///< The window to draw to
-	Texture* screenBuffer; ///< We don't draw directly to the screen, rather through this texture
+	JamTexture* screenBuffer; ///< We don't draw directly to the screen, rather through this texture
 	uint32 displayBufferW; ///< The width of the buffer on screen
 	uint32 displayBufferH; ///< The height of the buffer on screen
 	uint32 displayBufferX; ///< X position on screen of the display buffer
@@ -47,12 +47,12 @@ typedef struct {
 
 	double cameraX; ///< X Location of the camera in the game world (offset to render by)
 	double cameraY; ///< Y Location of the camera in the game world (offset to render by)
-} Renderer;
+} JamRenderer;
 
 /// \brief Initializes a Renderer
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_ALLOC_FAILED
-Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate);
+JamRenderer* jamCreateRenderer(const char *name, uint32 w, uint32 h, double framerate);
 
 /// \brief Updates a renderer's properties, returns false if it failed
 ///
@@ -66,7 +66,7 @@ Renderer* createRenderer(const char* name, uint32 w, uint32 h, double framerate)
 ///
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
-bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, uint8 fullscreen);
+bool jamResetRenderer(JamRenderer *renderer, uint32 windowWidth, uint32 windowHeight, uint8 fullscreen);
 
 /// \brief Upscales your screen buffer as much as it can while retaining its aspect ratio and integer scaling
 ///
@@ -74,10 +74,10 @@ bool resetWindow(Renderer* renderer, uint32 windowWidth, uint32 windowHeight, ui
 /// the maximum size it can be given the current window resolution
 ///
 /// \throws ERROR_NULL_POINTER
-void rendererMaximizeScreenBufferInteger(Renderer* renderer);
+void jamIntegerMaximizeScreenBuffer(JamRenderer *renderer);
 
 /// \brief Sets the title of the window for the renderer
-void rendererSetWindowTitle(Renderer* renderer, const char* name);
+void jamSetWindowTitle(JamRenderer *renderer, const char *name);
 
 /// \brief Enables or disables anti-aliasing
 ///
@@ -85,7 +85,7 @@ void rendererSetWindowTitle(Renderer* renderer, const char* name);
 /// sure your platform does before turning it on (Most do).
 ///
 /// \throws ERROR_NULL_POINTER
-void rendererSetAA(Renderer* renderer, bool aa);
+void jamSetAA(JamRenderer *renderer, bool aa);
 
 /// \brief Enables or disables vertical synchronization
 ///
@@ -93,50 +93,50 @@ void rendererSetAA(Renderer* renderer, bool aa);
 /// screen tear at the cost of a bit of performance.
 ///
 /// \throws ERROR_NULL_POINTER
-void rendererSetVerticalSync(Renderer* renderer, bool vsync);
+void jamSetVSync(JamRenderer *renderer, bool vsync);
 
 /// \brief Sets the renderer's framerate
 /// \throws ERROR_NULL_POINTER
-void rendererSetFramerate(Renderer* renderer, double framerate);
+void jamSetFramerate(JamRenderer *renderer, double framerate);
 
 /// \brief Checks if the render target is the screen buffer or not
 /// \throws ERROR_NULL_POINTER
-bool rendererIsScreenBuffer(Renderer* renderer);
+bool jamRendererTargetIsScreenBuffer(JamRenderer *renderer);
 
 /// \brief Calculates x/y for the renderer's camera
 ///
 /// If renderer is NULL, this function won't complain or anything,
 /// so you can throw this anywhere. This only changes the x and y
 /// if the renderer's render target is the screen.
-void calculateForCamera(Renderer* renderer, int* x, int* y);
+void jamCalculateForCamera(JamRenderer *renderer, int *x, int *y);
 
 /// \brief Sets the render target, or null for the screen
 /// \throws ERROR_NULL_POINTER
-void setRenderTarget(Renderer* renderer, Texture* texture);
+void jamSetRenderTarget(JamRenderer *renderer, JamTexture *texture);
 
 /// \brief Updates the screen buffer. Returns false if this fails.
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_SDL_ERROR
-bool configScreenBuffer(Renderer* renderer, uint32 internalWidth, uint32 internalHeight, uint32 displayWidth, uint32 displayHeight);
+bool jamConfigScreenBuffer(JamRenderer *renderer, uint32 internalWidth, uint32 internalHeight, uint32 displayWidth,
+						   uint32 displayHeight);
 
 /// \brief Converts window coordinates to screen buffer coordinates
+///
+/// This is really just for the input module, you most likely will
+/// never need to use this. Nonetheless, it is available lest you
+/// have some crazy shenanigans going on.
+///
 /// \throws ERROR_NULL_POINTER
-void windowToScreenBufferCoordinates(Renderer* renderer, int* x, int* y);
+void jamConvertCoords(JamRenderer *renderer, int *x, int *y);
 
 /// \brief Run this every frame at the start of the frame,
 ///  returns false if it's time to break the game loop
-///
-/// You may pass an input struct if you wish to have
-/// this function update it for you (otherwise you must
-/// run the update function yourself before you run this
-/// function). Pass NULL if you'd rather do it yourself.
-/// 
 /// \throws ERROR_NULL_POINTER
-bool rendererProcEvents(Renderer* renderer);
+bool jamProcEvents(JamRenderer *renderer);
 
 /// \brief Run this at the end of a frame to clock and render it
 /// \throws ERROR_NULL_POINTER
-void rendererProcEndFrame(Renderer* renderer);
+void jamProcEndFrame(JamRenderer *renderer);
 
 /// \brief Frees a renderer
-void freeRenderer(Renderer* renderer);
+void jamFreeRenderer(JamRenderer *renderer);

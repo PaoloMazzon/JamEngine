@@ -12,7 +12,7 @@
 /// Weather or not a texture is able to be rendered
 /// to depends on if it was used to load a file or
 /// created without loading a file
-struct _Texture {
+struct _JamTexture {
 	SDL_Texture* tex; ///< The internal SDL2 texture
 	uint32 w; ///< Texture's width
 	uint32 h; ///< Texture's height
@@ -21,13 +21,13 @@ struct _Texture {
 
 /// \brief Creates a texture that can be rendered to
 /// \throws ERROR_SDL_ERROR
-Texture* createTexture(Renderer* renderer, int w, int h);
+JamTexture* createTexture(JamRenderer* renderer, int w, int h);
 
 /// \brief Loads a texture from a file
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
-Texture* loadTexture(Renderer* renderer, const char* filename);
+JamTexture* loadTexture(JamRenderer* renderer, const char* filename);
 
 /// \brief Frees a texture from memory
-void freeTexture(Texture* tex);
+void freeTexture(JamTexture* tex);

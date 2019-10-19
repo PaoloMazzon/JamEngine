@@ -35,7 +35,7 @@ SDL_Texture* loadTex(SDL_Renderer* renderer, const char* fname) {
 ///////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-Font* createFont(Renderer* renderer, const char* latinFname, const char* fontFname) {
+Font* createFont(JamRenderer* renderer, const char* latinFname, const char* fontFname) {
 	Font* font = (Font*)calloc(1, sizeof(Font));
 	SDL_Texture* tex = NULL;
 
@@ -115,7 +115,7 @@ bool is4ByteCharacter(uint8 byte) {
 	return ((byte & 128) == 128 && (byte & 64) == 64 && (byte & 32) == 32 && (byte & 16) == 16 && (byte & 8) == 0);
 }
 
-void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer) {
+void renderFont(int x, int y, const char* string, Font* font, JamRenderer* renderer) {
 	uint32 unichar;
 	uint32 tempChar;
 	bool ready = false;
@@ -217,7 +217,7 @@ void renderFont(int x, int y, const char* string, Font* font, Renderer* renderer
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void renderFontExt(int x, int y, const char* string, Font* font, Renderer* renderer, int w, ...) {
+void renderFontExt(int x, int y, const char* string, Font* font, JamRenderer* renderer, int w, ...) {
 	// Variable length parameter things
 	va_list params;
 	va_start(params, w);
@@ -390,7 +390,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 		}
 	} else {
 		if (renderer == NULL)
-			fprintf(stderr, "Renderer does not exist (renderFontExt)\n");
+			fprintf(stderr, "JamRenderer does not exist (renderFontExt)\n");
 		if (font == NULL)
 		jSetError(ERROR_NULL_POINTER, "Font does not exist (renderFontExt)\n");
 	}
@@ -399,7 +399,7 @@ void renderFontExt(int x, int y, const char* string, Font* font, Renderer* rende
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void renderFontWrap(int x, int y, uint16 w, const char* string, Font* font, Renderer* renderer) {
+void renderFontWrap(int x, int y, uint16 w, const char* string, Font* font, JamRenderer* renderer) {
 	uint32 unichar;
 	uint32 tempChar;
 	bool ready = false;
