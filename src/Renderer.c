@@ -379,7 +379,7 @@ void jamProcEndFrame(JamRenderer *renderer) {
 
 		// Sleep for any remaining time/calculate framerate
 		if (renderer->between < renderer->timePerFrame)
-			sleep(renderer->timePerFrame - renderer->between);
+			jamSleep(renderer->timePerFrame - renderer->between);
 
 		renderer->framerate = 1000000000 / ((double)ns() - (double)renderer->lastTime);
 

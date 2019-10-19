@@ -30,7 +30,7 @@ Frame* createFrame(JamTexture* tex, sint32 x, sint32 y, sint32 w, sint32 h) {
 //////////////////////////////////////////////////////////////
 void drawFrame(Frame* frame, JamRenderer* renderer, sint32 x, sint32 y) {
 	if (frame != NULL && renderer != NULL) {
-		drawTexturePart(renderer, frame->tex, x, y, frame->x, frame->y, frame->w, frame->h);
+		jamDrawTexturePart(renderer, frame->tex, x, y, frame->x, frame->y, frame->w, frame->h);
 	} else {
 		if (frame != NULL)
 			jSetError(ERROR_NULL_POINTER, "Frame does not exist. (drawFrame).\n");

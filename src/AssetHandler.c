@@ -41,7 +41,7 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAsset
 			else if (handler->vals[exists]->type == at_Sprite)
 				freeSprite(handler->vals[exists]->spr, true, false);
 			else if (handler->vals[exists]->type == at_Entity)
-				freeEntity(handler->vals[exists]->entity, false, false, false);
+				jamFreeEntity(handler->vals[exists]->entity, false, false, false);
 			else
 				freeTileMap(handler->vals[exists]->tileMap);
 
@@ -160,36 +160,36 @@ void assetLoadSprite(JamAssetHandler* assetHandler, INI* ini, const char* header
 	}
 }
 
-void assetLoadEntity(JamAssetHandler* assetHandler, INI* ini, const char* headerName, BehaviourMap* map) {
-	Entity* ent;
+void assetLoadEntity(JamAssetHandler* assetHandler, INI* ini, const char* headerName, JamBehaviourMap* map) {
+	JamEntity* ent;
 	const char* typeString;
 	// Make sure we have all necessary assets
 	if (jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
 		&& jamGetAssetFromHandler(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
-		ent = createEntity(
+		ent = jamCreateEntity(
 				jamGetAssetFromHandler(assetHandler,
 									   (getKeyINI(ini, headerName, "sprite_id", "0")))->spr,
 				jamGetHitboxFromHandler(assetHandler, (getKeyINI(ini, headerName, "hitbox_id", "0"))),
-							(int) atof(getKeyINI(ini, headerName, "x", "0")),
-							(int) atof(getKeyINI(ini, headerName, "y", "0")),
-							(int) atof(getKeyINI(ini, headerName, "hitbox_offset_x", "0")),
-							(int) atof(getKeyINI(ini, headerName, "hitbox_offset_y", "0")),
-							getBehaviourFromMap(map, getKeyINI(ini, headerName, "behaviour", "default")));
+				(int) atof(getKeyINI(ini, headerName, "x", "0")),
+				(int) atof(getKeyINI(ini, headerName, "y", "0")),
+				(int) atof(getKeyINI(ini, headerName, "hitbox_offset_x", "0")),
+				(int) atof(getKeyINI(ini, headerName, "hitbox_offset_y", "0")),
+				jamGetBehaviourFromMap(map, getKeyINI(ini, headerName, "behaviour", "default")));
 
 		// Figure out the type
 		typeString = getKeyINI(ini, headerName, "type", "none");
 		if (strcmp(typeString, "Logic") == 0)
-			ent->type = logic;
+			ent->type = et_Logic;
 		if (strcmp(typeString, "Solid") == 0)
-			ent->type = solid;
+			ent->type = et_Solid;
 		if (strcmp(typeString, "NPC") == 0)
-			ent->type = npc;
+			ent->type = et_NPC;
 		if (strcmp(typeString, "Object") == 0)
-			ent->type = object;
+			ent->type = et_Object;
 		if (strcmp(typeString, "Item") == 0)
-			ent->type = item;
+			ent->type = et_Item;
 		if (strcmp(typeString, "Player") == 0)
-			ent->type = player;
+			ent->type = et_Player;
 		ent->rot = atof(getKeyINI(ini, headerName, "rotation", "0"));
 		ent->alpha = (uint8)atof(getKeyINI(ini, headerName, "alpha", "255"));
 		ent->updateOnDraw = (bool)atof(getKeyINI(ini, headerName, "update_on_draw", "1"));
@@ -219,7 +219,7 @@ void assetLoadHitbox(JamAssetHandler* assetHandler, INI* ini, const char* header
 //////////////////////// End of assetLoadINI support functions ////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const char *filename, BehaviourMap *map) {
+void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const char *filename, JamBehaviourMap *map) {
 	INI* ini = loadINI(filename);
 	uint32 i, j;
 
@@ -312,9 +312,9 @@ Sprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Entity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
-	Entity* returnVal = NULL;
+	JamEntity* returnVal = NULL;
 
 	if (handler != NULL) {
 		if (asset != NULL && asset->type == at_Entity) {
@@ -408,7 +408,7 @@ JamAssetHandler* jamFreeAssetHandler(JamAssetHandler *handler) {
 			else if (handler->vals[i]->type == at_Hitbox)
 				freeHitbox(handler->vals[i]->hitbox);
 			else if (handler->vals[i]->type == at_Entity)
-				freeEntity(handler->vals[i]->entity, false, false, false);
+				jamFreeEntity(handler->vals[i]->entity, false, false, false);
 			else
 				freeTileMap(handler->vals[i]->tileMap);
 			free(handler->vals[i]);

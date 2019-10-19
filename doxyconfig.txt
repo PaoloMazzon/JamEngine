@@ -954,7 +954,7 @@ INPUT_FILTER           =
 # basis. Doxygen will compare the file name with each pattern and apply the
 # filter if there is a match. The filters are a list of the form: pattern=filter
 # (like *.cpp=my_cpp_filter). See INPUT_FILTER for further information on how
-# filters are used. If the FILTER_PATTERNS tag is empty or if none of the
+# filters are used. If the FILTER_PATTERNS tag is empty or if et_None of the
 # patterns match the file name, INPUT_FILTER is applied.
 #
 # Note that for custom extensions or not directly supported extensions you also
@@ -1604,7 +1604,7 @@ MATHJAX_CODEFILE       =
 # (what the <access key> is depends on the OS and browser, but it is typically
 # <CTRL>, <ALT>/<option>, or both). Inside the search box use the <cursor down
 # key> to jump into the search results window, the results can be navigated
-# using the <cursor keys>. Press <Enter> to select an item or <escape> to cancel
+# using the <cursor keys>. Press <Enter> to select an et_Item or <escape> to cancel
 # the search. The filter options can be selected when the cursor is inside the
 # search box by pressing <Shift>+<cursor down>. Also here use the <cursor keys>
 # to select a filter and <Enter> or <escape> to activate or cancel the filter

@@ -40,7 +40,7 @@ typedef struct {
 	uint8* buffer; ///< The actual binary buffer
 	uint64 size; ///< The size of the buffer
 	uint64 pointer; ///< Where in the buffer we are
-} Buffer;
+} JamBuffer;
 
 ////////////////////////////////////////////////
 /// \brief Creates a new buffer
@@ -51,7 +51,7 @@ typedef struct {
 ///
 /// \throws ERROR_ALLOC_FAILED
 ////////////////////////////////////////////////
-Buffer* createBuffer(uint64 size);
+JamBuffer* jamCreateBuffer(uint64 size);
 
 ////////////////////////////////////////////////
 /// \brief Creates a new buffer
@@ -63,14 +63,14 @@ Buffer* createBuffer(uint64 size);
 /// \throws ERROR_FILE_FAILED
 /// \throws ERROR_OPEN_FAILED
 ////////////////////////////////////////////////
-Buffer* loadBuffer(const char* filename);
+JamBuffer* jamLoadBuffer(const char *filename);
 
 ////////////////////////////////////////////////
 /// \brief Frees a buffer
 ///
 /// \param buffer The buffer to free
 ////////////////////////////////////////////////
-void freeBuffer(Buffer* buffer);
+void jamFreeBuffer(JamBuffer *buffer);
 
 ////////////////////////////////////////////////
 /// \brief Resizes a buffer
@@ -82,14 +82,14 @@ void freeBuffer(Buffer* buffer);
 ///
 /// \throws ERROR_REALLOC_FAILED
 ////////////////////////////////////////////////
-bool resizeBuffer(Buffer* buffer, uint64 newSize);
+bool jamResizeBuffer(JamBuffer *buffer, uint64 newSize);
 
 ////////////////////////////////////////////////
 /// \brief Zeroes a buffer
 ///
 /// \param buffer The buffer to zero
 ////////////////////////////////////////////////
-void zeroBuffer(Buffer* buffer);
+void jamZeroBuffer(JamBuffer *buffer);
 
 ////////////////////////////////////////////////
 /// \brief Places a byte at the pointer
@@ -101,7 +101,7 @@ void zeroBuffer(Buffer* buffer);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-bool addByte1(Buffer* buffer, uint8 byte);
+bool jamAddByte1(JamBuffer *buffer, uint8 byte);
 
 ////////////////////////////////////////////////
 /// \brief Places bytes at the pointer
@@ -113,7 +113,7 @@ bool addByte1(Buffer* buffer, uint8 byte);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-bool addByte2(Buffer* buffer, uint16 bytes);
+bool jamAddByte2(JamBuffer *buffer, uint16 bytes);
 
 ////////////////////////////////////////////////
 /// \brief Places bytes at the pointer
@@ -125,7 +125,7 @@ bool addByte2(Buffer* buffer, uint16 bytes);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-bool addByte4(Buffer* buffer, uint32 bytes);
+bool jamAddByte4(JamBuffer *buffer, uint32 bytes);
 
 ////////////////////////////////////////////////
 /// \brief Places bytes at the pointer
@@ -137,7 +137,7 @@ bool addByte4(Buffer* buffer, uint32 bytes);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-bool addByte8(Buffer* buffer, uint64 bytes);
+bool jamAddByte8(JamBuffer *buffer, uint64 bytes);
 
 ////////////////////////////////////////////////
 /// \brief Reads a byte at the pointer
@@ -147,7 +147,7 @@ bool addByte8(Buffer* buffer, uint64 bytes);
 ///
 /// \return Returns the read value or defaultReturn
 ////////////////////////////////////////////////
-uint8 readByte1(Buffer* buffer, uint8 defaultReturn);
+uint8 jamReadByte1(JamBuffer *buffer, uint8 defaultReturn);
 
 ////////////////////////////////////////////////
 /// \brief Reads bytes at the pointer
@@ -157,7 +157,7 @@ uint8 readByte1(Buffer* buffer, uint8 defaultReturn);
 ///
 /// \return Returns the read value or defaultReturn
 ////////////////////////////////////////////////
-uint16 readByte2(Buffer* buffer, uint16 defaultReturn);
+uint16 jamReadByte2(JamBuffer *buffer, uint16 defaultReturn);
 
 ////////////////////////////////////////////////
 /// \brief Reads bytes at the pointer
@@ -167,7 +167,7 @@ uint16 readByte2(Buffer* buffer, uint16 defaultReturn);
 ///
 /// \return Returns the read value or defaultReturn
 ////////////////////////////////////////////////
-uint32 readByte4(Buffer* buffer, uint32 defaultReturn);
+uint32 jamReadByte4(JamBuffer *buffer, uint32 defaultReturn);
 
 ////////////////////////////////////////////////
 /// \brief Reads bytes at the pointer
@@ -177,4 +177,4 @@ uint32 readByte4(Buffer* buffer, uint32 defaultReturn);
 ///
 /// \return Returns the read value or defaultReturn
 ////////////////////////////////////////////////
-uint64 readByte8(Buffer* buffer, uint64 defaultReturn);
+uint64 jamReadByte8(JamBuffer *buffer, uint64 defaultReturn);

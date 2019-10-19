@@ -18,7 +18,7 @@ Features
  - Load many assets at once with an `JamAssetHandler`
  - Manage many entities at a time with a `World`
  - Between `World`s and `JamAssetHandler`s, memory management is quite simple as well
- - `BehaviourMap`s to automate most of each frame
+ - `JamBehaviourMap`s to automate most of each frame
  - Supports the use of [Tiled](https://www.mapeditor.org/) as a level editor
  - Written purely in C and thus cross platform
  - INI file I/O built in and extremely easy to use

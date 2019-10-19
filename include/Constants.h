@@ -21,16 +21,16 @@ typedef signed long long sint64;
 #define ENTITY_LIST_ALLOCATION_AMOUNT 5
 #define ENTITIES_IN_RANGE 1
 #define ENTITIES_OUT_OF_RANGE 0
-#define MAX_ENTITY_TYPES 6
+#define MAX_ENTITY_TYPES 7
 #define MAX_TILEMAPS 5
 
 ///< \brief Contains every type of thing an entity can be
 ///
 /// Don't use none in an actual entity, its to denote the lack thereof
-typedef enum {none = -1, logic = 0, solid = 1, npc = 2, object = 3, item = 4, player = 5} EntityType;
+typedef enum {et_None = -1, et_Logic = 0, et_Solid = 1, et_NPC = 2, et_Object = 3, et_Item = 4, et_Player = 5, et_Unassigned = 6} JamEntityType;
 
 /// \brief Used exclusive in worlds, sets up how to filter entities
-typedef enum {fRectangle, fProximity} FilterType;
+typedef enum {ft_Rectangle, ft_Proximity} JamFilterType;
 
 /// \brief The file that error messages will be output to
 #define LOG_FILENAME "jamerrorlog.txt"

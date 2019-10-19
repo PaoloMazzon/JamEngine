@@ -4,10 +4,10 @@
 #include <JamError.h>
 
 ////////////////////////////////////////////////
-Buffer* createBuffer(uint64 size) {
+JamBuffer* jamCreateBuffer(uint64 size) {
 	// Create the buffer and internal buffer
 	uint8* internalBuffer = (uint8*)malloc((size_t)size);
-	Buffer* buffer = (Buffer*)malloc(sizeof(Buffer));
+	JamBuffer* buffer = (JamBuffer*)malloc(sizeof(JamBuffer));
 
 	// Check them
 	if (internalBuffer == NULL || buffer == NULL) {
@@ -29,10 +29,10 @@ Buffer* createBuffer(uint64 size) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-Buffer* loadBuffer(const char* filename) {
+JamBuffer* jamLoadBuffer(const char *filename) {
 	FILE* bufferFile = fopen(filename, "rb");
 	uint64 bufferSize = 0;
-	Buffer* returnBuffer = NULL;
+	JamBuffer* returnBuffer = NULL;
 
 	// Make sure the file actually opened
 	if (bufferFile != NULL) {
@@ -47,12 +47,12 @@ Buffer* loadBuffer(const char* filename) {
 		rewind(bufferFile);
 
 		// Create a buffer of that size then fill it
-		returnBuffer = createBuffer(bufferSize);
+		returnBuffer = jamCreateBuffer(bufferSize);
 		fread((uint64*)returnBuffer->buffer, 1, bufferSize, bufferFile);
 
 		// ERRRRRRRORRRRRRR CHEQUES
 		if (ferror(bufferFile) != 0) {
-			freeBuffer(returnBuffer);
+			jamFreeBuffer(returnBuffer);
 			returnBuffer = NULL;
 			jSetError(ERROR_FILE_FAILED, "Failed to read buffer from file '%s'\n", filename);
 		}
@@ -66,7 +66,7 @@ Buffer* loadBuffer(const char* filename) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void freeBuffer(Buffer* buffer) {
+void jamFreeBuffer(JamBuffer *buffer) {
 	if (buffer != NULL) {
 		if (buffer->buffer != NULL)
 			free(buffer->buffer);
@@ -76,14 +76,14 @@ void freeBuffer(Buffer* buffer) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool resizeBuffer(Buffer* buffer, uint64 newSize) {
+bool jamResizeBuffer(JamBuffer *buffer, uint64 newSize) {
 	uint8* newBuffer = (uint8*)realloc((void*)buffer->buffer, (size_t)newSize);
 	bool ret = true;
 
 	// CHECKS
 	if (newBuffer == NULL) {
 		ret = false;
-		jSetError(ERROR_REALLOC_FAILED, "Failed to create new buffer (resizeBuffer)\n");
+		jSetError(ERROR_REALLOC_FAILED, "Failed to create new buffer (jamResizeBuffer)\n");
 	} else {
 		buffer->buffer = newBuffer;
 		buffer->size = newSize;
@@ -95,7 +95,7 @@ bool resizeBuffer(Buffer* buffer, uint64 newSize) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void zeroBuffer(Buffer* buffer) {
+void jamZeroBuffer(JamBuffer *buffer) {
 	// Loop through the whole buffer and set it to zero
 	uint64 i;
 	for (i = 0; i < buffer->size; i++)
@@ -104,7 +104,7 @@ void zeroBuffer(Buffer* buffer) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool addByte1(Buffer* buffer, uint8 byte) {
+bool jamAddByte1(JamBuffer *buffer, uint8 byte) {
 	// Run some checks
 	if (buffer->pointer + 1 > buffer->size) {
 		jSetError(ERROR_OUT_OF_BOUNDS, "");
@@ -121,7 +121,7 @@ bool addByte1(Buffer* buffer, uint8 byte) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool addByte2(Buffer* buffer, uint16 bytes) {
+bool jamAddByte2(JamBuffer *buffer, uint16 bytes) {
 	// Run some checks
 	if (buffer->pointer + 2 > buffer->size) {
 		jSetError(ERROR_OUT_OF_BOUNDS, "");
@@ -139,7 +139,7 @@ bool addByte2(Buffer* buffer, uint16 bytes) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool addByte4(Buffer* buffer, uint32 bytes) {
+bool jamAddByte4(JamBuffer *buffer, uint32 bytes) {
 	// Run some checks
 	if (buffer->pointer + 4 > buffer->size) {
 		jSetError(ERROR_OUT_OF_BOUNDS, "");
@@ -159,7 +159,7 @@ bool addByte4(Buffer* buffer, uint32 bytes) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool addByte8(Buffer* buffer, uint64 bytes) {
+bool jamAddByte8(JamBuffer *buffer, uint64 bytes) {
 	// Run some checks
 	if (buffer->pointer + 8 > buffer->size) {
 		jSetError(ERROR_OUT_OF_BOUNDS, "");
@@ -183,7 +183,7 @@ bool addByte8(Buffer* buffer, uint64 bytes) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-uint8 readByte1(Buffer* buffer, uint8 defaultReturn) {
+uint8 jamReadByte1(JamBuffer *buffer, uint8 defaultReturn) {
 	// Checks
 	if (buffer->pointer + 1 > buffer->size)
 		return defaultReturn;
@@ -201,7 +201,7 @@ uint8 readByte1(Buffer* buffer, uint8 defaultReturn) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-uint16 readByte2(Buffer* buffer, uint16 defaultReturn) {
+uint16 jamReadByte2(JamBuffer *buffer, uint16 defaultReturn) {
 	// Checks
 	if (buffer->pointer + 2 > buffer->size)
 		return defaultReturn;
@@ -220,7 +220,7 @@ uint16 readByte2(Buffer* buffer, uint16 defaultReturn) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-uint32 readByte4(Buffer* buffer, uint32 defaultReturn) {
+uint32 jamReadByte4(JamBuffer *buffer, uint32 defaultReturn) {
 	// Checks
 	if (buffer->pointer + 4 > buffer->size)
 		return defaultReturn;
@@ -241,7 +241,7 @@ uint32 readByte4(Buffer* buffer, uint32 defaultReturn) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-uint64 readByte8(Buffer* buffer, uint64 defaultReturn) {
+uint64 jamReadByte8(JamBuffer *buffer, uint64 defaultReturn) {
 	// Checks
 	if (buffer->pointer + 8 > buffer->size)
 		return defaultReturn;

@@ -15,8 +15,9 @@ int roundToInt(double x) {
 }
 
 //////////////////////////////////////////////////////////
-Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double hitboxOffsetX, double hitboxOffsetY, Behaviour* behaviour) {
-	Entity* ent = (Entity*)malloc(sizeof(Entity));
+JamEntity* jamCreateEntity(Sprite *sprite, Hitbox *hitbox, double x, double y, double hitboxOffsetX,
+						   double hitboxOffsetY, JamBehaviour *behaviour) {
+	JamEntity* ent = (JamEntity*)malloc(sizeof(JamEntity));
 
 	// Check that it worked
 	if (ent != NULL) {
@@ -34,11 +35,11 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double 
 		ent->hSpeed = 0;
 		ent->vSpeed = 0;
 		ent->friction = 0;
-		ent->type = logic;
+		ent->type = et_Unassigned;
 		ent->behaviour = behaviour;
 		ent->userData = NULL;
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to create Entity struct (createEntity).\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamEntity struct (jamCreateEntity).\n");
 	}
 
 	return ent;
@@ -46,11 +47,12 @@ Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double 
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-Entity* copyEntity(Entity* baseEntity, double x, double y) {
-	Entity* newEnt = NULL;
+JamEntity* jamCopyEntity(JamEntity *baseEntity, double x, double y) {
+	JamEntity* newEnt = NULL;
 
 	if (baseEntity != NULL) {
-		newEnt = createEntity(baseEntity->sprite, baseEntity->hitbox, x, y, baseEntity->hitboxOffsetX, baseEntity->hitboxOffsetY, baseEntity->behaviour);
+		newEnt = jamCreateEntity(baseEntity->sprite, baseEntity->hitbox, x, y, baseEntity->hitboxOffsetX,
+								 baseEntity->hitboxOffsetY, baseEntity->behaviour);
 		if (newEnt != NULL) {
 			newEnt->type = baseEntity->type;
 			newEnt->rot = baseEntity->rot;
@@ -72,7 +74,7 @@ Entity* copyEntity(Entity* baseEntity, double x, double y) {
 			#endif
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Base entity doesn't exist (copyEntity)\n");
+		jSetError(ERROR_NULL_POINTER, "Base entity doesn't exist (jamCopyEntity)\n");
 	}
 
 	return newEnt;
@@ -80,21 +82,21 @@ Entity* copyEntity(Entity* baseEntity, double x, double y) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void drawEntity(JamRenderer* renderer, Entity* entity) {
+void jamDrawEntity(JamRenderer *renderer, JamEntity *entity) {
 	if (entity != NULL && renderer != NULL) {
 		if (entity->sprite != NULL)
 		drawSprite(renderer, entity->sprite, (sint32)entity->x - entity->sprite->originX, (sint32)entity->y - entity->sprite->originY, entity->scaleX, entity->scaleY, entity->rot, entity->alpha, entity->updateOnDraw);
 	} else {
 		if (entity == NULL)
-			jSetError(ERROR_NULL_POINTER, "Entity does not exist (drawEntity).\n");
+			jSetError(ERROR_NULL_POINTER, "JamEntity does not exist (jamDrawEntity).\n");
 		if (renderer == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (drawEntity).\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamDrawEntity).\n");
 	}
 }
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2) {
+bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity2) {
 	bool coll = false;
 	double x1, y1, x2, y2; // Accounting for origins
 
@@ -121,23 +123,23 @@ bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2) {
 		coll = checkHitboxCollision(entity1->hitbox, x1, y1, entity2->hitbox, x2, y2);
 	} else {
 		if (entity1 == NULL) {
-			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (checkEntityCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (jamCheckEntityCollision).\n");
 		} else {
 			if (entity1->sprite == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a sprite (checkEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a sprite (jamCheckEntityCollision).\n");
 			}
 			if (entity1->hitbox == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a hitbox (checkEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a hitbox (jamCheckEntityCollision).\n");
 			}
 		}
 		if (entity2 == NULL) {
-			jSetError(ERROR_NULL_POINTER, "entity2 does not exist (checkEntityCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "entity2 does not exist (jamCheckEntityCollision).\n");
 		} else {
 			if (entity2->sprite == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a sprite (checkEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a sprite (jamCheckEntityCollision).\n");
 			}
 			if (entity2->hitbox == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a hitbox (checkEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a hitbox (jamCheckEntityCollision).\n");
 			}
 		}
 	}
@@ -147,7 +149,7 @@ bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, double ry) {
+bool jamCheckEntityTileMapCollision(JamEntity *entity, TileMap *tileMap, double rx, double ry) {
 	bool coll = false;
 	double x, y; // Accounting for origins
 
@@ -160,17 +162,17 @@ bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, do
 		coll = checkMapCollision(tileMap, roundToInt(x), roundToInt(y), (int)entity->hitbox->width, (int)entity->hitbox->height);
 	} else {
 		if (entity == NULL) {
-			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (checkEntityTileMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (jamCheckEntityTileMapCollision).\n");
 		} else {
 			if (entity->sprite == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity does not have a sprite (checkEntityTileMapCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity does not have a sprite (jamCheckEntityTileMapCollision).\n");
 			}
 			if (entity->hitbox == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity does not have a hitbox (checkEntityTileMapCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity does not have a hitbox (jamCheckEntityTileMapCollision).\n");
 			}
 		}
 		if (tileMap == NULL) {
-			jSetError(ERROR_NULL_POINTER, "tileMap does not exist (checkEntityTileMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "tileMap does not exist (jamCheckEntityTileMapCollision).\n");
 		}
 	}
 
@@ -179,7 +181,7 @@ bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, do
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void freeEntity(Entity* entity, bool destroyHitbox, bool destroySprite, bool destroyFrames) {
+void jamFreeEntity(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames) {
 	if (entity != NULL) {
 		if (destroyHitbox)
 			freeHitbox(entity->hitbox);

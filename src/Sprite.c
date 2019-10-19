@@ -178,20 +178,20 @@ void drawSprite(JamRenderer* renderer, Sprite* sprite, sint32 x, sint32 y, float
 			updateSprite(sprite);
 
 		// Draw it to the screen with all the crazy parameters
-		drawTexturePartExt(renderer,
-		sprite->frames[sprite->currentFrame]->tex,
-		x,
-		y,
-		sprite->originX,
-		sprite->originY,
-		scaleX,
-		scaleY,
-		rot,
-		alpha,
-		sprite->frames[sprite->currentFrame]->x,
-		sprite->frames[sprite->currentFrame]->y,
-		sprite->frames[sprite->currentFrame]->w,
-		sprite->frames[sprite->currentFrame]->h
+		jamDrawTexturePartExt(renderer,
+							  sprite->frames[sprite->currentFrame]->tex,
+							  x,
+							  y,
+							  sprite->originX,
+							  sprite->originY,
+							  scaleX,
+							  scaleY,
+							  rot,
+							  alpha,
+							  sprite->frames[sprite->currentFrame]->x,
+							  sprite->frames[sprite->currentFrame]->y,
+							  sprite->frames[sprite->currentFrame]->w,
+							  sprite->frames[sprite->currentFrame]->h
 		);
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Sprite does not exist (drawSprite).\n");
@@ -203,20 +203,20 @@ void drawSprite(JamRenderer* renderer, Sprite* sprite, sint32 x, sint32 y, float
 void drawSpriteFrame(JamRenderer* renderer, Sprite* sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot, uint8 alpha, uint32 frame) {
 	if (renderer != NULL && sprite != NULL && frame < sprite->animationLength) {
 		// Draw it to the screen with all the crazy parameters
-		drawTexturePartExt(renderer,
-						   sprite->frames[frame]->tex,
-						   x,
-						   y,
-						   sprite->originX,
-						   sprite->originY,
-						   scaleX,
-						   scaleY,
-						   rot,
-						   alpha,
-						   sprite->frames[frame]->x,
-						   sprite->frames[frame]->y,
-						   sprite->frames[frame]->w,
-						   sprite->frames[frame]->h
+		jamDrawTexturePartExt(renderer,
+							  sprite->frames[frame]->tex,
+							  x,
+							  y,
+							  sprite->originX,
+							  sprite->originY,
+							  scaleX,
+							  scaleY,
+							  rot,
+							  alpha,
+							  sprite->frames[frame]->x,
+							  sprite->frames[frame]->y,
+							  sprite->frames[frame]->w,
+							  sprite->frames[frame]->h
 		);
 	} else {
 		if (renderer == NULL) {

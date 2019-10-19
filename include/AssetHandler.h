@@ -25,7 +25,7 @@ typedef struct {
 		JamTexture* tex; ///< The internal texture
 		Sprite* spr; ///< The internal sprite
 		TileMap* tileMap; ///< The internal tile map
-		Entity* entity; ///< The internal entity
+		JamEntity* entity; ///< The internal entity
 		Hitbox* hitbox; ///< The internal hitbox
 	};
 } JamAsset;
@@ -87,7 +87,7 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAsset
 /// \throws ERROR_ASSET_NOT_FOUND
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OPEN_FAILED
-void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const char *filename, BehaviourMap *map);
+void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const char *filename, JamBehaviourMap *map);
 
 /// \brief Grabs an asset, or returns NULL if the key is not bound
 /// \throws ERROR_NULL_POINTER
@@ -101,7 +101,7 @@ Sprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key);
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-Entity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER

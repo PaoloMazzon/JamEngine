@@ -6,7 +6,7 @@ Worlds have a couple key features
 
  + Entities are automatically sorted into two categories: type and range (although there is still a list of every entity)
  + filterEntitiesByProximity will automatically sort entities into in-range and out-of-range categories
- + Integrated `BehaviourMap` support (or more precisely `Behaviour` support)
+ + Integrated `JamBehaviourMap` support (or more precisely `JamBehaviour` support)
  + Automatic memory management for all entities in the world
  + An array to store tile maps relevant to the world in
 
@@ -22,8 +22,8 @@ a world to look like
 
     JamAssetHandler* handler = jamCreateAssetHandler();
     jamAssetLoadINI(handler, renderer, "assets/mygame.ini", myBehaviourMap);
-    worldAddEntity(gameWorld, copyEntity(jamGetEntityFromHandler(handler, "EnemyEntity"), 80, 500));
-    worldAddEntity(gameWorld, copyEntity(jamGetEntityFromHandler(handler, "BirdEntity"), 200, 100));
+    worldAddEntity(gameWorld, jamCopyEntity(jamGetEntityFromHandler(handler, "EnemyEntity"), 80, 500));
+    worldAddEntity(gameWorld, jamCopyEntity(jamGetEntityFromHandler(handler, "BirdEntity"), 200, 100));
     // Now my entity copies will be safely freed by the world, and the "real" entities loaded by
     // the asset handler (and its associated sprites/whatever) will be freed by the handler.
 
@@ -33,8 +33,8 @@ create worlds can make the level-building process much quicker, but using Tiled 
 with a few caveats to be aware of due to the limitations of JamEngine
 
  + Each tile layer must be named after the tileset asset it uses (You can't use multiple tilesets on one tileset layer)
- + All entities in the world must be in an object layer, but how many object layers you have is irrelevant
- + Each entity (or object in Tiled) must have its type be the same as its asset name
+ + All entities in the world must be in an et_Object layer, but how many et_Object layers you have is irrelevant
+ + Each entity (or et_Object in Tiled) must have its type be the same as its asset name
  + Only orthogonal worlds are supported, sorry isometric fans
 
 Tiled might take a bit of fiddling to get working properly for you, but it is very

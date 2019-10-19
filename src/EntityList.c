@@ -20,9 +20,9 @@ EntityList* createEntityList() {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void addEntityToList(EntityList* list, Entity* entity) {
+void addEntityToList(EntityList* list, JamEntity* entity) {
 	int i = 0;
-	Entity** newList;
+	JamEntity** newList;
 	bool foundSpot = false;
 	if (list != NULL && entity != NULL) {
 		// First we look for a free spot in the list
@@ -40,7 +40,7 @@ void addEntityToList(EntityList* list, Entity* entity) {
 			list->size++;
 		} else if (!foundSpot) {
 			// When all else fails, allocate more memory
-			newList = realloc(list->entities, (list->size + ENTITY_LIST_ALLOCATION_AMOUNT) * sizeof(Entity*));
+			newList = realloc(list->entities, (list->size + ENTITY_LIST_ALLOCATION_AMOUNT) * sizeof(JamEntity*));
 
 			if (newList != NULL) {
 				list->entities = newList;
@@ -58,7 +58,7 @@ void addEntityToList(EntityList* list, Entity* entity) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-Entity* popEntityFromList(EntityList* list, Entity* entity) {
+JamEntity* popEntityFromList(EntityList* list, JamEntity* entity) {
 	int i = 0;
 	bool found = false;
 	if (list != NULL) {
@@ -89,13 +89,13 @@ Entity* popEntityFromList(EntityList* list, Entity* entity) {
 */
 void shrinkEntityList(EntityList* list) {
 	int i, j, posInList;
-	Entity** newList;
+	JamEntity** newList;
 	if (list != NULL) {
 		// Loop every element in size, we don't need to run through empty capacity
 		for (i = 0; i < list->size; i++) {
 			// We found an empty spot in the list
 			if (list->entities[i] == NULL && i < list->size - 1) {
-				// Find the last item in the list and put it at the current spot
+				// Find the last et_Item in the list and put it at the current spot
 				posInList = 0;
 				for (j = i + 1; j < list->size; j++)
 					if (list->entities[j] != NULL)
@@ -115,7 +115,7 @@ void shrinkEntityList(EntityList* list) {
 		}
 
 		// Reset list size to that amount and make sure it works
-		newList = realloc(list->entities, posInList * sizeof(Entity*));
+		newList = realloc(list->entities, posInList * sizeof(JamEntity*));
 		if (newList != NULL) {
 			list->entities = newList;
 			list->size = (uint32)posInList;

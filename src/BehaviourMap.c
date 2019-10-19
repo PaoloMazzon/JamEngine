@@ -3,26 +3,28 @@
 #include "string.h"
 
 /////////////////////////////////////////////////////////////////
-BehaviourMap* createBehaviourMap() {
-	BehaviourMap* map = (BehaviourMap*)calloc(1, sizeof(BehaviourMap));
+JamBehaviourMap* jamCreateBehaviourMap() {
+	JamBehaviourMap* map = (JamBehaviourMap*)calloc(1, sizeof(JamBehaviourMap));
 
 	if (map == NULL)
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate behaviour map (createBehaviourMap)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate behaviour map (jamCreateBehaviourMap)\n");
 
 	return map;
 }
 /////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
-void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(BEHAVIOUR_ARGUMENTS), void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS), void (*onDraw)(BEHAVIOUR_ARGUMENTS)) {
-	Behaviour** newBehaviours;
+void jamAddBehaviourToMap(JamBehaviourMap *map, const char *name, void (*onCreation)(BEHAVIOUR_ARGUMENTS),
+						  void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS),
+						  void (*onDraw)(BEHAVIOUR_ARGUMENTS)) {
+	JamBehaviour** newBehaviours;
 	const char** newNames;
-	Behaviour* behaviour;
+	JamBehaviour* behaviour;
 	
 	if (map != NULL) {
-		newBehaviours = (Behaviour**)realloc(map->behaviours, (map->size + 1) * sizeof(Behaviour*));
+		newBehaviours = (JamBehaviour**)realloc(map->behaviours, (map->size + 1) * sizeof(JamBehaviour*));
 		newNames = (const char**)realloc(map->names, (map->size + 1) * sizeof(const char*));
-		behaviour = (Behaviour*)malloc(sizeof(Behaviour));
+		behaviour = (JamBehaviour*)malloc(sizeof(JamBehaviour));
 
 		if (behaviour != NULL && newNames != NULL && newBehaviours != NULL) {
 			map->behaviours = newBehaviours;
@@ -36,17 +38,17 @@ void addBehaviourToMap(BehaviourMap* map, const char* name, void (*onCreation)(B
 			behaviour->onFrame = onFrame;
 			behaviour->onDraw = onDraw;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate map (addBehaviourToMap)\n");
+			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate map (jamAddBehaviourToMap)\n");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Map doesn't exist (addBehaviourToMap)\n");
+		jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamAddBehaviourToMap)\n");
 	}
 }
 /////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
-Behaviour* getBehaviourFromMap(BehaviourMap* map, const char* name) {
-	Behaviour* returnBehaviour = NULL;
+JamBehaviour* jamGetBehaviourFromMap(JamBehaviourMap *map, const char *name) {
+	JamBehaviour* returnBehaviour = NULL;
 	int i;
 
 	if (map != NULL) {
@@ -60,7 +62,7 @@ Behaviour* getBehaviourFromMap(BehaviourMap* map, const char* name) {
 /////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
-void freeBehaviourMap(BehaviourMap* map) {
+void jamFreeBehaviourMap(JamBehaviourMap *map) {
 	int i;
 	
 	if (map != NULL) {

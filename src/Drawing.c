@@ -11,27 +11,27 @@
 
 
 //////////////////////////////////////////////////////////////
-void drawSetColour(JamRenderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
+void jamDrawSetColour(JamRenderer *renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
 	if (renderer != NULL) {
 		SDL_SetRenderDrawColor(renderer->internalRenderer, r, g, b, a);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawSetColour).\n");
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (jamDrawSetColour).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawGetColour(JamRenderer* renderer, uint8* r, uint8* g, uint8* b, uint8* a) {
+void jamDrawGetColour(JamRenderer *renderer, uint8 *r, uint8 *g, uint8 *b, uint8 *a) {
 	if (renderer != NULL) {
 		SDL_GetRenderDrawColor(renderer->internalRenderer, r, g, b, a);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawGetColour).\n");
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (jamDrawGetColour).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawRectangle(JamRenderer* renderer, int x, int y, int w, int h) {
+void jamDrawRectangle(JamRenderer *renderer, int x, int y, int w, int h) {
 	SDL_Rect rectangle;
 	jamCalculateForCamera(renderer, &x, &y);
 
@@ -43,23 +43,23 @@ void drawRectangle(JamRenderer* renderer, int x, int y, int w, int h) {
 		rectangle.h = h;
 		SDL_RenderDrawRect(renderer->internalRenderer, &rectangle);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawRectangle).\n");
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (jamDrawRectangle).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawCircle(JamRenderer* renderer, int x, int y, int r) {
+void jamDrawCircle(JamRenderer *renderer, int x, int y, int r) {
 	if (renderer != NULL) {
 		// TODO: This
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawCircle).\n");
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (jamDrawCircle).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawPolygon(JamRenderer* renderer, Polygon* poly, int x, int y) {
+void jamDrawPolygon(JamRenderer *renderer, Polygon *poly, int x, int y) {
 	unsigned int i;
 	if (renderer != NULL && poly != NULL) {
 		for (i = 0; i < poly->vertices; i++) {
@@ -78,7 +78,7 @@ void drawPolygon(JamRenderer* renderer, Polygon* poly, int x, int y) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawFillColour(JamRenderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
+void jamDrawFillColour(JamRenderer *renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
 	uint8 oR, oG, oB, oA;
 	SDL_BlendMode texMode;
 	SDL_Texture* renderTarget;
@@ -102,13 +102,13 @@ void drawFillColour(JamRenderer* renderer, uint8 r, uint8 g, uint8 b, uint8 a) {
 		SDL_SetRenderDrawColor(renderer->internalRenderer, oR, oG, oB, oA);
 		SDL_SetTextureBlendMode(renderTarget, texMode);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (drawFillColour).\n");
+		jSetError(ERROR_NULL_POINTER, "Passed renderer does not exist (jamDrawFillColour).\n");
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawTexture(JamRenderer* renderer, JamTexture* texture, sint32 x, sint32 y) {
+void jamDrawTexture(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32 y) {
 	SDL_Rect dest;
 	jamCalculateForCamera(renderer, &x, &y);
 
@@ -121,15 +121,16 @@ void drawTexture(JamRenderer* renderer, JamTexture* texture, sint32 x, sint32 y)
 		SDL_RenderCopy(renderer->internalRenderer, texture->tex, NULL, &dest);
 	} else {
 		if (renderer == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer not present (drawTexture). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "JamRenderer not present (jamDrawTexture). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamTexture not present (drawTexture). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "JamTexture not present (jamDrawTexture). SDL Error: %s", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawSortedMap(JamRenderer* renderer, Sprite* spr, TileMap* map, int x, int y, uint32 startingCellX, uint32 startingCellY) {
+void jamDrawSortedMap(JamRenderer *renderer, Sprite *spr, TileMap *map, int x, int y, uint32 startingCellX,
+					  uint32 startingCellY) {
 	int i, j;
 	bool n, e, s, w, ne, nw, se, sw;
 	int frame;
@@ -260,22 +261,23 @@ void drawSortedMap(JamRenderer* renderer, Sprite* spr, TileMap* map, int x, int 
 		}
 	} else {
 		if (renderer == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamRenderer doesn't exist (drawSortedMap)\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer doesn't exist (jamDrawSortedMap)\n");
 		}
 		if (map == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Map doesn't exist (drawSortedMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamDrawSortedMap)\n");
 		}
 		if (spr == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Sprite doesn't exist (drawSortedMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Sprite doesn't exist (jamDrawSortedMap)\n");
 		} else if (!(spr->animationLength == 48 || spr->animationLength == 47)) {
-			jSetError(ERROR_INCORRECT_FORMAT, "Sprite does not contain 48 frames(drawSortedMap)\n");
+			jSetError(ERROR_INCORRECT_FORMAT, "Sprite does not contain 48 frames(jamDrawSortedMap)\n");
 		}
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawTileMap(JamRenderer* renderer, TileMap* map, int x, int y, uint32 xInMapStart, uint32 yInMapStart, uint32 xInMapFinish, uint32 yInMapFinish) {
+void jamDrawTileMap(JamRenderer *renderer, TileMap *map, int x, int y, uint32 xInMapStart, uint32 yInMapStart,
+					uint32 xInMapFinish, uint32 yInMapFinish) {
 	int i, j, originalX;
 	originalX = x;
 	uint32 val;
@@ -295,17 +297,18 @@ void drawTileMap(JamRenderer* renderer, TileMap* map, int x, int y, uint32 xInMa
 		}
 	} else {
 		if (renderer == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (drawTileMap)\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamDrawTileMap)\n");
 		if (map == NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (drawTileMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamDrawTileMap)\n");
 		if (map != NULL && map->tileSheet == NULL)
-			jSetError(ERROR_NULL_POINTER, "Internal tilesheet does not exist (drawTileMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Internal tilesheet does not exist (jamDrawTileMap)\n");
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawTextureExt(JamRenderer* renderer, JamTexture* texture, sint32 x, sint32 y, sint32 originX, sint32 originY, float scaleX, float scaleY, double rot, Uint8 alpha) {
+void jamDrawTextureExt(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32 y, sint32 originX, sint32 originY,
+					   float scaleX, float scaleY, double rot, Uint8 alpha) {
 	SDL_Rect dest;
 	SDL_Point origin;
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
@@ -339,19 +342,20 @@ void drawTextureExt(JamRenderer* renderer, JamTexture* texture, sint32 x, sint32
 			SDL_RenderCopyEx(renderer->internalRenderer, texture->tex, NULL, &dest, rot, &origin, flip);
 			SDL_SetTextureAlphaMod(texture->tex, previousAlpha);
 		} else {
-			jSetError(ERROR_SDL_ERROR, "JamTexture does not support alpha (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_SDL_ERROR, "JamTexture does not support alpha (jamDrawTextureExt). SDL Error: %s", SDL_GetError());
 		}
 	} else {
 		if (renderer == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer not present (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "JamRenderer not present (jamDrawTextureExt). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamTexture not present (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "JamTexture not present (jamDrawTextureExt). SDL Error: %s", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawTexturePart(JamRenderer* renderer, JamTexture* texture, sint32 x, sint32 y, sint32 texX, sint32 texY, sint32 texW, sint32 texH) {
+void jamDrawTexturePart(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32 y, sint32 texX, sint32 texY,
+						sint32 texW, sint32 texH) {
 	SDL_Rect dest;
 	SDL_Rect src;
 	jamCalculateForCamera(renderer, &x, &y);
@@ -369,15 +373,17 @@ void drawTexturePart(JamRenderer* renderer, JamTexture* texture, sint32 x, sint3
 		SDL_RenderCopy(renderer->internalRenderer, texture->tex, &src, &dest);
 	} else {
 		if (renderer == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer not present (drawTexturePart). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "JamRenderer not present (jamDrawTexturePart). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamTexture not present (drawTexturePart). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "JamTexture not present (jamDrawTexturePart). SDL Error: %s", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void drawTexturePartExt(JamRenderer* renderer, JamTexture* texture, sint32 x, sint32 y, sint32 originX, sint32 originY, float scaleX, float scaleY, double rot, Uint8 alpha, sint32 texX, sint32 texY, sint32 texW, sint32 texH) {
+void jamDrawTexturePartExt(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32 y, sint32 originX,
+						   sint32 originY, float scaleX, float scaleY, double rot, Uint8 alpha, sint32 texX,
+						   sint32 texY, sint32 texW, sint32 texH) {
 	SDL_Rect dest;
 	SDL_Rect src;
 	SDL_Point origin;
@@ -416,13 +422,13 @@ void drawTexturePartExt(JamRenderer* renderer, JamTexture* texture, sint32 x, si
 			SDL_RenderCopyEx(renderer->internalRenderer, texture->tex, &src, &dest, rot, &origin, flip);
 			SDL_SetTextureAlphaMod(texture->tex, previousAlpha);
 		} else {
-			jSetError(ERROR_SDL_ERROR, "JamTexture does not support alpha (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_SDL_ERROR, "JamTexture does not support alpha (jamDrawTextureExt). SDL Error: %s", SDL_GetError());
 		}
 	} else {
 		if (renderer == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer not present (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "JamRenderer not present (jamDrawTextureExt). SDL Error: %s", SDL_GetError());
 		if (texture == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamTexture not present (drawTextureExt). SDL Error: %s", SDL_GetError());
+			jSetError(ERROR_NULL_POINTER, "JamTexture not present (jamDrawTextureExt). SDL Error: %s", SDL_GetError());
 	}
 }
 //////////////////////////////////////////////////////////////

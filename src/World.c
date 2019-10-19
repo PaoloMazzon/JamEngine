@@ -52,7 +52,7 @@ World* createWorld(JamRenderer* renderer) {
 ///////////////////////////////////////////////////////
 void setWorldFilterTypeRectangle(World* world, uint16 inRangeRectangleWidth, uint16 inRangeRectangleHeight) {
 	if (world != NULL) {
-		world->distanceFilteringType = fRectangle;
+		world->distanceFilteringType = ft_Rectangle;
 		world->inRangeRectangleWidth = inRangeRectangleWidth;
 		world->inRangeRectangleHeight = inRangeRectangleHeight;
 	} else {
@@ -64,7 +64,7 @@ void setWorldFilterTypeRectangle(World* world, uint16 inRangeRectangleWidth, uin
 ///////////////////////////////////////////////////////
 void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius) {
 	if (world != NULL) {
-		world->distanceFilteringType = fProximity;
+		world->distanceFilteringType = ft_Proximity;
 		world->inRangeRadius = inRangeRadius;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "World does not exist (setWorldFilterTypeCircle)\n");
@@ -73,7 +73,7 @@ void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldAddEntity(World* world, Entity* entity) {
+void worldAddEntity(World* world, JamEntity* entity) {
 	if (world != NULL && entity != NULL && entity->type < MAX_ENTITY_TYPES) {
 		// Put the entity in each of the three lists it belongs to
 		addEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
@@ -89,10 +89,10 @@ void worldAddEntity(World* world, Entity* entity) {
 			jSetError(ERROR_NULL_POINTER, "World does not exist (worldAddEntity)\n");
 		}
 		if (entity == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Entity does not exist (worldAddEntity)\n");
+			jSetError(ERROR_NULL_POINTER, "JamEntity does not exist (worldAddEntity)\n");
 		}
 		if (entity != NULL && entity->type >= MAX_ENTITY_TYPES) {
-			jSetError(ERROR_INCORRECT_FORMAT, "Entity type is invalid (worldAddEntity)\n");
+			jSetError(ERROR_INCORRECT_FORMAT, "JamEntity type is invalid (worldAddEntity)\n");
 		}
 	}
 }
@@ -101,7 +101,7 @@ void worldAddEntity(World* world, Entity* entity) {
 ///////////////////////////////////////////////////////
 void worldProcFrame(World* world) {
 	int i;
-	Entity* ent;
+	JamEntity* ent;
 
 	if (world != NULL) {
 		// Process all the entities in range
@@ -118,9 +118,9 @@ void worldProcFrame(World* world) {
 				if (ent->behaviour->onDraw != NULL)
 					(*ent->behaviour->onDraw)(world->renderer, world, ent);
 				else
-					drawEntity(world->renderer, ent);
+					jamDrawEntity(world->renderer, ent);
 			} else if (ent != NULL && ent->behaviour == NULL) {
-				drawEntity(world->renderer, ent);
+				jamDrawEntity(world->renderer, ent);
 			}
 		}
 	} else {
@@ -130,9 +130,9 @@ void worldProcFrame(World* world) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldRemoveEntity(World* world, Entity* entity) {
+void worldRemoveEntity(World* world, JamEntity* entity) {
 	int i;
-	EntityType type = none;
+	JamEntityType type = et_None;
 
 	if (world != NULL) {
 		// First find it in the master list
@@ -144,13 +144,13 @@ void worldRemoveEntity(World* world, Entity* entity) {
 
 				// Record the type and destroy it
 				type = world->worldEntities->entities[i]->type;
-				freeEntity(world->worldEntities->entities[i], false, false, false);
+				jamFreeEntity(world->worldEntities->entities[i], false, false, false);
 				world->worldEntities->entities[i] = NULL;
 			}
 		}
 
 		// Clear it from the other lists if it actually exists
-		if (type != none) {
+		if (type != et_None) {
 			for (i = 0; i < world->entityTypes[type]->size; i++)
 				if (world->entityTypes[type]->entities[i] != NULL && world->entityTypes[type]->entities[i] == entity)
 					world->entityTypes[type]->entities[i] = NULL;
@@ -168,7 +168,7 @@ void worldRemoveEntity(World* world, Entity* entity) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void worldRotateEntity(World* world, Entity* entity) {
+void worldRotateEntity(World* world, JamEntity* entity) {
 	int i = 0;
 	bool found = false;
 
@@ -191,12 +191,12 @@ void worldRotateEntity(World* world, Entity* entity) {
 ///////////////////////////////////////////////////////
 void filterEntitiesByProximity(World* world, int pointX, int pointY) {
 	uint32 i;
-	Entity* entity;
+	JamEntity* entity;
 
 	if (world != NULL) {
 		// Essentially the same code for the two different types of ranges b/c
 		// it is cheaper than running the same if statement every iteration
-		if (world->distanceFilteringType == fRectangle) {
+		if (world->distanceFilteringType == ft_Rectangle) {
 			// Situation 1: It was in range but now is not
 			for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++) {
 				entity = world->entityByRange[ENTITIES_IN_RANGE]->entities[i];

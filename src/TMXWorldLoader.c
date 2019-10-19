@@ -28,7 +28,7 @@ char* genRandomString() {
 ///////////////////////////////////////////////////////////////////////////////
 // This function is meant for loadWorldFromTMX and is not safe to call
 bool loadObjectLayerIntoWorld(JamAssetHandler* handler, World* world, tmx_layer* layer) {
-	Entity* tempEntity;
+	JamEntity* tempEntity;
 	tmx_object* currentObject = layer->content.objgr->head;
 	bool failedToLoad = false;
 
@@ -48,7 +48,7 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, World* world, tmx_layer*
 			// This is to account for the difference in sprite origins between JamEngine and Tiled
 			tempEntity->y -= currentObject->height;
 
-			// Load properties of the object into the new entity
+			// Load properties of the et_Object into the new entity
 			if (currentObject->visible)
 				tempEntity->alpha = 255;
 			else
@@ -121,7 +121,7 @@ World* loadWorldFromTMX(JamAssetHandler* handler, JamRenderer* renderer, const c
 		while (currentLayer != NULL) {
 			if (currentLayer->type == L_OBJGR) {
 				if (!loadObjectLayerIntoWorld(handler, world, currentLayer)) {
-					jSetError(ERROR_TMX_ENTITY_ERROR, "Entity layer %s could not be loaded (loadWorldFromTMX)\n", currentLayer->name);
+					jSetError(ERROR_TMX_ENTITY_ERROR, "JamEntity layer %s could not be loaded (loadWorldFromTMX)\n", currentLayer->name);
 				}
 			}
 			else if (currentLayer->type == L_LAYER) {

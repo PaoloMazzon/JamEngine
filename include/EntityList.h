@@ -32,7 +32,7 @@
 /// If you want to loop this struct, use size; not capacity, and
 /// ignore all NULL entities.
 typedef struct {
-	Entity** entities; ///< All the entities in the list
+	JamEntity** entities; ///< All the entities in the list
 	uint32 size; ///< The size of the entity list
 	uint32 capacity; ///< Total memory slots allocated
 } EntityList;
@@ -51,12 +51,12 @@ EntityList* createEntityList();
 ///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-void addEntityToList(EntityList* list, Entity* entity);
+void addEntityToList(EntityList* list, JamEntity* entity);
 
 /// \brief Removes an entity from the list and returns it
 /// \return Returns NULL if it was not found
 /// \throws ERROR_NULL_POINTER
-Entity* popEntityFromList(EntityList* list, Entity* entity);
+JamEntity* popEntityFromList(EntityList* list, JamEntity* entity);
 
 /// \brief Shrinks an entity list down to no bigger than needed
 /// \throws ERROR_REALLOC_FAILED

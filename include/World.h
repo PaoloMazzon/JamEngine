@@ -65,7 +65,7 @@ typedef struct _World {
 	// Higher-level abstractions - everything here is stored in core data
 	EntityList* entityByRange[2]; ///< List of lists of entities that are in or out of range
 	EntityList* entityTypes[MAX_ENTITY_TYPES]; ///< List of lists of entities by type, sorted by the world
-	FilterType distanceFilteringType; ///< Do we filter entities by ones on screen or by a given distance?
+	JamFilterType distanceFilteringType; ///< Do we filter entities by ones on screen or by a given distance?
 
 	// Information needed for filtering entities
 	union {
@@ -96,7 +96,7 @@ void setWorldFilterTypeCircle(World* world, uint16 inRangeRadius);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-void worldAddEntity(World* world, Entity* entity);
+void worldAddEntity(World* world, JamEntity* entity);
 
 /// \brief Processes and draws the entities in the world
 ///
@@ -116,7 +116,7 @@ void worldProcFrame(World* world);
 /// up later. This function does nothing if the entity is not in range.
 ///
 /// \throws ERROR_NULL_POINTER
-void worldRotateEntity(World* world, Entity* entity);
+void worldRotateEntity(World* world, JamEntity* entity);
 
 /// \brief Removes an entity from the world
 ///
@@ -126,7 +126,7 @@ void worldRotateEntity(World* world, Entity* entity);
 /// it will loop over at least 3 different entity lists trying to
 /// find all references to the specific entity
 /// \throws ERROR_NULL_POINTER
-void worldRemoveEntity(World* world, Entity* entity);
+void worldRemoveEntity(World* world, JamEntity* entity);
 
 /// \brief Sorts a world's entities into lists filtered by distance
 ///

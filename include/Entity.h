@@ -22,13 +22,13 @@
 /// the engine's problem. Since not every use case needs
 /// these things, you can turn each individually off in the
 /// Constants.h file.
-typedef struct _Entity {
+typedef struct _JamEntity {
 	Sprite* sprite;       ///< This entity's sprite (NULL is safe)
 	Hitbox* hitbox;       ///< This entity's hitbox (NULL is safe)
-	EntityType type;      ///< Type of entity this is
+	JamEntityType type;      ///< Type of entity this is
 	double x;             ///< X position in the game world
 	double y;             ///< Y position in the game world
-	Behaviour* behaviour; ///< Behaviour mapping of this entity (AssetManagers will resolve this)
+	JamBehaviour* behaviour; ///< Behaviour mapping of this entity (AssetManagers will resolve this)
 	double hitboxOffsetX; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	double hitboxOffsetY; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	void* userData;       ///< A place for the programmer to store their own variables and such
@@ -50,35 +50,36 @@ typedef struct _Entity {
 #ifdef ENTITY_ENABLE_Z
 	double z;            ///< Z position in the game world (Can be disabled to save memory)
 #endif
-} Entity;
+} JamEntity;
 
 /// \brief Creates/initializes an entity class
 /// \throws ERROR_ALLOC_FAILED
-Entity* createEntity(Sprite* sprite, Hitbox* hitbox, double x, double y, double hitboxOffsetX, double hitboxOffsetY, Behaviour* behaviour);
+JamEntity* jamCreateEntity(Sprite *sprite, Hitbox *hitbox, double x, double y, double hitboxOffsetX,
+						   double hitboxOffsetY, JamBehaviour *behaviour);
 
 /// \brief Makes a 1:1 copy of an entity and returns the new copy
-Entity* copyEntity(Entity* baseEntity, double x, double y);
+JamEntity* jamCopyEntity(JamEntity *baseEntity, double x, double y);
 
 /// \brief Draws an entity
 /// \throws ERROR_NULL_POINTER
-void drawEntity(JamRenderer* renderer, Entity* entity);
+void jamDrawEntity(JamRenderer *renderer, JamEntity *entity);
 
 /// \brief Checks if two entities are colliding with one another
 ///
 /// This function uses the rx/ry coordinates for entity 1, no its x/y
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-bool checkEntityCollision(int x, int y, Entity* entity1, Entity* entity2);
+bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity2);
 
 /// \brief Checks if an entity is colliding with a tile map
 ///
 /// This function uses the rx/ry coordinates for the entity, no the entity's x/y
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-bool checkEntityTileMapCollision(Entity* entity, TileMap* tileMap, double rx, double ry);
+bool jamCheckEntityTileMapCollision(JamEntity *entity, TileMap *tileMap, double rx, double ry);
 
 /// \brief Frees an entity from memory
 ///
 /// No matter what you specify with the boolean arguments,
 /// the sprite's frames' textures will NOT be freed.
-void freeEntity(Entity* entity, bool destroyHitbox, bool destroySprite, bool destroyFrames);
+void jamFreeEntity(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames);

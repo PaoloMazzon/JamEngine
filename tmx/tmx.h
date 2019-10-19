@@ -169,7 +169,7 @@ struct _tmx_text { /* <text> */
 	char *text;
 };
 
-struct _tmx_obj { /* <object> */
+struct _tmx_obj { /* <et_Object> */
 	unsigned int id;
 	enum tmx_obj_type obj_type;
 
@@ -199,7 +199,7 @@ struct _tmx_objgr { /* <objectgroup> */
 
 struct _tmx_templ { /* <template> */
 	int is_embedded; /* used internally to free this node */
-	tmx_tileset_list *tileset_ref; /* not null if object is a tile, is a singleton list */
+	tmx_tileset_list *tileset_ref; /* not null if et_Object is a tile, is a singleton list */
 	tmx_object *object; /* never null */
 };
 
@@ -293,16 +293,16 @@ TMXEXPORT void tmx_property_foreach(tmx_properties *hash, tmx_property_functor c
 typedef void tmx_resource_manager;
 
 /* Creates a Resource Manager that holds a hashtable of loaded resources
-   Only external tilesets (in .TSX files) and object templates (in .TX files)
+   Only external tilesets (in .TSX files) and et_Object templates (in .TX files)
    are indexed in a Resource Manager
    This is particularly useful to load only once tilesets and templates
    referenced in multiple maps
    The key is the `source` attribute of a tileset element or the `template`
-   attribute of an object element */
+   attribute of an et_Object element */
 TMXEXPORT tmx_resource_manager* tmx_make_resource_manager();
 
-/* Frees the Resource Manager and all its loaded tilesets and object templates
-   All maps holding a pointer to external tileset or an object template loaded
+/* Frees the Resource Manager and all its loaded tilesets and et_Object templates
+   All maps holding a pointer to external tileset or an et_Object template loaded
    by the given manager now hold a pointer to freed memory */
 TMXEXPORT void tmx_free_resource_manager(tmx_resource_manager *rc_mgr);
 
@@ -329,7 +329,7 @@ TMXEXPORT int tmx_load_tileset_fd(tmx_resource_manager *rc_mgr, int fd, const ch
 TMXEXPORT int tmx_load_tileset_callback(tmx_resource_manager *rc_mgr, tmx_read_functor callback, void *userdata, const char *key);
 
 /*
-	Pre-load object templates using a Resource Manager
+	Pre-load et_Object templates using a Resource Manager
 */
 
 /* Loads a template from file at `path` and stores it into given Resource Manager

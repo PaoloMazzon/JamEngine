@@ -61,4 +61,4 @@ static uint64_t ns() {
 //////////////////////////////////////////////////////////////////////
 
 /// \brief Sleeps for a given amount of time (in nanoseconds)
-void sleep(uint64_t nsTime);
+void jamSleep(uint64_t nsTime);

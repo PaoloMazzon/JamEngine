@@ -128,7 +128,7 @@ static int parse_points(xmlTextReaderPtr reader, tmx_shape *shape) {
 	int i;
 
 	if (!(value = (char*)xmlTextReaderGetAttribute(reader, (xmlChar*)"points"))) { /* points */
-		tmx_err(E_MISSEL, "xml parser: missing 'points' attribute in the 'object' element");
+		tmx_err(E_MISSEL, "xml parser: missing 'points' attribute in the 'et_Object' element");
 		return 0;
 	}
 
@@ -244,7 +244,7 @@ static int parse_object(xmlTextReaderPtr reader, tmx_object *obj, int is_on_map,
 		obj->id = atoi(value);
 		tmx_free_func(value);
 	} else if (is_on_map) {
-		tmx_err(E_MISSEL, "xml parser: missing 'id' attribute in the 'object' element");
+		tmx_err(E_MISSEL, "xml parser: missing 'id' attribute in the 'et_Object' element");
 		return 0;
 	}
 
@@ -252,7 +252,7 @@ static int parse_object(xmlTextReaderPtr reader, tmx_object *obj, int is_on_map,
 		obj->x = atof(value);
 		tmx_free_func(value);
 	} else if (is_on_map) {
-		tmx_err(E_MISSEL, "xml parser: missing 'x' attribute in the 'object' element");
+		tmx_err(E_MISSEL, "xml parser: missing 'x' attribute in the 'et_Object' element");
 		return 0;
 	}
 
@@ -260,7 +260,7 @@ static int parse_object(xmlTextReaderPtr reader, tmx_object *obj, int is_on_map,
 		obj->y = atof(value);
 		tmx_free_func(value);
 	} else if (is_on_map) {
-		tmx_err(E_MISSEL, "xml parser: missing 'y' attribute in the 'object' element");
+		tmx_err(E_MISSEL, "xml parser: missing 'y' attribute in the 'et_Object' element");
 		return 0;
 	}
 
@@ -274,7 +274,7 @@ static int parse_object(xmlTextReaderPtr reader, tmx_object *obj, int is_on_map,
 		if (!(obj->template_ref)) {
 			if (!(ab_path = mk_absolute_path(filename, value))) return 0;
 			if (!(sub_reader = xmlReaderForFile(ab_path, NULL, 0))) { /* opens */
-				tmx_err(E_XDATA, "xml parser: cannot open object template file '%s'", ab_path);
+				tmx_err(E_XDATA, "xml parser: cannot open et_Object template file '%s'", ab_path);
 				tmx_free_func(ab_path);
 				tmx_free_func(value);
 				return 0;
@@ -535,7 +535,7 @@ static int parse_layer(xmlTextReaderPtr reader, tmx_layer **layer_headadr, int m
 				if (!parse_data(reader, &(res->content.gids), map_h * map_w)) return 0;
 			} else if (!strcmp(name, "image")) {
 				if (!parse_image(reader, &(res->content.image), 0, filename)) return 0;
-			} else if (!strcmp(name, "object")) {
+			} else if (!strcmp(name, "et_Object")) {
 				if (!(obj = alloc_object())) return 0;
 
 				obj->next = res->content.objgr->head;
@@ -703,7 +703,7 @@ static int parse_tile(xmlTextReaderPtr reader, tmx_tileset *tileset, tmx_resourc
 					do {
 						if (xmlTextReaderRead(reader) != 1) return 0; /* error_handler has been called */
 						name = (char*)xmlTextReaderConstName(reader);
-						if (!strcmp(name, "object")) {
+						if (!strcmp(name, "et_Object")) {
 							if (!(obj = alloc_object())) return 0;
 
 							obj->next = res->collision;
@@ -900,7 +900,7 @@ static int parse_template(xmlTextReaderPtr reader, tmx_template *template, tmx_r
 			name = (char*)xmlTextReaderConstName(reader);
 			if (!strcmp(name, "tileset")) {
 				parse_tileset_list(reader, &(template->tileset_ref), rc_mgr, filename);
-			} else if (!strcmp(name, "object")) {
+			} else if (!strcmp(name, "et_Object")) {
 				if (!parse_object(reader, template->object, 0, rc_mgr, filename)) return 0;
 			} else {
 				/* Unknow element, skip its tree */

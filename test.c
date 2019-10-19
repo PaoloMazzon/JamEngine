@@ -29,33 +29,33 @@ static inline double sign(double number) {
 		return 0.0;
 }
 
-void onPlayerFrame(JamRenderer* renderer, World* world, Entity* self) {
+void onPlayerFrame(JamRenderer* renderer, World* world, JamEntity* self) {
 	// Gravity
 	self->vSpeed += 0.5;
 
 	self->hSpeed =
 			(inputCheckKey(SDL_SCANCODE_RIGHT) + -inputCheckKey(SDL_SCANCODE_LEFT)) * 3;
 
-	// Jump - just shoot the player up and let gravity deal with it (only if on the ground)
+	// Jump - just shoot the et_Player up and let gravity deal with it (only if on the ground)
 	if (inputCheckKeyPressed(SDL_SCANCODE_UP) &&
-		checkEntityTileMapCollision(self, world->worldMaps[0], (int) self->x, (int) self->y + 1))
+			jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int) self->x, (int) self->y + 1))
 		self->vSpeed -= 10;
 
 	// Let's not go mach speed
 	if (self->vSpeed >= BLOCK_HEIGHT)
 		self->vSpeed = BLOCK_HEIGHT - 1;
 
-	if (checkEntityTileMapCollision(self, world->worldMaps[0], self->x + self->hSpeed, self->y)) {
+	if (jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x + self->hSpeed, self->y)) {
 		self->x -= sign(self->hSpeed);
 		self->x = round(self->x);
-		while (!checkEntityTileMapCollision(self, world->worldMaps[0], self->x + sign(self->hSpeed), self->y))
+		while (!jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x + sign(self->hSpeed), self->y))
 			self->x += sign(self->hSpeed);
 		self->hSpeed = 0;
 	}
-	if (checkEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + self->vSpeed)) {
+	if (jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + self->vSpeed)) {
 		self->y -= sign(self->vSpeed);
 		self->y = round(self->y);
-		while (!checkEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + sign(self->vSpeed)))
+		while (!jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + sign(self->vSpeed)))
 			self->y += sign(self->vSpeed);
 		self->vSpeed = 0;
 	}
@@ -63,7 +63,7 @@ void onPlayerFrame(JamRenderer* renderer, World* world, Entity* self) {
 	self->y += self->vSpeed;
 
 	//////////////////////// Player Animations ////////////////////////
-	// We must invert the player if he is going left
+	// We must invert the et_Player if he is going left
 	if (self->hSpeed > 0)
 		self->scaleX = 1;
 	else if (self->hSpeed < 0)
@@ -75,7 +75,7 @@ void onPlayerFrame(JamRenderer* renderer, World* world, Entity* self) {
 	else
 		self->sprite = sPlayerStand;
 
-	if (!checkEntityTileMapCollision(self, currentLevel, self->x, self->y + 1))
+	if (!jamCheckEntityTileMapCollision(self, currentLevel, self->x, self->y + 1))
 		self->sprite = sPlayerJump;*/
 }
 
@@ -90,7 +90,7 @@ bool runMenu(JamRenderer* renderer, Font* font) { // Returns false if quit game
 		runLoop = jamProcEvents(renderer);
 
 		if (runLoop) {
-			drawFillColour(renderer, 255, 255, 255, 255);
+			jamDrawFillColour(renderer, 255, 255, 255, 255);
 
 			// Display a simple message prompting play or quit
 			renderFont(0, 0, "Press <ESC> to quit or <SPACE> to play.", font, renderer);
@@ -120,8 +120,8 @@ bool runGame(JamRenderer* renderer, Font* font) {
 	int i;
 
 	// Create the behaviour map
-	BehaviourMap* bMap = createBehaviourMap();
-	addBehaviourToMap(bMap, "PlayerBehaviour", NULL, NULL, onPlayerFrame, NULL);
+	JamBehaviourMap* bMap = jamCreateBehaviourMap();
+	jamAddBehaviourToMap(bMap, "PlayerBehaviour", NULL, NULL, onPlayerFrame, NULL);
 
 	// Load the assets and create the world
 	JamAssetHandler* handler = jamCreateAssetHandler();
@@ -140,7 +140,7 @@ bool runGame(JamRenderer* renderer, Font* font) {
 			runLoop = jamProcEvents(renderer);
 
 			if (runLoop) {
-				drawFillColour(renderer, 0, 0, 0, 255);
+				jamDrawFillColour(renderer, 0, 0, 0, 255);
 
 				// Mess around with the renderer reset
 				if (inputCheckKeyPressed(SDL_SCANCODE_F)) {
@@ -156,13 +156,13 @@ bool runGame(JamRenderer* renderer, Font* font) {
 				// Draw the game world
 				for (i = 0; i < MAX_TILEMAPS; i++)
 					if (gameWorld->worldMaps[i] != NULL)
-						drawTileMap(renderer, gameWorld->worldMaps[i], 0, 0, 0, 0, 0, 0);
+						jamDrawTileMap(renderer, gameWorld->worldMaps[i], 0, 0, 0, 0, 0, 0);
 				worldProcFrame(gameWorld);
 
 				// Draw a border around the screen
-				drawSetColour(renderer, 255, 255, 255, 255);
-				drawRectangle(renderer, 0, 0, GAME_WIDTH, GAME_HEIGHT);
-				drawSetColour(renderer, 0, 0, 0, 255);
+				jamDrawSetColour(renderer, 255, 255, 255, 255);
+				jamDrawRectangle(renderer, 0, 0, GAME_WIDTH, GAME_HEIGHT);
+				jamDrawSetColour(renderer, 0, 0, 0, 255);
 
 				// Debug
 				renderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
@@ -175,7 +175,7 @@ bool runGame(JamRenderer* renderer, Font* font) {
 
 	// Free up the resources
 	freeWorld(gameWorld);
-	freeBehaviourMap(bMap);
+	jamFreeBehaviourMap(bMap);
 	jamFreeAssetHandler(handler);
 
 	return mainMenu;
@@ -193,7 +193,7 @@ int main(int argc, char* argv[]) {
 	// Setup the screen
 	jamConfigScreenBuffer(renderer, GAME_WIDTH, GAME_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	// A very simple loop that allows the player to bounce between
+	// A very simple loop that allows the et_Player to bounce between
 	// the menu and the game infinitely
 	while (run) {
 		run = runMenu(renderer, font);
