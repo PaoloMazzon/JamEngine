@@ -5,22 +5,24 @@
 #include "JamError.h"
 #include <malloc.h>
 #include <Audio.h>
+#include <string.h>
 
 static JamAudioPlayer* gAudioPlayer;
 static JamAudioSource* gDefaultSource;
 
 ///////////////////////////////////////////////////////////////////////
 void jamInitAudioPlayer() {
-	if (gAudioPlayer != NULL) {
+	if (gAudioPlayer == NULL) {
 		gAudioPlayer = (JamAudioPlayer*)malloc(sizeof(JamAudioPlayer));
 		gDefaultSource = (JamAudioSource*)calloc(1, sizeof(JamAudioSource));
+		alutInit(NULL, NULL);
 
 		if (gAudioPlayer != NULL && gDefaultSource != NULL) {
 			// Setup OpenAL device/context
 			gAudioPlayer->audioDevice = alcOpenDevice(NULL);
 			gAudioPlayer->audioContext = alcCreateContext(gAudioPlayer->audioDevice, NULL);
 
-			if (gAudioPlayer->audioDevice != NULL && gAudioPlayer->audioContext != NULL) {
+			if (alGetError() == AL_NO_ERROR) {
 				// Setup the default source
 				alGenSources(1, &gDefaultSource->soundID);
 				gDefaultSource->gain = 1;
@@ -34,6 +36,7 @@ void jamInitAudioPlayer() {
 					gDefaultSource = NULL;
 					gAudioPlayer = NULL;
 					jSetError(ERROR_OPENAL_ERROR, "Failed to create audio source");
+					alutExit();
 				}
 			} else {
 				alcDestroyContext(gAudioPlayer->audioContext);
@@ -43,6 +46,7 @@ void jamInitAudioPlayer() {
 				gDefaultSource = NULL;
 				gAudioPlayer = NULL;
 				jSetError(ERROR_OPENAL_ERROR, "Failed to initialize OpenAL");
+				alutExit();
 			}
 		} else {
 			if (gAudioPlayer == NULL)
@@ -53,6 +57,7 @@ void jamInitAudioPlayer() {
 			free(gAudioPlayer);
 			gDefaultSource = NULL;
 			gAudioPlayer = NULL;
+			alutExit();
 		}
 	}
 }
@@ -60,7 +65,13 @@ void jamInitAudioPlayer() {
 
 ///////////////////////////////////////////////////////////////////////
 void jamFreeAudioPlayer() {
-	// TODO: This
+	if (gDefaultSource != NULL)
+		alDeleteSources(1, &gDefaultSource->soundID);
+	if (gAudioPlayer != NULL) {
+		alcDestroyContext(gAudioPlayer->audioContext);
+		alcCloseDevice(gAudioPlayer->audioDevice);
+	}
+	alutExit();
 }
 ///////////////////////////////////////////////////////////////////////
 

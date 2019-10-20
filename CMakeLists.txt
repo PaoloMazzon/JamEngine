@@ -16,6 +16,7 @@ if (WIN32)
 elseif (UNIX)
 	find_package(LibXml2 REQUIRED)
 	find_package(OpenAL REQUIRED)
+	find_package(ALUT REQUIRED)
 	include_directories(include /usr/include/SDL2 ${LibXml2_INCLUDE_DIR} ${OPENAL_INCLUDE_DIR})
 endif()
 
@@ -30,10 +31,10 @@ else ()
 endif()
 
 if (WIN32)
-	# TODO: Add libxml2 stuff here
+	# TODO: Add libxml2/OpenAL stuff here
 	target_link_libraries(${PROJ_NAME} C:/SDL/lib/x86/SDL2main.lib C:/SDL/lib/x86/SDL2.lib C:/SDL/lib/x86/SDL2_image.lib)
 elseif (UNIX)
 	find_package(SDL2 REQUIRED)
 	find_package(SDL2_image REQUIRED)
-	target_link_libraries(${PROJ_NAME} m ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${LIBXML2_LIBRARIES} ${OPENAL_LIBRARY})
+	target_link_libraries(${PROJ_NAME} m ${SDL2_LIBRARY} ${ALUT_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${LIBXML2_LIBRARIES} ${OPENAL_LIBRARY})
 endif()
