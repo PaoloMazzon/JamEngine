@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <Input.h>
 #include <JamError.h>
+#include <SDL.h>
 
 static JamInput* gInputPointer;
 
@@ -19,7 +20,7 @@ void jamInitInput() {
 		gInputPointer->currentInput = SDL_GetKeyboardState(&gInputPointer->kbLen);
 
 		// And create the other array
-		gInputPointer->previousInput = (Uint8*)malloc(gInputPointer->kbLen);
+		gInputPointer->previousInput = (Uint8*)malloc((size_t)gInputPointer->kbLen);
 
 		// And again, double check
 		if (gInputPointer->previousInput == NULL) {
@@ -60,7 +61,7 @@ void jamUpdateInput(double screenMultiplier) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool jamInputCheckKey(SDL_Scancode key) {
+bool jamInputCheckKey(JamKeyboardKeys key) {
 	bool ret = false;
 
 	// Check input exists
@@ -79,7 +80,7 @@ bool jamInputCheckKey(SDL_Scancode key) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool jamInputCheckKeyPressed(SDL_Scancode key) {
+bool jamInputCheckKeyPressed(JamKeyboardKeys key) {
 	bool ret = false;
 
 	// Check input exists
@@ -99,7 +100,7 @@ bool jamInputCheckKeyPressed(SDL_Scancode key) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-bool jamInputCheckKeyReleased(SDL_Scancode key) {
+bool jamInputCheckKeyReleased(JamKeyboardKeys key) {
 	bool ret = false;
 
 	// Check input exists
@@ -148,7 +149,7 @@ bool jamInputCheckMouseButton(uint8 button) {
 
 	// Check input exists
 	if (gInputPointer != NULL) {
-		ret = gInputPointer->mouseState & button;
+		ret = (gInputPointer->mouseState & button) > 0;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamInput doesn't exist (jamInputCheckMouseButton). SDL Error: %s\n", SDL_GetError());
 	}

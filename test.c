@@ -31,10 +31,10 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 	self->vSpeed += 0.5;
 
 	self->hSpeed =
-			(jamInputCheckKey(SDL_SCANCODE_RIGHT) + -jamInputCheckKey(SDL_SCANCODE_LEFT)) * 3;
+			(jamInputCheckKey(JAM_KB_RIGHT) + -jamInputCheckKey(JAM_KB_LEFT)) * 3;
 
 	// Jump - just shoot the et_Player up and let gravity deal with it (only if on the ground)
-	if (jamInputCheckKeyPressed(SDL_SCANCODE_UP) &&
+	if (jamInputCheckKeyPressed(JAM_KB_UP) &&
 			jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int) self->x, (int) self->y + 1))
 		self->vSpeed -= 10;
 
@@ -93,10 +93,10 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 			jamRenderFont(0, 0, "Press <ESC> to quit or <SPACE> to play.", font);
 
 			// Now check out what the user wants to do
-			if (jamInputCheckKeyPressed(SDL_SCANCODE_ESCAPE)) {
+			if (jamInputCheckKeyPressed(JAM_KB_ESCAPE)) {
 				// Just quit the game
 				runLoop = false;
-			} else if (jamInputCheckKeyPressed(SDL_SCANCODE_SPACE)) {
+			} else if (jamInputCheckKeyPressed(JAM_KB_SPACE)) {
 				// Play the ever-exciting test game
 				runLoop = false;
 				play = true;
@@ -139,11 +139,11 @@ bool runGame(JamFont* font) {
 				jamDrawFillColour(0, 0, 0, 255);
 
 				// Mess around with the renderer reset
-				if (jamInputCheckKeyPressed(SDL_SCANCODE_F)) {
+				if (jamInputCheckKeyPressed(JAM_KB_F)) {
 					jamResetRenderer(0, 0, RENDERER_BORDERLESS_FULLSCREEN);
 					jamIntegerMaximizeScreenBuffer();
 				}
-				if (jamInputCheckKeyPressed(SDL_SCANCODE_G)) {
+				if (jamInputCheckKeyPressed(JAM_KB_G)) {
 					jamResetRenderer(GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
 					jamIntegerMaximizeScreenBuffer();
 				}

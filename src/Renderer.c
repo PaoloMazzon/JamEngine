@@ -5,10 +5,10 @@
 #include "Renderer.h"
 #include "Texture.h"
 #include <stdio.h>
-#include <SDL_video.h>
 #include <Renderer.h>
 #include "Clock.h"
 #include "JamError.h"
+#include <SDL.h>
 
 static JamRenderer* gRenderer;
 

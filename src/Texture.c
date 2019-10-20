@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "Renderer.h"
 #include <stdio.h>
+#include <SDL.h>
 #include <SDL_image.h>
 #include "JamError.h"
 
@@ -74,7 +75,7 @@ JamTexture* jamLoadTexture(const char *filename) {
 					// the width and height into the arguments passed,
 					// hence why pointers to our width and height is passed
 					// and not the values themselves.
-					SDL_QueryTexture(tex->tex, NULL, NULL, (int*)&tex->w, (int*)&tex->h);
+					SDL_QueryTexture(tex->tex, NULL, NULL, &tex->w, &tex->h);
 
 					// In SDL2, you can't load an image and draw on the same texture
 					tex->renderTarget = false;

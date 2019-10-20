@@ -8,7 +8,7 @@
 #include <TileMap.h>
 #include <Vector.h>
 #include "JamError.h"
-
+#include <SDL.h>
 
 //////////////////////////////////////////////////////////////
 void jamDrawSetColour(uint8 r, uint8 g, uint8 b, uint8 a) {

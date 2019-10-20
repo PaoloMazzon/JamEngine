@@ -77,7 +77,7 @@ void jamDrawTileMap(JamTileMap *tileMap, int x, int y, uint32 xInMapStart, uint3
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
 void jamDrawTextureExt(JamTexture *texture, sint32 x, sint32 y, sint32 originX, sint32 originY,
-					   float scaleX, float scaleY, double rot, Uint8 alpha);
+					   float scaleX, float scaleY, double rot, uint8 alpha);
 
 
 /// \breif Draws part of a texture to the current target
@@ -90,5 +90,5 @@ void jamDrawTexturePart(JamTexture *texture, sint32 x, sint32 y, sint32 texX, si
 /// \param rot Rotation in radians
 /// \param alpha The alpha from 0-1
 void jamDrawTexturePartExt(JamTexture *texture, sint32 x, sint32 y, sint32 originX,
-						   sint32 originY, float scaleX, float scaleY, double rot, Uint8 alpha, sint32 texX,
+						   sint32 originY, float scaleX, float scaleY, double rot, uint8 alpha, sint32 texX,
 						   sint32 texY, sint32 texW, sint32 texH);

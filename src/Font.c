@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////
 
 #include "Font.h"
+#include <SDL.h>
 #include <SDL_image.h>
 #include <malloc.h>
 #include <stdio.h>

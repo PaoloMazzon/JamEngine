@@ -18,8 +18,8 @@
 ///
 /////////////////////////////////////////////////////
 typedef struct {
-	SDL_Texture* latin; ///< The essential latin characters; expects U+0000 - U+00FF (0 - 255)
-	SDL_Texture* font; ///< The internal bitmap font
+	void* latin; ///< The essential latin characters; expects U+0000 - U+00FF (0 - 255)
+	void* font; ///< The internal bitmap font
 	uint32 uStart; ///< Where the font begins in unicode points (Inclusive)
 	uint32 uEnd; ///< Where the font ends in unicode points (Inclusive)
 	uint8 characterWidth; /// <The width in pixels of a single character

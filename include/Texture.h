@@ -3,7 +3,6 @@
 /// \brief Because of circular dependencies, this file only declares texture functions.
 
 #pragma once
-#include <SDL.h>
 #include "Constants.h"
 #include "Renderer.h"
 
@@ -13,9 +12,9 @@
 /// to depends on if it was used to load a file or
 /// created without loading a file
 struct _JamTexture {
-	SDL_Texture* tex; ///< The internal SDL2 texture
-	uint32 w; ///< Texture's width
-	uint32 h; ///< Texture's height
+	void* tex; ///< The internal SDL2 texture
+	sint32 w; ///< Texture's width
+	sint32 h; ///< Texture's height
 	bool renderTarget; ///< Weather or not this texture can be rendered to
 };
 

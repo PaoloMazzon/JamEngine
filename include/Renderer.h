@@ -6,7 +6,6 @@
 /// buffer, and more is all handled by this thing. Only one instance of
 /// the renderer should exist at a time.
 #pragma once
-#include <SDL.h>
 #include "Constants.h"
 #include "Input.h"
 
@@ -30,19 +29,19 @@ typedef struct _JamTexture JamTexture;
 /// Updating the game window undoes any changes you make to
 /// the size of the rendered buffer.
 typedef struct {
-	SDL_Renderer* internalRenderer; ///< The SDL2 internal renderer
-	SDL_Window* gameWindow; ///< The window to draw to
+	void* internalRenderer; ///< The SDL2 internal renderer
+	void* gameWindow; ///< The SDL2 window to draw to
 	JamTexture* screenBuffer; ///< We don't draw directly to the screen, rather through this texture
 	uint32 displayBufferW; ///< The width of the buffer on screen
 	uint32 displayBufferH; ///< The height of the buffer on screen
 	uint32 displayBufferX; ///< X position on screen of the display buffer
 	uint32 displayBufferY; ///< Y position on screen of the display buffer
 
-	uint64_t lastTime; ///< Used for calculating frame wait time
-	uint64_t between; ///< Also used for calculating frame wait time
-	uint64_t timePerFrame; ///< Number of microseconds per frame
+	uint64 lastTime; ///< Used for calculating frame wait time
+	uint64 between; ///< Also used for calculating frame wait time
+	uint64 timePerFrame; ///< Number of microseconds per frame
 	double framerate; ///< The current framerate
-	uint64_t fps; ///< The expected framerate
+	uint64 fps; ///< The expected framerate
 	bool renderingToScreenBuffer; ///< Until SDL_GetRenderTarget is figured out, this is a stand in
 
 	double cameraX; ///< X Location of the camera in the game world (offset to render by)
