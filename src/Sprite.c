@@ -10,6 +10,8 @@
 #include "Renderer.h"
 #include "Drawing.h"
 #include "JamError.h"
+#include <malloc.h>
+#include <SDL.h>
 
 ///////////////////////////////////////////////////
 JamSprite* jamCreateSprite(uint32 animationLength, uint16 frameDelay, bool looping) {

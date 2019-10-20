@@ -1,6 +1,7 @@
 #include "BehaviourMap.h"
 #include "JamError.h"
 #include "string.h"
+#include <malloc.h>
 
 /////////////////////////////////////////////////////////////////
 JamBehaviourMap* jamCreateBehaviourMap() {

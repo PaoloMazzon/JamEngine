@@ -119,4 +119,4 @@ JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key);
 JamTileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Frees an asset handler and all of its components
-JamAssetHandler* jamFreeAssetHandler(JamAssetHandler *handler);
+void jamFreeAssetHandler(JamAssetHandler *handler);

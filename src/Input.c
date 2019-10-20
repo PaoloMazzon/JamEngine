@@ -42,7 +42,7 @@ bool jamInputIsInitialized() {
 
 //////////////////////////////////////////////////////////////
 void jamUpdateInput(double screenMultiplier) {
-	int i, wx, wy;
+	int i;
 
 	// Check that the gInputPointer exists
 	if (gInputPointer != NULL) {

@@ -122,6 +122,8 @@ bool jamCheckConvexPolygonCollision(JamPolygon *poly1, JamPolygon *poly2, double
 		if (poly2 == NULL)
 			jSetError(ERROR_NULL_POINTER, "JamPolygon 2 does not exist.");
 	}
+
+	return false;
 }
 //////////////////////////////////////////////////
 

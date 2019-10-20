@@ -6,6 +6,7 @@
 #include "JamError.h"
 #include <stdio.h>
 #include <EntityList.h>
+#include <malloc.h>
 
 ///////////////////////////////////////////////////////////////
 JamEntityList* jamCreateEntityList() {

@@ -13,6 +13,8 @@
 #include <JamError.h>
 #include <Sprite.h>
 #include "BehaviourMap.h"
+#include <malloc.h>
+#include <SDL.h>
 
 // The base key comparison function
 bool keysEqual(JamAssetKey key1, JamAssetKey key2) {
@@ -204,9 +206,9 @@ void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const char* hea
 void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	JamHitboxType hType = ht_Rectangle;
 	const char* key = jamGetKeyINI(ini, headerName, "type", "rectangle");
-	if (key == "rectangle") hType = ht_Rectangle;
-	else if (key == "cirlce") hType = ht_Circle;
-	else if (key == "polygon") hType = ht_ConvexPolygon;
+	if (strcmp(key, "rectangle") == 0) hType = ht_Rectangle;
+	else if (strcmp(key, "cirlce") == 0) hType = ht_Circle;
+	else if (strcmp(key, "polygon") == 0) hType = ht_ConvexPolygon;
 	jamLoadAssetIntoHandler(
 			assetHandler,
 			createAsset(jamCreateHitbox(
@@ -398,7 +400,7 @@ JamTileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key) 
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamAssetHandler* jamFreeAssetHandler(JamAssetHandler *handler) {
+void jamFreeAssetHandler(JamAssetHandler *handler) {
 	int i;
 	if (handler != NULL) {
 		for (i = 0; i < handler->size; i++) {

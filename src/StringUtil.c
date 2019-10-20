@@ -221,7 +221,7 @@ int jamGetBuilderLength(JamStringBuilder *builder) {
 	if (builder != NULL) {
 		// As long as its not a UTF-8 continuation character, we count it
 		for (i = 0; i < builder->length; i++)
-			if (!(builder->str[i] & 128 == 128 && builder->str[i] & 64 == 0))
+			if (!((builder->str[i] & 128) == 128 && (builder->str[i] & 64) == 0))
 				count++;
 	} else {
 		count = -1;

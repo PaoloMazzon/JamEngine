@@ -6,6 +6,7 @@
 #include "Drawing.h"
 #include "Texture.h"
 #include <stdio.h>
+#include <malloc.h>
 #include <JamError.h>
 
 //////////////////////////////////////////////////////////////

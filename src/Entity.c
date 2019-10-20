@@ -8,6 +8,7 @@
 #include <Entity.h>
 #include <Sprite.h>
 #include "JamError.h"
+#include <malloc.h>
 
 int roundToInt(double x) {
 	x += 0.5;
