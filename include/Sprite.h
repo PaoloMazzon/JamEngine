@@ -72,13 +72,13 @@ void jamUpdateSprite(JamSprite *sprite);
 
 /// \brief Draws a sprite on screen
 /// \throws ERROR_NULL_POINTER
-void jamDrawSprite(JamRenderer *renderer, JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot,
+void jamDrawSprite(JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot,
 				   uint8 alpha, bool updateOnDraw);
 
 /// \brief Draws a specific frame of a sprite without screwing with the animation
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
-void jamDrawSpriteFrame(JamRenderer *renderer, JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY,
+void jamDrawSpriteFrame(JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY,
 						double rot, uint8 alpha, uint32 frame);
 
 /// \brief Frees a sprite

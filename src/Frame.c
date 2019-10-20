@@ -28,14 +28,11 @@ JamFrame* jamCreateFrame(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamDrawFrame(JamFrame *frame, JamRenderer *renderer, sint32 x, sint32 y) {
-	if (frame != NULL && renderer != NULL) {
-		jamDrawTexturePart(renderer, frame->tex, x, y, frame->x, frame->y, frame->w, frame->h);
+void jamDrawFrame(JamFrame *frame, sint32 x, sint32 y) {
+	if (frame != NULL) {
+		jamDrawTexturePart(frame->tex, x, y, frame->x, frame->y, frame->w, frame->h);
 	} else {
-		if (frame != NULL)
-			jSetError(ERROR_NULL_POINTER, "JamFrame does not exist. (jamDrawFrame).\n");
-		if (renderer != NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist. (jamDrawFrame).\n");
+		jSetError(ERROR_NULL_POINTER, "JamFrame does not exist. (jamDrawFrame).\n");
 	}
 }
 //////////////////////////////////////////////////////////////

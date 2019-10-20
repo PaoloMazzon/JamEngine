@@ -60,7 +60,6 @@ typedef struct _JamWorld {
 	// Core data
 	JamTileMap* worldMaps[MAX_TILEMAPS]; ///< This is the struct that represents the collisions in this world
 	JamEntityList* worldEntities; ///< The full list of entities in this world
-	JamRenderer* renderer; ///< This is just held in this struct so it can pass this pointer to entities inside it as needed
 
 	// Higher-level abstractions - everything here is stored in core data
 	JamEntityList* entityByRange[2]; ///< List of lists of entities that are in or out of range
@@ -79,7 +78,7 @@ typedef struct _JamWorld {
 
 /// \brief Creates a world to work with
 /// \throws ERROR_ALLOC_FAILED
-JamWorld* jamCreateWorld(JamRenderer *renderer);
+JamWorld* jamCreateWorld();
 
 /// \brief Sets up a rectangular filter in a world
 /// \throws ERROR_NULL_POINTER

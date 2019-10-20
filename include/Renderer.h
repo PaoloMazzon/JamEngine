@@ -163,4 +163,4 @@ bool jamProcEvents();
 void jamProcEndFrame();
 
 /// \brief Frees a renderer
-void jamFreeRenderer();
+void jamRendererQuit();

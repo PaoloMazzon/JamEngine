@@ -11,7 +11,7 @@
 #include <JamError.h>
 
 ///////////////////////////////////////////////////////
-SDL_Texture* loadTex(SDL_Renderer* renderer, const char* fname) {
+SDL_Texture* loadTex(const char* fname) {
 	// Load the actual image
 	SDL_Surface* image = IMG_Load(fname);
 	SDL_Texture* tex;
@@ -21,7 +21,7 @@ SDL_Texture* loadTex(SDL_Renderer* renderer, const char* fname) {
 		fprintf(stderr, "Failed to load image, SDL error: %s\n", SDL_GetError());
 		tex = NULL;
 	} else {
-		tex = SDL_CreateTextureFromSurface(renderer, image);
+		tex = SDL_CreateTextureFromSurface(jamRendererGetInternalRenderer(), image);
 		SDL_FreeSurface(image);
 
 		// More checks
@@ -35,7 +35,7 @@ SDL_Texture* loadTex(SDL_Renderer* renderer, const char* fname) {
 ///////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-JamFont* jamCreateFont(JamRenderer *renderer, const char *latinFname, const char *fontFname) {
+JamFont* jamCreateFont(const char *latinFname, const char *fontFname) {
 	JamFont* font = (JamFont*)calloc(1, sizeof(JamFont));
 	SDL_Texture* tex = NULL;
 
@@ -44,7 +44,7 @@ JamFont* jamCreateFont(JamRenderer *renderer, const char *latinFname, const char
 		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate font struct.\n");
 	} else {
 		// Load latin font
-		SDL_Texture* latin = loadTex(renderer->internalRenderer, latinFname);
+		SDL_Texture* latin = loadTex(latinFname);
 
 		// Some more checks
 		if (latin == NULL) {
@@ -63,7 +63,7 @@ JamFont* jamCreateFont(JamRenderer *renderer, const char *latinFname, const char
 
 			if (fontFname != NULL) {
 				// Load the texture
-				tex = loadTex(renderer->internalRenderer, fontFname);
+				tex = loadTex(fontFname);
 
 				if (tex == NULL) {
 					jamFreeFont(font);
@@ -115,7 +115,7 @@ bool is4ByteCharacter(uint8 byte) {
 	return ((byte & 128) == 128 && (byte & 64) == 64 && (byte & 32) == 32 && (byte & 16) == 16 && (byte & 8) == 0);
 }
 
-void jamRenderFont(int x, int y, const char *string, JamFont *font, JamRenderer *renderer) {
+void jamRenderFont(int x, int y, const char *string, JamFont *font) {
 	uint32 unichar;
 	uint32 tempChar;
 	bool ready = false;
@@ -189,7 +189,7 @@ void jamRenderFont(int x, int y, const char *string, JamFont *font, JamRenderer 
 					charSheetBox.y = unichar / wh * font->characterHeight;
 
 					// Print the character
-					SDL_RenderCopy(renderer->internalRenderer, font->latin, &charSheetBox, &charPlace);
+					SDL_RenderCopy(jamRendererGetInternalRenderer(), font->latin, &charSheetBox, &charPlace);
 				} else if (unichar >= font->uStart && unichar <= font->uEnd) { // It is the unicode part
 					tempChar = unichar - font->uStart;
 
@@ -198,7 +198,7 @@ void jamRenderFont(int x, int y, const char *string, JamFont *font, JamRenderer 
 					charSheetBox.y = tempChar / uwh * font->characterHeight;
 
 					// Print the character
-					SDL_RenderCopy(renderer->internalRenderer, font->font, &charSheetBox, &charPlace);
+					SDL_RenderCopy(jamRendererGetInternalRenderer(), font->font, &charSheetBox, &charPlace);
 				} else { // Not in the font
 					jSetError(ERROR_OUT_OF_BOUNDS, "Error: Character '%u' is out of the font's range.\n", unichar);
 				}
@@ -217,7 +217,7 @@ void jamRenderFont(int x, int y, const char *string, JamFont *font, JamRenderer 
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void jamRenderFontExt(int x, int y, const char *string, JamFont *font, JamRenderer *renderer, int w, ...) {
+void jamRenderFontExt(int x, int y, const char *string, JamFont *font, int w, ...) {
 	// Variable length parameter things
 	va_list params;
 	va_start(params, w);
@@ -252,7 +252,7 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, JamRender
 	charPlace.w = font->characterWidth;
 	charPlace.h = font->characterHeight;
 
-	if (renderer != NULL && font != NULL) {
+	if (jamRendererGetInternalRenderer() != NULL && font != NULL) {
 		while (continueRendering) {
 			// UTF-8 bit checks
 			if (isContinuationByte(currentString[*currentIterator]) && bytesLeft > 0) {
@@ -339,7 +339,7 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, JamRender
 						charSheetBox.y = unichar / wh * font->characterHeight;
 
 						// Print the character
-						SDL_RenderCopy(renderer->internalRenderer, font->latin, &charSheetBox, &charPlace);
+						SDL_RenderCopy(jamRendererGetInternalRenderer(), font->latin, &charSheetBox, &charPlace);
 					} else if (unichar >= font->uStart && unichar <= font->uEnd) { // It is the unicode part
 						tempChar = unichar - font->uStart;
 
@@ -348,7 +348,7 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, JamRender
 						charSheetBox.y = tempChar / uwh * font->characterHeight;
 
 						// Print the character
-						SDL_RenderCopy(renderer->internalRenderer, font->font, &charSheetBox, &charPlace);
+						SDL_RenderCopy(jamRendererGetInternalRenderer(), font->font, &charSheetBox, &charPlace);
 					} else { // Not in the font
 						jSetError(ERROR_OUT_OF_BOUNDS, "Error: Character '%u' is out of the font's range. (jamRenderFontExt)\n", unichar);
 					}
@@ -389,7 +389,7 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, JamRender
 			readyToProcessCharacter = false;
 		}
 	} else {
-		if (renderer == NULL)
+		if (jamRendererGetInternalRenderer() == NULL)
 			fprintf(stderr, "JamRenderer does not exist (jamRenderFontExt)\n");
 		if (font == NULL)
 		jSetError(ERROR_NULL_POINTER, "JamFont does not exist (jamRenderFontExt)\n");
@@ -399,7 +399,7 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, JamRender
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void jamRenderFontWrap(int x, int y, uint16 w, const char *string, JamFont *font, JamRenderer *renderer) {
+void jamRenderFontWrap(int x, int y, uint16 w, const char *string, JamFont *font) {
 	uint32 unichar;
 	uint32 tempChar;
 	bool ready = false;
@@ -473,7 +473,7 @@ void jamRenderFontWrap(int x, int y, uint16 w, const char *string, JamFont *font
 					charSheetBox.y = unichar / wh * font->characterHeight;
 
 					// Print the character
-					SDL_RenderCopy(renderer->internalRenderer, font->latin, &charSheetBox, &charPlace);
+					SDL_RenderCopy(jamRendererGetInternalRenderer(), font->latin, &charSheetBox, &charPlace);
 				} else if (unichar >= font->uStart && unichar <= font->uEnd) { // It is the unicode part
 					tempChar = unichar - font->uStart;
 
@@ -482,7 +482,7 @@ void jamRenderFontWrap(int x, int y, uint16 w, const char *string, JamFont *font
 					charSheetBox.y = tempChar / uwh * font->characterHeight;
 
 					// Print the character
-					SDL_RenderCopy(renderer->internalRenderer, font->font, &charSheetBox, &charPlace);
+					SDL_RenderCopy(jamRendererGetInternalRenderer(), font->font, &charSheetBox, &charPlace);
 				} else { // Not in the font
 					jSetError(ERROR_OUT_OF_BOUNDS, "Error: Character '%u' is out of the font's range.\n", unichar);
 				}

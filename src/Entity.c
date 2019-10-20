@@ -82,17 +82,14 @@ JamEntity* jamCopyEntity(JamEntity *baseEntity, double x, double y) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void jamDrawEntity(JamRenderer *renderer, JamEntity *entity) {
-	if (entity != NULL && renderer != NULL) {
+void jamDrawEntity(JamEntity *entity) {
+	if (entity != NULL) {
 		if (entity->sprite != NULL)
-			jamDrawSprite(renderer, entity->sprite, (sint32) entity->x - entity->sprite->originX,
+			jamDrawSprite(entity->sprite, (sint32) entity->x - entity->sprite->originX,
 						  (sint32) entity->y - entity->sprite->originY, entity->scaleX, entity->scaleY, entity->rot,
 						  entity->alpha, entity->updateOnDraw);
 	} else {
-		if (entity == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamEntity does not exist (jamDrawEntity).\n");
-		if (renderer == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamDrawEntity).\n");
+		jSetError(ERROR_NULL_POINTER, "JamEntity does not exist (jamDrawEntity).\n");
 	}
 }
 //////////////////////////////////////////////////////////

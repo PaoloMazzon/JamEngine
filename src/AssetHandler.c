@@ -221,11 +221,11 @@ void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const char* hea
 //////////////////////// End of assetLoadINI support functions ////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const char *filename, JamBehaviourMap *map) {
+void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBehaviourMap *map) {
 	JamINI* ini = jamLoadINI(filename);
 	uint32 i, j;
 
-	if (assetHandler != NULL && renderer != NULL && ini != NULL) {
+	if (assetHandler != NULL && jamRendererGetInternalRenderer() != NULL && ini != NULL) {
 		// Keep track of the ini (it holds the strings) and destroy it later
 		assetHandler->localINI = ini;
 
@@ -235,7 +235,7 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const
 				for (j = 0; j < ini->headers[i]->size; j++)
 					jamLoadAssetIntoHandler(
 							assetHandler,
-							createAsset(jamLoadTexture(renderer, ini->headers[i]->vals[j]), at_Texture),
+							createAsset(jamLoadTexture(ini->headers[i]->vals[j]), at_Texture),
 							(ini->headers[i]->keys[j])
 					);
 			}
@@ -266,7 +266,7 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const
 		if (assetHandler == NULL) {
 			jSetError(ERROR_NULL_POINTER, "JamAsset loader does not exist for file %s (jamAssetLoadINI)\n", filename);
 		}
-		if (renderer == NULL) {
+		if (jamRendererGetInternalRenderer() == NULL) {
 			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist for file %s (jamAssetLoadINI)\n", filename);
 		}
 		if (ini == NULL) {

@@ -42,7 +42,7 @@ void jamInitRenderer(const char *name, uint32 w, uint32 h, double framerate) {
 			// Once again, check for a dud
 			if (sdlRenderer != NULL) {
 				// Last piece - create the internal texture to draw to
-				tex = jamCreateTexture(gRenderer, w, h);
+				tex = jamCreateTexture(w, h);
 
 				// More dud checks
 				if (tex != NULL) {
@@ -59,18 +59,18 @@ void jamInitRenderer(const char *name, uint32 w, uint32 h, double framerate) {
 					gRenderer->cameraY = 0;
 					SDL_SetRenderTarget(sdlRenderer, tex->tex);
 				} else {
-					jamFreeRenderer();
+					jamRendererQuit();
 					gRenderer = NULL;
 					jamFreeTexture(tex);
 					jSetError(ERROR_SDL_ERROR, "Failed to create internal texture (jamInitRenderer). SDL Error: %s\n", SDL_GetError());
 				}
 			} else {
-				jamFreeRenderer();
+				jamRendererQuit();
 				gRenderer = NULL;
 				jSetError(ERROR_SDL_ERROR, "Failed to create SDL gRenderer (jamInitRenderer). SDL Error: %s\n", SDL_GetError());
 			}
 		} else {
-			jamFreeRenderer();
+			jamRendererQuit();
 			gRenderer = NULL;
 			jSetError(ERROR_SDL_ERROR, "Failed to create SDL window (jamInitRenderer). SDL Error: %s\n", SDL_GetError());
 		}
@@ -297,7 +297,7 @@ void jamCalculateForCamera(int *x, int *y) {
 //////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamFreeRenderer() {
+void jamRendererQuit() {
 	if (gRenderer != NULL) {
 		jamFreeTexture(gRenderer->screenBuffer);
 		jamQuitInput();
@@ -363,7 +363,7 @@ bool jamConfigScreenBuffer(uint32 internalWidth, uint32 internalHeight, uint32 d
 	// Check for gRenderer
 	if (gRenderer != NULL) {
 		// Create the texture that will likely become the new screen buffer
-		tempTex = jamCreateTexture(gRenderer, internalWidth, internalHeight);
+		tempTex = jamCreateTexture(internalWidth, internalHeight);
 
 		// Check that it worked
 		if (tempTex != NULL) {

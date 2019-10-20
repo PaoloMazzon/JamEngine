@@ -87,7 +87,7 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAsset
 /// \throws ERROR_ASSET_NOT_FOUND
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OPEN_FAILED
-void jamAssetLoadINI(JamAssetHandler *assetHandler, JamRenderer *renderer, const char *filename, JamBehaviourMap *map);
+void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBehaviourMap *map);
 
 /// \brief Grabs an asset, or returns NULL if the key is not bound
 /// \throws ERROR_NULL_POINTER

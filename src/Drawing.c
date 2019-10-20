@@ -263,7 +263,7 @@ void jamDrawSortedMap(JamSprite *spr, JamTileMap *map, int x, int y, uint32 star
 					}
 
 					jamSetMapPos(map, (uint16) j, (uint16) i, (uint16) (frame + 1));
-					jamDrawSpriteFrame(jamRendererGetInternalRenderer(), spr, x + (j * map->cellWidth + startingCellX),
+					jamDrawSpriteFrame(spr, x + (j * map->cellWidth + startingCellX),
 									   y + (i * map->cellHeight + startingCellY), 1, 1, 0, 255, (uint32) frame);
 				}
 			}
@@ -298,7 +298,7 @@ void jamDrawTileMap(JamTileMap *map, int x, int y, uint32 xInMapStart, uint32 yI
 			for (j = xInMapStart; j <= xInMapFinish; j++) {
 				val = (uint32) jamGetMapPos(map, (uint16) j, (uint16) i);
 				if (val > 0)
-					jamDrawSpriteFrame(jamRendererGetInternalRenderer(), map->tileSheet, x, y, 1, 1, 0, 255, val - 1);
+					jamDrawSpriteFrame(map->tileSheet, x, y, 1, 1, 0, 255, val - 1);
 				x += map->cellWidth;
 			}
 			x = originalX;

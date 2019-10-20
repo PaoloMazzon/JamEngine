@@ -14,12 +14,12 @@
 #include "JamError.h"
 
 ///////////////////////////////////////////////////////
-JamWorld* jamCreateWorld(JamRenderer *renderer) {
+JamWorld* jamCreateWorld() {
 	JamWorld* world = (JamWorld*)calloc(1, sizeof(JamWorld));
 	int i;
 	bool error = false;
 
-	if (world != NULL && renderer != NULL) {
+	if (world != NULL) {
 		// We now need to initialize the 8 or so entity lists that come with a world
 		for (i = 0; i < MAX_ENTITY_TYPES; i++) {
 			world->entityTypes[i] = jamCreateEntityList();
@@ -29,7 +29,6 @@ JamWorld* jamCreateWorld(JamRenderer *renderer) {
 		world->worldEntities = jamCreateEntityList();
 		world->entityByRange[ENTITIES_IN_RANGE] = jamCreateEntityList();
 		world->entityByRange[ENTITIES_OUT_OF_RANGE] = jamCreateEntityList();
-		world->renderer = renderer;
 
 		if (error || world->worldEntities == NULL || world->entityByRange[ENTITIES_OUT_OF_RANGE] == NULL || world->entityByRange[ENTITIES_IN_RANGE] == NULL) {
 			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate entity lists (jamCreateWorld)\n");
@@ -39,9 +38,6 @@ JamWorld* jamCreateWorld(JamRenderer *renderer) {
 	} else {
 		if (world == NULL) {
 			jSetError(ERROR_ALLOC_FAILED, "Could not allocate world (jamCreateWorld)\n");
-		} 
-		if (renderer == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamCreateWorld)\n");
 		}
 	}
 
@@ -82,7 +78,7 @@ void jamWorldAddEntity(JamWorld *world, JamEntity *entity) {
 
 		// Attempt to call the entity's onCreation function
 		if (entity->behaviour != NULL && entity->behaviour->onCreation != NULL) {
-			(*entity->behaviour->onCreation)(world->renderer, world, entity);
+			(*entity->behaviour->onCreation)(world, entity);
 		}
 	} else {
 		if (world == NULL) {
@@ -108,7 +104,7 @@ void jamWorldProcFrame(JamWorld *world) {
 		for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++) {
 			ent = world->entityByRange[ENTITIES_IN_RANGE]->entities[i];
 			if (ent != NULL && ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
-				(*ent->behaviour->onFrame)(world->renderer, world, ent);
+				(*ent->behaviour->onFrame)(world, ent);
 		}
 
 		// Draw all the entities in range
@@ -116,11 +112,11 @@ void jamWorldProcFrame(JamWorld *world) {
 			ent = world->entityByRange[ENTITIES_IN_RANGE]->entities[i];
 			if (ent != NULL && ent->behaviour != NULL) {
 				if (ent->behaviour->onDraw != NULL)
-					(*ent->behaviour->onDraw)(world->renderer, world, ent);
+					(*ent->behaviour->onDraw)(world, ent);
 				else
-					jamDrawEntity(world->renderer, ent);
+					jamDrawEntity(ent);
 			} else if (ent != NULL && ent->behaviour == NULL) {
-				jamDrawEntity(world->renderer, ent);
+				jamDrawEntity(ent);
 			}
 		}
 	} else {
@@ -140,7 +136,7 @@ void jamWorldRemoveEntity(JamWorld *world, JamEntity *entity) {
 			if (world->worldEntities->entities[i] != NULL && world->worldEntities->entities[i] == entity) {
 				// We found it, call its destroy function if applicable
 				if (world->worldEntities->entities[i]->behaviour != NULL && world->worldEntities->entities[i]->behaviour->onDestruction != NULL)
-					(*world->worldEntities->entities[i]->behaviour->onDestruction)(world->renderer, world, world->worldEntities->entities[i]);
+					(*world->worldEntities->entities[i]->behaviour->onDestruction)(world, world->worldEntities->entities[i]);
 
 				// Record the type and destroy it
 				type = world->worldEntities->entities[i]->type;

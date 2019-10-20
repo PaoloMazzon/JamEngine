@@ -39,7 +39,7 @@ JamFrame* jamCreateFrame(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h
 /// just a convenience for users
 ///
 /// \throws ERROR_NULL_POINTER
-void jamDrawFrame(JamFrame *frame, JamRenderer *renderer, sint32 x, sint32 y);
+void jamDrawFrame(JamFrame *frame, sint32 x, sint32 y);
 
 /// \brief Empties a frame from memory
 void jamFreeFrame(JamFrame *frame, bool destroyTexture);

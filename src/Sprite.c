@@ -173,7 +173,7 @@ void jamUpdateSprite(JamSprite *sprite) {
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void jamDrawSprite(JamRenderer *renderer, JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot,
+void jamDrawSprite(JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot,
 				   uint8 alpha, bool updateOnDraw) {
 	if (sprite != NULL) {
 		// Update the sprite if that is to be done before drawing
@@ -181,8 +181,7 @@ void jamDrawSprite(JamRenderer *renderer, JamSprite *sprite, sint32 x, sint32 y,
 			jamUpdateSprite(sprite);
 
 		// Draw it to the screen with all the crazy parameters
-		jamDrawTexturePartExt(renderer,
-							  sprite->frames[sprite->currentFrame]->tex,
+		jamDrawTexturePartExt(sprite->frames[sprite->currentFrame]->tex,
 							  x,
 							  y,
 							  sprite->originX,
@@ -203,12 +202,11 @@ void jamDrawSprite(JamRenderer *renderer, JamSprite *sprite, sint32 x, sint32 y,
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void jamDrawSpriteFrame(JamRenderer *renderer, JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY,
+void jamDrawSpriteFrame(JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY,
 						double rot, uint8 alpha, uint32 frame) {
-	if (renderer != NULL && sprite != NULL && frame < sprite->animationLength) {
+	if (sprite != NULL && frame < sprite->animationLength) {
 		// Draw it to the screen with all the crazy parameters
-		jamDrawTexturePartExt(renderer,
-							  sprite->frames[frame]->tex,
+		jamDrawTexturePartExt(sprite->frames[frame]->tex,
 							  x,
 							  y,
 							  sprite->originX,
@@ -223,9 +221,6 @@ void jamDrawSpriteFrame(JamRenderer *renderer, JamSprite *sprite, sint32 x, sint
 							  sprite->frames[frame]->h
 		);
 	} else {
-		if (renderer == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamDrawSpriteFrame).\n");
-		}
 		if (sprite == NULL) {
 			jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamDrawSpriteFrame).\n");
 		} else if (frame >= sprite->animationLength) {

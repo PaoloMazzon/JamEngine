@@ -42,7 +42,7 @@ typedef struct {
 /// \throws ERROR_OPEN_FAILED
 /// \throws ERROR_ALLOC_FAILED
 /////////////////////////////////////////////////////
-JamFont* jamCreateFont(JamRenderer *renderer, const char *latinFname, const char *fontFname);
+JamFont* jamCreateFont(const char *latinFname, const char *fontFname);
 
 /////////////////////////////////////////////////////
 /// \brief Frees a font
@@ -62,7 +62,7 @@ void jamFreeFont(JamFont *font);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
-void jamRenderFont(int x, int y, const char *string, JamFont *font, JamRenderer *renderer);
+void jamRenderFont(int x, int y, const char *string, JamFont *font);
 
 /////////////////////////////////////////////////////
 /// \brief Renders text to a renderer with wrapping
@@ -79,7 +79,7 @@ void jamRenderFont(int x, int y, const char *string, JamFont *font, JamRenderer 
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
 /////////////////////////////////////////////////////
-void jamRenderFontExt(int x, int y, const char *string, JamFont *font, JamRenderer *renderer, int w, ...);
+void jamRenderFontExt(int x, int y, const char *string, JamFont *font, int w, ...);
 
 /////////////////////////////////////////////////////
 /// \brief Renders text to a renderer with wrapping
@@ -93,7 +93,7 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, JamRender
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
-void jamRenderFontWrap(int x, int y, uint16 w, const char *string, JamFont *font, JamRenderer *renderer);
+void jamRenderFontWrap(int x, int y, uint16 w, const char *string, JamFont *font);
 
 /////////////////////////////////////////////////////
 /// \brief Gets the width of a given string

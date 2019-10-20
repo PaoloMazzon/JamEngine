@@ -26,7 +26,7 @@ static inline double sign(double number) {
 		return 0.0;
 }
 
-void onPlayerFrame(JamRenderer* renderer, JamWorld* world, JamEntity* self) {
+void onPlayerFrame(JamWorld* world, JamEntity* self) {
 	// Gravity
 	self->vSpeed += 0.5;
 
@@ -161,7 +161,7 @@ bool runGame(JamFont* font) {
 				jamDrawSetColour(0, 0, 0, 255);
 
 				// Debug
-				jamRenderFontExt(16, 16, "FPS: %f", font, 999, (int)roundf((float)jamRendererGetFramerate()));
+				jamRenderFontExt(16, 16, "FPS: %f", font, 999, jamRendererGetFramerate());
 				/////////////////////////////////////////////////////////////////////
 
 				jamProcEndFrame();
@@ -198,6 +198,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	jamFreeFont(font);
-	jamFreeRenderer(renderer);
+	jamRendererQuit();
 	return 0;
 }

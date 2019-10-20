@@ -9,7 +9,7 @@
 #include "JamError.h"
 
 ////////////////////////////////////////////////////////////////
-JamTexture* jamCreateTexture(JamRenderer *renderer, int w, int h) {
+JamTexture* jamCreateTexture(int w, int h) {
 	// Create the basic tex struct
 	JamTexture* tex = (JamTexture*)malloc(sizeof(JamTexture));
 
@@ -18,7 +18,7 @@ JamTexture* jamCreateTexture(JamRenderer *renderer, int w, int h) {
 		// Now we create the actual SDL texture, telling SDL we want
 		// a texture that is not only in 32-bit RGBA format, but also
 		// a texture we can render things to
-		tex->tex = SDL_CreateTexture(renderer->internalRenderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, w, h);
+		tex->tex = SDL_CreateTexture(jamRendererGetInternalRenderer(), SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, w, h);
 
 		// And once again, check if we got a dud back
 		if (tex->tex != NULL) {
@@ -43,11 +43,11 @@ JamTexture* jamCreateTexture(JamRenderer *renderer, int w, int h) {
 ////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////
-JamTexture* jamLoadTexture(JamRenderer *renderer, const char *filename) {
+JamTexture* jamLoadTexture(const char *filename) {
 	JamTexture* tex = NULL;
 
 	// Check that the renderer isn't a dud
-	if (renderer != NULL && renderer->internalRenderer != NULL) {
+	if (jamRendererGetInternalRenderer() != NULL) {
 		// Create the basic tex struct
 		tex = (JamTexture*) malloc(sizeof(JamTexture));
 
@@ -62,7 +62,7 @@ JamTexture* jamLoadTexture(JamRenderer *renderer, const char *filename) {
 			// And once again, check if we got a dud back
 			if (img != NULL) {
 				// Now we place that surface onto a texture
-				tex->tex = SDL_CreateTextureFromSurface(renderer->internalRenderer, img);
+				tex->tex = SDL_CreateTextureFromSurface(jamRendererGetInternalRenderer(), img);
 
 				// Cleanup irregardless of what happens next
 				SDL_FreeSurface(img);
@@ -93,7 +93,7 @@ JamTexture* jamLoadTexture(JamRenderer *renderer, const char *filename) {
 
 		}
 	} else {
-		if (renderer == NULL)
+		if (jamRendererGetInternalRenderer() == NULL)
 			jSetError(ERROR_NULL_POINTER, "Cannot load texture, null renderer passed. SDL Error: %s\n", SDL_GetError());
 		else
 			jSetError(ERROR_NULL_POINTER, "Cannot load texture, renderer contains no internal renderer. SDL Error: %s\n", SDL_GetError());
