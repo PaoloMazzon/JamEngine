@@ -5,9 +5,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
-#include <Renderer.h>
-#include <Hitbox.h>
-#include <Sprite.h>
 #include "JamEngine.h"
 
 /////////////////// Constants ///////////////////
@@ -201,7 +198,6 @@ int main(int argc, char* argv[]) {
 			run = runGame(renderer, font);
 	}
 
-	jamQuitInput();
 	jamFreeFont(font);
 	jamFreeRenderer(renderer);
 	return 0;

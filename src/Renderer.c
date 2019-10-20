@@ -234,6 +234,7 @@ void jamCalculateForCamera(JamRenderer *renderer, int *x, int *y) {
 void jamFreeRenderer(JamRenderer *renderer) {
 	if (renderer != NULL) {
 		jamFreeTexture(renderer->screenBuffer);
+		jamQuitInput();
 		SDL_DestroyRenderer(renderer->internalRenderer);
 		SDL_DestroyWindow(renderer->gameWindow);
 		SDL_Quit();

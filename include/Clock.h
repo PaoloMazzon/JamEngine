@@ -61,4 +61,7 @@ static uint64_t ns() {
 //////////////////////////////////////////////////////////////////////
 
 /// \brief Sleeps for a given amount of time (in nanoseconds)
+///
+/// This function is not precise at high values since it won't
+/// sleep away interrupted values on unix machines.
 void jamSleep(uint64_t nsTime);

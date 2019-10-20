@@ -9,6 +9,7 @@
 #include <Drawing.h>
 #include <File.h>
 #include <Entity.h>
+#include <Clock.h>
 #include <Sprite.h>
 #include <Hitbox.h>
 #include <Renderer.h>
