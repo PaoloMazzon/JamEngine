@@ -12,31 +12,31 @@
 
 /// \brief Sets the current colour of the renderer
 /// \throws ERROR_NULL_POINTER
-void jamDrawSetColour(JamRenderer *renderer, uint8 r, uint8 g, uint8 b, uint8 a);
+void jamDrawSetColour(uint8 r, uint8 g, uint8 b, uint8 a);
 
 /// \brief Grabs the current colour of the renderer
 /// \throws ERROR_NULL_POINTER
-void jamDrawGetColour(JamRenderer *renderer, uint8 *r, uint8 *g, uint8 *b, uint8 *a);
+void jamDrawGetColour(uint8 *r, uint8 *g, uint8 *b, uint8 *a);
 
 /// \brief Fills the current target with a colour
 /// \throws ERROR_NULL_POINTER
-void jamDrawFillColour(JamRenderer *renderer, uint8 r, uint8 g, uint8 b, uint8 a);
+void jamDrawFillColour(uint8 r, uint8 g, uint8 b, uint8 a);
 
 /// \brief Draws a rectangle with the current colour
 /// \throws ERROR_NULL_POINTER
-void jamDrawRectangle(JamRenderer *renderer, int x, int y, int w, int h);
+void jamDrawRectangle(int x, int y, int w, int h);
 
 /// \brief Draws a circle with the current colour
 /// \throws ERROR_NULL_POINTER
-void jamDrawCircle(JamRenderer *renderer, int x, int y, int r);
+void jamDrawCircle(int x, int y, int r);
 
 /// \brief Draws a polygon
 /// \throws ERROR_NULL_POINTER
-void jamDrawPolygon(JamRenderer *renderer, JamPolygon *poly, int x, int y);
+void jamDrawPolygon(JamPolygon *poly, int x, int y);
 
 /// \breif Draws a texture to the current target
 /// \throws ERROR_NULL_POINTER
-void jamDrawTexture(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32 y);
+void jamDrawTexture(JamTexture *texture, sint32 x, sint32 y);
 
 /// \brief Draws a tile map using an 48-frame sprite
 ///
@@ -51,7 +51,7 @@ void jamDrawTexture(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-void jamDrawSortedMap(JamRenderer *renderer, JamSprite *spr, JamTileMap *map, int x, int y, uint32 startingCellX,
+void jamDrawSortedMap(JamSprite *spr, JamTileMap *map, int x, int y, uint32 startingCellX,
 					  uint32 startingCellY);
 
 /// \brief Draws a tilemap using its map as it's sprite frames
@@ -66,7 +66,7 @@ void jamDrawSortedMap(JamRenderer *renderer, JamSprite *spr, JamTileMap *map, in
 /// frame 0 should be 1 in the grid). This is so zero is still considered empty
 /// in the grid itself.
 /// \throws ERROR_NULL_POINTER
-void jamDrawTileMap(JamRenderer *renderer, JamTileMap *tileMap, int x, int y, uint32 xInMapStart, uint32 yInMapStart,
+void jamDrawTileMap(JamTileMap *tileMap, int x, int y, uint32 xInMapStart, uint32 yInMapStart,
 					uint32 xInMapFinish, uint32 yInMapFinish);
 
 /// \breif Draws a texture to the current target with a bunch of extra preferences
@@ -76,12 +76,12 @@ void jamDrawTileMap(JamRenderer *renderer, JamTileMap *tileMap, int x, int y, ui
 /// \param alpha The alpha from 0-1
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
-void jamDrawTextureExt(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32 y, sint32 originX, sint32 originY,
+void jamDrawTextureExt(JamTexture *texture, sint32 x, sint32 y, sint32 originX, sint32 originY,
 					   float scaleX, float scaleY, double rot, Uint8 alpha);
 
 
 /// \breif Draws part of a texture to the current target
-void jamDrawTexturePart(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32 y, sint32 texX, sint32 texY,
+void jamDrawTexturePart(JamTexture *texture, sint32 x, sint32 y, sint32 texX, sint32 texY,
 						sint32 texW, sint32 texH);
 
 /// \breif Draws a texture to the renderer with a bunch of extra preferences
@@ -89,6 +89,6 @@ void jamDrawTexturePart(JamRenderer *renderer, JamTexture *texture, sint32 x, si
 /// \param scaleY The y scale of the texture, 1 for normal
 /// \param rot Rotation in radians
 /// \param alpha The alpha from 0-1
-void jamDrawTexturePartExt(JamRenderer *renderer, JamTexture *texture, sint32 x, sint32 y, sint32 originX,
+void jamDrawTexturePartExt(JamTexture *texture, sint32 x, sint32 y, sint32 originX,
 						   sint32 originY, float scaleX, float scaleY, double rot, Uint8 alpha, sint32 texX,
 						   sint32 texY, sint32 texW, sint32 texH);

@@ -77,20 +77,20 @@ void onPlayerFrame(JamRenderer* renderer, JamWorld* world, JamEntity* self) {
 }
 
 /////////////////////////////////////// The main menu ///////////////////////////////////////
-bool runMenu(JamRenderer* renderer, JamFont* font) { // Returns false if quit game
+bool runMenu(JamFont* font) { // Returns false if quit game
 	// Menu-related variables
 	bool play = false;
 	bool runLoop = true;
 
 	while (runLoop) {
 		// Update the renderer and check for a quit signal
-		runLoop = jamProcEvents(renderer);
+		runLoop = jamProcEvents();
 
 		if (runLoop) {
-			jamDrawFillColour(renderer, 255, 255, 255, 255);
+			jamDrawFillColour(255, 255, 255, 255);
 
 			// Display a simple message prompting play or quit
-			jamRenderFont(0, 0, "Press <ESC> to quit or <SPACE> to play.", font, renderer);
+			jamRenderFont(0, 0, "Press <ESC> to quit or <SPACE> to play.", font);
 
 			// Now check out what the user wants to do
 			if (jamInputCheckKeyPressed(SDL_SCANCODE_ESCAPE)) {
@@ -102,7 +102,7 @@ bool runMenu(JamRenderer* renderer, JamFont* font) { // Returns false if quit ga
 				play = true;
 			}
 
-			jamProcEndFrame(renderer);
+			jamProcEndFrame();
 		}
 	}
 
@@ -110,7 +110,7 @@ bool runMenu(JamRenderer* renderer, JamFont* font) { // Returns false if quit ga
 	return play;
 }
 ////////////////////////////////////////// The game /////////////////////////////////////////
-bool runGame(JamRenderer* renderer, JamFont* font) {
+bool runGame(JamFont* font) {
 	// Core game pieces
 	bool mainMenu = false; // Weather or not return to main menu
 	bool runLoop = true;
@@ -122,50 +122,49 @@ bool runGame(JamRenderer* renderer, JamFont* font) {
 
 	// Load the assets and create the world
 	JamAssetHandler* handler = jamCreateAssetHandler();
-	jamAssetLoadINI(handler, renderer, "assets/level0.ini", bMap);
-	JamWorld* gameWorld = jamLoadWorldFromTMX(handler, renderer, "assets/level0.tmx");
+	jamAssetLoadINI(handler, "assets/level0.ini", bMap);
+	JamWorld* gameWorld = jamLoadWorldFromTMX(handler, "assets/level0.tmx");
 
 	// Some setup
-	renderer->cameraX = 50;
-	renderer->cameraY = 50;
+	jamRendererSetCameraPos(50, 50);
 
 	// We don't really care what went wrong, but if something went wrong while
 	// while loading assets, we cannot continue.
 	if (jGetError() == 0) {
 		while (runLoop) {
 			// Update the renderer and check for a quit signal
-			runLoop = jamProcEvents(renderer);
+			runLoop = jamProcEvents();
 
 			if (runLoop) {
-				jamDrawFillColour(renderer, 0, 0, 0, 255);
+				jamDrawFillColour(0, 0, 0, 255);
 
 				// Mess around with the renderer reset
 				if (jamInputCheckKeyPressed(SDL_SCANCODE_F)) {
-					jamResetRenderer(renderer, 0, 0, RENDERER_BORDERLESS_FULLSCREEN);
-					jamIntegerMaximizeScreenBuffer(renderer);
+					jamResetRenderer(0, 0, RENDERER_BORDERLESS_FULLSCREEN);
+					jamIntegerMaximizeScreenBuffer();
 				}
 				if (jamInputCheckKeyPressed(SDL_SCANCODE_G)) {
-					jamResetRenderer(renderer, GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
-					jamIntegerMaximizeScreenBuffer(renderer);
+					jamResetRenderer(GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
+					jamIntegerMaximizeScreenBuffer();
 				}
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				// Draw the game world
 				for (i = 0; i < MAX_TILEMAPS; i++)
 					if (gameWorld->worldMaps[i] != NULL)
-						jamDrawTileMap(renderer, gameWorld->worldMaps[i], 0, 0, 0, 0, 0, 0);
+						jamDrawTileMap(gameWorld->worldMaps[i], 0, 0, 0, 0, 0, 0);
 				jamWorldProcFrame(gameWorld);
 
 				// Draw a border around the screen
-				jamDrawSetColour(renderer, 255, 255, 255, 255);
-				jamDrawRectangle(renderer, 0, 0, GAME_WIDTH, GAME_HEIGHT);
-				jamDrawSetColour(renderer, 0, 0, 0, 255);
+				jamDrawSetColour(255, 255, 255, 255);
+				jamDrawRectangle(0, 0, GAME_WIDTH, GAME_HEIGHT);
+				jamDrawSetColour(0, 0, 0, 255);
 
 				// Debug
-				jamRenderFontExt(16, 16, "FPS: %f", font, renderer, 999, round(renderer->framerate));
+				jamRenderFontExt(16, 16, "FPS: %f", font, 999, (int)roundf((float)jamRendererGetFramerate()));
 				/////////////////////////////////////////////////////////////////////
 
-				jamProcEndFrame(renderer);
+				jamProcEndFrame();
 			}
 		}
 	}
@@ -180,22 +179,22 @@ bool runGame(JamRenderer* renderer, JamFont* font) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char* argv[]) {
-	JamRenderer* renderer = jamCreateRenderer("JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
-	jamSetAA(renderer, false);
-	JamFont* font = jamCreateFont(renderer, "assets/standardlatinwhitebg.png", NULL);
+	jamInitRenderer("JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
+	jamSetAA(false);
+	JamFont* font = jamCreateFont("assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;
 	font->characterWidth = 8;
 	bool run = true;
 
 	// Setup the screen
-	jamConfigScreenBuffer(renderer, GAME_WIDTH, GAME_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+	jamConfigScreenBuffer(GAME_WIDTH, GAME_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// A very simple loop that allows the et_Player to bounce between
 	// the menu and the game infinitely
 	while (run) {
-		run = runMenu(renderer, font);
+		run = runMenu(font);
 		if (run)
-			run = runGame(renderer, font);
+			run = runGame(font);
 	}
 
 	jamFreeFont(font);
