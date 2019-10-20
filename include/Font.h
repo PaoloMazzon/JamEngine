@@ -33,7 +33,6 @@ typedef struct {
 /////////////////////////////////////////////////////
 /// \brief Creates a new font and returns it
 ///
-/// \param renderer The renderer to load the texture
 /// \param latinFname The latin font filename
 /// \param fontFname The bitmap font's filename
 ///
@@ -58,7 +57,6 @@ void jamFreeFont(JamFont *font);
 /// \param y The y position to draw at
 /// \param string The string to render
 /// \param font The font to use
-/// \param renderer The renderer to draw to
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
@@ -73,7 +71,6 @@ void jamRenderFont(int x, int y, const char *string, JamFont *font);
 /// \param w The width at which to wrap
 /// \param string The string to render
 /// \param font The font to use
-/// \param renderer The renderer to draw to
 /// \param w Width before a newline
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
@@ -89,7 +86,6 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, int w, ..
 /// \param w The width at which to wrap
 /// \param string The string to render
 /// \param font The font to use
-/// \param renderer The renderer to draw to
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
