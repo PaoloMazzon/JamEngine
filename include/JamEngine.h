@@ -23,3 +23,4 @@
 #include <EntityList.h>
 #include <BehaviourMap.h>
 #include <TMXWorldLoader.h>
+#include <Audio.h>

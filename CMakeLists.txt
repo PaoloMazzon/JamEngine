@@ -11,15 +11,16 @@ set(FILES_USED src/TMXWorldLoader.c include/TMXWorldLoader.h src/BehaviourMap.c 
 
 # This is entirely so CLion will stop complaining
 if (WIN32)
-	# TODO: Add libxml2 stuff here
+	# TODO: Add libxml2 and OpenAL
 	include_directories(include C:/SDL/include)
 elseif (UNIX)
 	find_package(LibXml2 REQUIRED)
-	include_directories(include /usr/include/SDL2 ${LibXml2_INCLUDE_DIR})
+	find_package(OpenAL REQUIRED)
+	include_directories(include /usr/include/SDL2 ${LibXml2_INCLUDE_DIR} ${OPENAL_INCLUDE_DIR})
 endif()
 
 # TMX Related stuff
-set(FILES_USED ${FILES_USED} tmx/tmx.c  tmx/tmx_err.c tmx/tmx_hash.c tmx/tmx_mem.c tmx/tmx_utils.c tmx/tmx_xml.c)
+set(FILES_USED ${FILES_USED} tmx/tmx.c  tmx/tmx_err.c tmx/tmx_hash.c tmx/tmx_mem.c tmx/tmx_utils.c tmx/tmx_xml.c include/Audio.h src/Audio.c)
 include_directories(tmx)
 
 if (OUTPUT_LIB)
@@ -34,5 +35,5 @@ if (WIN32)
 elseif (UNIX)
 	find_package(SDL2 REQUIRED)
 	find_package(SDL2_image REQUIRED)
-	target_link_libraries(${PROJ_NAME} m ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${LIBXML2_LIBRARIES})
+	target_link_libraries(${PROJ_NAME} m ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${LIBXML2_LIBRARIES} ${OPENAL_LIBRARY})
 endif()
