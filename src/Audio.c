@@ -8,34 +8,34 @@
 #include <string.h>
 
 static JamAudioPlayer* gAudioPlayer;
-static JamAudioSource* gDefaultSource;
+static uint32 gDefaultSource;
 static float gGainMultiplier;
 
 ///////////////////////////////////////////////////////////////////////
 void jamInitAudioPlayer() {
 	if (gAudioPlayer == NULL) {
 		gAudioPlayer = (JamAudioPlayer*)malloc(sizeof(JamAudioPlayer));
-		gDefaultSource = (JamAudioSource*)calloc(1, sizeof(JamAudioSource));
 		alutInit(NULL, NULL);
 		gGainMultiplier = 1;
 
-		if (gAudioPlayer != NULL && gDefaultSource != NULL) {
+		if (gAudioPlayer != NULL) {
 			// Setup OpenAL device/context
 			gAudioPlayer->audioDevice = alcOpenDevice(NULL);
 			gAudioPlayer->audioContext = alcCreateContext(gAudioPlayer->audioDevice, NULL);
 
 			if (alGetError() == AL_NO_ERROR) {
 				// Setup the default source
-				alGenSources(1, &gDefaultSource->soundID);
-				gDefaultSource->gain = 1;
-				gDefaultSource->pitch = 1;
+				alGenSources(1, &gDefaultSource);
 
-				if (alGetError() != AL_NO_ERROR) {
+				if (alGetError() == AL_NO_ERROR) {
+					// Initialize the default source
+					alSourcef(gDefaultSource, AL_PITCH, 1);
+					alSource3f(gDefaultSource, AL_POSITION, 0, 0, 0);
+					alSource3f(gDefaultSource, AL_VELOCITY, 0, 0, 0);
+				} else {
 					alcDestroyContext(gAudioPlayer->audioContext);
 					alcCloseDevice(gAudioPlayer->audioDevice);
-					free(gDefaultSource);
 					free(gAudioPlayer);
-					gDefaultSource = NULL;
 					gAudioPlayer = NULL;
 					jSetError(ERROR_OPENAL_ERROR, "Failed to create audio source");
 					alutExit();
@@ -43,9 +43,7 @@ void jamInitAudioPlayer() {
 			} else {
 				alcDestroyContext(gAudioPlayer->audioContext);
 				alcCloseDevice(gAudioPlayer->audioDevice);
-				free(gDefaultSource);
 				free(gAudioPlayer);
-				gDefaultSource = NULL;
 				gAudioPlayer = NULL;
 				jSetError(ERROR_OPENAL_ERROR, "Failed to initialize OpenAL");
 				alutExit();
@@ -53,9 +51,6 @@ void jamInitAudioPlayer() {
 		} else {
 			if (gAudioPlayer == NULL)
 				jSetError(ERROR_ALLOC_FAILED, "Failed to allocate audio player");
-			if (gDefaultSource == NULL)
-				jSetError(ERROR_ALLOC_FAILED, "Failed to allocate default audio source");
-			free(gDefaultSource);
 			free(gAudioPlayer);
 			gDefaultSource = NULL;
 			gAudioPlayer = NULL;
@@ -68,7 +63,7 @@ void jamInitAudioPlayer() {
 ///////////////////////////////////////////////////////////////////////
 void jamFreeAudioPlayer() {
 	if (gDefaultSource != NULL)
-		alDeleteSources(1, &gDefaultSource->soundID);
+		alDeleteSources(1, &gDefaultSource);
 	if (gAudioPlayer != NULL) {
 		alcDestroyContext(gAudioPlayer->audioContext);
 		alcCloseDevice(gAudioPlayer->audioDevice);
@@ -98,20 +93,26 @@ float jamAudioGetGlobalGain() {
 
 ///////////////////////////////////////////////////////////////////////
 JamAudioSource* jamCreateAudioSource() {
-	JamAudioSource* src = (JamAudioSource*)calloc(1, sizeof(JamAudioSource));
+	JamAudioSource* src = NULL;
 
-	if (src != NULL) {
-		alGenSources(1, &src->soundID);
-		gDefaultSource->gain = 1;
-		gDefaultSource->pitch = 1;
+	if (gAudioPlayer != NULL) {
+		src = (JamAudioSource *) calloc(1, sizeof(JamAudioSource));
 
-		if (alGetError() != AL_NO_ERROR) {
-			free(src);
-			src = NULL;
-			jSetError(ERROR_OPENAL_ERROR, "Failed to create audio source");
+		if (src != NULL) {
+			alGenSources(1, &src->soundID);
+			src->gain = 1;
+			src->pitch = 1;
+
+			if (alGetError() != AL_NO_ERROR) {
+				free(src);
+				src = NULL;
+				jSetError(ERROR_OPENAL_ERROR, "Failed to create audio source");
+			}
+		} else {
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate audio source");
 		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate audio source");
+		jSetError(ERROR_NULL_POINTER, "Audio player has not been initialized");
 	}
 
 	return src;
@@ -129,18 +130,66 @@ void jamFreeAudioSource(JamAudioSource* source) {
 
 ///////////////////////////////////////////////////////////////////////
 JamAudioBuffer* jamLoadAudioBuffer(const char* filename) {
-	return NULL; // TODO: This
+	JamAudioBuffer* buf = NULL;
+
+	if (gAudioPlayer != NULL) {
+		buf = (JamAudioBuffer *) calloc(1, sizeof(JamAudioSource));
+
+		if (buf != NULL) {
+			buf->bufferID = alutCreateBufferFromFile(filename);
+
+			if (alGetError() != AL_NO_ERROR) {
+				free(buf);
+				buf = NULL;
+				jSetError(ERROR_OPENAL_ERROR, "Failed to create audio source");
+			}
+		} else {
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate audio source");
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Audio player has not been initialized");
+	}
+
+	return buf;
 }
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
 void jamFreeAudioBuffer(JamAudioBuffer* buffer) {
-	// TODO: This
+	if (buffer != NULL) {
+		alDeleteBuffers(1, &buffer->bufferID);
+		free(buffer);
+	}
 }
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
 void jamPlayAudio(JamAudioBuffer* buffer, JamAudioSource* source, bool looping) {
-	// TODO: This
+	if (buffer != NULL && gAudioPlayer != NULL) {
+		// Setup the surrounding audio playback parameters
+		if (source != NULL) {
+			alSourcef(source->soundID, AL_PITCH, source->pitch);
+			alSourcef(source->soundID, AL_GAIN, source->gain * gGainMultiplier);
+			alSource3f(source->soundID, AL_POSITION, source->xPosition, source->yPosition, source->zPosition);
+			alSource3f(source->soundID, AL_VELOCITY, source->xVelocity, source->yVelocity, source->zVelocity);
+			alSourcei(source->soundID, AL_LOOPING, source->looping);
+
+			// Bind the sound and play it
+			alSourcei(source->soundID, AL_BUFFER, buffer->bufferID);
+			alSourcePlay(source->soundID);
+		} else {
+			alSourcei(gDefaultSource, AL_LOOPING, looping);
+			alSourcef(gDefaultSource, AL_GAIN, gGainMultiplier);
+
+			// Bind the sound and play it
+			alSourcei(gDefaultSource, AL_BUFFER, buffer->bufferID);
+			alSourcePlay(gDefaultSource);
+		}
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer does not exist");
+		if (gAudioPlayer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Audio player has not been initialized");
+	}
 }
 ///////////////////////////////////////////////////////////////////////
