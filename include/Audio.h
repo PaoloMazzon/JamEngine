@@ -11,9 +11,9 @@ typedef struct {
 	float listenerOrientation[6]; ///< The orientation of the listener
 } JamAudioPlayer;
 
-/// \brief A sound
+/// \brief A sound in memory
 typedef struct {
-
+	uint32 bufferID; ///< The internal id of the buffer (for OpenAL)
 } JamAudioBuffer;
 
 /// \brief A source from which to play sound
@@ -45,6 +45,24 @@ void jamFreeAudioPlayer();
 
 /// \brief Returns weather or not the audio player was successfully initialized
 bool jamAudioIsInitialized();
+
+/// \brief Sets the global gain multiplier
+///
+/// All source's gain is multiplied by the global gain multiplier
+/// when it is played. Say for example, your user wants the game
+/// to be at 38% volume. You could just set this value to 0.38
+///
+/// By default the global gain multiplier is 1.
+void jamAudioSetGlobalGain(float volume);
+
+/// \brief Gets the global gain multiplier
+///
+/// All source's gain is multiplied by the global gain multiplier
+/// when it is played. Say for example, your user wants the game
+/// to be at 38% volume. You could just set this value to 0.38
+///
+/// By default the global gain multiplier is 1.
+float jamAudioGetGlobalGain();
 
 /// \brief Creates an audio source
 /// \throws ERROR_ALLOC_FAILED

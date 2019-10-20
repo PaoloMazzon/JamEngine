@@ -9,6 +9,7 @@
 
 static JamAudioPlayer* gAudioPlayer;
 static JamAudioSource* gDefaultSource;
+static float gGainMultiplier;
 
 ///////////////////////////////////////////////////////////////////////
 void jamInitAudioPlayer() {
@@ -16,6 +17,7 @@ void jamInitAudioPlayer() {
 		gAudioPlayer = (JamAudioPlayer*)malloc(sizeof(JamAudioPlayer));
 		gDefaultSource = (JamAudioSource*)calloc(1, sizeof(JamAudioSource));
 		alutInit(NULL, NULL);
+		gGainMultiplier = 1;
 
 		if (gAudioPlayer != NULL && gDefaultSource != NULL) {
 			// Setup OpenAL device/context
@@ -82,14 +84,46 @@ bool jamAudioIsInitialized() {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
+void jamAudioSetGlobalGain(float volume) {
+	if (volume <= 1 && volume >= 0)
+		gGainMultiplier = volume;
+}
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
+float jamAudioGetGlobalGain() {
+	return gGainMultiplier;
+}
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
 JamAudioSource* jamCreateAudioSource() {
-	return NULL; // TODO: This
+	JamAudioSource* src = (JamAudioSource*)calloc(1, sizeof(JamAudioSource));
+
+	if (src != NULL) {
+		alGenSources(1, &src->soundID);
+		gDefaultSource->gain = 1;
+		gDefaultSource->pitch = 1;
+
+		if (alGetError() != AL_NO_ERROR) {
+			free(src);
+			src = NULL;
+			jSetError(ERROR_OPENAL_ERROR, "Failed to create audio source");
+		}
+	} else {
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate audio source");
+	}
+
+	return src;
 }
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
 void jamFreeAudioSource(JamAudioSource* source) {
-	// TODO: This
+	if (source != NULL) {
+		alDeleteSources(1, &source->soundID);
+		free(source);
+	}
 }
 ///////////////////////////////////////////////////////////////////////
 
