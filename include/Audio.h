@@ -43,6 +43,9 @@ void jamInitAudioPlayer();
 /// \brief Quits the audio system
 void jamFreeAudioPlayer();
 
+/// \brief Returns weather or not the audio player was successfully initialized
+bool jamAudioIsInitialized();
+
 /// \brief Creates an audio source
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
@@ -58,3 +61,15 @@ JamAudioBuffer* jamLoadAudioBuffer(const char* filename);
 
 /// \brief Frees an audio buffer
 void jamFreeAudioBuffer(JamAudioBuffer* buffer);
+
+/// \brief Plays some audio
+///
+/// Source can be null, in which case the default source will be
+/// used (basically the sound will be played right beside the
+/// listener)
+///
+/// The looping argument only applies if you don't specify a source.
+///
+/// \throws ERROR_OPENAL_ERROR
+/// \throws ERROR_NULL_POINTER
+void jamPlayAudio(JamAudioBuffer* buffer, JamAudioSource* source, bool looping);

@@ -9,6 +9,7 @@
 #include "Clock.h"
 #include "JamError.h"
 #include <SDL.h>
+#include <Audio.h>
 
 static JamRenderer* gRenderer;
 
@@ -19,9 +20,10 @@ void jamInitRenderer(const char *name, uint32 w, uint32 h, double framerate) {
 	JamTexture* tex;
 	gRenderer = (JamRenderer*)malloc(sizeof(JamRenderer));
 	jamInitInput();
+	jamInitAudioPlayer();
 
 	// Check if we were given a dud
-	if (gRenderer != NULL && jamInputIsInitialized()) {
+	if (gRenderer != NULL && jamInputIsInitialized() && jamAudioIsInitialized()) {
 
 		// Ignore any complaints valgrind gives about this, its out
 		// of my control
@@ -301,6 +303,7 @@ void jamRendererQuit() {
 	if (gRenderer != NULL) {
 		jamFreeTexture(gRenderer->screenBuffer);
 		jamQuitInput();
+		jamFreeAudioPlayer();
 		SDL_DestroyRenderer(gRenderer->internalRenderer);
 		SDL_DestroyWindow(gRenderer->gameWindow);
 		SDL_Quit();
