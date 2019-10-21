@@ -46,6 +46,8 @@ typedef struct {
 
 	double cameraX; ///< X Location of the camera in the game world (offset to render by)
 	double cameraY; ///< Y Location of the camera in the game world (offset to render by)
+
+	double delta; ///< The delta multiplier (actual_frame_time/expected_frame_time used to make up for fluctuating framerates)
 } JamRenderer;
 
 /// \brief Initializes a Renderer
@@ -76,6 +78,10 @@ void jamRendererMoveCamera(double x_relative, double y_relative);
 /// \brief Gets the current framerate the renderer is trying to run at
 /// \throws ERROR_NULL_POINTER
 double jamRendererGetFramerate();
+
+/// \brief Grabs the delta multiplier for this frame
+/// \throws ERROR_NULL_POINTER
+double jamRendererGetDelta();
 
 /// \brief Updates a renderer's properties, returns false if it failed
 ///

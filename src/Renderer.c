@@ -59,6 +59,7 @@ void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 
 					gRenderer->displayBufferY = 0;
 					gRenderer->cameraX = 0;
 					gRenderer->cameraY = 0;
+					gRenderer->delta = 1;
 					SDL_SetRenderTarget(sdlRenderer, tex->tex);
 				} else {
 					jamRendererQuit();
@@ -417,6 +418,18 @@ void jamConvertCoords(int *x, int *y) {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
+double jamRendererGetDelta() {
+	if (gRenderer != NULL) {
+		return gRenderer->delta;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized");
+	}
+
+	return 1;
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
 void jamProcEndFrame() {
 	SDL_Rect rect;
 
@@ -452,7 +465,7 @@ void jamProcEndFrame() {
 			jamSleep(gRenderer->timePerFrame - gRenderer->between);
 
 		gRenderer->framerate = 1000000000 / ((double)ns() - (double)gRenderer->lastTime);
-
+		gRenderer->delta = gRenderer->between / gRenderer->timePerFrame;
 		// Update the last time
 		gRenderer->lastTime = ns();
 	} else {
