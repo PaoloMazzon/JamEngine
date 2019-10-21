@@ -26,6 +26,7 @@ Features
  - Cross-platform implementations of atof and ftoa (string to double and vice-versa)
  - SAT collisions and simple rectangle/circle collisions are interchangeable
  - Collision grids (`JamTileMap`) for lightning-fast grid-to-rectangle collisions (or just rendering tiles (or both))
+ - 3D audio support through OpenAL
 
 To-Do List
 ==========
@@ -42,5 +43,3 @@ To-Do List
     + Circle-to-polygon
  - Fonts
     + TTF fonts
- - Audio support
-    + Everything
