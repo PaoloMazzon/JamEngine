@@ -72,10 +72,10 @@ JamAudioSource* jamCreateAudioSource();
 /// \brief Frees an audio source
 void jamFreeAudioSource(JamAudioSource* source);
 
-/// \brief Loads audio from a file
+/// \brief Loads audio from a .wav file
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
-JamAudioBuffer* jamLoadAudioBuffer(const char* filename);
+JamAudioBuffer* jamLoadAudioBufferFromWAV(const char *filename);
 
 /// \brief Frees an audio buffer
 void jamFreeAudioBuffer(JamAudioBuffer* buffer);

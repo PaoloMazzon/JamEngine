@@ -15,13 +15,14 @@ static float gGainMultiplier;
 void jamInitAudioPlayer(int* argc, char** argv) {
 	if (gAudioPlayer == NULL) {
 		gAudioPlayer = (JamAudioPlayer*)malloc(sizeof(JamAudioPlayer));
-		alutInit(argc, argv);
 		gGainMultiplier = 1;
 
 		if (gAudioPlayer != NULL) {
 			// Setup OpenAL device/context
-			gAudioPlayer->audioDevice = alcOpenDevice(NULL);
+			gAudioPlayer->audioDevice = alcOpenDevice("OpenAL Soft");
 			gAudioPlayer->audioContext = alcCreateContext(gAudioPlayer->audioDevice, NULL);
+			alcMakeContextCurrent(gAudioPlayer->audioContext);
+			alutInitWithoutContext(argc, argv);
 
 			if (alGetError() == AL_NO_ERROR) {
 				// Setup the default source
@@ -52,7 +53,6 @@ void jamInitAudioPlayer(int* argc, char** argv) {
 			if (gAudioPlayer == NULL)
 				jSetError(ERROR_ALLOC_FAILED, "Failed to allocate audio player");
 			free(gAudioPlayer);
-			gDefaultSource = NULL;
 			gAudioPlayer = NULL;
 			alutExit();
 		}
@@ -62,9 +62,8 @@ void jamInitAudioPlayer(int* argc, char** argv) {
 
 ///////////////////////////////////////////////////////////////////////
 void jamFreeAudioPlayer() {
-	if (gDefaultSource != NULL)
-		alDeleteSources(1, &gDefaultSource);
 	if (gAudioPlayer != NULL) {
+		alDeleteSources(1, &gDefaultSource);
 		alcDestroyContext(gAudioPlayer->audioContext);
 		alcCloseDevice(gAudioPlayer->audioDevice);
 	}
@@ -129,7 +128,7 @@ void jamFreeAudioSource(JamAudioSource* source) {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-JamAudioBuffer* jamLoadAudioBuffer(const char* filename) {
+JamAudioBuffer* jamLoadAudioBufferFromWAV(const char *filename) {
 	JamAudioBuffer* buf = NULL;
 
 	if (gAudioPlayer != NULL) {
@@ -138,7 +137,7 @@ JamAudioBuffer* jamLoadAudioBuffer(const char* filename) {
 		if (buf != NULL) {
 			buf->bufferID = alutCreateBufferFromFile(filename);
 
-			if (alGetError() != AL_NO_ERROR) {
+			if (alutGetError() != ALUT_ERROR_NO_ERROR) {
 				free(buf);
 				buf = NULL;
 				jSetError(ERROR_OPENAL_ERROR, "Failed to create audio source");
