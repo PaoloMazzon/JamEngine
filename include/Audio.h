@@ -38,7 +38,7 @@ typedef struct {
 /// \brief Initializes the audio system
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
-void jamInitAudioPlayer();
+void jamInitAudioPlayer(int* argc, char** argv);
 
 /// \brief Quits the audio system
 void jamFreeAudioPlayer();

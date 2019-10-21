@@ -51,7 +51,7 @@ typedef struct {
 /// \brief Initializes a Renderer
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_ALLOC_FAILED
-void jamInitRenderer(const char *name, uint32 w, uint32 h, double framerate);
+void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 h, double framerate);
 
 /// \brief Returns the internal renderer used by JamRenderer
 /// \throws ERROR_NULL_POINTER

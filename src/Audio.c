@@ -12,10 +12,10 @@ static uint32 gDefaultSource;
 static float gGainMultiplier;
 
 ///////////////////////////////////////////////////////////////////////
-void jamInitAudioPlayer() {
+void jamInitAudioPlayer(int* argc, char** argv) {
 	if (gAudioPlayer == NULL) {
 		gAudioPlayer = (JamAudioPlayer*)malloc(sizeof(JamAudioPlayer));
-		alutInit(NULL, NULL);
+		alutInit(argc, argv);
 		gGainMultiplier = 1;
 
 		if (gAudioPlayer != NULL) {

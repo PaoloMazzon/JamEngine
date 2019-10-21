@@ -127,6 +127,7 @@ bool runGame(JamFont* font) {
 
 	// Some setup
 	jamRendererSetCameraPos(50, 50);
+	JamAudioBuffer* sound = jamLoadAudioBuffer("assets/pop.ogg");
 
 	// We don't really care what went wrong, but if something went wrong while
 	// while loading assets, we cannot continue.
@@ -138,7 +139,7 @@ bool runGame(JamFont* font) {
 			if (runLoop) {
 				jamDrawFillColour(0, 0, 0, 255);
 
-				// Mess around with the renderer reset
+				// Testing suite
 				if (jamInputCheckKeyPressed(JAM_KB_F)) {
 					jamResetRenderer(0, 0, RENDERER_BORDERLESS_FULLSCREEN);
 					jamIntegerMaximizeScreenBuffer();
@@ -147,6 +148,8 @@ bool runGame(JamFont* font) {
 					jamResetRenderer(GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
 					jamIntegerMaximizeScreenBuffer();
 				}
+				if (jamInputCheckKeyPressed(JAM_KB_P))
+					jamPlayAudio(sound, NULL, 0);
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				// Draw the game world
@@ -173,13 +176,14 @@ bool runGame(JamFont* font) {
 	jamFreeWorld(gameWorld);
 	jamFreeBehaviourMap(bMap);
 	jamFreeAssetHandler(handler);
+	jamFreeAudioBuffer(sound);
 
 	return mainMenu;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char* argv[]) {
-	jamInitRenderer("JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
+	jamInitRenderer(&argc, &argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	jamSetAA(false);
 	JamFont* font = jamCreateFont("assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;

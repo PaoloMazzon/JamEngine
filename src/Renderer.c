@@ -14,13 +14,13 @@
 static JamRenderer* gRenderer;
 
 /////////////////////////////////////////////////////////////
-void jamInitRenderer(const char *name, uint32 w, uint32 h, double framerate) {
+void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 h, double framerate) {
 	SDL_Renderer* sdlRenderer;
 	SDL_Window* window;
 	JamTexture* tex;
 	gRenderer = (JamRenderer*)malloc(sizeof(JamRenderer));
 	jamInitInput();
-	jamInitAudioPlayer();
+	jamInitAudioPlayer(argc, argv);
 
 	// Check if we were given a dud
 	if (gRenderer != NULL && jamInputIsInitialized() && jamAudioIsInitialized()) {
