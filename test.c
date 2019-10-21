@@ -180,8 +180,8 @@ bool runGame(JamFont* font) {
 	}
 
 	// Free up the resources
-	jamFreeBehaviourMap(bMap);
 	jamFreeAssetHandler(handler);
+	jamFreeBehaviourMap(bMap);
 
 	// Test stuff
 	jamFreeAudioSource(source);
