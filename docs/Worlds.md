@@ -39,3 +39,15 @@ with a few caveats to be aware of due to the limitations of JamEngine
 
 Tiled might take a bit of fiddling to get working properly for you, but it is very
 handy once it is.
+
+Note For .tmx Loading
+---------------------
+
+JamAssetHandler supports the loading of .tmx files directly through the handler. For convenience
+you can just add it to your assets' .ini file
+
+    [wGrassLevel]
+    file=level1.tmx
+    
+    [wUnderwaterLevel]
+    file=level2.tmx
