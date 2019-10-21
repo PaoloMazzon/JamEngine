@@ -171,7 +171,7 @@ bool runGame(JamFont* font) {
 				jamDrawSetColour(0, 0, 0, 255);
 
 				// Debug
-				jamRenderFontExt(16, 16, "FPS: %f", font, 999, jamRendererGetFramerate());
+				jamRenderFontExt(16, 16, "FPS: %f\nDelta: %f", font, 999, jamRendererGetFramerate(), jamRendererGetDelta());
 				/////////////////////////////////////////////////////////////////////
 
 				jamProcEndFrame();

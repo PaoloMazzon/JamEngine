@@ -465,7 +465,7 @@ void jamProcEndFrame() {
 			jamSleep(gRenderer->timePerFrame - gRenderer->between);
 
 		gRenderer->framerate = 1000000000 / ((double)ns() - (double)gRenderer->lastTime);
-		gRenderer->delta = gRenderer->between / gRenderer->timePerFrame;
+		gRenderer->delta = (double)(ns() - gRenderer->lastTime) / ((double)gRenderer->timePerFrame);
 		// Update the last time
 		gRenderer->lastTime = ns();
 	} else {
