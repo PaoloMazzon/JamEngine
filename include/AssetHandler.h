@@ -11,8 +11,10 @@
 #include "Hitbox.h"
 #include "INI.h"
 #include "BehaviourMap.h"
+#include "Audio.h"
+#include "World.h"
 
-enum JamAssetType {at_Texture, at_Sprite, at_TileMap, at_Entity, at_Hitbox};
+enum JamAssetType {at_Texture, at_Sprite, at_TileMap, at_Entity, at_Hitbox, at_AudioBuffer, at_World};
 
 /// \brief A struct that can hold any of the assets the asset handler needs
 ///
@@ -27,6 +29,8 @@ typedef struct {
 		JamTileMap* tileMap; ///< The internal tile map
 		JamEntity* entity; ///< The internal entity
 		JamHitbox* hitbox; ///< The internal hitbox
+		JamAudioBuffer* buffer; ///< The internal audio buffer
+		JamWorld* world; ///< The internal world
 	};
 } JamAsset;
 
@@ -117,6 +121,16 @@ JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key);
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
 JamTileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key);
+
+/// \brief Pulls a specific asset safely, making sure the types match up
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ASSET_WRONG_TYPE
+JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, JamAssetKey key);
+
+/// \brief Pulls a specific asset safely, making sure the types match up
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ASSET_WRONG_TYPE
+JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, JamAssetKey key);
 
 /// \brief Frees an asset handler and all of its components
 void jamFreeAssetHandler(JamAssetHandler *handler);

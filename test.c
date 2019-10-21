@@ -126,11 +126,11 @@ bool runGame(JamFont* font) {
 	// Load the assets and create the world
 	JamAssetHandler* handler = jamCreateAssetHandler();
 	jamAssetLoadINI(handler, "assets/level0.ini", bMap);
-	JamWorld* gameWorld = jamLoadWorldFromTMX(handler, "assets/level0.tmx");
+	JamWorld* gameWorld = jamGetWorldFromHandler(handler, "GameWorld");
 
 	// Some setup
 	jamRendererSetCameraPos(50, 50);
-	JamAudioBuffer* sound = jamLoadAudioBufferFromWAV("assets/pop.wav");
+	JamAudioBuffer* sound = jamGetAudioBufferFromHandler(handler, "PopSound");
 	JamAudioSource* source = jamCreateAudioSource();
 
 	// We don't really care what went wrong, but if something went wrong while
@@ -180,13 +180,11 @@ bool runGame(JamFont* font) {
 	}
 
 	// Free up the resources
-	jamFreeWorld(gameWorld);
 	jamFreeBehaviourMap(bMap);
 	jamFreeAssetHandler(handler);
 
-	// Test suite
+	// Test stuff
 	jamFreeAudioSource(source);
-	jamFreeAudioBuffer(sound);
 
 	return mainMenu;
 }

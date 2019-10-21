@@ -15,6 +15,7 @@
 #include "BehaviourMap.h"
 #include <malloc.h>
 #include <SDL.h>
+#include "TMXWorldLoader.h"
 
 // The base key comparison function
 bool keysEqual(JamAssetKey key1, JamAssetKey key2) {
@@ -86,6 +87,10 @@ JamAsset* createAsset(void* pointer, enum JamAssetType type) {
 	if (asset != NULL && pointer != NULL) {
 		asset->type = type;
 
+		// I know this isn't necessary, but it would be very confusing for those relatively new to c
+		// In fact the union and all that is really just for clarity and could just as well be
+		// a void* pointer to anything but that is not clear and being unclear is not what this engine's about
+		// (also it would not be as easy to change things in JamAsset later should I decide to)
 		if (type == at_Texture)
 			asset->tex = pointer;
 		if (type == at_Sprite)
@@ -96,6 +101,10 @@ JamAsset* createAsset(void* pointer, enum JamAssetType type) {
 			asset->entity = pointer;
 		if (type == at_TileMap)
 			asset->tileMap = pointer;
+		if (type == at_World)
+			asset->world = pointer;
+		if (type == at_AudioBuffer)
+			asset->buffer = pointer;
 	} else {
 		if (asset == NULL) {
 			jSetError(ERROR_ALLOC_FAILED, "Failed to create asset (createAsset)\n");
@@ -220,6 +229,24 @@ void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const char* hea
 			(headerName + 1)
 	);
 }
+
+void assetLoadAudio(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
+	jamLoadAssetIntoHandler(
+			assetHandler,
+			createAsset(
+					jamLoadAudioBufferFromWAV(jamGetKeyINI(ini, headerName, "file", ""))
+					, at_AudioBuffer)
+			, (headerName + 1));
+}
+
+void assetLoadWorld(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
+	jamLoadAssetIntoHandler(
+			assetHandler,
+			createAsset(
+					jamLoadWorldFromTMX(assetHandler, jamGetKeyINI(ini, headerName, "file", ""))
+					, at_World)
+			, (headerName + 1));
+}
 //////////////////////// End of assetLoadINI support functions ////////////////////////
 
 ///////////////////////////////////////////////////////////////
@@ -250,17 +277,28 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 					assetLoadSprite(assetHandler, ini, ini->headerNames[i]);
 				} else if (ini->headerNames[i][0] == INI_HITBOX_PREFIX) {
 					assetLoadHitbox(assetHandler, ini, ini->headerNames[i]);
+				} else if (ini->headerNames[i][0] == INI_AUDIO_PREFIX) {
+					assetLoadAudio(assetHandler, ini, ini->headerNames[i]);
 				}
 			}
 		}
 
-		// Phase 2: Everything else
+		// Phase 2: Tile maps and entities
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], "texture_ids") != 0) {
 				if (ini->headerNames[i][0] == INI_TILEMAP_PREFIX) {
 					assetLoadTileMap(assetHandler, ini, ini->headerNames[i]);
 				} else if (ini->headerNames[i][0] == INI_ENTITY_PREFIX) {
 					assetLoadEntity(assetHandler, ini, ini->headerNames[i], map);
+				}
+			}
+		}
+
+		// Phase 3: Worlds from .tmx files
+		for (i = 0; i < ini->numberOfHeaders; i++) {
+			if (strcmp(ini->headerNames[i], "texture_ids") != 0) {
+				if (ini->headerNames[i][0] == INI_WORLD_PREFIX) {
+					assetLoadWorld(assetHandler, ini, ini->headerNames[i]);
 				}
 			}
 		}
@@ -400,6 +438,48 @@ JamTileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key) 
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
+JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+	JamAsset* asset = jamGetAssetFromHandler(handler, key);
+	JamAudioBuffer* returnVal = NULL;
+
+	if (handler != NULL) {
+		if (asset != NULL && asset->type == at_AudioBuffer) {
+			returnVal = asset->buffer;
+		} else if (asset != NULL) {
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected audio buffer (jamGetTileMapFromHandler)\n", key);
+		} else {
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find audio buffer for key %s (jamGetTileMapFromHandler)\n", key);
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist(jamGetTileMapFromHandler)\n");
+	}
+
+	return returnVal;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+	JamAsset* asset = jamGetAssetFromHandler(handler, key);
+	JamWorld* returnVal = NULL;
+
+	if (handler != NULL) {
+		if (asset != NULL && asset->type == at_World) {
+			returnVal = asset->world;
+		} else if (asset != NULL) {
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected world (jamGetTileMapFromHandler)\n", key);
+		} else {
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find world for key %s (jamGetTileMapFromHandler)\n", key);
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist(jamGetTileMapFromHandler)\n");
+	}
+
+	return returnVal;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
 void jamFreeAssetHandler(JamAssetHandler *handler) {
 	int i;
 	if (handler != NULL) {
@@ -413,8 +493,12 @@ void jamFreeAssetHandler(JamAssetHandler *handler) {
 				jamFreeHitbox(handler->vals[i]->hitbox);
 			else if (handler->vals[i]->type == at_Entity)
 				jamFreeEntity(handler->vals[i]->entity, false, false, false);
-			else
+			else if (handler->vals[i]->type == at_TileMap)
 				jamFreeTileMap(handler->vals[i]->tileMap);
+			else if (handler->vals[i]->type == at_World)
+				jamFreeWorld(handler->vals[i]->world);
+			else if (handler->vals[i]->type == at_AudioBuffer)
+				jamFreeAudioBuffer(handler->vals[i]->buffer);
 			free(handler->vals[i]);
 		}
 		free(handler->vals);
