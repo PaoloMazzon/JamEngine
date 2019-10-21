@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
+#include <Audio.h>
 #include "JamEngine.h"
 
 /////////////////// Constants ///////////////////
@@ -58,6 +59,8 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 	}
 	self->x += self->hSpeed;
 	self->y += self->vSpeed;
+
+	jamAudioSetListenerPosition((float)self->x, (float)self->y, 0);
 
 	//////////////////////// Player Animations ////////////////////////
 	// We must invert the et_Player if he is going left
@@ -128,6 +131,7 @@ bool runGame(JamFont* font) {
 	// Some setup
 	jamRendererSetCameraPos(50, 50);
 	JamAudioBuffer* sound = jamLoadAudioBufferFromWAV("assets/pop.wav");
+	JamAudioSource* source = jamCreateAudioSource();
 
 	// We don't really care what went wrong, but if something went wrong while
 	// while loading assets, we cannot continue.
@@ -149,7 +153,9 @@ bool runGame(JamFont* font) {
 					jamIntegerMaximizeScreenBuffer();
 				}
 				if (jamInputCheckKeyPressed(JAM_KB_P)) {
-					jamPlayAudio(sound, NULL, 0);
+					source->xPosition = jamInputGetMouseX();
+					source->yPosition = jamInputGetMouseY();
+					jamPlayAudio(sound, source, false);
 				}
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
@@ -177,6 +183,9 @@ bool runGame(JamFont* font) {
 	jamFreeWorld(gameWorld);
 	jamFreeBehaviourMap(bMap);
 	jamFreeAssetHandler(handler);
+
+	// Test suite
+	jamFreeAudioSource(source);
 	jamFreeAudioBuffer(sound);
 
 	return mainMenu;

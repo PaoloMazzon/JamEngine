@@ -78,6 +78,47 @@ bool jamAudioIsInitialized() {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
+void jamAudioSetListenerPosition(float x, float y, float z) {
+	if (gAudioPlayer != NULL) {
+		alListener3f(AL_POSITION, x, y, z);
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Audio player has not been initialized");
+	}
+}
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
+void jamAudioSetListenerVelocity(float x, float y, float z) {
+	if (gAudioPlayer != NULL) {
+		alListener3f(AL_VELOCITY, x, y, z);
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Audio player has not been initialized");
+	}
+}
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
+void jamAudioSetListenerOrientation(float atX, float atY, float atZ, float upX, float upY, float upZ) {
+	float ori[] = {atX, atY, atZ, upX, upY, upZ};
+	if (gAudioPlayer != NULL) {
+		alListenerfv(AL_ORIENTATION, ori);
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Audio player has not been initialized");
+	}
+}
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
+void jamAudioSetListenerGain(float gain) {
+	if (gAudioPlayer != NULL) {
+		alListenerf(AL_GAIN, gain);
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Audio player has not been initialized");
+	}
+}
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
 void jamAudioSetGlobalGain(float volume) {
 	if (volume <= 1 && volume >= 0)
 		gGainMultiplier = volume;
@@ -158,6 +199,20 @@ void jamFreeAudioBuffer(JamAudioBuffer* buffer) {
 	if (buffer != NULL) {
 		alDeleteBuffers(1, &buffer->bufferID);
 		free(buffer);
+	}
+}
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
+void jamUpdateAudioSource(JamAudioSource* source) {
+	if (source != NULL) {
+		alSourcef(source->soundID, AL_PITCH, source->pitch);
+		alSourcef(source->soundID, AL_GAIN, source->gain * gGainMultiplier);
+		alSource3f(source->soundID, AL_POSITION, source->xPosition, source->yPosition, source->zPosition);
+		alSource3f(source->soundID, AL_VELOCITY, source->xVelocity, source->yVelocity, source->zVelocity);
+		alSourcei(source->soundID, AL_LOOPING, source->looping);
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Source does not exist");
 	}
 }
 ///////////////////////////////////////////////////////////////////////

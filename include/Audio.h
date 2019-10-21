@@ -22,6 +22,9 @@ typedef struct {
 /// aren't listed here because they're very edge case for a 2D
 /// game. If you do want access to things like the sound cone and
 /// rolloff, it wouldn't be too much trouble to add.
+///
+/// This is for 3D audio, and if you don't need 3D audio you'll
+/// never need to use this struct (just pass NULL to jamPlayAudio)
 typedef struct {
 	uint32 soundID; ///< The internal id of the sound (for OpenAL)
 	float pitch; ///< The pitch of the audio from 0 - 1
@@ -46,6 +49,38 @@ void jamFreeAudioPlayer();
 /// \brief Returns weather or not the audio player was successfully initialized
 bool jamAudioIsInitialized();
 
+/// \brief Sets the listener's position in the game world
+///
+/// This is for 3D audio, and if you don't need 3D audio you'll
+/// never need to call this function so don't fret about it.
+///
+/// \throws ERROR_NULL_POINTER
+void jamAudioSetListenerPosition(float x, float y, float z);
+
+/// \brief Sets the listener's velocity in the game world
+///
+/// This is for 3D audio, and if you don't need 3D audio you'll
+/// never need to call this function so don't fret about it.
+///
+/// \throws ERROR_NULL_POINTER
+void jamAudioSetListenerVelocity(float x, float y, float z);
+
+/// \brief Sets the listener's prespective in the game world
+///
+/// This is for 3D audio, and if you don't need 3D audio you'll
+/// never need to call this function so don't fret about it.
+///
+/// \throws ERROR_NULL_POINTER
+void jamAudioSetListenerOrientation(float atX, float atY, float atZ, float upX, float upY, float upZ);
+
+/// \brief Sets the listener's prespective in the game world
+///
+/// This is for 3D audio, and if you don't need 3D audio you'll
+/// never need to call this function so don't fret about it.
+///
+/// \throws ERROR_NULL_POINTER
+void jamAudioSetListenerGain(float gain);
+
 /// \brief Sets the global gain multiplier
 ///
 /// All source's gain is multiplied by the global gain multiplier
@@ -65,12 +100,28 @@ void jamAudioSetGlobalGain(float volume);
 float jamAudioGetGlobalGain();
 
 /// \brief Creates an audio source
+///
+/// This is for 3D audio, and if you don't need 3D audio you'll
+/// never need to call this function so don't fret about it.
+///
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
 JamAudioSource* jamCreateAudioSource();
 
 /// \brief Frees an audio source
 void jamFreeAudioSource(JamAudioSource* source);
+
+/// \brief Updates internal values of the source
+///
+/// The source's internal OpenAL values are only updated when
+/// you call jamPlayAudio or this function to save performance.
+/// Usually, jamPlayAudio updating things is good enough, but
+/// if you have something looping for example, you may need to
+/// call this every time you update the source.
+///
+/// This is for 3D audio, and if you don't need 3D audio you'll
+/// never need to call this function so don't fret about it.
+void jamUpdateAudioSource(JamAudioSource* source);
 
 /// \brief Loads audio from a .wav file
 /// \throws ERROR_ALLOC_FAILED
