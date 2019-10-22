@@ -32,14 +32,8 @@ To-Do List
 ==========
  - JamInput System
     + Gamepad input
- - Renderer
-    + Delta timing
  - Drawing functions
-    + Let the fill colour thing work with alpha values
     + Draw shapes
     + Vector images
-    + Tweening
- - Hit-box
-    + Circle-to-polygon
  - Fonts
     + TTF fonts

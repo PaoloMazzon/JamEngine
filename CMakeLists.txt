@@ -21,7 +21,7 @@ elseif (UNIX)
 endif()
 
 # TMX Related stuff
-set(FILES_USED ${FILES_USED} tmx/tmx.c  tmx/tmx_err.c tmx/tmx_hash.c tmx/tmx_mem.c tmx/tmx_utils.c tmx/tmx_xml.c include/Audio.h src/Audio.c)
+set(FILES_USED ${FILES_USED} tmx/tmx.c  tmx/tmx_err.c tmx/tmx_hash.c tmx/tmx_mem.c tmx/tmx_utils.c tmx/tmx_xml.c include/Audio.h src/Audio.c include/Tweening.h src/Tweening.c)
 include_directories(tmx)
 
 if (OUTPUT_LIB)
