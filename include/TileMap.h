@@ -13,12 +13,16 @@
 
 /// \brief A simple struct that makes collision checking and tile graphics easier
 ///
-/// Internally, this struct is just a width * height 16-bit grid. You don't need
-/// to use the graphical part of it, but the grid is 16-bit to allow for lots of
-/// graphical tiles and you only need a 1-bit grid (which, yes is not possible
-/// with base datatypes but you can get tricky with bool arrays) for that situation.
-/// The collisionRangeStart/End variables define what portion of the tile sheet
-/// is dedicated to solid objects so the collision detection works properly.
+/// Internally, this struct is just a width * height grid of JamFrame pointers.
+/// Any NULL pointer is considered not a collision, and anything not NULL is
+/// considered a collision. Also, the tile map will not free any of the frames
+/// it holds because it is meant to be used with a JamAssetHandler (so basically
+/// if you use it without it just free the frames yourself).
+///
+/// If you wish to use this simply as a collision grid and not to draw things with,
+/// you can technically just set the pointers to something, but its dangerous.
+/// Instead, it would be wiser to create an empty frame struct and assign that
+/// just in case you later try to access it and get a segfault.
 typedef struct {
 	int xInWorld;               ///< X position in the world of the grid (for collisions only, drawing ignores this)
 	int yInWorld;               ///< Y position in the world of the grid (for collisions only, drawing ignores this)
@@ -26,10 +30,7 @@ typedef struct {
 	uint32 height;              ///< Grid's height
 	uint32 cellWidth;           ///< Width of any given cell in the map
 	uint32 cellHeight;          ///< Height of any given cell in the map
-	uint16* grid;               ///< The internal grid of size w * h
-	uint16 collisionRangeStart; ///< The start of the range of collide-able tiles
-	uint16 collisionRangeEnd;   ///< The end of the range of collide-able tiles
-	JamSprite* tileSheet;          ///< The sprite sheet holding all tiles
+	JamFrame** grid;            ///< Internal grid of w*h (it is a 1D array of JamFrame pointers)
 } JamTileMap;
 
 /// \brief Creates a tile map
@@ -39,31 +40,15 @@ typedef struct {
 /// \throws ERROR_ALLOC_FAILED
 JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight);
 
-/// \brief Loads a tile map from file
-///
-/// Tile maps loaded from files accept "*" as a true value
-/// all else as false. Should just be a plain text file. For
-/// example, a 4 * 4 grid might look like
-/// 
-/// 	..*.
-/// 	*..*
-/// 	*..*
-/// 	****
-///
-/// \throws ERROR_FILE_FAILED
-/// \throws ERROR_OPEN_FAILED
-/// \throws ERROR_ALLOC_FAILED
-JamTileMap* jamLoadTileMap(const char *filename, uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight);
-
 /// \brief Sets a position in a tile map
 /// Returns true if it worked
 ///
 /// \throws ERROR_NULL_POINTER
-bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, uint16 val);
+bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame* val);
 
 /// \brief Gets a position in a tile map
 /// \throws ERROR_NULL_POINTER
-uint16 jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y);
+JamFrame* jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y);
 
 /// \brief Checks For a collision
 ///

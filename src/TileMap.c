@@ -16,7 +16,7 @@ JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint
 	// Check it worked
 	if (map != NULL) {
 		// Make the internal map
-		map->grid = (uint16*)calloc(2, width * height);
+		map->grid = (JamFrame**)calloc(sizeof(JamFrame*), width * height);
 
 		// Check this one as well
 		if (map->grid != NULL) {
@@ -25,8 +25,6 @@ JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint
 			map->height = height;
 			map->cellWidth = cellWidth;
 			map->cellHeight = cellHeight;
-			map->collisionRangeStart = 1;
-			map->collisionRangeEnd = 1;
 			map->xInWorld = 0;
 			map->yInWorld = 0;
 		} else {
@@ -42,47 +40,7 @@ JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-JamTileMap* jamLoadTileMap(const char *filename, uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
-	// Open the file and create the line for temporary storage and create the tile map
-	uint32 x, y;
-	FILE* file = fopen(filename, "r");
-	JamTileMap* map = jamCreateTileMap(width, height, cellWidth, cellHeight);
-
-	// Check it worked
-	if (map != NULL && file != NULL) {
-		// Load the map information from the file
-		for (y = 0; y < height; y++) {
-			for (x = 0; x < width; x++) {
-				if (fgetc(file) == '*')
-					jamSetMapPos(map, x, y, true);
-			}
-			if (fgetc(file) == '\r')
-				fgetc(file);
-		}
-
-		// Check if the file screwed up somehow
-		if (ferror(file) != 0) {
-			jSetError(ERROR_FILE_FAILED, "Could not load tile map from file (jamLoadTileMap).\n");
-			jamFreeTileMap(map);
-		}
-	} else {
-		if (map == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "Map could not be allocated (jamLoadTileMap).\n");
-		}
-		if (file == NULL) {
-			jSetError(ERROR_OPEN_FAILED, "File could not be opened (jamLoadTileMap).\n");
-		}
-		jamFreeTileMap(map);
-	}
-
-	fclose(file);
-
-	return map;
-}
-//////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////
-bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, uint16 val) {
+bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame* val) {
 	bool worked = false;
 
 	// Make sure the map is here
@@ -107,8 +65,8 @@ bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, uint16 val) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-uint16 jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y) {
-	uint16 val = 0;
+JamFrame* jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y) {
+	JamFrame* val = 0;
 
 	// Make sure the map is here
 	if (tileMap != NULL && tileMap->grid != NULL) {
@@ -142,10 +100,10 @@ bool jamCheckMapCollFast(JamTileMap *tileMap, int x, int y, int w, int h) {
 		// Now check for a collision by just checking each corner
 		if (x1 >= 0 && x1 < tileMap->width && y1 >= 0 && y1 < tileMap->height
 			&& x2 >= 0 && x2 < tileMap->width && y2 >= 0 && y2 < tileMap->height)
-			coll = ((tileMap->grid[y1 * tileMap->width + x1] >= tileMap->collisionRangeStart && tileMap->grid[y1 * tileMap->width + x1] <= tileMap->collisionRangeEnd) ||
-					(tileMap->grid[y1 * tileMap->width + x2] >= tileMap->collisionRangeStart && tileMap->grid[y1 * tileMap->width + x2] <= tileMap->collisionRangeEnd) ||
-					(tileMap->grid[y2 * tileMap->width + x1] >= tileMap->collisionRangeStart && tileMap->grid[y2 * tileMap->width + x1] <= tileMap->collisionRangeEnd) ||
-					(tileMap->grid[y2 * tileMap->width + x2] >= tileMap->collisionRangeStart && tileMap->grid[y2 * tileMap->width + x2] <= tileMap->collisionRangeEnd));
+			coll = ((tileMap->grid[y1 * tileMap->width + x1] != NULL) ||
+					(tileMap->grid[y1 * tileMap->width + x2] != NULL) ||
+					(tileMap->grid[y2 * tileMap->width + x1] != NULL) ||
+					(tileMap->grid[y2 * tileMap->width + x2] != NULL));
 	} else {
 		if (tileMap != NULL)
 			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamCheckMapCollFast).\n");
@@ -203,7 +161,7 @@ bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
 			for (i = 0; i < currentVertex && !coll; i++) {
 				// Make sure it's in bounds
 				if (verticesX[i] >= 0 && verticesX[i] < tileMap->width && verticesY[i] >= 0 && verticesY[i] < tileMap->height)
-					coll = tileMap->grid[verticesY[i] * tileMap->width + verticesX[i]] >= tileMap->collisionRangeStart && tileMap->grid[verticesY[i] * tileMap->width + verticesX[i]] <= tileMap->collisionRangeEnd;
+					coll = tileMap->grid[verticesY[i] * tileMap->width + verticesX[i]] != NULL;
 			}
 		} else {
 			jSetError(ERROR_OUT_OF_BOUNDS, "Rectangle  [%i, %i, %i, %i] requires too many vertices (jamCheckMapCollision)\n", x, y, w, h);

@@ -45,8 +45,10 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAsset
 				jamFreeSprite(handler->vals[exists]->spr, true, false);
 			else if (handler->vals[exists]->type == at_Entity)
 				jamFreeEntity(handler->vals[exists]->entity, false, false, false);
-			else
-				jamFreeTileMap(handler->vals[exists]->tileMap);
+			else if (handler->vals[exists]->type == at_World)
+				jamFreeWorld(handler->vals[exists]->world);
+			else if (handler->vals[exists]->type == at_AudioBuffer)
+				jamFreeAudioBuffer(handler->vals[exists]->buffer);
 
 			// Finally, we set the new value
 			handler->vals[exists] = asset;
@@ -99,8 +101,6 @@ JamAsset* createAsset(void* pointer, enum JamAssetType type) {
 			asset->hitbox = pointer;
 		if (type == at_Entity)
 			asset->entity = pointer;
-		if (type == at_TileMap)
-			asset->tileMap = pointer;
 		if (type == at_World)
 			asset->world = pointer;
 		if (type == at_AudioBuffer)
@@ -135,19 +135,6 @@ JamAssetHandler* jamCreateAssetHandler() {
 ///////////////////////////////////////////////////////////////
 
 //////////////////////// Functions that load individual pieces ////////////////////////
-void assetLoadTileMap(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
-	jamLoadAssetIntoHandler(
-			assetHandler,
-			createAsset(jamLoadTileMap(
-					jamGetKeyINI(ini, headerName, "file", ""),
-					(uint32) atof(jamGetKeyINI(ini, headerName, "grid_width", "0")),
-					(uint32) atof(jamGetKeyINI(ini, headerName, "grid_height", "0")),
-					(uint32) atof(jamGetKeyINI(ini, headerName, "cell_width", "0")),
-					(uint32) atof(jamGetKeyINI(ini, headerName, "cell_height", "0"))), at_TileMap),
-			(headerName + 1)
-	);
-}
-
 void assetLoadSprite(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	JamSprite* spr = jamLoadSpriteFromSheet(
 			jamGetTextureFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))),
@@ -283,12 +270,10 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 			}
 		}
 
-		// Phase 2: Tile maps and entities
+		// Phase 2: Entities
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], "texture_ids") != 0) {
-				if (ini->headerNames[i][0] == INI_TILEMAP_PREFIX) {
-					assetLoadTileMap(assetHandler, ini, ini->headerNames[i]);
-				} else if (ini->headerNames[i][0] == INI_ENTITY_PREFIX) {
+				if (ini->headerNames[i][0] == INI_ENTITY_PREFIX) {
 					assetLoadEntity(assetHandler, ini, ini->headerNames[i], map);
 				}
 			}
@@ -417,27 +402,6 @@ JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key) 
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamTileMap* jamGetTileMapFromHandler(JamAssetHandler *handler, JamAssetKey key) {
-	JamAsset* asset = jamGetAssetFromHandler(handler, key);
-	JamTileMap* returnVal = NULL;
-
-	if (handler != NULL) {
-		if (asset != NULL && asset->type == at_TileMap) {
-			returnVal = asset->tileMap;
-		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected tileMap (jamGetTileMapFromHandler)\n", key);
-		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find tileMap for key %s (jamGetTileMapFromHandler)\n", key);
-		}
-	} else {
-		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist(jamGetTileMapFromHandler)\n");
-	}
-
-	return returnVal;
-}
-///////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////
 JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamAudioBuffer* returnVal = NULL;
@@ -493,8 +457,6 @@ void jamFreeAssetHandler(JamAssetHandler *handler) {
 				jamFreeHitbox(handler->vals[i]->hitbox);
 			else if (handler->vals[i]->type == at_Entity)
 				jamFreeEntity(handler->vals[i]->entity, false, false, false);
-			else if (handler->vals[i]->type == at_TileMap)
-				jamFreeTileMap(handler->vals[i]->tileMap);
 			else if (handler->vals[i]->type == at_World)
 				jamFreeWorld(handler->vals[i]->world);
 			else if (handler->vals[i]->type == at_AudioBuffer)
