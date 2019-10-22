@@ -41,3 +41,5 @@ To-Do List
     + .ogg File Loading
  - Tile Maps
     + ***Convert to Frame Pointers***
+ - Worlds
+    + Make the type lists only account for in-range entities of that type

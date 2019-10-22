@@ -32,15 +32,13 @@
 /// that this was a choice deliberately made because the overhead of
 /// using malloc and pointers was much greater than a simple little array.
 ///
-/// Sidenote, as a byproduct of how memory is managed in this engine, worlds
-/// always free any entities inside them when it is time to be freed. This
-/// means a few things
+/// Here is a quick rundown on how worlds manage memory (besides them obviously
+/// cleaning up anything they themselves allocate like entity lists)
 ///
 /// + Entity sprites/hitboxes will ***NOT*** be freed by the world
-/// + It is safest to use copies of "base" entities so the world can go about freeing the copies
-/// and you can concern yourself only with handling the base ones/the base ones' assets
 /// + Always use copies when using an asset handler's entities (let the asset handler deal with its own memory)
 /// + If you don't use copies of "base" entities, just make sure you cleanup the sprites and hitboxes
+/// + JamWorlds are in charge of cleaning up any tile maps they hold, but not the internal frames of said tile map (use a JamAssetHandler)
 ///
 /// In general, the best practice is to use an AssetHandler and use copies
 /// of entities in world, as it makes it memory cleanup very clear. AssetHandler

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="6">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="9">
  <tileset firstgid="1" source="WallTilesetSprite.tsx"/>
  <tileset firstgid="49" source="Entities.tsx"/>
  <layer id="2" name="WallTilesetSprite" width="25" height="25">
@@ -15,9 +15,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,2,47,47,47,47,47,47,47,47,4,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,14,47,47,47,4,0,0,0,0,
+0,0,0,2,47,47,47,47,47,47,47,47,4,0,0,0,1,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -32,9 +32,8 @@
 </data>
  </layer>
  <objectgroup id="3" name="Object Layer 1">
-  <et_Object id="2" type="EnemyEntity" gid="49" x="144" y="208" width="16" height="16"/>
-  <et_Object id="3" type="EnemyEntity" gid="49" x="176" y="208" width="16" height="16"/>
-  <et_Object id="4" type="EnemyEntity" gid="49" x="112" y="208" width="16" height="16"/>
-  <et_Object id="5" type="PlayerEntity" gid="50" x="80" y="208" width="16" height="32"/>
+  <object id="6" type="PlayerEntity" gid="50" x="64" y="208" width="16" height="32"/>
+  <object id="7" type="EnemyEntity" gid="49" x="176" y="208" width="16" height="16"/>
+  <object id="8" type="EnemyEntity" gid="49" x="288" y="192" width="16" height="16"/>
  </objectgroup>
 </map>

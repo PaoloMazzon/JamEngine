@@ -36,9 +36,7 @@ JamWorld* jamCreateWorld() {
 			jamFreeWorld(world);
 		}
 	} else {
-		if (world == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "Could not allocate world (jamCreateWorld)\n");
-		}
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate world (jamCreateWorld)\n");
 	}
 
 	return world;
@@ -247,6 +245,10 @@ void jamFreeWorld(JamWorld *world) {
 		for (i = 0; i < world->worldEntities->size; i++)
 			if (world->worldEntities->entities[i] != NULL)
 				jamWorldRemoveEntity(world, world->worldEntities->entities[i]);
+
+		// Free the tile maps
+		for (i = 0; i < MAX_TILEMAPS; i++)
+			jamFreeTileMap(world->worldMaps[i]);
 
 		// There is a lot of lists to free
 		for (i = 0; i < MAX_ENTITY_TYPES; i++)

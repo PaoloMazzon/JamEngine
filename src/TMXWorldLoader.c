@@ -72,22 +72,26 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH, tmx_map* tmx) {
 	JamTileMap* map = jamCreateTileMap(mapW, mapH, tileW, tileH);
 	JamSprite* src = jamGetSpriteFromHandler(handler, layer->name);
+	JamSprite* currentSprite;
 	tmx_tile* tile;
+	bool mapLoadFailed = false;
 	uint32 i;
 
 	if (map != NULL && src != NULL) {
-		// Give the map some basic data
-		map->tileSheet = src;
-		map->collisionRangeStart = 1;
-		map->collisionRangeEnd = (uint16)src->animationLength;
-
 		// Loop through each tile on this layer and give it to the map
-		for (i = 0; i < mapW * mapH; i++) {
+		for (i = 0; (i < mapW * mapH) && (!mapLoadFailed); i++) {
 			tile = tmx_get_tile(tmx, (unsigned int) layer->content.gids[i]);
-			if (tile == NULL)
-				map->grid[i] = 0;
-			else
-				map->grid[i] = (uint16)(tile->id + 1);
+
+			// Find the frame in the handler and load it into the map
+			currentSprite = jamGetSpriteFromHandler(handler, tile->tileset->name);
+			if (currentSprite != NULL && tile->id < currentSprite->animationLength) {
+				map->grid[i] = currentSprite->frames[tile->id];
+			} else {
+				jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s contains tiles not present in the handler or the tile is out of range of the sprite");
+				mapLoadFailed = true;
+				jamFreeTileMap(map);
+				map = NULL;
+			}
 		}
 	} else {
 		fprintf(stderr, "Failed to create JamTileMap from name %s (createTileMapFromTMXLayer)\n", layer->name);
@@ -130,11 +134,7 @@ JamWorld* jamLoadWorldFromTMX(JamAssetHandler *handler, const char *tmxFilename)
 				if (currentTileMap != NULL) {
 					// Is there room in the world?
 					if (worldLayerPointer < MAX_TILEMAPS - 1) {
-						// Put the map into the world and throw it into the asset handler as well so it gets cleaned up later
 						world->worldMaps[worldLayerPointer++] = currentTileMap;
-						randomString = genRandomString();
-						jamLoadAssetIntoHandler(handler, createAsset(currentTileMap, at_TileMap), randomString);
-						jamThrowInGarbageINI(handler->localINI, randomString);
 					} else {
 						jamFreeTileMap(currentTileMap);
 						jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded because the world has no more map slots (jamLoadWorldFromTMX)\n", currentLayer->name);

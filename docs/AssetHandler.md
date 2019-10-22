@@ -4,10 +4,10 @@ To make loading many assets at once easier and more flexible,
 JamEngine provides the `JamAssetHandler`. Each (individual) handler
 can load a single .ini file containing all the data that handler
 needs to load for whatever scene you're on. As of right now, 
-handlers can load entities, textures, sprites, tilemaps,
-hitboxes (but it cannot load the vertices on a polygon hitbox),
-worlds, and audio buffers. The .ini files are expected to follow a 
-strict format to be loaded, however.
+handlers can load entities, textures, sprites, hitboxes (but it 
+cannot load the vertices on a polygon hitbox), worlds, and audio 
+buffers. The .ini files are expected to follow a strict format 
+to be loaded, however.
 
 This format is as follows
 
@@ -41,12 +41,6 @@ And here is a list of recognized keys for every asset type
    + `x_align` Horizontal offset of the animation in the spritesheet
    + `frame_delay` In-game frames between each animation frame
    + `looping` Weather or not the animation loops
- + Tile Maps ***(prefix = 'm')***
-   + `file` The file to load the map from (default="") (see `jamLoadTileMap`)
-   + `grid_width` How many tiles horizontally
-   + `grid_height` How many tiles vertically
-   + `cell_width` Width in pixels of each tile
-   + `cell_height` Height in pixels of each tile
  + Hitboxes ***(prefix = 'h')***
    + `type` Type of hitbox (default="rectangle") (types are rectangle, circle, and polygon)
    + `width` Width of a rectangular hitbox (default=0)
