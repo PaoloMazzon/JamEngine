@@ -31,10 +31,13 @@ Features
 
 To-Do List
 ==========
- - JamInput System
+ - Input
     + Gamepad input
  - Drawing functions
     + Draw shapes
-    + Vector images
  - Fonts
-    + TTF fonts
+    + ***TTF fonts***
+ - Audio
+    + .ogg File Loading
+ - Tile Maps
+    + ***Convert to Frame Pointers***
