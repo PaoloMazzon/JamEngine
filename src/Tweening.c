@@ -5,29 +5,40 @@
 #include <Tweening.h>
 #include "Tweening.h"
 
-static inline void _updatePos(float* pos, float increment) {
-	(*pos) += increment;
-	if (*pos > 1) (*pos) == 1;
+static inline float _updatePos(float pos, float increment) {
+	if (pos + increment > 1)
+		return 1;
+	else
+		return pos + increment;
 }
 
 ////////////////////////////////////////////////////////////////////
 double jamUpdateTweenLinear(JamTweeningState* state) {
-	_updatePos(&state->progress, state->progressPerStep);
+	state->progress = _updatePos(state->progress, state->progressPerStep);
 	return state->initialValue + (state->progress * (state->finalValue - state->initialValue));
 }
 ////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////
 double jamUpdateTweenParabolic(JamTweeningState* state) {
-	_updatePos(&state->progress, state->progressPerStep);
+	state->progress = _updatePos(state->progress, state->progressPerStep);
 	return state->initialValue + ((-pow(state->progress - 1, 2) + 1) * (state->finalValue - state->initialValue));
 }
 ////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////
 double jamUpdateTweenParabolicJump(JamTweeningState* state) {
-	_updatePos(&state->progress, state->progressPerStep);
-	return state->initialValue + (((841/720) - ((20/9) * pow(state->progress - (29/40), 2))) * (state->finalValue - state->initialValue));
+	state->progress = _updatePos(state->progress, state->progressPerStep);
+	return state->initialValue + ((1.168056 - (2.2222222 * pow(state->progress - 0.725, 2))) * (state->finalValue - state->initialValue));
+}
+////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////
+void jamReverseTween(JamTweeningState* state) {
+	double x = state->initialValue;
+	state->initialValue = state->finalValue;
+	state->finalValue = x;
+	state->progress = 0;
 }
 ////////////////////////////////////////////////////////////////////
 

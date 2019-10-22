@@ -6,6 +6,7 @@
 #include <time.h>
 #include <math.h>
 #include <Audio.h>
+#include <Tweening.h>
 #include "JamEngine.h"
 
 /////////////////// Constants ///////////////////

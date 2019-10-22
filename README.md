@@ -27,6 +27,7 @@ Features
  - SAT collisions and simple rectangle/circle collisions are interchangeable
  - Collision grids (`JamTileMap`) for lightning-fast grid-to-rectangle collisions (or just rendering tiles (or both))
  - 3D audio support through OpenAL
+ - Basic low-level tweening support for smooth animations 
 
 To-Do List
 ==========
