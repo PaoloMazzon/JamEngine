@@ -32,9 +32,9 @@ instead you can just load worlds from .tmx files using `jamLoadWorldFromTMX` Usi
 create worlds can make the level-building process much quicker, but using Tiled comes
 with a few caveats to be aware of due to the limitations of JamEngine
 
- + Each tile layer must be named after the tileset asset it uses (You can't use multiple tilesets on one tileset layer)
- + All entities in the world must be in an et_Object layer, but how many et_Object layers you have is irrelevant
- + Each entity (or et_Object in Tiled) must have its type be the same as its asset name
+ + Tileset layers can be whatever, but the tilesets must be named after the sprite they come from in the handler
+ + All entities in the world must be in an object layer, but how many object layers you have is irrelevant
+ + Each entity (or object in Tiled) must have its type be the same as its asset name
  + Only orthogonal worlds are supported, sorry isometric fans
 
 Tiled might take a bit of fiddling to get working properly for you, but it is very

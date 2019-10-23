@@ -39,7 +39,7 @@ To-Do List
     + ***TTF fonts***
  - Audio
     + .ogg File Loading
- - Tile Maps
-    + ***Convert to Frame Pointers***
+ - Tweening
+    + Make tweenstates based on specific graphs, each graph with an inverse
  - Worlds
     + Make the type lists only account for in-range entities of that type

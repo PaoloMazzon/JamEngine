@@ -41,7 +41,7 @@ double jamUpdateTweenParabolic(JamTweeningState* state);
 /// Once a tweening animation is finished, this will continually return final value
 double jamUpdateTweenParabolicJump(JamTweeningState* state);
 
-/// \brief Swaps the initial and final state then sets the progress to 0
+/// \brief Swaps the initial and final state then inverses the progress
 void jamReverseTween(JamTweeningState* state);
 
 /// \brief This essentially just says if progress is at 1 or not, made into a function for clarity in code

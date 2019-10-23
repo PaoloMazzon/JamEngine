@@ -82,11 +82,34 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 		self->sprite = jamGetSpriteFromHandler(gHandler, "PlayerJumpingSprite");
 }
 
+bool runGame(JamFont* font);
+
 /////////////////////////////////////// The main menu ///////////////////////////////////////
 bool runMenu(JamFont* font) { // Returns false if quit game
 	// Menu-related variables
 	bool play = false;
 	bool runLoop = true;
+	JamTexture* logoTex = jamLoadTexture("assets/jamengine.png");
+
+	// The menu buttons
+	JamTexture* playTex = jamLoadTexture("assets/playbutton.png");
+	JamTexture* exitTex = jamLoadTexture("assets/exitbutton.png");
+	JamTweeningState playTween;
+	JamTweeningState exitTween;
+	bool inPlayButtonPreviousFrame = false;
+	bool inExitButtonPreviousFrame = false;
+	bool inPlayButton = false;
+	bool inExitButton = false;
+	int playButtonY = GAME_HEIGHT - 96;
+	int exitButtonY = GAME_HEIGHT - 64;
+	playTween.initialValue = GAME_WIDTH - 160;
+	playTween.finalValue = GAME_WIDTH - 96;
+	playTween.progressPerStep = 0.05;
+	playTween.progress = 0;
+	exitTween.initialValue = GAME_WIDTH - 160;
+	exitTween.finalValue = GAME_WIDTH - 96;
+	exitTween.progressPerStep = 0.05;
+	exitTween.progress = 0;
 
 	while (runLoop) {
 		// Update the renderer and check for a quit signal
@@ -95,23 +118,37 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 		if (runLoop) {
 			jamDrawFillColour(255, 255, 255, 255);
 
-			// Display a simple message prompting play or quit
-			jamRenderFont(0, 0, "Press <ESC> to quit or <SPACE> to play.", font);
+			// Check if the mouse is in a button
+			inPlayButton = pointInRectangle(jamInputGetMouseX(), jamInputGetMouseY(), GAME_WIDTH - 172, playButtonY, 172, 32);
+			inExitButton = pointInRectangle(jamInputGetMouseX(), jamInputGetMouseY(), GAME_WIDTH - 172, exitButtonY, 172, 32);
 
-			// Now check out what the user wants to do
-			if (jamInputCheckKeyPressed(JAM_KB_ESCAPE)) {
-				// Just quit the game
-				runLoop = false;
-			} else if (jamInputCheckKeyPressed(JAM_KB_SPACE)) {
-				// Play the ever-exciting test game
-				runLoop = false;
-				play = true;
-			}
+			// Handle tweening changes
+			if (inPlayButton != inPlayButtonPreviousFrame)
+				jamReverseTween(&playTween);
+			if (inExitButton != inExitButtonPreviousFrame)
+				jamReverseTween(&exitTween);
 
+			// And button presses
+			if (jamInputCheckMouseButtonPressed(MOUSE_LEFT_BUTTON) && inPlayButton)
+				runLoop = runGame(font);
+			if (jamInputCheckMouseButtonPressed(MOUSE_LEFT_BUTTON) && inExitButton)
+				runLoop = false;
+
+			// Draw the buttons
+			jamDrawTexture(playTex, (sint32)jamUpdateTweenParabolicJump(&playTween), playButtonY);
+			jamDrawTexture(exitTex, (sint32)jamUpdateTweenParabolicJump(&exitTween), exitButtonY);
+
+			jamDrawTexture(logoTex, 0, 0);
+
+			inPlayButtonPreviousFrame = inPlayButton;
+			inExitButtonPreviousFrame = inExitButton;
 			jamProcEndFrame();
 		}
 	}
 
+	jamFreeTexture(playTex);
+	jamFreeTexture(exitTex);
+	jamFreeTexture(logoTex);
 	return play;
 }
 ////////////////////////////////////////// The game /////////////////////////////////////////

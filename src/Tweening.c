@@ -38,7 +38,7 @@ void jamReverseTween(JamTweeningState* state) {
 	double x = state->initialValue;
 	state->initialValue = state->finalValue;
 	state->finalValue = x;
-	state->progress = 0;
+	state->progress = 1 - state->progress;
 }
 ////////////////////////////////////////////////////////////////////
 

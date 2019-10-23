@@ -3,9 +3,9 @@
 /// \brief Declares the input handler and some functions to make it easier to use
 #pragma once
 #include "Constants.h"
-#define MOUSE_LEFT_BUTTON SDL_BUTTON(1)
-#define MOUSE_MIDDLE_BUTTON SDL_BUTTON(2)
-#define MOUSE_RIGHT_BUTTON SDL_BUTTON(3)
+#define MOUSE_LEFT_BUTTON 1
+#define MOUSE_MIDDLE_BUTTON 2
+#define MOUSE_RIGHT_BUTTON 4
 
 /// \brief The keyboard bindings needed to check keyboard presses
 ///
