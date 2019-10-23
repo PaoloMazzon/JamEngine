@@ -71,13 +71,12 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 // This function is meant for jamLoadWorldFromTMX and is not safe to call
 JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH, tmx_map* tmx) {
 	JamTileMap* map = jamCreateTileMap(mapW, mapH, tileW, tileH);
-	JamSprite* src = jamGetSpriteFromHandler(handler, layer->name);
 	JamSprite* currentSprite;
 	tmx_tile* tile;
 	bool mapLoadFailed = false;
 	uint32 i;
 
-	if (map != NULL && src != NULL) {
+	if (map != NULL) {
 		// Loop through each tile on this layer and give it to the map
 		for (i = 0; (i < mapW * mapH) && (!mapLoadFailed); i++) {
 			tile = tmx_get_tile(tmx, (unsigned int) layer->content.gids[i]);

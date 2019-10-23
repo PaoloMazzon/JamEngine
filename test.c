@@ -18,6 +18,8 @@
 #define BLOCK_WIDTH 16
 #define BLOCK_HEIGHT 16
 
+JamAssetHandler* gHandler;
+
 // Takes a number and returns either -1, 1, or 0 depending on weather its positive negative or neither
 static inline double sign(double number) {
 	if (number > 0)
@@ -69,15 +71,15 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 		self->scaleX = 1;
 	else if (self->hSpeed < 0)
 		self->scaleX = -1;
-	/*
+
 	// Walking/standing animations
 	if (self->hSpeed != 0)
-		self->sprite = sPlayerMove;
+		self->sprite = jamGetSpriteFromHandler(gHandler, "PlayerMovingSprite");
 	else
-		self->sprite = sPlayerStand;
+		self->sprite = jamGetSpriteFromHandler(gHandler, "PlayerStandingSprite");
 
-	if (!jamCheckEntityTileMapCollision(self, currentLevel, self->x, self->y + 1))
-		self->sprite = sPlayerJump;*/
+	if (!jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + 1))
+		self->sprite = jamGetSpriteFromHandler(gHandler, "PlayerJumpingSprite");
 }
 
 /////////////////////////////////////// The main menu ///////////////////////////////////////
@@ -124,13 +126,13 @@ bool runGame(JamFont* font) {
 	jamAddBehaviourToMap(bMap, "PlayerBehaviour", NULL, NULL, onPlayerFrame, NULL);
 
 	// Load the assets and create the world
-	JamAssetHandler* handler = jamCreateAssetHandler();
-	jamAssetLoadINI(handler, "assets/level0.ini", bMap);
-	JamWorld* gameWorld = jamGetWorldFromHandler(handler, "GameWorld");
+	gHandler = jamCreateAssetHandler();
+	jamAssetLoadINI(gHandler, "assets/level0.ini", bMap);
+	JamWorld* gameWorld = jamGetWorldFromHandler(gHandler, "GameWorld");
 
 	// Some setup
 	jamRendererSetCameraPos(50, 50);
-	JamAudioBuffer* sound = jamGetAudioBufferFromHandler(handler, "PopSound");
+	JamAudioBuffer* sound = jamGetAudioBufferFromHandler(gHandler, "PopSound");
 	JamAudioSource* source = jamCreateAudioSource();
 
 	// We don't really care what went wrong, but if something went wrong while
@@ -180,7 +182,7 @@ bool runGame(JamFont* font) {
 	}
 
 	// Free up the resources
-	jamFreeAssetHandler(handler);
+	jamFreeAssetHandler(gHandler);
 	jamFreeBehaviourMap(bMap);
 
 	// Test stuff
