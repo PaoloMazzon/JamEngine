@@ -82,15 +82,18 @@ JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer
 		for (i = 0; (i < mapW * mapH) && (!mapLoadFailed); i++) {
 			tile = tmx_get_tile(tmx, (unsigned int) layer->content.gids[i]);
 
-			// Find the frame in the handler and load it into the map
-			currentSprite = jamGetSpriteFromHandler(handler, tile->tileset->name);
-			if (currentSprite != NULL && tile->id < currentSprite->animationLength) {
-				map->grid[i] = currentSprite->frames[tile->id];
-			} else {
-				jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s contains tiles not present in the handler or the tile is out of range of the sprite");
-				mapLoadFailed = true;
-				jamFreeTileMap(map);
-				map = NULL;
+			if (tile != NULL) {
+				// Find the frame in the handler and load it into the map
+				currentSprite = jamGetSpriteFromHandler(handler, tile->tileset->name);
+				if (currentSprite != NULL && tile->id < currentSprite->animationLength) {
+					map->grid[i] = currentSprite->frames[tile->id];
+				} else {
+					jSetError(ERROR_TMX_TILEMAP_ERROR,
+							  "Tile layer %s contains tiles not present in the handler or the tile is out of range of the sprite");
+					mapLoadFailed = true;
+					jamFreeTileMap(map);
+					map = NULL;
+				}
 			}
 		}
 	} else {

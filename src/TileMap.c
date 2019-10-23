@@ -8,6 +8,7 @@
 #include <TileMap.h>
 #include "JamError.h"
 #include <math.h>
+#include <Sprite.h>
 
 //////////////////////////////////////////////////////////
 JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
@@ -177,6 +178,141 @@ bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
 	return coll;
 }
 //////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+void jamAutoTileMap(JamTileMap *map, JamSprite *spr) {
+	uint32 i, j;
+	bool n, e, s, w, ne, nw, se, sw;
+	int frame;
+
+	// First confirm the things exist
+	if (spr != NULL && map != NULL && (spr->animationLength == 48 || spr->animationLength == 47)) {
+
+		// We gotta run through every cell
+		for (i = map->height - 1; i >= 0; i--) {
+			for (j = 0; j < map->width; j++) {
+				if (jamGetMapPos(map, j, i)) {
+					// Where there are adjacent tiles
+					w = (jamGetMapPos(map, j - 1, i) != NULL);
+					e = (jamGetMapPos(map, j + 1, i) != NULL);
+					n = (jamGetMapPos(map, j, i - 1) != NULL);
+					s = (jamGetMapPos(map, j, i + 1) != NULL);
+					ne = (jamGetMapPos(map, j + 1, i - 1) != NULL);
+					nw = (jamGetMapPos(map, j - 1, i - 1) != NULL);
+					se = (jamGetMapPos(map, j + 1, i + 1) != NULL);
+					sw = (jamGetMapPos(map, j - 1, i + 1) != NULL);
+
+					// Calculate the tile
+					if (!w && !e && !s && n/* && !nw && !ne && !se && !sw*/) {
+						frame = 0;
+					} else if (!w && e && !s && !n/* && !nw && !ne && !se && !sw*/) {
+						frame = 1;
+					} else if (!w && !e && s && !n/* && !nw && !ne && !se && !sw*/) {
+						frame = 2;
+					} else if (w && !e && !s && !n/* && !nw && !ne && !se && !sw*/) {
+						frame = 3;
+					} else if (!w && e && !s && n && !ne) {
+						frame = 4;
+					} else if (!w && e && s && !n && !se) {
+						frame = 5;
+					} else if (w && !e && s && !n && !sw) {
+						frame = 6;
+					} else if (w && !e && !s && n && !nw) {
+						frame = 7;
+					} else if (!w && e && !s && n && ne && !sw) {
+						frame = 8;
+					} else if (!w && e && s && !n && se) {//(!w && e && s && !n && !nw && !ne && se && !sw) {
+						frame = 9;
+					} else if (w && !e && s && !n && sw) {
+						frame = 10;
+					} else if (w && !e && !s && n && nw) {
+						frame = 11;
+					} else if (!w && e && s && n && !ne && !se) {
+						frame = 12;
+					} else if (w && e && s && !n && !se && !sw) {
+						frame = 13;
+					} else if (w && !e && s && n && !nw && !sw) {
+						frame = 14;
+					} else if (w && e && !s && n && !nw && !ne) {
+						frame = 15;
+					} else if (!w && e && s && n && ne && !se) {
+						frame = 16;
+					} else if (!w && e && s && n && !ne && se) {
+						frame = 17;
+					} else if (!w && e && s && n && ne && se) {
+						frame = 18;
+					} else if (w && e && s && !n && se && !sw) {
+						frame = 19;
+					} else if (w && e && s && !n && !nw && !se) {
+						frame = 20;
+					} else if (w && e && s && !n && se && sw) {
+						frame = 21;
+					} else if (w && !e && s && n && !nw && sw) {
+						frame = 22;
+					} else if (w && !e && s && n && nw && !sw) {
+						frame = 23;
+					} else if (w && !e && s && n && nw && sw) {
+						frame = 24;
+					} else if (w && e && !s && n && !nw && ne) {
+						frame = 25;
+					} else if (w && e && !s && n && nw && !ne) {
+						frame = 26;
+					} else if (w && e && !s && n && nw && ne) {
+						frame = 27;
+					} else if (w && e && s && n && !nw && !ne && !se && !sw) {
+						frame = 28;
+					} else if (w && e && s && n && !nw && ne && !se && !sw) {
+						frame = 29;
+					} else if (w && e && s && n && !nw && !ne && se && !sw) {
+						frame = 30;
+					} else if (w && e && s && n && !nw && !ne && !se && sw) {
+						frame = 31;
+					} else if (w && e && s && n && nw && !ne && !se && !sw) {
+						frame = 32;
+					} else if (w && e && s && n && !nw && ne && se && !sw) {
+						frame = 33;
+					} else if (w && e && s && n && !nw && !ne && se && sw) {
+						frame = 34;
+					} else if (w && e && s && n && nw && !ne && !se && sw) {
+						frame = 35;
+					} else if (w && e && s && n && nw && ne && !se && !sw) {
+						frame = 36;
+					} else if (w && e && s && n && !nw && ne && !se && sw) {
+						frame = 37;
+					} else if (w && e && s && n && nw && !ne && se && !sw) {
+						frame = 38;
+					} else if (w && e && s && n && !nw && ne && se && sw) {
+						frame = 39;
+					} else if (w && e && s && n && nw && ne && se && !sw) {
+						frame = 40;
+					} else if (w && e && s && n && nw && ne && !se && sw) {
+						frame = 41;
+					} else if (w && e && s && n && nw && !ne && se && sw) {
+						frame = 42;
+					} else if (w && e && s && n && nw && ne && se && sw) {
+						frame = 43;
+					} else if (!w && !e && s && n/* && !nw && !ne && !se && !sw*/) {
+						frame = 45;
+					} else if (w && e && !s && !n/* && !nw && !ne && !se && !sw*/) {
+						frame = 46;
+					} else { // No blocks around
+						frame = 44;
+					}
+
+					jamSetMapPos(map, j, i, spr->frames[frame]);
+				}
+			}
+		}
+	} else {
+		if (map == NULL)
+			jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamDrawSortedMap)\n");
+		if (spr == NULL)
+			jSetError(ERROR_NULL_POINTER, "JamSprite doesn't exist (jamDrawSortedMap)\n");
+		else if (!(spr->animationLength == 48 || spr->animationLength == 47))
+			jSetError(ERROR_INCORRECT_FORMAT, "JamSprite does not contain 48 frames(jamDrawSortedMap)\n");
+	}
+}
+//////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
 void jamFreeTileMap(JamTileMap *tileMap) {

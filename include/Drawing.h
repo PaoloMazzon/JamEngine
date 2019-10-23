@@ -38,22 +38,6 @@ void jamDrawPolygon(JamPolygon *poly, int x, int y);
 /// \throws ERROR_NULL_POINTER
 void jamDrawTexture(JamTexture *texture, sint32 x, sint32 y);
 
-/// \brief Draws a tile map using an 48-frame sprite
-///
-/// This function serves double purpose in that will auto-tile and draw the
-/// map, but it will also save the auto-tile information/sprite to the renderer
-/// so you can just use drawTileMap in the future and it will not need to re-do
-/// the auto-tiling, it just needs to draw the map. For this reason, you're
-/// usually better off letting this function draw the whole tilemap even though
-/// you may not need the whole thing yet just so you can have the auto-tile ready
-/// for later. NOTE: This also has the side effect of making the collision range
-/// 1-48 (all "true" values)
-///
-/// \throws ERROR_NULL_POINTER
-/// \throws ERROR_INCORRECT_FORMAT
-void jamDrawSortedMap(JamSprite *spr, JamTileMap *map, int x, int y, uint32 startingCellX,
-					  uint32 startingCellY);
-
 /// \brief Draws a tilemap using its map as it's sprite frames
 ///
 /// This function draws a TileMap using the TileMap's sprite as the thing to draw

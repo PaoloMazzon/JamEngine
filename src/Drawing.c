@@ -129,176 +129,20 @@ void jamDrawTexture(JamTexture *texture, sint32 x, sint32 y) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamDrawSortedMap(JamSprite *spr, JamTileMap *map, int x, int y, uint32 startingCellX,
-					  uint32 startingCellY) {
-	int i, j;
-	bool n, e, s, w, ne, nw, se, sw;
-	int frame;
-	jamCalculateForCamera(&x, &y);
-
-	// First confirm the things exist
-	if (jamRendererGetInternalRenderer() != NULL && spr != NULL && map != NULL && (spr->animationLength == 48 || spr->animationLength == 47)) {
-		// Save this tileset to the tilemap
-		map->tileSheet = spr;
-		map->collisionRangeStart = 1;
-		map->collisionRangeEnd = 48;
-
-		// We gotta run through every cell
-		for (i = map->height - 1; i >= 0; i--) {
-			for (j = 0; j < map->width; j++) {
-				if (jamGetMapPos(map, (uint32) j, (uint32) i)) {
-					// Where there are adjacent tiles
-					w = (jamGetMapPos(map, (uint32) j - 1, (uint32) i) >= map->collisionRangeStart &&
-							jamGetMapPos(map, (uint32) j - 1, (uint32) i) <= map->collisionRangeEnd);
-					e = (jamGetMapPos(map, (uint32) j + 1, (uint32) i) >= map->collisionRangeStart &&
-							jamGetMapPos(map, (uint32) j + 1, (uint32) i) <= map->collisionRangeEnd);
-					n = (jamGetMapPos(map, (uint32) j, (uint32) i - 1) >= map->collisionRangeStart &&
-							jamGetMapPos(map, (uint32) j, (uint32) i - 1) <= map->collisionRangeEnd);
-					s = (jamGetMapPos(map, (uint32) j, (uint32) i + 1) >= map->collisionRangeStart &&
-							jamGetMapPos(map, (uint32) j, (uint32) i + 1) <= map->collisionRangeEnd);
-					ne = (jamGetMapPos(map, (uint32) j + 1, (uint32) i - 1) >= map->collisionRangeStart &&
-							jamGetMapPos(map, (uint32) j + 1, (uint32) i - 1) <= map->collisionRangeEnd);
-					nw = (jamGetMapPos(map, (uint32) j - 1, (uint32) i - 1) >= map->collisionRangeStart &&
-							jamGetMapPos(map, (uint32) j - 1, (uint32) i - 1) <= map->collisionRangeEnd);
-					se = (jamGetMapPos(map, (uint32) j + 1, (uint32) i + 1) >= map->collisionRangeStart &&
-							jamGetMapPos(map, (uint32) j + 1, (uint32) i + 1) <= map->collisionRangeEnd);
-					sw = (jamGetMapPos(map, (uint32) j - 1, (uint32) i + 1) >= map->collisionRangeStart &&
-							jamGetMapPos(map, (uint32) j - 1, (uint32) i + 1) <= map->collisionRangeEnd);
-
-					// Calculate the tile
-					if (!w && !e && !s && n/* && !nw && !ne && !se && !sw*/) {
-						frame = 0;
-					} else if (!w && e && !s && !n/* && !nw && !ne && !se && !sw*/) {
-						frame = 1;
-					} else if (!w && !e && s && !n/* && !nw && !ne && !se && !sw*/) {
-						frame = 2;
-					} else if (w && !e && !s && !n/* && !nw && !ne && !se && !sw*/) {
-						frame = 3;
-					} else if (!w && e && !s && n && !ne) {
-						frame = 4;
-					} else if (!w && e && s && !n && !se) {
-						frame = 5;
-					} else if (w && !e && s && !n && !sw) {
-						frame = 6;
-					} else if (w && !e && !s && n && !nw) {
-						frame = 7;
-					} else if (!w && e && !s && n && ne && !sw) {
-						frame = 8;
-					} else if (!w && e && s && !n && se) {//(!w && e && s && !n && !nw && !ne && se && !sw) {
-						frame = 9;
-					} else if (w && !e && s && !n && sw) {
-						frame = 10;
-					} else if (w && !e && !s && n && nw) {
-						frame = 11;
-					} else if (!w && e && s && n && !ne && !se) {
-						frame = 12;
-					} else if (w && e && s && !n && !se && !sw) {
-						frame = 13;
-					} else if (w && !e && s && n && !nw && !sw) {
-						frame = 14;
-					} else if (w && e && !s && n && !nw && !ne) {
-						frame = 15;
-					} else if (!w && e && s && n && ne && !se) {
-						frame = 16;
-					} else if (!w && e && s && n && !ne && se) {
-						frame = 17;
-					} else if (!w && e && s && n && ne && se) {
-						frame = 18;
-					} else if (w && e && s && !n && se && !sw) {
-						frame = 19;
-					} else if (w && e && s && !n && !nw && !se) {
-						frame = 20;
-					} else if (w && e && s && !n && se && sw) {
-						frame = 21;
-					} else if (w && !e && s && n && !nw && sw) {
-						frame = 22;
-					} else if (w && !e && s && n && nw && !sw) {
-						frame = 23;
-					} else if (w && !e && s && n && nw && sw) {
-						frame = 24;
-					} else if (w && e && !s && n && !nw && ne) {
-						frame = 25;
-					} else if (w && e && !s && n && nw && !ne) {
-						frame = 26;
-					} else if (w && e && !s && n && nw && ne) {
-						frame = 27;
-					} else if (w && e && s && n && !nw && !ne && !se && !sw) {
-						frame = 28;
-					} else if (w && e && s && n && !nw && ne && !se && !sw) {
-						frame = 29;
-					} else if (w && e && s && n && !nw && !ne && se && !sw) {
-						frame = 30;
-					} else if (w && e && s && n && !nw && !ne && !se && sw) {
-						frame = 31;
-					} else if (w && e && s && n && nw && !ne && !se && !sw) {
-						frame = 32;
-					} else if (w && e && s && n && !nw && ne && se && !sw) {
-						frame = 33;
-					} else if (w && e && s && n && !nw && !ne && se && sw) {
-						frame = 34;
-					} else if (w && e && s && n && nw && !ne && !se && sw) {
-						frame = 35;
-					} else if (w && e && s && n && nw && ne && !se && !sw) {
-						frame = 36;
-					} else if (w && e && s && n && !nw && ne && !se && sw) {
-						frame = 37;
-					} else if (w && e && s && n && nw && !ne && se && !sw) {
-						frame = 38;
-					} else if (w && e && s && n && !nw && ne && se && sw) {
-						frame = 39;
-					} else if (w && e && s && n && nw && ne && se && !sw) {
-						frame = 40;
-					} else if (w && e && s && n && nw && ne && !se && sw) {
-						frame = 41;
-					} else if (w && e && s && n && nw && !ne && se && sw) {
-						frame = 42;
-					} else if (w && e && s && n && nw && ne && se && sw) {
-						frame = 43;
-					} else if (!w && !e && s && n/* && !nw && !ne && !se && !sw*/) {
-						frame = 45;
-					} else if (w && e && !s && !n/* && !nw && !ne && !se && !sw*/) {
-						frame = 46;
-					} else { // No blocks around
-						frame = 44;
-					}
-
-					jamSetMapPos(map, (uint16) j, (uint16) i, (uint16) (frame + 1));
-					jamDrawSpriteFrame(spr, x + (j * map->cellWidth + startingCellX),
-									   y + (i * map->cellHeight + startingCellY), 1, 1, 0, 255, (uint32) frame);
-				}
-			}
-		}
-	} else {
-		if (jamRendererGetInternalRenderer() == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamRenderer doesn't exist (jamDrawSortedMap)\n");
-		}
-		if (map == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamDrawSortedMap)\n");
-		}
-		if (spr == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamSprite doesn't exist (jamDrawSortedMap)\n");
-		} else if (!(spr->animationLength == 48 || spr->animationLength == 47)) {
-			jSetError(ERROR_INCORRECT_FORMAT, "JamSprite does not contain 48 frames(jamDrawSortedMap)\n");
-		}
-	}
-}
-//////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////
 void jamDrawTileMap(JamTileMap *map, int x, int y, uint32 xInMapStart, uint32 yInMapStart,
 					uint32 xInMapFinish, uint32 yInMapFinish) {
 	int i, j, originalX;
 	originalX = x;
-	uint32 val;
-	if (jamRendererGetInternalRenderer() != NULL && map != NULL && map->tileSheet != NULL) {
+	JamFrame* val;
+	if (jamRendererGetInternalRenderer() != NULL && map != NULL) {
 		if (xInMapFinish == 0) xInMapFinish = map->width - 1;
 		if (yInMapFinish == 0) yInMapFinish = map->height - 1;
 
 		for (i = yInMapStart; i <= yInMapFinish; i++) {
 			for (j = xInMapStart; j <= xInMapFinish; j++) {
-				val = (uint32) jamGetMapPos(map, (uint16) j, (uint16) i);
-				if (val > 0)
-					jamDrawSpriteFrame(map->tileSheet, x, y, 1, 1, 0, 255, val - 1);
+				val = jamGetMapPos(map, (uint16) j, (uint16) i);
+				if (val != NULL)
+					jamDrawFrame(val, x, y);
 				x += map->cellWidth;
 			}
 			x = originalX;
@@ -309,8 +153,6 @@ void jamDrawTileMap(JamTileMap *map, int x, int y, uint32 xInMapStart, uint32 yI
 			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamDrawTileMap)\n");
 		if (map == NULL)
 			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamDrawTileMap)\n");
-		if (map != NULL && map->tileSheet == NULL)
-			jSetError(ERROR_NULL_POINTER, "Internal tilesheet does not exist (jamDrawTileMap)\n");
 	}
 }
 //////////////////////////////////////////////////////////////

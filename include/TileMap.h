@@ -23,6 +23,12 @@
 /// you can technically just set the pointers to something, but its dangerous.
 /// Instead, it would be wiser to create an empty frame struct and assign that
 /// just in case you later try to access it and get a segfault.
+///
+/// Although you can set any grid spot to any arbitrary frame (including NULL
+/// pointers), you are best off making sure each frame is exactly cellWidth width
+/// and cellHeight height. If frames in the grid do not match the expected cellWidth
+/// and cellHeight, you will more likely than not get really wonky collisions and
+/// strange rendering.
 typedef struct {
 	int xInWorld;               ///< X position in the world of the grid (for collisions only, drawing ignores this)
 	int yInWorld;               ///< Y position in the world of the grid (for collisions only, drawing ignores this)
@@ -49,6 +55,23 @@ bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame* val);
 /// \brief Gets a position in a tile map
 /// \throws ERROR_NULL_POINTER
 JamFrame* jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y);
+
+/// \brief Auto-tiles a tile map using a 48-frame sprite
+///
+/// This function takes a 48-frame spritesheet and automatically places
+/// the frame in their proper spot in the map; it automatically sorts the
+/// tiles so that they all look in place. It is incredibly useful for quick
+/// mock-up projects and things like roguelikes that randomly generate their
+/// levels.
+///
+/// This function only checks if a map spot is not NULL to check for a spot,
+/// it does not care about anything past that. This means it is safe
+/// to use a dummy frame to denote a tile, or even just random data since
+/// this function will never access data inside the pointers in the grid.
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_INCORRECT_FORMAT
+void jamAutoTileMap(JamTileMap *map, JamSprite *spr);
 
 /// \brief Checks For a collision
 ///
