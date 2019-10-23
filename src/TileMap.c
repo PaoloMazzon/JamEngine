@@ -189,9 +189,9 @@ void jamAutoTileMap(JamTileMap *map, JamSprite *spr) {
 	if (spr != NULL && map != NULL && (spr->animationLength == 48 || spr->animationLength == 47)) {
 
 		// We gotta run through every cell
-		for (i = map->height - 1; i >= 0; i--) {
+		for (i = 0; i < map->height; i++) {
 			for (j = 0; j < map->width; j++) {
-				if (jamGetMapPos(map, j, i)) {
+				if (jamGetMapPos(map, j, i) != NULL) {
 					// Where there are adjacent tiles
 					w = (jamGetMapPos(map, j - 1, i) != NULL);
 					e = (jamGetMapPos(map, j + 1, i) != NULL);
