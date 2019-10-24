@@ -432,6 +432,7 @@ double jamRendererGetDelta() {
 /////////////////////////////////////////////////////////////
 void jamProcEndFrame() {
 	SDL_Rect rect;
+	Uint8 r, g, b, a;
 
 	// The preliminary check
 	if (gRenderer != NULL) {
@@ -445,6 +446,16 @@ void jamProcEndFrame() {
 
 		// Draw the texture to screen
 		SDL_RenderCopy(gRenderer->internalRenderer, gRenderer->screenBuffer->tex, NULL, &rect);
+
+		// Draw a white border around the drawn screen
+		rect.x = gRenderer->displayBufferX - 1;
+		rect.y = gRenderer->displayBufferY - 1;
+		rect.w = gRenderer->displayBufferW + 2;
+		rect.h = gRenderer->displayBufferH + 2;
+		SDL_GetRenderDrawColor(gRenderer->internalRenderer, &r, &g, &b, &a);
+		SDL_SetRenderDrawColor(gRenderer->internalRenderer, 255, 255, 255, 255);
+		SDL_RenderDrawRect(gRenderer->internalRenderer, &rect);
+		SDL_SetRenderDrawColor(gRenderer->internalRenderer, r, g, b, a);
 
 		// Update the screen
 		SDL_RenderPresent(gRenderer->internalRenderer);
