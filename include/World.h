@@ -61,7 +61,7 @@ typedef struct _JamWorld {
 
 	// Higher-level abstractions - everything here is stored in core data
 	JamEntityList* entityByRange[2]; ///< List of lists of entities that are in or out of range
-	JamEntityList* entityTypes[MAX_ENTITY_TYPES]; ///< List of lists of entities by type, sorted by the world
+	JamEntityList* entityTypes[MAX_ENTITY_TYPES]; ///< List of lists of entities by type, sorted by the world. Everything in this list is also in the in-range list
 	JamFilterType distanceFilteringType; ///< Do we filter entities by ones on screen or by a given distance?
 
 	// Information needed for filtering entities

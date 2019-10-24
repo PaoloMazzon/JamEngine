@@ -166,7 +166,7 @@ void jamWorldRotateEntity(JamWorld *world, JamEntity *entity) {
 	int i = 0;
 	bool found = false;
 
-	if (world != NULL) {
+	if (world != NULL && entity != NULL) {
 		// Find the entity in the in range list, if it's not there we don't need to do anything
 		while (i < world->entityByRange[ENTITIES_IN_RANGE]->size && !found) {
 			if (world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == entity) {
@@ -176,16 +176,28 @@ void jamWorldRotateEntity(JamWorld *world, JamEntity *entity) {
 			}
 			i++;
 		}
+
+		// If we found it also remove it from the in-range list
+		for (i = 0; i < world->entityTypes[entity->type]->size && found; i++) {
+			if (world->entityTypes[entity->type]->entities[i] == entity) {
+				world->entityTypes[entity->type]->entities[i] = NULL;
+				found = false;
+			}
+		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldRotateEntity)\n");
+		if (world == NULL)
+			jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldRotateEntity)\n");
+		if (entity == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity does not exist");
 	}
 }
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
 void jamFilterEntitiesByProximity(JamWorld *world, int pointX, int pointY) {
-	uint32 i;
+	uint32 i, j;
 	JamEntity* entity;
+	bool foundInTypeList = false;
 
 	if (world != NULL) {
 		// Essentially the same code for the two different types of ranges b/c
@@ -198,6 +210,15 @@ void jamFilterEntitiesByProximity(JamWorld *world, int pointX, int pointY) {
 														pointX, pointY, world->inRangeRectangleWidth, world->inRangeRectangleHeight)) {
 					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
 					jamAddEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
+
+					// Find it in the type list and remove it
+					foundInTypeList = false;
+					for (j = 0; (j < world->entityTypes[entity->type]->size && !foundInTypeList); j++) {
+						if (entity == world->entityTypes[entity->type]->entities[j]) {
+							world->entityTypes[entity->type]->entities[j] = NULL;
+							foundInTypeList = true;
+						}
+					}
 				}
 			}
 
@@ -208,6 +229,7 @@ void jamFilterEntitiesByProximity(JamWorld *world, int pointX, int pointY) {
 														pointX, pointY, world->inRangeRectangleWidth, world->inRangeRectangleHeight)) {
 					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] = NULL;
 					jamAddEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
+					jamAddEntityToList(world->entityTypes[entity->type], entity);
 				}
 			}
 		} else {
@@ -218,6 +240,15 @@ void jamFilterEntitiesByProximity(JamWorld *world, int pointX, int pointY) {
 														pointX, pointY, world->inRangeRadius)) {
 					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
 					jamAddEntityToList(world->entityByRange[ENTITIES_OUT_OF_RANGE], entity);
+
+					// Find it in the type list and remove it
+					foundInTypeList = false;
+					for (j = 0; (j < world->entityTypes[entity->type]->size && !foundInTypeList); j++) {
+						if (entity == world->entityTypes[entity->type]->entities[j]) {
+							world->entityTypes[entity->type]->entities[j] = NULL;
+							foundInTypeList = true;
+						}
+					}
 				}
 			}
 

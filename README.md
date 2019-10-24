@@ -41,5 +41,5 @@ To-Do List
     + .ogg File Loading
  - Tweening
     + Make tweenstates based on specific graphs, each graph with an inverse
- - Worlds
-    + Make the type lists only account for in-range entities of that type
+ - Asset Handler
+    + Load world filter settings

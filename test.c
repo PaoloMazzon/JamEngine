@@ -7,6 +7,7 @@
 #include <math.h>
 #include <Audio.h>
 #include <Tweening.h>
+#include <EntityList.h>
 #include "JamEngine.h"
 
 /////////////////// Constants ///////////////////
@@ -31,6 +32,8 @@ static inline double sign(double number) {
 }
 
 void onPlayerFrame(JamWorld* world, JamEntity* self) {
+	int i;
+
 	// Gravity
 	self->vSpeed += 0.5;
 
@@ -203,11 +206,6 @@ bool runGame(JamFont* font) {
 					if (gameWorld->worldMaps[i] != NULL)
 						jamDrawTileMap(gameWorld->worldMaps[i], 0, 0, 0, 0, 0, 0);
 				jamWorldProcFrame(gameWorld);
-
-				// Draw a border around the screen
-				jamDrawSetColour(255, 255, 255, 255);
-				jamDrawRectangle(0, 0, GAME_WIDTH, GAME_HEIGHT);
-				jamDrawSetColour(0, 0, 0, 255);
 
 				// Debug
 				jamRenderFontExt(16, 16, "FPS: %f\nDelta: %f", font, 999, jamRendererGetFramerate(), jamRendererGetDelta());
