@@ -36,10 +36,8 @@ To-Do List
  - Drawing functions
     + Draw shapes
  - Fonts
-    + ***TTF fonts***
+    + TTF fonts
  - Audio
     + .ogg File Loading
- - Tweening
-    + Make tweenstates based on specific graphs, each graph with an inverse
  - Asset Handler
     + Load world filter settings

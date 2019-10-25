@@ -12,8 +12,9 @@
 /// \brief The information on a tween, which is manipulated by jamUpdateTween* functions
 ///
 /// Typically, you create this struct not as a pointer and just pass by reference to the
-/// functions (`jamUpdateTweenLinearForward(&myState);`). This means you must set the
-/// values yourself. Currently, there are only three different kinds of tweening animations
+/// functions (`jamUpdateTweenLinearForward(&myState);`). You can update the internal values
+/// all you want but it is recommended you stick to these functions.
+/// Currently, there are only three different kinds of tweening animations
 /// supported, but it is really simple to add more. Internally, the tweening update functions
 /// just plot a graph using JamTweeningState.progress as x.
 typedef struct {
@@ -21,7 +22,12 @@ typedef struct {
 	float progressPerStep; ///< The progress to increment each time a tweening function is called in percentage
 	double initialValue; ///< The value the tween should start at (in whatever unit you're using)
 	double finalValue; ///< The final value the tween should end at (in whatever unit you're using)
+	double tempValue; ///< Temporary value that is used to reverse the tween smoothly
+	bool usingTempVal; ///< Weather or not its currently using the temp value
 } JamTweeningState;
+
+/// \brief Sets all the values automatically
+void jamInitTween(JamTweeningState* state, float progressPerStep, double initialValue, double finalValue);
 
 /// \brief Updates a tweening state using a positive-slope linear graph
 /// \return The current value the tween is at in the animation

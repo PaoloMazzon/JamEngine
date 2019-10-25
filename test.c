@@ -99,20 +99,14 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 	JamTexture* exitTex = jamLoadTexture("assets/exitbutton.png");
 	JamTweeningState playTween;
 	JamTweeningState exitTween;
+	jamInitTween(&playTween, 0.05, GAME_WIDTH - 172, GAME_WIDTH - 96);
+	jamInitTween(&exitTween, 0.05, GAME_WIDTH - 172, GAME_WIDTH - 96);
 	bool inPlayButtonPreviousFrame = false;
 	bool inExitButtonPreviousFrame = false;
 	bool inPlayButton = false;
 	bool inExitButton = false;
-	int playButtonY = GAME_HEIGHT - 96;
-	int exitButtonY = GAME_HEIGHT - 64;
-	playTween.initialValue = GAME_WIDTH - 160;
-	playTween.finalValue = GAME_WIDTH - 96;
-	playTween.progressPerStep = 0.05;
-	playTween.progress = 0;
-	exitTween.initialValue = GAME_WIDTH - 160;
-	exitTween.finalValue = GAME_WIDTH - 96;
-	exitTween.progressPerStep = 0.05;
-	exitTween.progress = 0;
+	int playButtonY = GAME_HEIGHT - 128;
+	int exitButtonY = GAME_HEIGHT - 96;
 
 	while (runLoop) {
 		// Update the renderer and check for a quit signal
@@ -138,8 +132,8 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 				runLoop = false;
 
 			// Draw the buttons
-			jamDrawTexture(playTex, (sint32)jamUpdateTweenParabolicJump(&playTween), playButtonY);
-			jamDrawTexture(exitTex, (sint32)jamUpdateTweenParabolicJump(&exitTween), exitButtonY);
+			jamDrawTexture(playTex, (sint32)jamUpdateTweenParabolic(&playTween), playButtonY);
+			jamDrawTexture(exitTex, (sint32)jamUpdateTweenParabolic(&exitTween), exitButtonY);
 
 			jamDrawTexture(logoTex, 0, 0);
 
