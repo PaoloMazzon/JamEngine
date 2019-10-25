@@ -195,6 +195,9 @@ bool runGame(JamFont* font) {
 				}
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
+				// Draw the background
+				jamDrawTexture(jamGetTextureFromHandler(gHandler, "BackgroundTexture"), 0, 0);
+
 				// Draw the game world
 				for (i = 0; i < MAX_TILEMAPS; i++)
 					if (gameWorld->worldMaps[i] != NULL)
