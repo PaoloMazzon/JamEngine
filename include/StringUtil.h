@@ -2,6 +2,7 @@
 /// \author plo, of course
 /// \brief Some incredibly useful string stuff
 #pragma once
+#include <Constants.h>
 
 #define END_OF_STRING (-1)
 #define LAST_OCCURRENCE (-1)
@@ -153,3 +154,6 @@ double atof(const char* string);
 /// \return Returns the processed string which will need to be manually freed
 /// \throws ERROR_ALLOC_FAILED
 char* ftoa(double input);
+
+/// \brief Turns a string into a number from 0 to maxNumber
+uint32 jamHashString(const char* string, uint32 maxNumber);

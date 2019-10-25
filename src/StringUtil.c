@@ -389,3 +389,16 @@ char* ftoa(double input) {
 	return string;
 }
 ///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+uint32 jamHashString(const char* string, uint32 maxNumber) {
+	int i;
+	uint32 num = 0;
+
+	for (i = 0; i < strlen(string); i++) {
+		num += string[i];
+	}
+
+	return (uint32)((9187591 * num % 8589935681) % maxNumber);
+}
+///////////////////////////////////////////////////////////////

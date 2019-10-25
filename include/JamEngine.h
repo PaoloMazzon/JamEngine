@@ -25,3 +25,4 @@
 #include <TMXWorldLoader.h>
 #include <Audio.h>
 #include <Tweening.h>
+#include <StringUtil.h>
