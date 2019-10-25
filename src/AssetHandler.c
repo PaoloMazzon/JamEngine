@@ -17,25 +17,19 @@
 #include <SDL.h>
 #include "TMXWorldLoader.h"
 
-// The base key comparison function
-bool keysEqual(JamAssetKey key1, JamAssetKey key2) {
-	return strcmp(key1, key2) == 0;
-}
-
 ///////////////////////////////////////////////////////////////
-void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAssetKey id) {
+void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const char* id) {
 	int i;
-	int exists = -1;
-	JamAssetKey* newInts = NULL;
+	int hash = jamHashString(id, HANDLER_MAX_ASSETS);
+	bool exists = false;
 	JamAsset** newAssets = NULL;
 	if (handler != NULL && asset != NULL) {
 		// Look and check if the ID already exists
-		for (i = 0; i < handler->size; i++)
-			if (keysEqual(handler->ids[i], id))
-				exists = i;
+		if (handler->vals[hash] != NULL)
+			exists = true;
 
 		// Either throw it in its spot or make a new spot
-		if (exists != -1) {
+		if (exists) {
 			// First we must free the value there
 			if (handler->vals[exists]->type == at_Texture)
 				jamFreeTexture(handler->vals[exists]->tex);
@@ -52,22 +46,18 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAsset
 
 			// Finally, we set the new value
 			handler->vals[exists] = asset;
+
+			jSetError(ERROR_WARNING, "Asset %s already exists, replacing old one.", id);
 		} else {
 			// We must make room for a new piece
-			newInts = (JamAssetKey*)realloc((void*)handler->ids, sizeof(JamAssetKey) * (handler->size + 1));
 			newAssets = (JamAsset**)realloc((void*)handler->vals, sizeof(JamAsset*) * (handler->size + 1));
 
-			if (newAssets != NULL && newInts != NULL) {
+			if (newAssets != NULL) {
 				// Set the new values and increment the size
-				newInts[handler->size] = id;
 				newAssets[handler->size] = asset;
-				handler->ids = newInts;
 				handler->vals = newAssets;
 				handler->size++;
 			} else {
-				// Oh heck go back
-				handler->ids = (JamAssetKey*)realloc((void*)handler->ids, sizeof(JamAssetKey) * (handler->size));
-				handler->vals = (JamAsset**)realloc((void*)handler->vals, sizeof(JamAsset*) * (handler->size));
 				jSetError(ERROR_REALLOC_FAILED, "Failed to increment handler size (jamLoadAssetIntoHandler with ID %s)\n", id);
 			}
 		}
@@ -125,7 +115,14 @@ JamAssetHandler* jamCreateAssetHandler() {
 	JamAssetHandler* handler = (JamAssetHandler*)calloc(1, sizeof(JamAssetHandler));
 
 	if (handler != NULL) {
-		// no need to do anything here for now
+		// Allocate the massive list
+		handler->vals = (JamAsset**)calloc(HANDLER_MAX_ASSETS, sizeof(JamAsset*));
+
+		if (handler->vals == NULL) {
+			free(handler);
+			handler = NULL;
+			jSetError(ERROR_ALLOC_FAILED, "Could not allocate asset list");
+		}
 	} else {
 		jSetError(ERROR_ALLOC_FAILED, "Failed to create an asset handler (jamCreateAssetHandler)\n");
 	}
@@ -302,13 +299,11 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, JamAssetKey key) {
+JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) {
 	int i;
 	JamAsset* asset = NULL;
 	if (assetHandler != NULL) {
-		for (i = 0; i < assetHandler->size; i++)
-			if (keysEqual(assetHandler->ids[i], key))
-				asset = assetHandler->vals[i];
+		asset = assetHandler->vals[jamHashString(key, HANDLER_MAX_ASSETS)];
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetAssetFromHandler)\n");
 	}
@@ -318,7 +313,7 @@ JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, JamAssetKey key)
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, const char* key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamSprite* returnVal = NULL;
 
@@ -339,7 +334,7 @@ JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, const char* key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamEntity* returnVal = NULL;
 
@@ -360,7 +355,7 @@ JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, const char* key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamHitbox* returnVal = NULL;
 
@@ -381,7 +376,7 @@ JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, JamAssetKey key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, const char* key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamTexture* returnVal = NULL;
 
@@ -402,7 +397,7 @@ JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key) 
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, const char* key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamAudioBuffer* returnVal = NULL;
 
@@ -423,7 +418,7 @@ JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, JamAssetK
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, JamAssetKey key) {
+JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, const char* key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamWorld* returnVal = NULL;
 
@@ -464,7 +459,6 @@ void jamFreeAssetHandler(JamAssetHandler *handler) {
 			free(handler->vals[i]);
 		}
 		free(handler->vals);
-		free(handler->ids);
 		jamFreeINI(handler->localINI);
 		free(handler);
 	}

@@ -14,6 +14,8 @@
 #include "Audio.h"
 #include "World.h"
 
+#define HANDLER_MAX_ASSETS 15000
+
 enum JamAssetType {at_Texture, at_Sprite, at_Entity, at_Hitbox, at_AudioBuffer, at_World};
 
 /// \brief A struct that can hold any of the assets the asset handler needs
@@ -32,9 +34,6 @@ typedef struct {
 		JamWorld* world; ///< The internal world
 	};
 } JamAsset;
-
-/// \brief In case you wish to change what type of keys are used
-typedef const char* JamAssetKey;
 
 /// \brief Loads lots of assets at once from files
 /// to manage large projects
@@ -58,8 +57,7 @@ typedef const char* JamAssetKey;
 /// important since they don't depend on other assets
 /// being loaded in first.
 typedef struct {
-	int size; ///< The size of the map
-	JamAssetKey* ids; ///< The keys that match up with the values
+	int size; ///< The size of the vals array
 	JamAsset** vals; ///< The actual assets
 	JamINI* localINI; ///< Let the INI keep track of internal string's memory
 } JamAssetHandler;
@@ -79,7 +77,7 @@ JamAssetHandler* jamCreateAssetHandler();
 /// you will more than likely get a segfault and if not at least a memory leak.
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NUULL_POINTER
-void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, JamAssetKey id);
+void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const char* id);
 
 /// \brief Loads all recognized assets from a directory
 ///
@@ -94,37 +92,37 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 
 /// \brief Grabs an asset, or returns NULL if the key is not bound
 /// \throws ERROR_NULL_POINTER
-JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, JamAssetKey key);
+JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, const char* key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, const char* key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, const char* key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, const char* key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, const char* key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, JamAssetKey key);
+JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, const char* key);
 
 /// \brief Frees an asset handler and all of its components
 void jamFreeAssetHandler(JamAssetHandler *handler);
