@@ -13,7 +13,7 @@ JamEntityList* jamCreateEntityList() {
 	JamEntityList* list = (JamEntityList*)calloc(1, sizeof(JamEntityList));
 
 	if (list == NULL) {
-		jSetError(ERROR_NULL_POINTER, "Failed to allocate entity list (jamCreateEntityList)\n");
+		jSetError(ERROR_NULL_POINTER, "Failed to allocate entity list (jamCreateEntityList)");
 	}
 
 	return list;
@@ -49,11 +49,11 @@ void jamAddEntityToList(JamEntityList *list, JamEntity *entity) {
 				list->capacity += ENTITY_LIST_ALLOCATION_AMOUNT;
 				newList[list->size - 1] = entity;
 			} else {
-				jSetError(ERROR_REALLOC_FAILED, "Could not reallocate entity list to accommodate for new entity (jamAddEntityToList)\n");
+				jSetError(ERROR_REALLOC_FAILED, "Could not reallocate entity list to accommodate for new entity (jamAddEntityToList)");
 			}
 		}
 	} else if (list == NULL) {
-		jSetError(ERROR_NULL_POINTER, "List does not exist (jamAddEntityToList)\n");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (jamAddEntityToList)");
 	}
 }
 ///////////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@ JamEntity* jamPopEntityFromList(JamEntityList *list, JamEntity *entity) {
 			i++;
 		}
 	} else {
-		fprintf(stderr, "List does not exist (popEntityInList)\n");
+		jSetError(ERROR_NULL_POINTER, "List does not exist");
 	}
 
 	return entity;
@@ -122,10 +122,10 @@ void jamShrinkEntityList(JamEntityList *list) {
 			list->size = (uint32)posInList;
 			list->capacity = (uint32)posInList;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate entity list (jamShrinkEntityList)\n");
+			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate entity list (jamShrinkEntityList)");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "List does not exist (jamShrinkEntityList)\n");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (jamShrinkEntityList)");
 	}
 }
 ///////////////////////////////////////////////////////////////
@@ -143,7 +143,7 @@ void jamEmptyEntityList(JamEntityList *list, bool destroyEntities) {
 		list->size = 0;
 		list->capacity = 0;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "List does not exist (jamEmptyEntityList)\n");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (jamEmptyEntityList)");
 	}
 }
 ///////////////////////////////////////////////////////////////

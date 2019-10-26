@@ -56,9 +56,9 @@ bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame* val) {
 		}
 	} else {
 		if (tileMap != NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamSetMapPos).\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamSetMapPos)");
 		else
-			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamSetMapPos).\n");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamSetMapPos)");
 	}
 
 	return worked;
@@ -76,9 +76,9 @@ JamFrame* jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y) {
 			val = tileMap->grid[y * tileMap->width + x];
 	} else {
 		if (tileMap != NULL)
-			fprintf(stderr, "Map does not exist (jamGetMapPos).\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist");
 		else
-			fprintf(stderr, "Map grid does not exist (jamGetMapPos).\n");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist");
 	}
 
 	return val;
@@ -107,9 +107,9 @@ bool jamCheckMapCollFast(JamTileMap *tileMap, int x, int y, int w, int h) {
 					(tileMap->grid[y2 * tileMap->width + x2] != NULL));
 	} else {
 		if (tileMap != NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamCheckMapCollFast).\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamCheckMapCollFast)");
 		else
-			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamCheckMapCollFast).\n");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamCheckMapCollFast)");
 	}
 
 	return coll;
@@ -165,14 +165,14 @@ bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
 					coll = tileMap->grid[verticesY[i] * tileMap->width + verticesX[i]] != NULL;
 			}
 		} else {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Rectangle  [%i, %i, %i, %i] requires too many vertices (jamCheckMapCollision)\n", x, y, w, h);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Rectangle  [%i, %i, %i, %i] requires too many vertices (jamCheckMapCollision)", x, y, w, h);
 		}
 
 	} else {
 		if (tileMap != NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamCheckMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamCheckMapCollision)");
 		else
-			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamCheckMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamCheckMapCollision)");
 	}
 
 	return coll;
@@ -305,11 +305,11 @@ void jamAutoTileMap(JamTileMap *map, JamSprite *spr) {
 		}
 	} else {
 		if (map == NULL)
-			jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamDrawSortedMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamDrawSortedMap)");
 		if (spr == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamSprite doesn't exist (jamDrawSortedMap)\n");
+			jSetError(ERROR_NULL_POINTER, "JamSprite doesn't exist (jamDrawSortedMap)");
 		else if (!(spr->animationLength == 48 || spr->animationLength == 47))
-			jSetError(ERROR_INCORRECT_FORMAT, "JamSprite does not contain 48 frames(jamDrawSortedMap)\n");
+			jSetError(ERROR_INCORRECT_FORMAT, "JamSprite does not contain 48 frames(jamDrawSortedMap)");
 	}
 }
 //////////////////////////////////////////////////////////////

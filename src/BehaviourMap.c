@@ -8,7 +8,7 @@ JamBehaviourMap* jamCreateBehaviourMap() {
 	JamBehaviourMap* map = (JamBehaviourMap*)calloc(1, sizeof(JamBehaviourMap));
 
 	if (map == NULL)
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate behaviour map (jamCreateBehaviourMap)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate behaviour map (jamCreateBehaviourMap)");
 
 	return map;
 }
@@ -39,10 +39,10 @@ void jamAddBehaviourToMap(JamBehaviourMap *map, const char *name, void (*onCreat
 			behaviour->onFrame = onFrame;
 			behaviour->onDraw = onDraw;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate map (jamAddBehaviourToMap)\n");
+			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate map (jamAddBehaviourToMap)");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamAddBehaviourToMap)\n");
+		jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamAddBehaviourToMap)");
 	}
 }
 /////////////////////////////////////////////////////////////////

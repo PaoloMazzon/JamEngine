@@ -10,7 +10,7 @@ JamINI* jamCreateINI() {
 	JamINI* ini = (JamINI*)calloc(1, sizeof(JamINI));
 
 	if (ini == NULL) {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamINI. (jamCreateINI)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamINI. (jamCreateINI)");
 	}
 
 	return ini;
@@ -48,7 +48,7 @@ JamINI* jamLoadINI(const char *filename) {
 						strncpy(currentHeader, file->strList[i] + 1, lineLength - 2);
 						jamThrowInGarbageINI(ini, currentHeader);
 					} else {
-						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate header (jamLoadINI)\n");
+						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate header (jamLoadINI)");
 					}
 				} else if (equalCharPos != NULL && currentHeader != NULL && equalCharPos != file->strList[i]) {
 					// setter
@@ -65,16 +65,16 @@ JamINI* jamLoadINI(const char *filename) {
 					} else {
 						free(key);
 						free(val);
-						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate key or val (jamLoadINI)\n");
+						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate key or val (jamLoadINI)");
 					}
 				}
 			}
 		}
 	} else {
 		if (ini == NULL)
-			jSetError(ERROR_ALLOC_FAILED, "JamINI could not be created for file [%s] (jamLoadINI)\n", filename);
+			jSetError(ERROR_ALLOC_FAILED, "JamINI could not be created for file [%s] (jamLoadINI)", filename);
 		if (file == NULL)
-			jSetError(ERROR_OPEN_FAILED, "File [%s] could not be loaded (jamLoadINI)\n", filename);
+			jSetError(ERROR_OPEN_FAILED, "File [%s] could not be loaded (jamLoadINI)", filename);
 	}
 
 	jamFreeStringList(file);
@@ -94,9 +94,9 @@ void jamOutputINI(JamINI *ini, FILE *stream) {
 		}
 	} else {
 		if (ini == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamINI does not exist (ouputINI)\n");
+			jSetError(ERROR_NULL_POINTER, "JamINI does not exist (ouputINI)");
 		if (stream == NULL)
-			jSetError(ERROR_NULL_POINTER, "Stream does not exist (ouputINI)\n");
+			jSetError(ERROR_NULL_POINTER, "Stream does not exist (ouputINI)");
 	}
 }
 //////////////////////////////////////////////////////
@@ -137,11 +137,11 @@ void jamSetKeyINI(JamINI *ini, const char *header, const char *key, char *val) {
 				ini->headers = newHeaders;
 				ini->headerNames = newHeaderNames;
 			} else {
-				jSetError(ERROR_REALLOC_FAILED, "Failed create header (jamSetKeyINI)\n");
+				jSetError(ERROR_REALLOC_FAILED, "Failed create header (jamSetKeyINI)");
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamINI does not exist for header:key pair %s:%s (jamSetKeyINI)\n", header, key);
+		jSetError(ERROR_NULL_POINTER, "JamINI does not exist for header:key pair %s:%s (jamSetKeyINI)", header, key);
 	}
 }
 //////////////////////////////////////////////////////
@@ -163,7 +163,7 @@ char* jamGetKeyINI(JamINI *ini, const char *header, const char *key, char *def) 
 				ret = (char*) jamGetStringMapVal(ini->headers[i], (const char *) key, def);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamINI does not exist for header:key pair %s:%s (jamGetKeyINI)\n", header, key);
+		jSetError(ERROR_NULL_POINTER, "JamINI does not exist for header:key pair %s:%s (jamGetKeyINI)", header, key);
 	}
 
 	return ret;
@@ -184,10 +184,10 @@ void jamThrowInGarbageINI(JamINI *ini, char *string) {
 			ini->garbagePile[ini->sizeOfGarbagePile] = string;
 			ini->sizeOfGarbagePile++;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Failed to resize garbage pile (jamThrowInGarbageINI)\n");
+			jSetError(ERROR_REALLOC_FAILED, "Failed to resize garbage pile (jamThrowInGarbageINI)");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamINI does not exist (jamThrowInGarbageINI)\n");
+		jSetError(ERROR_NULL_POINTER, "JamINI does not exist (jamThrowInGarbageINI)");
 	}
 }
 //////////////////////////////////////////////////////

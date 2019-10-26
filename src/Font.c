@@ -351,7 +351,7 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, int w, ..
 						// Print the character
 						SDL_RenderCopy(jamRendererGetInternalRenderer(), font->font, &charSheetBox, &charPlace);
 					} else { // Not in the font
-						jSetError(ERROR_OUT_OF_BOUNDS, "Error: Character '%u' is out of the font's range. (jamRenderFontExt)\n", unichar);
+						jSetError(ERROR_OUT_OF_BOUNDS, "Error: Character '%u' is out of the font's range. (jamRenderFontExt)", unichar);
 					}
 
 					// Check for text width
@@ -391,9 +391,9 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, int w, ..
 		}
 	} else {
 		if (jamRendererGetInternalRenderer() == NULL)
-			fprintf(stderr, "JamRenderer does not exist (jamRenderFontExt)\n");
+			fprintf(stderr, "JamRenderer does not exist (jamRenderFontExt)");
 		if (font == NULL)
-		jSetError(ERROR_NULL_POINTER, "JamFont does not exist (jamRenderFontExt)\n");
+		jSetError(ERROR_NULL_POINTER, "JamFont does not exist (jamRenderFontExt)");
 	}
 	va_end(params);
 }

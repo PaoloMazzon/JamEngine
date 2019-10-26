@@ -21,7 +21,7 @@ JamFrame* jamCreateFrame(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h
 		frame->w = w;
 		frame->h = h;
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Could not allocate frame. (jamCreateFrame).\n");
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate frame. (jamCreateFrame)");
 	}
 
 	return frame;
@@ -33,7 +33,7 @@ void jamDrawFrame(JamFrame *frame, sint32 x, sint32 y) {
 	if (frame != NULL) {
 		jamDrawTexturePart(frame->tex, x, y, frame->x, frame->y, frame->w, frame->h);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamFrame does not exist. (jamDrawFrame).\n");
+		jSetError(ERROR_NULL_POINTER, "JamFrame does not exist. (jamDrawFrame)");
 	}
 }
 //////////////////////////////////////////////////////////////

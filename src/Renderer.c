@@ -283,7 +283,7 @@ bool jamRendererTargetIsScreenBuffer() {
 	if (gRenderer != NULL) {
 		ret = gRenderer->renderingToScreenBuffer;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererTargetIsScreenBuffer)\n");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererTargetIsScreenBuffer)");
 	}
 
 	return ret;
@@ -352,7 +352,7 @@ void jamSetRenderTarget(JamTexture *texture) {
 			SDL_SetRenderTarget(gRenderer->internalRenderer, texture->tex);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamSetRenderTarget)\n");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamSetRenderTarget)");
 	}
 }
 /////////////////////////////////////////////////////////////
@@ -386,7 +386,7 @@ bool jamConfigScreenBuffer(uint32 internalWidth, uint32 internalHeight, uint32 d
 			jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (jamConfigScreenBuffer).");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamConfigScreenBuffer)\n");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamConfigScreenBuffer)");
 	}
 
 	return pass;
@@ -412,7 +412,7 @@ void jamConvertCoords(int *x, int *y) {
 		*x = (int)(((double)rX - (double)gRenderer->displayBufferX) * widthRatio);
 		*y = (int)(((double)rY - (double)gRenderer->displayBufferY) * heightRatio);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamConvertCoords)\n");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamConvertCoords)");
 	}
 }
 /////////////////////////////////////////////////////////////

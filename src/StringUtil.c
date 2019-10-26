@@ -13,7 +13,7 @@ JamStringBuilder* jamCreateStringBuilder() {
 	if (builder != NULL) {
 		builder->allocAmount = DEFAULT_ALLOC_AMOUNT;
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Could not create builder (jamCreateStringBuilder)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Could not create builder (jamCreateStringBuilder)");
 	}
 
 	return builder;
@@ -27,7 +27,7 @@ JamStringBuilder* jamCreateBuilderFromString(const char *string) {
 	if (builder != NULL) {
 		jamInsertStringIntoBuilder(builder, (char *) string, -1);
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to create builder (jamCreateBuilderFromString)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create builder (jamCreateBuilderFromString)");
 	}
 
 	return builder;
@@ -58,7 +58,7 @@ char* jamInsertStringIntoBuilder(JamStringBuilder *builder, char *string, int in
 				builder->size += builder->allocAmount + stringLen;
 				builder->str[builder->length + stringLen] = 0;
 			} else {
-				jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate builder (jamInsertStringIntoBuilder)\n");
+				jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate builder (jamInsertStringIntoBuilder)");
 				goodToProceed = false;
 			}
 		}
@@ -76,9 +76,9 @@ char* jamInsertStringIntoBuilder(JamStringBuilder *builder, char *string, int in
 		}
 	} else {
 		if (builder == NULL)
-			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamInsertStringIntoBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamInsertStringIntoBuilder)");
 		if (string == NULL)
-			jSetError(ERROR_NULL_POINTER, "String does not exist (jamInsertStringIntoBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "String does not exist (jamInsertStringIntoBuilder)");
 	}
 
 	return string;
@@ -103,9 +103,9 @@ void jamRemoveCharFromBuilder(JamStringBuilder *builder, int index) {
 		}
 	} else {
 		if (builder == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamRemoveCharFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamRemoveCharFromBuilder)");
 		} else {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (jamRemoveCharFromBuilder)\n");
+			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (jamRemoveCharFromBuilder)");
 		}
 	}
 }
@@ -142,12 +142,12 @@ int jamFindStringInBuilder(JamStringBuilder *builder, const char *string, int oc
 			finalReturn = lastPos;
 	} else {
 		if (builder == NULL)
-			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamRemoveCharFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamRemoveCharFromBuilder)");
 		if (occurrencesRequired < -1) {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Occurrences required out of bounds (jamRemoveCharFromBuilder)\n");
+			jSetError(ERROR_OUT_OF_BOUNDS, "Occurrences required out of bounds (jamRemoveCharFromBuilder)");
 		}
 		if (string == NULL)
-			jSetError(ERROR_NULL_POINTER, "String does not exist (jamRemoveCharFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "String does not exist (jamRemoveCharFromBuilder)");
 	}
 
 	return finalReturn;
@@ -175,18 +175,18 @@ JamStringBuilder* jamSubstringFromBuilder(JamStringBuilder *builder, int index, 
 		} else {
 			jamFreeStringBuilder(sub);
 			sub = NULL;
-			jSetError(ERROR_ALLOC_FAILED, "Failed to create internal string (jamSubstringFromBuilder)\n");
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create internal string (jamSubstringFromBuilder)");
 		}
 	} else {
 		jamFreeStringBuilder(sub);
 		if (sub == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "Failed to create substring (jamSubstringFromBuilder)\n");
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create substring (jamSubstringFromBuilder)");
 		}
 		if (builder == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamSubstringFromBuilder)\n");
+			jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamSubstringFromBuilder)");
 		}
 		if (builder != NULL && sub != NULL) {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (jamSubstringFromBuilder)\n");
+			jSetError(ERROR_OUT_OF_BOUNDS, "Index out of bounds (jamSubstringFromBuilder)");
 		}
 		sub = NULL;
 	}
@@ -209,7 +209,7 @@ void jamShrinkBuilder(JamStringBuilder *builder) { // NOTE: UNTESTED
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamShrinkBuilder)\n");
+		jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamShrinkBuilder)");
 	}
 }
 ///////////////////////////////////////////////////////////////
@@ -225,7 +225,7 @@ int jamGetBuilderLength(JamStringBuilder *builder) {
 				count++;
 	} else {
 		count = -1;
-		jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamGetBuilderLength)\n");
+		jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamGetBuilderLength)");
 	}
 
 	return count;
@@ -238,7 +238,7 @@ const char* jamGetBuilderArray(JamStringBuilder *builder) {
 	if (builder != NULL) {
 		ret = (const char*)builder->str;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamGetBuilderArray)\n");
+		jSetError(ERROR_NULL_POINTER, "Builder does not exist (jamGetBuilderArray)");
 	}
 
 	return ret;
@@ -383,7 +383,7 @@ char* ftoa(double input) {
 			string[0] = '-';
 		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate string with decimal %f (ftoa)\n", input);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate string with decimal %f (ftoa)", input);
 	}
 
 	return string;

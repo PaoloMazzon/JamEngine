@@ -15,7 +15,7 @@ void jamDrawSetColour(uint8 r, uint8 g, uint8 b, uint8 a) {
 	if (jamRendererGetInternalRenderer() != NULL) {
 		SDL_SetRenderDrawColor(jamRendererGetInternalRenderer(), r, g, b, a);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawSetColour).\n");
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawSetColour)");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -25,7 +25,7 @@ void jamDrawGetColour(uint8 *r, uint8 *g, uint8 *b, uint8 *a) {
 	if (jamRendererGetInternalRenderer() != NULL) {
 		SDL_GetRenderDrawColor(jamRendererGetInternalRenderer(), r, g, b, a);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawGetColour).\n");
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawGetColour)");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ void jamDrawRectangle(int x, int y, int w, int h) {
 		rectangle.h = h;
 		SDL_RenderDrawRect(jamRendererGetInternalRenderer(), &rectangle);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawRectangle).\n");
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawRectangle)");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ void jamDrawCircle(int x, int y, int r) {
 	if (jamRendererGetInternalRenderer() != NULL) {
 		// TODO: This
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawCircle).\n");
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawCircle)");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ void jamDrawFillColour(uint8 r, uint8 g, uint8 b, uint8 a) {
 		SDL_SetRenderDrawColor(jamRendererGetInternalRenderer(), oR, oG, oB, oA);
 		SDL_SetTextureBlendMode(renderTarget, texMode);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawFillColour).\n");
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawFillColour)");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -150,9 +150,9 @@ void jamDrawTileMap(JamTileMap *map, int x, int y, uint32 xInMapStart, uint32 yI
 		}
 	} else {
 		if (jamRendererGetInternalRenderer() == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamDrawTileMap)\n");
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist (jamDrawTileMap)");
 		if (map == NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamDrawTileMap)\n");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamDrawTileMap)");
 	}
 }
 //////////////////////////////////////////////////////////////

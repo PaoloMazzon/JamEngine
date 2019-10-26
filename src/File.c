@@ -16,7 +16,7 @@ JamStringList* jamCreateStringList() {
 
 	// Check that it worked alright
 	if (list == NULL) {
-		jSetError(ERROR_ALLOC_FAILED, "Could not allocate string list (jamCreateStringList)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate string list (jamCreateStringList)");
 	}
 
 	return list;
@@ -72,16 +72,16 @@ JamStringList* jamLoadStringList(const char *fname) {
 				fgets(currentString, (int)sizeOfLine, file); // TODO: Fix this not working on last line of a file
 				jamAppendStringToList(list, currentString, true);
 			} else {
-				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (jamLoadStringList)\n");
+				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (jamLoadStringList)");
 				quit = true;
 			}
 		}
 	} else {
 		if (list == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "List could not be allocated (jamLoadStringList)\n");
+			jSetError(ERROR_ALLOC_FAILED, "List could not be allocated (jamLoadStringList)");
 		}
 		if (file == NULL) {
-			jSetError(ERROR_OPEN_FAILED, "File could not be opened (jamLoadStringList)\n");
+			jSetError(ERROR_OPEN_FAILED, "File could not be opened (jamLoadStringList)");
 		}
 	}
 
@@ -112,17 +112,17 @@ void jamAppendStringToList(JamStringList *list, char *string, bool heapBased) {
 			list->dynamic[list->size] = heapBased;
 			list->size++;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Could not reallocate string list(s) (jamAppendStringToList)\n");
+			jSetError(ERROR_REALLOC_FAILED, "Could not reallocate string list(s) (jamAppendStringToList)");
 			// Just in case one was initialized and the other wasn't
 			free(newBools);
 			free(newList);
 		}
 	} else {
 		if (list == NULL) {
-			jSetError(ERROR_NULL_POINTER, "List does not exist (jamAppendStringToList)\n");
+			jSetError(ERROR_NULL_POINTER, "List does not exist (jamAppendStringToList)");
 		}
 		if (string == NULL) {
-			jSetError(ERROR_NULL_POINTER, "String does not exist (jamAppendStringToList)\n");
+			jSetError(ERROR_NULL_POINTER, "String does not exist (jamAppendStringToList)");
 		}
 	}
 }
@@ -166,7 +166,7 @@ JamStringList* jamExplodeString(const char *string, char delim, bool ignoreQuote
 				jamAppendStringToList(list, currentBuffer, true);
 				cameFromQuotes = false;
 			} else {
-				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (jamExplodeString)\n");
+				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (jamExplodeString)");
 			}
 			lastLocation = i + 1;
 		}

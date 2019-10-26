@@ -36,7 +36,7 @@ JamSprite* jamCreateSprite(uint32 animationLength, uint16 frameDelay, bool loopi
 			sprite = NULL;
 		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Could not allocate sprite. (jamCreateSprite).\n");
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate sprite. (jamCreateSprite)");
 		free(list);
 	}
 
@@ -70,10 +70,10 @@ void jamSpriteAppendFrame(JamSprite *sprite, JamFrame *frame) {
 			free(sprite->frames);
 			sprite->frames = buffer;
 		} else {
-			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate buffer frame list (jamSpriteAppendFrame).\n");
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate buffer frame list (jamSpriteAppendFrame)");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamSpriteAppendFrame).\n");
+		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamSpriteAppendFrame)");
 	}
 }
 ///////////////////////////////////////////////////
@@ -127,10 +127,10 @@ JamSprite* jamLoadSpriteFromSheet(JamTexture *spriteSheet, uint32 cellCount, uin
 		}
 	} else {
 		if (sprite == NULL) {
-			jSetError(ERROR_SDL_ERROR, "Failed to create the sprite (jamLoadSpriteFromSheet).\n");
+			jSetError(ERROR_SDL_ERROR, "Failed to create the sprite (jamLoadSpriteFromSheet)");
 		}
 		if (spriteSheet == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamTexture does not exist (jamLoadSpriteFromSheet).\n");
+			jSetError(ERROR_NULL_POINTER, "JamTexture does not exist (jamLoadSpriteFromSheet)");
 		}
 		jamFreeSprite(sprite, true, false);
 		sprite = NULL;
@@ -169,7 +169,7 @@ void jamUpdateSprite(JamSprite *sprite) {
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamUpdateSprite).\n");
+		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamUpdateSprite)");
 	}
 }
 ///////////////////////////////////////////////////
@@ -198,7 +198,7 @@ void jamDrawSprite(JamSprite *sprite, sint32 x, sint32 y, float scaleX, float sc
 							  sprite->frames[sprite->currentFrame]->h
 		);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamDrawSprite).\n");
+		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamDrawSprite)");
 	}
 }
 ///////////////////////////////////////////////////
@@ -224,9 +224,9 @@ void jamDrawSpriteFrame(JamSprite *sprite, sint32 x, sint32 y, float scaleX, flo
 		);
 	} else {
 		if (sprite == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamDrawSpriteFrame).\n");
+			jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamDrawSpriteFrame)");
 		} else if (frame >= sprite->animationLength) {
-			jSetError(ERROR_OUT_OF_BOUNDS, "JamFrame %i out of bounds (jamDrawSpriteFrame).\n", (int) frame);
+			jSetError(ERROR_OUT_OF_BOUNDS, "JamFrame %i out of bounds (jamDrawSpriteFrame)", (int) frame);
 		}
 	}
 }

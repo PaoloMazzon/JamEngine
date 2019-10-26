@@ -40,7 +40,7 @@ JamEntity* jamCreateEntity(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 		ent->behaviour = behaviour;
 		ent->userData = NULL;
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamEntity struct (jamCreateEntity).\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamEntity struct (jamCreateEntity)");
 	}
 
 	return ent;
@@ -75,7 +75,7 @@ JamEntity* jamCopyEntity(JamEntity *baseEntity, double x, double y) {
 			#endif
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Base entity doesn't exist (jamCopyEntity)\n");
+		jSetError(ERROR_NULL_POINTER, "Base entity doesn't exist (jamCopyEntity)");
 	}
 
 	return newEnt;
@@ -90,7 +90,7 @@ void jamDrawEntity(JamEntity *entity) {
 						  (sint32) entity->y - entity->sprite->originY, entity->scaleX, entity->scaleY, entity->rot,
 						  entity->alpha, entity->updateOnDraw);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamEntity does not exist (jamDrawEntity).\n");
+		jSetError(ERROR_NULL_POINTER, "JamEntity does not exist (jamDrawEntity)");
 	}
 }
 //////////////////////////////////////////////////////////
@@ -123,23 +123,23 @@ bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity
 		coll = jamCheckHitboxCollision(entity1->hitbox, x1, y1, entity2->hitbox, x2, y2);
 	} else {
 		if (entity1 == NULL) {
-			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (jamCheckEntityCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (jamCheckEntityCollision)");
 		} else {
 			if (entity1->sprite == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a sprite (jamCheckEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a sprite (jamCheckEntityCollision)");
 			}
 			if (entity1->hitbox == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a hitbox (jamCheckEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a hitbox (jamCheckEntityCollision)");
 			}
 		}
 		if (entity2 == NULL) {
-			jSetError(ERROR_NULL_POINTER, "entity2 does not exist (jamCheckEntityCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "entity2 does not exist (jamCheckEntityCollision)");
 		} else {
 			if (entity2->sprite == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a sprite (jamCheckEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a sprite (jamCheckEntityCollision)");
 			}
 			if (entity2->hitbox == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a hitbox (jamCheckEntityCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a hitbox (jamCheckEntityCollision)");
 			}
 		}
 	}
@@ -163,17 +163,17 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 									(int) entity->hitbox->height);
 	} else {
 		if (entity == NULL) {
-			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (jamCheckEntityTileMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "entity1 does not exist (jamCheckEntityTileMapCollision)");
 		} else {
 			if (entity->sprite == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity does not have a sprite (jamCheckEntityTileMapCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity does not have a sprite (jamCheckEntityTileMapCollision)");
 			}
 			if (entity->hitbox == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity does not have a hitbox (jamCheckEntityTileMapCollision).\n");
+				jSetError(ERROR_INCORRECT_FORMAT, "entity does not have a hitbox (jamCheckEntityTileMapCollision)");
 			}
 		}
 		if (tileMap == NULL) {
-			jSetError(ERROR_NULL_POINTER, "tileMap does not exist (jamCheckEntityTileMapCollision).\n");
+			jSetError(ERROR_NULL_POINTER, "tileMap does not exist (jamCheckEntityTileMapCollision)");
 		}
 	}
 

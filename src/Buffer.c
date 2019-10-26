@@ -83,7 +83,7 @@ bool jamResizeBuffer(JamBuffer *buffer, uint64 newSize) {
 	// CHECKS
 	if (newBuffer == NULL) {
 		ret = false;
-		jSetError(ERROR_REALLOC_FAILED, "Failed to create new buffer (jamResizeBuffer)\n");
+		jSetError(ERROR_REALLOC_FAILED, "Failed to create new buffer (jamResizeBuffer)");
 	} else {
 		buffer->buffer = newBuffer;
 		buffer->size = newSize;

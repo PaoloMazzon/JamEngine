@@ -173,7 +173,7 @@ JamHitbox* jamCreateHitbox(JamHitboxType type, double radius, double width, doub
 			hitbox->polygon = polygon;
 		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate hitbox. (jamCreateHitbox)\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate hitbox. (jamCreateHitbox)");
 	}
 
 	return hitbox;
@@ -216,9 +216,9 @@ bool jamCheckHitboxCollision(JamHitbox *hitbox1, double x1, double y1, JamHitbox
 		} // TODO: Implement cirlce-to-poly collisions
 	} else {
 		if (hitbox1 == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamHitbox 1 does not exist. (jamCheckHitboxCollision)\n");
+			jSetError(ERROR_NULL_POINTER, "JamHitbox 1 does not exist. (jamCheckHitboxCollision)");
 		if (hitbox2 == NULL)
-			jSetError(ERROR_NULL_POINTER, "JamHitbox 2 does not exist. (jamCheckHitboxCollision)\n");
+			jSetError(ERROR_NULL_POINTER, "JamHitbox 2 does not exist. (jamCheckHitboxCollision)");
 	}
 
 	return hit;
