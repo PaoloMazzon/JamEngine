@@ -210,12 +210,21 @@ void assetLoadAudio(JamAssetHandler* assetHandler, JamINI* ini, const char* head
 }
 
 void assetLoadWorld(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
-	jamLoadAssetIntoHandler(
-			assetHandler,
-			createAsset(
-					jamLoadWorldFromTMX(assetHandler, jamGetKeyINI(ini, headerName, "file", ""))
-					, at_World)
-			, (headerName + 1));
+	// Load the world filtering setup and world
+	JamWorld* world = jamLoadWorldFromTMX(assetHandler, jamGetKeyINI(ini, headerName, "file", ""));
+	uint16 width = (uint16)atof(jamGetKeyINI(ini, headerName, "width", "0"));
+	uint16 height = (uint16)atof(jamGetKeyINI(ini, headerName, "height", "0"));
+	uint16 radius = (uint16)atof(jamGetKeyINI(ini, headerName, "radius", "0"));
+
+	if (world != NULL) {
+		if (width != 0) {
+			jamSetWorldFilterTypeRectangle(world, width, height);
+		} else if (radius != 0) {
+			jamSetWorldFilterTypeCircle(world, radius);
+		}
+	}
+
+	jamLoadAssetIntoHandler(assetHandler, createAsset(world, at_World), (headerName + 1));
 }
 //////////////////////// End of assetLoadINI support functions ////////////////////////
 
@@ -225,9 +234,6 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 	uint32 i, j;
 
 	if (assetHandler != NULL && jamRendererGetInternalRenderer() != NULL && ini != NULL) {
-		// Keep track of the ini (it holds the strings) and destroy it later
-		assetHandler->localINI = ini;
-
 		// Load the texture ids first
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
@@ -281,6 +287,8 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 			jSetError(ERROR_OPEN_FAILED, "Failed to load JamINI for file %s (jamAssetLoadINI)", filename);
 		}
 	}
+
+	jamFreeINI(ini);
 }
 ///////////////////////////////////////////////////////////////
 
@@ -445,7 +453,6 @@ void jamFreeAssetHandler(JamAssetHandler *handler) {
 			free(handler->vals[i]);
 		}
 		free(handler->vals);
-		jamFreeINI(handler->localINI);
 		free(handler);
 	}
 }

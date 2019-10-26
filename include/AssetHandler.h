@@ -43,7 +43,6 @@ typedef struct {
 typedef struct {
 	int size; ///< The size of the vals array
 	JamAsset** vals; ///< The actual assets
-	JamINI* localINI; ///< Let the INI keep track of internal string's memory
 } JamAssetHandler;
 
 /// \brief Creates an asset handler
@@ -69,6 +68,8 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const ch
 /// Loads all assets from an INI file. Note that you should never use 0
 /// as an ID for an asset or the loader may not load everything correctly.
 /// If you don't have/want a behaviour map you can just pass NULL.
+///
+/// You can load as many inis into a single handler as you want.
 ///
 /// \throws ERROR_ASSET_NOT_FOUND
 /// \throws ERROR_NULL_POINTER

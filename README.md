@@ -39,7 +39,7 @@ To-Do List
     + TTF fonts
  - Audio
     + .ogg file loading
- - Asset Handler
-    + Load world filter settings
  - Renderer
     + Improve/make more consistent camera support
+ - General
+    + Make engine more resilient to bad values
