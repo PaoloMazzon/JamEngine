@@ -14,14 +14,12 @@
 #include "Audio.h"
 #include "World.h"
 
+///< Size of the asset handler asset list (the smaller it is the more likely it is for it to break)
 #define HANDLER_MAX_ASSETS 15000
 
 enum JamAssetType {at_Texture, at_Sprite, at_Entity, at_Hitbox, at_AudioBuffer, at_World};
 
 /// \brief A struct that can hold any of the assets the asset handler needs
-///
-/// This struct utilizes an anonymous union inside it so it can hold
-/// any of the needed assets without using a bunch of extra storage.
 typedef struct {
 	enum JamAssetType type; ///< The type of asset this thing holds
 
@@ -38,24 +36,10 @@ typedef struct {
 /// \brief Loads lots of assets at once from files
 /// to manage large projects
 ///
-/// Do not use these lightly, they are an incredibly
-/// helpful tool but they gobble up memory like there
-/// is no tomorrow.
-///
-/// Also, something incredibly important to note is that
-/// this class expects all strings (from the key array)
-/// to be dynamically allocated since they will all be
-/// later freed upon destruction. Do not manually set
-/// keys.
-///
-/// Because it is important in which order assets are
-/// loaded, this handler only lets you load directories.
-/// The recognized file formats are .ent, .spr, .png,
-/// .hit, .level, and .bmp. The loader always loads
-/// in the order Textures -> Sprites -> Entities.
-/// Where hitboxes/tile maps fit in there is not at
-/// important since they don't depend on other assets
-/// being loaded in first.
+/// Asset handlers make loading large amounts of resources at once very
+/// simple and easy. That said, they are incredibly heavy on memory because
+/// they utilize a hash table internally so lookup time for assets isn't
+/// crazy.
 typedef struct {
 	int size; ///< The size of the vals array
 	JamAsset** vals; ///< The actual assets
@@ -69,12 +53,13 @@ JamAssetHandler* jamCreateAssetHandler();
 /// \brief Throws an asset into the handler
 ///
 /// Once an asset is thrown in here, the handler will take full
-/// responsibilty for its cleanup except for two cases: an entity's
+/// responsibility for its cleanup except for two cases: an entity's
 /// sprite and hitbox (Those must be loaded independently). Do
 /// not clean up assets yourself if you throw them into a handler.
 ///
-/// \warning Never run this more than once per assetLoader object, otherwise
-/// you will more than likely get a segfault and if not at least a memory leak.
+/// This function will replace the asset if there is already one there
+/// and post a warning to jSetError
+///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NUULL_POINTER
 void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const char* id);

@@ -396,7 +396,7 @@ uint32 jamHashString(const char* string, uint32 maxNumber) {
 	uint32 num = 0;
 
 	for (i = 0; i < strlen(string); i++) {
-		num += string[i];
+		num += string[i] + (i * 7);
 	}
 
 	return (uint32)((9187591 * num % 8589935681) % maxNumber);
