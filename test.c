@@ -31,6 +31,19 @@ static inline double sign(double number) {
 		return 0.0;
 }
 
+void onEnemyCreate(JamWorld* world, JamEntity* self) {
+	self->hSpeed = 3;
+}
+
+void onEnemyFrame(JamWorld* world, JamEntity* self) {
+	// We change direction when there is a wall in our way or a cliff in front of us
+	if (jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int)self->x +self-> hSpeed, (int)self->y) ||
+		!jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int)self->x + self->hSpeed, (int)self->y + 17))
+		self->hSpeed = -self->hSpeed;
+
+	self->x += self->hSpeed;
+}
+
 void onPlayerFrame(JamWorld* world, JamEntity* self) {
 	int i;
 
@@ -158,6 +171,7 @@ bool runGame(JamFont* font) {
 	// Create the behaviour map
 	JamBehaviourMap* bMap = jamCreateBehaviourMap();
 	jamAddBehaviourToMap(bMap, "PlayerBehaviour", NULL, NULL, onPlayerFrame, NULL);
+	jamAddBehaviourToMap(bMap, "EnemyBehaviour", onEnemyCreate, NULL, onEnemyFrame, NULL);
 
 	// Load the assets and create the world
 	gHandler = jamCreateAssetHandler();
