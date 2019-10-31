@@ -38,8 +38,11 @@ void onEnemyCreate(JamWorld* world, JamEntity* self) {
 void onEnemyFrame(JamWorld* world, JamEntity* self) {
 	// We change direction when there is a wall in our way or a cliff in front of us
 	if (jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int)self->x +self-> hSpeed, (int)self->y) ||
-		!jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int)self->x + self->hSpeed, (int)self->y + 17))
+		!jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int)self->x + sign(self->hSpeed) * 16, (int)self->y + 17))
 		self->hSpeed = -self->hSpeed;
+
+	// Make them face the direction they are walking in
+	self->scaleX = sign(self->hSpeed);
 
 	self->x += self->hSpeed;
 }
