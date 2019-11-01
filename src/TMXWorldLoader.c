@@ -57,9 +57,9 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 			tempEntity->rot = currentObject->rotation;
 		} else {
 			failedToLoad = true;
-			fprintf(stderr, "Failed to create entity ID %i (loadObjectLayerIntoWorld)", currentObject->id);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create entity ID %i (loadObjectLayerIntoWorld)", currentObject->id);
 		}
-		
+
 		currentObject = currentObject->next;
 	}
 
@@ -96,7 +96,7 @@ JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer
 			}
 		}
 	} else {
-		fprintf(stderr, "Failed to create JamTileMap from name %s (createTileMapFromTMXLayer)", layer->name);
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamTileMap from name %s (createTileMapFromTMXLayer)", layer->name);
 	}
 
 	return map;
