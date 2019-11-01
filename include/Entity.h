@@ -26,13 +26,13 @@ typedef struct _JamEntity {
 	JamSprite* sprite;       ///< This entity's sprite (NULL is safe)
 	JamHitbox* hitbox;       ///< This entity's hitbox (NULL is safe)
 	JamEntityType type;      ///< Type of entity this is
-	double x;             ///< X position in the game world
-	double y;             ///< Y position in the game world
+	double x;                ///< X position in the game world
+	double y;                ///< Y position in the game world
 	JamBehaviour* behaviour; ///< Behaviour mapping of this entity (AssetManagers will resolve this)
-	double hitboxOffsetX; ///< The hitbox's offset from the entity, this ignore the sprite's origin
-	double hitboxOffsetY; ///< The hitbox's offset from the entity, this ignore the sprite's origin
-	void* userData;       ///< A place for the programmer to store their own variables and such
-	int id;          ///< The ID of this entity (assigned by whatever world this entity belongs to)
+	double hitboxOffsetX;    ///< The hitbox's offset from the entity, this ignore the sprite's origin
+	double hitboxOffsetY;    ///< The hitbox's offset from the entity, this ignore the sprite's origin
+	void* userData;          ///< A place for the programmer to store their own variables and such
+	int id;                  ///< The ID of this entity (assigned by whatever world this entity belongs to)
 
 	// Drawing control
 	double rot;           ///< The rotation of the entity when drawn
@@ -42,14 +42,14 @@ typedef struct _JamEntity {
 	float scaleY;         ///< The y scale of the entity (for sprite rendering)
 
 #ifdef ENTITY_ENABLE_SPEED
-	double hSpeed;       ///< Horizontal speed (Can be disabled to save memory)
-	double vSpeed;       ///< Vertical speed (Can be disabled to save memory)
+	double hSpeed; ///< Horizontal speed (Can be disabled to save memory)
+	double vSpeed; ///< Vertical speed (Can be disabled to save memory)
 #endif
 #ifdef ENTITY_ENABLE_FRICTION
-	double friction;     ///< Friction for speed calculations (Can be disabled to save memory)
+	double friction; ///< Friction for speed calculations (Can be disabled to save memory)
 #endif
 #ifdef ENTITY_ENABLE_Z
-	double z;            ///< Z position in the game world (Can be disabled to save memory)
+	double z; ///< Z position in the game world (Can be disabled to save memory)
 #endif
 } JamEntity;
 
