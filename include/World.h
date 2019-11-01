@@ -95,6 +95,11 @@ void jamSetWorldFilterTypeCircle(JamWorld *world, uint16 inRangeRadius);
 /// \throws ERROR_INCORRECT_FORMAT
 void jamWorldAddEntity(JamWorld *world, JamEntity *entity);
 
+/// \brief Finds an entity in the world using its ID
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_OUT_OF_BOUNDS
+JamEntity* jamFindEntityFromID(JamWorld* world, int id);
+
 /// \brief Processes and draws the entities in the world
 ///
 /// This function will run all in-range entities onFrame function

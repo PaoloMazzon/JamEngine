@@ -32,6 +32,7 @@ typedef struct _JamEntity {
 	double hitboxOffsetX; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	double hitboxOffsetY; ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	void* userData;       ///< A place for the programmer to store their own variables and such
+	int id;          ///< The ID of this entity (assigned by whatever world this entity belongs to)
 
 	// Drawing control
 	double rot;           ///< The rotation of the entity when drawn

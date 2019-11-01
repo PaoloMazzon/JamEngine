@@ -72,7 +72,7 @@ void jamWorldAddEntity(JamWorld *world, JamEntity *entity) {
 		// Put the entity in each of the three lists it belongs to
 		jamAddEntityToList(world->entityByRange[ENTITIES_IN_RANGE], entity);
 		jamAddEntityToList(world->entityTypes[entity->type], entity);
-		jamAddEntityToList(world->worldEntities, entity);
+		entity->id = jamAddEntityToList(world->worldEntities, entity);
 
 		// Attempt to call the entity's onCreation function
 		if (entity->behaviour != NULL && entity->behaviour->onCreation != NULL) {
@@ -89,6 +89,24 @@ void jamWorldAddEntity(JamWorld *world, JamEntity *entity) {
 			jSetError(ERROR_INCORRECT_FORMAT, "JamEntity type is invalid (jamWorldAddEntity)");
 		}
 	}
+}
+///////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////
+JamEntity* jamFindEntityFromID(JamWorld* world, int id) {
+	JamEntity* ent = NULL;
+
+	if (world != NULL) {
+		if (world->worldEntities->size > id && id > -1) {
+			ent = world->worldEntities->entities[id];
+		} else {
+			jSetError(ERROR_OUT_OF_BOUNDS, "Entity ID out of bounds");
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "World does not exist");
+	}
+
+	return ent;
 }
 ///////////////////////////////////////////////////////
 

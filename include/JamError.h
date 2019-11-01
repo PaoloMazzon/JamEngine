@@ -50,6 +50,7 @@
 ///< At least one entity could not be loaded from a tmx
 #define ERROR_TMX_ENTITY_ERROR  0b0000100000000000
 
+///< OpenAL (The audio subsystem) messed up somewhere
 #define ERROR_OPENAL_ERROR      0b0001000000000000
 
 #define jSetError(errorCode, format, ...) __jSetError(errorCode, format, __FUNCTION__, __LINE__, ##__VA_ARGS__)

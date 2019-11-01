@@ -49,9 +49,11 @@ JamEntityList* jamCreateEntityList();
 /// allocate ENTITY_LIST_ALLOCATION_AMOUNT new spots then put the entity
 /// in one of those spots.
 ///
+/// This function will return the location of the entity in the list.
+///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-void jamAddEntityToList(JamEntityList *list, JamEntity *entity);
+int jamAddEntityToList(JamEntityList *list, JamEntity *entity);
 
 /// \brief Removes an entity from the list and returns it
 /// \return Returns NULL if it was not found

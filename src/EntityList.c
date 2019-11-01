@@ -21,7 +21,7 @@ JamEntityList* jamCreateEntityList() {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void jamAddEntityToList(JamEntityList *list, JamEntity *entity) {
+int jamAddEntityToList(JamEntityList *list, JamEntity *entity) {
 	int i = 0;
 	JamEntity** newList;
 	bool foundSpot = false;
@@ -48,6 +48,7 @@ void jamAddEntityToList(JamEntityList *list, JamEntity *entity) {
 				list->size++;
 				list->capacity += ENTITY_LIST_ALLOCATION_AMOUNT;
 				newList[list->size - 1] = entity;
+				i = list->size - 1; // Record entity position in list
 			} else {
 				jSetError(ERROR_REALLOC_FAILED, "Could not reallocate entity list to accommodate for new entity (jamAddEntityToList)");
 			}
@@ -55,6 +56,8 @@ void jamAddEntityToList(JamEntityList *list, JamEntity *entity) {
 	} else if (list == NULL) {
 		jSetError(ERROR_NULL_POINTER, "List does not exist (jamAddEntityToList)");
 	}
+
+	return i;
 }
 ///////////////////////////////////////////////////////////////
 
