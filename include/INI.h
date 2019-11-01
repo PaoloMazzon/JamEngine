@@ -23,12 +23,23 @@ typedef struct {
 JamINI* jamCreateINI();
 
 /// \brief Loads an INI from a file
+///
+/// This function aims to follow the old Windows INI format from old as closely as possible.
+/// Since there is quite a few different ini formats floating around, here is what this
+/// particular loader does
+///
+///  + Headers are lines that start with '[' and end with ']'
+///  + Keys are lines that have an '=' in them, everything after the first '=' is considered part of the value
+///  + The loader does not care about "" in values and will simply call them part of the value
+///  + Comments are lines that start with ';', no, '#' does not count as a comment
+///  + Invalid lines in the file will be reported through jSetError as a warning
+///
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPEN_FAILED
 JamINI* jamLoadINI(const char *filename);
 
 /// \brief This will print the INI file to a stream
-/// 
+///
 /// If you want to save an INI file to load it later,
 /// just open a file, pass it here, and close the file.
 /// This function will properly print a formatted INI

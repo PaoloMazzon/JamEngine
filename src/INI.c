@@ -5,6 +5,18 @@
 #include "File.h"
 #include "JamError.h"
 
+// Checks if a string consists soley of whitespace (by this function's standards, tabs, spaces, and newlines)
+static bool stringIsWhitespace(const char* string) {
+	int len = strlen(string);
+	int i;
+
+	for (i = 0; i < len; i++)
+		if (string[i] != ' ' && string[i] != '\t' && string[i] != '\n')
+			return false;
+
+	return true;
+}
+
 //////////////////////////////////////////////////////
 JamINI* jamCreateINI() {
 	JamINI* ini = (JamINI*)calloc(1, sizeof(JamINI));
@@ -36,7 +48,7 @@ JamINI* jamLoadINI(const char *filename) {
 			equalCharPos = strchr(file->strList[i], '=');
 
 			// Check for empty lines and comments
-			if (lineLength != 0 && file->strList[i][0] != '#') {
+			if (lineLength != 0 && file->strList[i][0] != ';') {
 				// Find out if this is a header or setter
 				if (file->strList[i][0] == '[' && file->strList[i][lineLength - 1] == ']') {
 					// Copy the header name to our current header,
@@ -50,6 +62,8 @@ JamINI* jamLoadINI(const char *filename) {
 					} else {
 						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate header (jamLoadINI)");
 					}
+				} else if (file->strList[i][0] == '[' && file->strList[i][lineLength - 1] != ']') {
+					jSetError(ERROR_WARNING, "Line \"%s\" is invalid, ignoring", file->strList[i]);
 				} else if (equalCharPos != NULL && currentHeader != NULL && equalCharPos != file->strList[i]) {
 					// setter
 					key = (char*)calloc(equalCharPos - file->strList[i] + 1, 1);
@@ -67,6 +81,8 @@ JamINI* jamLoadINI(const char *filename) {
 						free(val);
 						jSetError(ERROR_ALLOC_FAILED, "Failed to allocate key or val (jamLoadINI)");
 					}
+				} else if (!stringIsWhitespace(file->strList[i])) {
+					jSetError(ERROR_WARNING, "Line \"%s\" is invalid, ignoring", file->strList[i]);
 				}
 			}
 		}
