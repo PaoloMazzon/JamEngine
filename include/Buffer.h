@@ -60,10 +60,16 @@ JamBuffer* jamCreateBuffer(uint64 size);
 ///
 /// \return Returns a new buffer with the file
 ///
+/// If the file doesn't exist an empty buffer will
+/// be returned.
+///
 /// \throws ERROR_FILE_FAILED
-/// \throws ERROR_OPEN_FAILED
+/// \throws ERROR_ALLOC_FAILED
 ////////////////////////////////////////////////
 JamBuffer* jamLoadBuffer(const char *filename);
+
+/// \brief Places the contents of a buffer in a binary
+void jamSaveBuffer(JamBuffer* buffer, const char* filename);
 
 ////////////////////////////////////////////////
 /// \brief Frees a buffer

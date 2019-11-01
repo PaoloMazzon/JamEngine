@@ -32,10 +32,10 @@ JamBuffer* jamCreateBuffer(uint64 size) {
 JamBuffer* jamLoadBuffer(const char *filename) {
 	FILE* bufferFile = fopen(filename, "rb");
 	uint64 bufferSize = 0;
-	JamBuffer* returnBuffer = NULL;
+	JamBuffer* returnBuffer = jamCreateBuffer(0);
 
 	// Make sure the file actually opened
-	if (bufferFile != NULL) {
+	if (bufferFile != NULL && returnBuffer != NULL) {
 
 		// This just finds out how large the file is
 		while (!feof(bufferFile)) {
@@ -46,22 +46,41 @@ JamBuffer* jamLoadBuffer(const char *filename) {
 		// Move back to the start
 		rewind(bufferFile);
 
-		// Create a buffer of that size then fill it
-		returnBuffer = jamCreateBuffer(bufferSize);
-		fread((uint64*)returnBuffer->buffer, 1, bufferSize, bufferFile);
+		// Resize buffer to new size
+		if (jamResizeBuffer(returnBuffer, bufferSize)) {
+			// Fill the buffer
+			fread((uint64*)returnBuffer->buffer, 1, bufferSize, bufferFile);
 
-		// ERRRRRRRORRRRRRR CHEQUES
-		if (ferror(bufferFile) != 0) {
-			jamFreeBuffer(returnBuffer);
-			returnBuffer = NULL;
-			jSetError(ERROR_FILE_FAILED, "Failed to read buffer from file '%s'\n", filename);
+			if (ferror(bufferFile) != 0) {
+				jamFreeBuffer(returnBuffer);
+				returnBuffer = NULL;
+				jSetError(ERROR_FILE_FAILED, "Failed to read buffer from file '%s'\n", filename);
+			}
+		} else {
+			jSetError(ERROR_ALLOC_FAILED, "Failed to resize buffer for file '%s'", filename);
 		}
 		fclose(bufferFile);
-	} else {
-		jSetError(ERROR_OPEN_FAILED, "Failed to open file '%s'\n", filename);
+	} else if (returnBuffer == NULL) {
+		jSetError(ERROR_ALLOC_FAILED, "Failed to open file '%s'\n", filename);
 	}
 
 	return returnBuffer;
+}
+////////////////////////////////////////////////
+
+////////////////////////////////////////////////
+void jamSaveBuffer(JamBuffer* buffer, const char* filename) {
+	FILE* file = fopen(filename, "wb");
+
+	if (buffer == NULL && file != NULL) {
+		fwrite(buffer->buffer, buffer->size, 1, file);
+		fclose(file);
+	} else {
+		if (file == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer does not exist for filename \"%s\"", filename);
+		if (buffer == NULL)
+			jSetError(ERROR_OPEN_FAILED, "Failed to open file \"%s\"", filename);
+	}
 }
 ////////////////////////////////////////////////
 

@@ -260,6 +260,10 @@ int main(int argc, char* argv[]) {
 			run = runGame(font);
 	}
 
+	////////////// Testing buffers //////////////
+	JamBuffer* buffer = jamLoadBuffer("buffer.bin");
+	jamFreeBuffer(buffer);
+
 	jamFreeFont(font);
 	jamRendererQuit();
 	return 0;

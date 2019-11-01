@@ -42,5 +42,3 @@ To-Do List
  - Renderer
     + Improve/make more consistent camera support
     + Shader support
- - General
-    + Make engine more resilient to bad values
