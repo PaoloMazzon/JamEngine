@@ -142,39 +142,41 @@ void jamWorldProcFrame(JamWorld *world) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void jamWorldRemoveEntity(JamWorld *world, JamEntity *entity) {
+void jamWorldRemoveEntity(JamWorld *world, int id) {
 	int i;
 	JamEntityType type = et_None;
+	JamEntity* ent;
+	bool found = false;
 
 	if (world != NULL) {
-		// First find it in the master list
-		for (i = 0; i < world->worldEntities->size; i++) {
-			if (world->worldEntities->entities[i] != NULL && world->worldEntities->entities[i] == entity) {
-				// We found it, call its destroy function if applicable
-				if (world->worldEntities->entities[i]->behaviour != NULL && world->worldEntities->entities[i]->behaviour->onDestruction != NULL)
-					(*world->worldEntities->entities[i]->behaviour->onDestruction)(world, world->worldEntities->entities[i]);
+		// Make sure its present in the master list
+		ent = jamFindEntityFromID(world, id);
+		if (ent != NULL) {
+			// We found it, call its destroy function if applicable
+			if (ent->behaviour != NULL && ent->behaviour->onDestruction != NULL)
+				(*ent->behaviour->onDestruction)(world, ent);
 
-				// Record the type and destroy it
-				type = world->worldEntities->entities[i]->type;
-				jamFreeEntity(world->worldEntities->entities[i], false, false, false);
-				world->worldEntities->entities[i] = NULL;
-			}
+			// Record the type and destroy it
+			type = ent->type;
+			found = true;
+			jamFreeEntity(ent, false, false, false);
+			world->worldEntities->entities[id] = NULL;
 		}
 
-		// Clear it from the other lists if it actually exists
+		// Find and get rid of the remaining dangling pointers
 		if (type != et_None) {
 			for (i = 0; i < world->entityTypes[type]->size; i++)
-				if (world->entityTypes[type]->entities[i] != NULL && world->entityTypes[type]->entities[i] == entity)
+				if (world->entityTypes[type]->entities[i] != NULL && world->entityTypes[type]->entities[i] == ent)
 					world->entityTypes[type]->entities[i] = NULL;
 			for (i = 0; i < world->entityByRange[ENTITIES_IN_RANGE]->size; i++)
-				if (world->entityByRange[ENTITIES_IN_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == entity)
+				if (world->entityByRange[ENTITIES_IN_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_IN_RANGE]->entities[i] == ent)
 					world->entityByRange[ENTITIES_IN_RANGE]->entities[i] = NULL;
 			for (i = 0; i < world->entityByRange[ENTITIES_OUT_OF_RANGE]->size; i++)
-				if (world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] == entity)
+				if (world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] != NULL && world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] == ent)
 					world->entityByRange[ENTITIES_OUT_OF_RANGE]->entities[i] = NULL;
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldRemoveEntity)");
+		jSetError(ERROR_NULL_POINTER, "World does not exist");
 	}
 }
 ///////////////////////////////////////////////////////
@@ -293,7 +295,7 @@ void jamFreeWorld(JamWorld *world) {
 		// Free all the entities first
 		for (i = 0; i < world->worldEntities->size; i++)
 			if (world->worldEntities->entities[i] != NULL)
-				jamWorldRemoveEntity(world, world->worldEntities->entities[i]);
+				jamWorldRemoveEntity(world, world->worldEntities->entities[i]->id);
 
 		// Free the tile maps
 		for (i = 0; i < MAX_TILEMAPS; i++)

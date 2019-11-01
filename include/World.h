@@ -128,7 +128,7 @@ void jamWorldRotateEntity(JamWorld *world, JamEntity *entity);
 /// it will loop over at least 3 different entity lists trying to
 /// find all references to the specific entity
 /// \throws ERROR_NULL_POINTER
-void jamWorldRemoveEntity(JamWorld *world, JamEntity *entity);
+void jamWorldRemoveEntity(JamWorld *world, int id);
 
 /// \brief Sorts a world's entities into lists filtered by distance
 ///
