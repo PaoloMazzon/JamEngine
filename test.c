@@ -142,9 +142,9 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 				jamReverseTween(&exitTween);
 
 			// And button presses
-			if (jamInputCheckMouseButtonPressed(MOUSE_LEFT_BUTTON) && inPlayButton)
+			if ((jamInputCheckMouseButtonPressed(MOUSE_LEFT_BUTTON) && inPlayButton) || jamInputCheckKeyPressed(JAM_KB_SPACE))
 				runLoop = runGame(font);
-			if (jamInputCheckMouseButtonPressed(MOUSE_LEFT_BUTTON) && inExitButton)
+			if ((jamInputCheckMouseButtonPressed(MOUSE_LEFT_BUTTON) && inExitButton) || jamInputCheckKeyPressed(JAM_KB_ESCAPE))
 				runLoop = false;
 
 			// Draw the buttons
@@ -262,6 +262,7 @@ int main(int argc, char* argv[]) {
 
 	////////////// Testing buffers //////////////
 	JamBuffer* buffer = jamLoadBuffer("buffer.bin");
+    printf("%i\n", jamReadByte4(buffer, 0));
 	jamFreeBuffer(buffer);
 
 	jamFreeFont(font);

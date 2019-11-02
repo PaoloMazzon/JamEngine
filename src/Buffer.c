@@ -72,7 +72,7 @@ JamBuffer* jamLoadBuffer(const char *filename) {
 void jamSaveBuffer(JamBuffer* buffer, const char* filename) {
 	FILE* file = fopen(filename, "wb");
 
-	if (buffer == NULL && file != NULL) {
+	if (buffer != NULL && file != NULL) {
 		fwrite(buffer->buffer, buffer->size, 1, file);
 		fclose(file);
 	} else {
@@ -126,7 +126,7 @@ void jamZeroBuffer(JamBuffer *buffer) {
 bool jamAddByte1(JamBuffer *buffer, uint8 byte) {
 	// Run some checks
 	if (buffer->pointer + 1 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS, "");
+		jSetError(ERROR_OUT_OF_BOUNDS, "Buffer pointer out of bounds");
 		return false;
 	}
 
@@ -143,7 +143,7 @@ bool jamAddByte1(JamBuffer *buffer, uint8 byte) {
 bool jamAddByte2(JamBuffer *buffer, uint16 bytes) {
 	// Run some checks
 	if (buffer->pointer + 2 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS, "");
+		jSetError(ERROR_OUT_OF_BOUNDS, "Buffer pointer out of bounds");
 		return false;
 	}
 
@@ -161,7 +161,7 @@ bool jamAddByte2(JamBuffer *buffer, uint16 bytes) {
 bool jamAddByte4(JamBuffer *buffer, uint32 bytes) {
 	// Run some checks
 	if (buffer->pointer + 4 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS, "");
+		jSetError(ERROR_OUT_OF_BOUNDS, "Buffer pointer out of bounds");
 		return false;
 	}
 
@@ -181,7 +181,7 @@ bool jamAddByte4(JamBuffer *buffer, uint32 bytes) {
 bool jamAddByte8(JamBuffer *buffer, uint64 bytes) {
 	// Run some checks
 	if (buffer->pointer + 8 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS, "");
+		jSetError(ERROR_OUT_OF_BOUNDS, "Buffer pointer out of bounds");
 		return false;
 	}
 

@@ -24,6 +24,8 @@ typedef unsigned int uint32;
 typedef unsigned long long uint64;
 #endif
 
+// TODO: Use memcpy to write float/double in/out functions for the buffer
+
 ////////////////////////////////////////////////
 /// \brief A binary buffer for storing info
 ///
