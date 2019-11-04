@@ -123,163 +123,51 @@ void jamZeroBuffer(JamBuffer *buffer) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool jamAddByte1(JamBuffer *buffer, uint8 byte) {
-	// Run some checks
-	if (buffer->pointer + 1 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS, "Buffer pointer out of bounds");
-		return false;
+void jamAddByte1(JamBuffer *buffer, void* data) {
+	if (buffer != NULL && buffer->pointer + 1 < buffer->size) {
+		memcpy(&buffer->buffer[buffer->pointer], data, 1);
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
 	}
-
-	// Place the actual byte
-	buffer->buffer[buffer->pointer] = (uint8)(byte);
-
-	// Displace the pointer
-	buffer->pointer += 1;
-	return true;
 }
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool jamAddByte2(JamBuffer *buffer, uint16 bytes) {
-	// Run some checks
-	if (buffer->pointer + 2 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS, "Buffer pointer out of bounds");
-		return false;
-	}
-
-	// Place the actual bytes
-	buffer->buffer[buffer->pointer] = (uint8)(bytes & 255);
-	buffer->buffer[buffer->pointer + 1] = (uint8)((bytes >> 8) & 255);
-
-	// Displace the pointer
-	buffer->pointer += 2;
-	return true;
-}
+void jamAddByte2(JamBuffer *buffer, void* data);
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool jamAddByte4(JamBuffer *buffer, uint32 bytes) {
-	// Run some checks
-	if (buffer->pointer + 4 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS, "Buffer pointer out of bounds");
-		return false;
-	}
-
-	// Place the actual bytes
-	buffer->buffer[buffer->pointer] = (uint8)(bytes & 255);
-	buffer->buffer[buffer->pointer + 1] = (uint8)((bytes >> 8) & 255);
-	buffer->buffer[buffer->pointer + 2] = (uint8)((bytes >> 16) & 255);
-	buffer->buffer[buffer->pointer + 3] = (uint8)((bytes >> 24) & 255);
-
-	// Displace the pointer
-	buffer->pointer += 4;
-	return true;
-}
+void jamAddByte4(JamBuffer *buffer, void* data);
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool jamAddByte8(JamBuffer *buffer, uint64 bytes) {
-	// Run some checks
-	if (buffer->pointer + 8 > buffer->size) {
-		jSetError(ERROR_OUT_OF_BOUNDS, "Buffer pointer out of bounds");
-		return false;
-	}
-
-	// Place the actual bytes
-	buffer->buffer[buffer->pointer] = (uint8)(bytes & 255);
-	buffer->buffer[buffer->pointer + 1] = (uint8)((bytes >> 8) & 255);
-	buffer->buffer[buffer->pointer + 2] = (uint8)((bytes >> 16) & 255);
-	buffer->buffer[buffer->pointer + 3] = (uint8)((bytes >> 24) & 255);
-	buffer->buffer[buffer->pointer + 4] = (uint8)((bytes >> 32) & 255);
-	buffer->buffer[buffer->pointer + 5] = (uint8)((bytes >> 40) & 255);
-	buffer->buffer[buffer->pointer + 6] = (uint8)((bytes >> 48) & 255);
-	buffer->buffer[buffer->pointer + 7] = (uint8)((bytes >> 56) & 255);
-
-	// Displace the pointer
-	buffer->pointer += 8;
-	return true;
-}
+void jamAddByte8(JamBuffer *buffer, void* data);
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-uint8 jamReadByte1(JamBuffer *buffer, uint8 defaultReturn) {
-	// Checks
-	if (buffer->pointer + 1 > buffer->size)
-		return defaultReturn;
-
-	// The new integer
-	uint8 returnInt = 0;
-
-	// Process it
-	returnInt = buffer->buffer[buffer->pointer];
-
-// Increase the pointer
-	buffer->pointer += 1;
-	return returnInt;
-}
+void jamAddByteX(JamBuffer *buffer, void* data, uint32 size);
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-uint16 jamReadByte2(JamBuffer *buffer, uint16 defaultReturn) {
-	// Checks
-	if (buffer->pointer + 2 > buffer->size)
-		return defaultReturn;
-
-	// The new integer
-	uint16 returnInt = 0;
-
-	// Process it
-	returnInt |= (uint16)buffer->buffer[buffer->pointer + 1] << 8;
-	returnInt |= (uint16)buffer->buffer[buffer->pointer];
-
-	// Increase the pointer
-	buffer->pointer += 2;
-	return returnInt;
-}
+void jamReadByte1(JamBuffer *buffer, void* data);
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-uint32 jamReadByte4(JamBuffer *buffer, uint32 defaultReturn) {
-	// Checks
-	if (buffer->pointer + 4 > buffer->size)
-		return defaultReturn;
-
-	// The new integer
-	uint32 returnInt = 0;
-
-	// Process it
-	returnInt |= (uint32)buffer->buffer[buffer->pointer + 3] << 24;
-	returnInt |= (uint32)buffer->buffer[buffer->pointer + 2] << 16;
-	returnInt |= (uint32)buffer->buffer[buffer->pointer + 1] << 8;
-	returnInt |= (uint32)buffer->buffer[buffer->pointer];
-
-	// Increase the pointer
-	buffer->pointer += 4;
-	return returnInt;
-}
+void jamReadByte2(JamBuffer *buffer, void* data);
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-uint64 jamReadByte8(JamBuffer *buffer, uint64 defaultReturn) {
-	// Checks
-	if (buffer->pointer + 8 > buffer->size)
-		return defaultReturn;
-
-	// The new integer
-	uint64 returnInt = 0;
-
-	// Process it
-	returnInt |= (uint64)buffer->buffer[buffer->pointer + 7] << 56;
-	returnInt |= (uint64)buffer->buffer[buffer->pointer + 6] << 48;
-	returnInt |= (uint64)buffer->buffer[buffer->pointer + 5] << 40;
-	returnInt |= (uint64)buffer->buffer[buffer->pointer + 4] << 32;
-	returnInt |= (uint64)buffer->buffer[buffer->pointer + 3] << 24;
-	returnInt |= (uint64)buffer->buffer[buffer->pointer + 2] << 16;
-	returnInt |= (uint64)buffer->buffer[buffer->pointer + 1] << 8;
-	returnInt |= (uint64)buffer->buffer[buffer->pointer];
-
-	// Increase the pointer
-	buffer->pointer += 8;
-	return returnInt;
-}
+void jamReadByte4(JamBuffer *buffer, void* data);
 ////////////////////////////////////////////////
+
+////////////////////////////////////////////////
+void jamReadByte8(JamBuffer *buffer, void* data);
+////////////////////////////////////////////////
+
+////////////////////////////////////////////////
+void jamReadByteX(JamBuffer *buffer, void* data, uint32 size);
+////////////////////////////////////////////////
+

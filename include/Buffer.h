@@ -105,11 +105,12 @@ void jamZeroBuffer(JamBuffer *buffer);
 /// \param buffer The buffer to use
 /// \param byte The byte to place
 ///
-/// \return Returns false if failed
+/// data should be at least 1 byte long or the program
+/// will crash
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-bool jamAddByte1(JamBuffer *buffer, uint8 byte);
+void jamAddByte1(JamBuffer *buffer, void* data);
 
 ////////////////////////////////////////////////
 /// \brief Places bytes at the pointer
@@ -117,11 +118,12 @@ bool jamAddByte1(JamBuffer *buffer, uint8 byte);
 /// \param buffer The buffer to use
 /// \param bytes The byte to place
 ///
-/// \return Returns false if failed
+/// data should be at least 2 byte long or the program
+/// will crash
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-bool jamAddByte2(JamBuffer *buffer, uint16 bytes);
+void jamAddByte2(JamBuffer *buffer, void* data);
 
 ////////////////////////////////////////////////
 /// \brief Places bytes at the pointer
@@ -129,11 +131,12 @@ bool jamAddByte2(JamBuffer *buffer, uint16 bytes);
 /// \param buffer The buffer to use
 /// \param bytes The byte to place
 ///
-/// \return Returns false if failed
+/// data should be at least 4 byte long or the program
+/// will crash
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-bool jamAddByte4(JamBuffer *buffer, uint32 bytes);
+void jamAddByte4(JamBuffer *buffer, void* data);
 
 ////////////////////////////////////////////////
 /// \brief Places bytes at the pointer
@@ -141,11 +144,15 @@ bool jamAddByte4(JamBuffer *buffer, uint32 bytes);
 /// \param buffer The buffer to use
 /// \param bytes The bytes to place
 ///
-/// \return Returns false if failed
+/// data should be at least 8 byte long or the program
+/// will crash
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-bool jamAddByte8(JamBuffer *buffer, uint64 bytes);
+void jamAddByte8(JamBuffer *buffer, void* data);
+
+/// \brief Adds a variable amount of data to a buffer
+void jamAddByteX(JamBuffer* buffer, void* data, uint32 size);
 
 ////////////////////////////////////////////////
 /// \brief Reads a byte at the pointer
@@ -154,8 +161,11 @@ bool jamAddByte8(JamBuffer *buffer, uint64 bytes);
 /// \param defaultReturn the default value to return
 ///
 /// \return Returns the read value or defaultReturn
+///
+/// data should be at least 1 byte long or the program
+/// will crash
 ////////////////////////////////////////////////
-uint8 jamReadByte1(JamBuffer *buffer, uint8 defaultReturn);
+void jamReadByte1(JamBuffer *buffer, void* data);
 
 ////////////////////////////////////////////////
 /// \brief Reads bytes at the pointer
@@ -164,8 +174,11 @@ uint8 jamReadByte1(JamBuffer *buffer, uint8 defaultReturn);
 /// \param defaultReturn the default value to return
 ///
 /// \return Returns the read value or defaultReturn
+///
+/// data should be at least 2 byte long or the program
+/// will crash
 ////////////////////////////////////////////////
-uint16 jamReadByte2(JamBuffer *buffer, uint16 defaultReturn);
+void jamReadByte2(JamBuffer *buffer, void* data);
 
 ////////////////////////////////////////////////
 /// \brief Reads bytes at the pointer
@@ -174,8 +187,11 @@ uint16 jamReadByte2(JamBuffer *buffer, uint16 defaultReturn);
 /// \param defaultReturn the default value to return
 ///
 /// \return Returns the read value or defaultReturn
+///
+/// data should be at least 4 byte long or the program
+/// will crash
 ////////////////////////////////////////////////
-uint32 jamReadByte4(JamBuffer *buffer, uint32 defaultReturn);
+void jamReadByte4(JamBuffer *buffer, void* data);
 
 ////////////////////////////////////////////////
 /// \brief Reads bytes at the pointer
@@ -184,5 +200,11 @@ uint32 jamReadByte4(JamBuffer *buffer, uint32 defaultReturn);
 /// \param defaultReturn the default value to return
 ///
 /// \return Returns the read value or defaultReturn
+///
+/// data should be at least 8 byte long or the program
+/// will crash
 ////////////////////////////////////////////////
-uint64 jamReadByte8(JamBuffer *buffer, uint64 defaultReturn);
+void jamReadByte8(JamBuffer *buffer, void* data);
+
+/// \brief Reads a variable amount of data from a buffer into data
+void jamReadByteX(JamBuffer* buffer, void* data, uint32 size);
