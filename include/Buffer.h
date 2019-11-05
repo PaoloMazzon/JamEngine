@@ -86,11 +86,15 @@ void jamFreeBuffer(JamBuffer *buffer);
 /// \param buffer The buffer to resize
 /// \param newSize The buffer's new size
 ///
-/// \return Returns false if failed
+/// This function has the side effect of setting the buffer's
+/// pointer to zero
 ///
 /// \throws ERROR_REALLOC_FAILED
 ////////////////////////////////////////////////
-bool jamResizeBuffer(JamBuffer *buffer, uint64 newSize);
+void jamResizeBuffer(JamBuffer *buffer, uint64 newSize);
+
+/// \brief Sets the buffer pointer to a new location
+void jamBufferSeek(JamBuffer* buffer, uint64 position);
 
 ////////////////////////////////////////////////
 /// \brief Zeroes a buffer

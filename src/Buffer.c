@@ -2,6 +2,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <JamError.h>
+#include <string.h>
 
 ////////////////////////////////////////////////
 JamBuffer* jamCreateBuffer(uint64 size) {
@@ -12,11 +13,8 @@ JamBuffer* jamCreateBuffer(uint64 size) {
 	// Check them
 	if (internalBuffer == NULL || buffer == NULL) {
 		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate one of the buffers.\n");
-
-		if (buffer != NULL)
-			free(buffer);
-		if (internalBuffer != NULL)
-			free(internalBuffer);
+		free(buffer);
+		free(internalBuffer);
 	} else {
 		// Assign buffer things
 		buffer->buffer = internalBuffer;
@@ -47,7 +45,8 @@ JamBuffer* jamLoadBuffer(const char *filename) {
 		rewind(bufferFile);
 
 		// Resize buffer to new size
-		if (jamResizeBuffer(returnBuffer, bufferSize)) {
+		jamResizeBuffer(returnBuffer, bufferSize);
+		if (returnBuffer->size == bufferSize) {
 			// Fill the buffer
 			fread((uint64*)returnBuffer->buffer, 1, bufferSize, bufferFile);
 
@@ -95,37 +94,53 @@ void jamFreeBuffer(JamBuffer *buffer) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-bool jamResizeBuffer(JamBuffer *buffer, uint64 newSize) {
-	uint8* newBuffer = (uint8*)realloc((void*)buffer->buffer, (size_t)newSize);
-	bool ret = true;
-
-	// CHECKS
-	if (newBuffer == NULL) {
-		ret = false;
-		jSetError(ERROR_REALLOC_FAILED, "Failed to create new buffer (jamResizeBuffer)");
+void jamResizeBuffer(JamBuffer *buffer, uint64 newSize) {
+	uint8* newBuffer;
+	if (buffer != NULL) {
+		newBuffer = (uint8*)realloc(buffer->buffer, newSize);
+		if (newBuffer != NULL) {
+			buffer->buffer = newBuffer;
+			buffer->size = newSize;
+			buffer->pointer = 0;
+		} else {
+			jSetError(ERROR_REALLOC_FAILED, "Failed to resize buffer");
+		}
 	} else {
-		buffer->buffer = newBuffer;
-		buffer->size = newSize;
-		buffer->pointer = 0;
+		jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
 	}
+}
+////////////////////////////////////////////////
 
-	return ret;
+////////////////////////////////////////////////
+void jamBufferSeek(JamBuffer* buffer, uint64 position) {
+	if (buffer != NULL && position <= buffer->size) {
+		buffer->pointer = position;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Attempt to seek out of bounds %i", position);
+	}
 }
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
 void jamZeroBuffer(JamBuffer *buffer) {
-	// Loop through the whole buffer and set it to zero
 	uint64 i;
-	for (i = 0; i < buffer->size; i++)
-		buffer->buffer[i] = 0;
+	if (buffer != NULL) {
+		for (i = 0; i < buffer->size; i++)
+			buffer->buffer[i] = 0;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+	}
 }
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
 void jamAddByte1(JamBuffer *buffer, void* data) {
-	if (buffer != NULL && buffer->pointer + 1 < buffer->size) {
+	if (buffer != NULL && buffer->pointer + 1 <= buffer->size) {
 		memcpy(&buffer->buffer[buffer->pointer], data, 1);
+		buffer->pointer += 1;
 	} else {
 		if (buffer == NULL)
 			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
@@ -136,38 +151,128 @@ void jamAddByte1(JamBuffer *buffer, void* data) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamAddByte2(JamBuffer *buffer, void* data);
+void jamAddByte2(JamBuffer *buffer, void* data) {
+	if (buffer != NULL && buffer->pointer + 2 <= buffer->size) {
+		memcpy(&buffer->buffer[buffer->pointer], data, 2);
+		buffer->pointer += 2;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
+	}
+}
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamAddByte4(JamBuffer *buffer, void* data);
+void jamAddByte4(JamBuffer *buffer, void* data) {
+	if (buffer != NULL && buffer->pointer + 4 <= buffer->size) {
+		memcpy(&buffer->buffer[buffer->pointer], data, 4);
+		buffer->pointer += 4;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
+	}
+}
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamAddByte8(JamBuffer *buffer, void* data);
+void jamAddByte8(JamBuffer *buffer, void* data) {
+	if (buffer != NULL && buffer->pointer + 8 <= buffer->size) {
+		memcpy(&buffer->buffer[buffer->pointer], data, 8);
+		buffer->pointer += 8;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
+	}
+}
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamAddByteX(JamBuffer *buffer, void* data, uint32 size);
+void jamAddByteX(JamBuffer *buffer, void* data, uint32 size) {
+	if (buffer != NULL && buffer->pointer + size <= buffer->size) {
+		memcpy(&buffer->buffer[buffer->pointer], data, size);
+		buffer->pointer += size;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
+	}
+}
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByte1(JamBuffer *buffer, void* data);
+void jamReadByte1(JamBuffer *buffer, void* data) {
+	if (buffer != NULL && buffer->pointer + 1 <= buffer->size) {
+		memcpy(data, &buffer->buffer[buffer->pointer], 1);
+		buffer->pointer += 1;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
+	}
+}
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByte2(JamBuffer *buffer, void* data);
+void jamReadByte2(JamBuffer *buffer, void* data) {
+	if (buffer != NULL && buffer->pointer + 2 <= buffer->size) {
+		memcpy(data, &buffer->buffer[buffer->pointer], 2);
+		buffer->pointer += 2;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
+	}
+}
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByte4(JamBuffer *buffer, void* data);
+void jamReadByte4(JamBuffer *buffer, void* data) {
+	if (buffer != NULL && buffer->pointer + 4 <= buffer->size) {
+		memcpy(data, &buffer->buffer[buffer->pointer], 4);
+		buffer->pointer += 4;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
+	}
+}
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByte8(JamBuffer *buffer, void* data);
+void jamReadByte8(JamBuffer *buffer, void* data) {
+	if (buffer != NULL && buffer->pointer + 8 <= buffer->size) {
+		memcpy(data, &buffer->buffer[buffer->pointer], 8);
+		buffer->pointer += 8;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
+	}
+}
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByteX(JamBuffer *buffer, void* data, uint32 size);
+void jamReadByteX(JamBuffer *buffer, void* data, uint32 size) {
+	if (buffer != NULL && buffer->pointer + size <= buffer->size) {
+		memcpy(data, &buffer->buffer[buffer->pointer], size);
+		buffer->pointer += size;
+	} else {
+		if (buffer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Buffer doesn't exist");
+		else
+			jSetError(ERROR_OUT_OF_BOUNDS, "Buffer is too small to add byte(s)");
+	}
+}
 ////////////////////////////////////////////////
 
