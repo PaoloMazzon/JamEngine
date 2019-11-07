@@ -48,6 +48,9 @@ And here is a list of recognized keys for every asset type
    + `radius` Radius of a circular hitbox (default=0)
  + Worlds ***(prefix = 'w')***
    + `file` The .tmx file to load the world from (The handler will call jamLoadWorldFromTMX internally)
+   + `width` Width of the filter rectangle in the world
+   + `height` Height of the filter rectangle in the world
+   + `radius` Radius of the filter circle in the world, although rectangle settings take precedence if both are provided
  + Audio Buffers ***(prefix = 'a')***
    + `file` The file to load buffer from, as of right now only .wav files are supported
 
