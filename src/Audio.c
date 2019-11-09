@@ -19,7 +19,11 @@ void jamInitAudioPlayer(int* argc, char** argv) {
 
 		if (gAudioPlayer != NULL) {
 			// Setup OpenAL device/context
+#ifdef WIN32
+			gAudioPlayer->audioDevice = alcOpenDevice(NULL);
+#else
 			gAudioPlayer->audioDevice = alcOpenDevice("OpenAL Soft");
+#endif
 			gAudioPlayer->audioContext = alcCreateContext(gAudioPlayer->audioDevice, NULL);
 			alcMakeContextCurrent(gAudioPlayer->audioContext);
 			alutInitWithoutContext(argc, argv);

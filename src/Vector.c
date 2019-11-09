@@ -7,6 +7,7 @@
 #include "JamError.h"
 #include <malloc.h>
 #include <Vector.h>
+#include <stdlib.h>
 
 /*typedef struct {
 	double* xVerts; ///< X component of the vertices
