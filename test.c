@@ -182,7 +182,7 @@ bool runGame(JamFont* font) {
 	JamWorld* gameWorld = jamGetWorldFromHandler(gHandler, "GameWorld");
 
 	// Some setup
-	jamRendererSetCameraPos(50, 50);
+	jamRendererSetCameraPos(25, 25);
 	JamAudioBuffer* sound = jamGetAudioBufferFromHandler(gHandler, "PopSound");
 	JamAudioSource* source = jamCreateAudioSource();
 
@@ -213,7 +213,7 @@ bool runGame(JamFont* font) {
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				// Draw the background
-				jamDrawTexture(jamGetTextureFromHandler(gHandler, "BackgroundTexture"), 0, 0);
+				jamDrawTexture(jamGetTextureFromHandler(gHandler, "BackgroundTexture"), (sint32)jamRendererGetCameraX(), (sint32)jamRendererGetCameraX());
 
 				// Draw the game world
 				for (i = 0; i < MAX_TILEMAPS; i++)
