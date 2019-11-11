@@ -51,7 +51,11 @@ void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 
 					// Load up the gRenderer struct
 					gRenderer->screenBuffer = tex;
 					gRenderer->internalRenderer = sdlRenderer;
-					gRenderer->timePerFrame = 1000000000 / (uint64_t)framerate;
+					gRenderer->sleepEnabled = true;
+					if (framerate != 0)
+						gRenderer->timePerFrame = 1000000000 / (uint64_t)framerate;
+					else
+						gRenderer->sleepEnabled = false;
 					gRenderer->lastTime = ns();
 					gRenderer->displayBufferW = w;
 					gRenderer->displayBufferH = h;
@@ -268,7 +272,12 @@ void jamSetWindowTitle(const char *name) {
 /////////////////////////////////////////////////////////////
 void jamSetFramerate(double framerate) {
 	if (gRenderer != NULL) {
-		gRenderer->timePerFrame = 1000000000 / (uint64_t) framerate;
+		if (framerate != 0) {
+			gRenderer->timePerFrame = 1000000000 / (uint64_t) framerate;
+			gRenderer->sleepEnabled = true;
+		} else {
+			gRenderer->sleepEnabled = false;
+		}
 		gRenderer->fps = (uint64_t) framerate;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized");
@@ -472,12 +481,13 @@ void jamProcEndFrame() {
 		gRenderer->between = ns() - gRenderer->lastTime;
 
 		// Sleep for any remaining time/calculate framerate
-		if (gRenderer->between < gRenderer->timePerFrame)
-			jamSleep(gRenderer->timePerFrame - gRenderer->between);
+		if (gRenderer->sleepEnabled)
+			if (gRenderer->between < gRenderer->timePerFrame)
+				jamSleep(gRenderer->timePerFrame - gRenderer->between);
 
 		// Calculate the framerate and delta
 		gRenderer->framerate = 1000000000 / ((double)ns() - (double)gRenderer->lastTime);
-		gRenderer->delta = (double)(ns() - gRenderer->lastTime) / ((double)gRenderer->timePerFrame);
+		gRenderer->delta = ((double)ns() - (double)gRenderer->lastTime) / (1000000000.0 / 60.0);
 
 		// Update the last time
 		gRenderer->lastTime = ns();

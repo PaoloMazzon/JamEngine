@@ -29,20 +29,21 @@ typedef struct _JamTexture JamTexture;
 /// Updating the game window undoes any changes you make to
 /// the size of the rendered buffer.
 typedef struct {
-	void* internalRenderer; ///< The SDL2 internal renderer
-	void* gameWindow; ///< The SDL2 window to draw to
+	void* internalRenderer;   ///< The SDL2 internal renderer
+	void* gameWindow;         ///< The SDL2 window to draw to
 	JamTexture* screenBuffer; ///< We don't draw directly to the screen, rather through this texture
-	uint32 displayBufferW; ///< The width of the buffer on screen
-	uint32 displayBufferH; ///< The height of the buffer on screen
-	uint32 displayBufferX; ///< X position on screen of the display buffer
-	uint32 displayBufferY; ///< Y position on screen of the display buffer
+	uint32 displayBufferW;    ///< The width of the buffer on screen
+	uint32 displayBufferH;    ///< The height of the buffer on screen
+	uint32 displayBufferX;    ///< X position on screen of the display buffer
+	uint32 displayBufferY;    ///< Y position on screen of the display buffer
 
-	uint64 lastTime; ///< Used for calculating frame wait time
-	uint64 between; ///< Also used for calculating frame wait time
-	uint64 timePerFrame; ///< Number of microseconds per frame
-	double framerate; ///< The current framerate
-	uint64 fps; ///< The expected framerate
+	uint64 lastTime;              ///< Used for calculating frame wait time
+	uint64 between;               ///< Also used for calculating frame wait time
+	uint64 timePerFrame;          ///< Number of microseconds per frame
+	double framerate;             ///< The current framerate
+	uint64 fps;                   ///< The expected framerate
 	bool renderingToScreenBuffer; ///< Until SDL_GetRenderTarget is figured out, this is a stand in
+	bool sleepEnabled;            ///< For unlocking framerates
 
 	double cameraX; ///< X Location of the camera in the game world (offset to render by)
 	double cameraY; ///< Y Location of the camera in the game world (offset to render by)
@@ -51,6 +52,13 @@ typedef struct {
 } JamRenderer;
 
 /// \brief Initializes a Renderer
+/// \param argc Command line parameters argument count (&argc)
+/// \param arv Command line parameters
+/// \param name Window title
+/// \param w Width of the window (and consequentially the initial screen buffer)
+/// \param h Height of the window (and consequentially the initial screen buffer)
+/// \param framerate Framerate to run the game at (or 0 to unlock the framerate)
+///
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_ALLOC_FAILED
 void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 h, double framerate);
@@ -80,6 +88,18 @@ void jamRendererMoveCamera(double x_relative, double y_relative);
 double jamRendererGetFramerate();
 
 /// \brief Grabs the delta multiplier for this frame
+///
+/// The delta multiplier is a way of allowing game logic to operate (relatively)
+/// independent of framerate. The delta multiplier is calculated by taking the
+/// actual amount of time it took to process a given frame and divides it by the
+/// theoretical amount of time a 60 fps frame should take. For example, if a game
+/// is running at ~30 fps, then it would be 60 / ~30 which is a delta multiplier
+/// of ~2, and if it were running at ~120 fps, then it would be 60 / ~120 which is
+/// a delta multiplier of ~0.5. You can then take this value and multiply things
+/// like movement speed against it, which will make your movement look similar at
+/// any framerate. Do note that the delta multiplier will always be calculated as
+/// is your framerate is 60, even if your framerate is not 60.
+///
 /// \throws ERROR_NULL_POINTER
 double jamRendererGetDelta();
 
@@ -125,6 +145,9 @@ void jamSetAA(bool aa);
 void jamSetVSync(bool vsync);
 
 /// \brief Sets the renderer's framerate
+///
+/// Set `framerate` to 0 to unlock the framerate.
+///
 /// \throws ERROR_NULL_POINTER
 void jamSetFramerate(double framerate);
 

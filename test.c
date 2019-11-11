@@ -13,7 +13,7 @@
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
 #define GAME_HEIGHT 360
-#define VIEW_MULTIPLIER 1
+#define VIEW_MULTIPLIER 2
 #define SCREEN_WIDTH GAME_WIDTH * VIEW_MULTIPLIER
 #define SCREEN_HEIGHT GAME_HEIGHT * VIEW_MULTIPLIER
 #define BLOCK_WIDTH 16
@@ -44,7 +44,7 @@ void onEnemyFrame(JamWorld* world, JamEntity* self) {
 	// Make them face the direction they are walking in
 	self->scaleX = sign(self->hSpeed);
 
-	self->x += self->hSpeed;
+	self->x += self->hSpeed * jamRendererGetDelta();
 }
 
 void onPlayerFrame(JamWorld* world, JamEntity* self) {
@@ -79,8 +79,8 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 			self->y += sign(self->vSpeed);
 		self->vSpeed = 0;
 	}
-	self->x += self->hSpeed;
-	self->y += self->vSpeed;
+	self->x += self->hSpeed * jamRendererGetDelta();
+	self->y += self->vSpeed * jamRendererGetDelta();
 
 	jamAudioSetListenerPosition((float)self->x, (float)self->y, 0);
 
