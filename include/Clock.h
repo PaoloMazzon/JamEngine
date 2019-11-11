@@ -1,64 +1,18 @@
 /// \file Clock.h
 /// \author lugi1
 /// \brief This is a very nice tool that makes precise timing easy
-///
-/// The code between the slash blocks is credit to @roxlu on Twitter
-/// or http://roxlu.com/
 #pragma once
-
-//////////////////////////////////////////////////////////////////////
 #include <stdint.h>
-#if defined(__linux)
-#	define HAVE_POSIX_TIMER
-#	include <time.h>
-#	ifdef CLOCK_MONOTONIC
-#		define CLOCKID CLOCK_MONOTONIC
-#	else
-#		define CLOCKID CLOCK_REALTIME
-#	endif
-#elif defined(__APPLE__)
-#	define HAVE_MACH_TIMER
-#	include <mach/mach_time.h>
-#elif defined(_WIN32)
-#	define WIN32_LEAN_AND_MEAN
-#	include <windows.h>
-#endif
 
-/// \brief Grabs current time in nanoseconds
-static uint64_t ns() {
-	static uint64_t is_init = 0;
-#if defined(__APPLE__)
-	static mach_timebase_info_data_t info;
-		if (is_init == 0) {
-			mach_timebase_info(&info);
-			is_init = 1;
-		}
-		uint64_t now = mach_absolute_time();
-		now *= info.numer;
-		now /= info.denom;
-		return now;
-#elif defined(__linux)
-	static struct timespec linux_rate;
-		if (is_init == 0) {
-			clock_getres(CLOCKID, &linux_rate);
-			is_init = 1;
-		}
-		uint64_t now;
-		clock_gettime(CLOCKID, &linux_rate);
-		now = (uint64_t)(linux_rate.tv_sec * 1.0e9 + linux_rate.tv_nsec);
-		return now;
-#elif defined(_WIN32)
-	static LARGE_INTEGER win_frequency;
-	if (is_init == 0) {
-		QueryPerformanceFrequency(&win_frequency);
-		is_init = 1;
-	}
-	LARGE_INTEGER now;
-	QueryPerformanceCounter(&now);
-	return (uint64_t) ((1e9 * now.QuadPart) / win_frequency.QuadPart);
-#endif
-}
-//////////////////////////////////////////////////////////////////////
+/// \brief Returns time in nanoseconds
+///
+/// The value returned is not guaranteed to be anything but
+/// accurate relative to the previous call. This is to say you
+/// can't reliably use this to get the current time across platforms,
+/// this is strictly for testing how long it takes blocks of
+/// code to execute (The renderer uses this to calculate the
+/// time between frames and measure delta time).
+uint64_t ns();
 
 /// \brief Sleeps for a given amount of time (in nanoseconds)
 ///
