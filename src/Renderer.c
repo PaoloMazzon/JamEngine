@@ -64,6 +64,7 @@ void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 
 					gRenderer->cameraX = 0;
 					gRenderer->cameraY = 0;
 					gRenderer->delta = 1;
+					gRenderer->renderingToScreenBuffer = true;
 					SDL_SetRenderTarget(sdlRenderer, tex->tex);
 				} else {
 					jamRendererQuit();
