@@ -11,21 +11,6 @@
 JamAsset* createAsset(void*, enum JamAssetType);
 
 ///////////////////////////////////////////////////////////////////////////////
-char* genRandomString() {
-	char* output = malloc(10);
-	int i;
-
-	if (output != NULL) {
-		for (i = 0; i < 9; i++)
-			output[i] = (char)(65 + (rand() % (26 * 2)));
-		output[9] = 0;
-	}
-
-	return output;
-}
-///////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////
 // This function is meant for jamLoadWorldFromTMX and is not safe to call
 bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_layer* layer) {
 	JamEntity* tempEntity;

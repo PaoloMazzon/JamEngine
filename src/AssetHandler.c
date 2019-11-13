@@ -146,9 +146,11 @@ void assetLoadSprite(JamAssetHandler* assetHandler, JamINI* ini, const char* hea
 void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName, JamBehaviourMap* map) {
 	JamEntity* ent;
 	const char* typeString;
+	const char* behaviourString;
 	// Make sure we have all necessary assets
 	if (jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
 		&& jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
+		behaviourString = jamGetKeyINI(ini, headerName, "behaviour", "default");
 		ent = jamCreateEntity(
 				jamGetAssetFromHandler(assetHandler,
 									   (jamGetKeyINI(ini, headerName, "sprite_id", "0")))->spr,
@@ -157,8 +159,12 @@ void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const char* hea
 				(int) atof(jamGetKeyINI(ini, headerName, "y", "0")),
 				(int) atof(jamGetKeyINI(ini, headerName, "hitbox_offset_x", "0")),
 				(int) atof(jamGetKeyINI(ini, headerName, "hitbox_offset_y", "0")),
-				jamGetBehaviourFromMap(map, jamGetKeyINI(ini, headerName, "behaviour", "default")));
+				jamGetBehaviourFromMap(map, behaviourString));
 
+		// Alert the user if a behaviour was expected but not found
+		if (strcmp(behaviourString, "default") != 0 && ent->behaviour == NULL)
+			jSetError(ERROR_WARNING, "Expected behaviour '%s' for entity '%s'", behaviourString, headerName);
+		
 		// Figure out the type
 		typeString = jamGetKeyINI(ini, headerName, "type", "none");
 		if (strcmp(typeString, "Logic") == 0)
