@@ -13,6 +13,10 @@
 #include "TileMap.h"
 #include "BehaviourMap.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief Defines an in-game entity
 ///
 /// Speed, friction, and Z coordinate is just a convinience
@@ -84,3 +88,7 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 /// No matter what you specify with the boolean arguments,
 /// the sprite's frames' textures will NOT be freed.
 void jamFreeEntity(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames);
+
+#ifdef __cplusplus
+}
+#endif

@@ -11,6 +11,10 @@
 #include "Constants.h"
 #include "Sprite.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief A simple struct that makes collision checking and tile graphics easier
 ///
 /// Internally, this struct is just a width * height grid of JamFrame pointers.
@@ -98,3 +102,7 @@ bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h);
 
 /// \brief Frees a tile map from memory
 void jamFreeTileMap(JamTileMap *tileMap);
+
+#ifdef __cplusplus
+}
+#endif

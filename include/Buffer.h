@@ -10,6 +10,10 @@
 #pragma once
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // We need to know size
 #ifndef uint8
 typedef unsigned char uint8;
@@ -212,3 +216,7 @@ void jamReadByte8(JamBuffer *buffer, void* data);
 
 /// \brief Reads a variable amount of data from a buffer into data
 void jamReadByteX(JamBuffer* buffer, void* data, uint32 size);
+
+#ifdef __cplusplus
+}
+#endif

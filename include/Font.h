@@ -13,6 +13,10 @@
 #pragma once
 #include "Renderer.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /////////////////////////////////////////////////////
 /// \brief A font used for drawing text
 ///
@@ -121,3 +125,7 @@ uint16 jamGetStringHeight(JamFont *font, const char *string);
 /// \return Returns the height of the string in pixels
 /////////////////////////////////////////////////////
 uint16 jamGetStringHeightWrap(JamFont *font, const char *string, uint16 w);
+
+#ifdef __cplusplus
+}
+#endif

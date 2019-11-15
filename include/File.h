@@ -5,6 +5,10 @@
 #pragma once
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief A vector for C-strings
 typedef struct {
 	char** strList; ///< The list of c-strings
@@ -58,3 +62,7 @@ JamStringList* jamExplodeString(const char *string, char delim, bool ignoreQuote
 /// \brief Frees a string list as well as its contents
 /// \param list The list to destroy
 void jamFreeStringList(JamStringList *list);
+
+#ifdef __cplusplus
+}
+#endif

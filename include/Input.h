@@ -3,6 +3,11 @@
 /// \brief Declares the input handler and some functions to make it easier to use
 #pragma once
 #include "Constants.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MOUSE_LEFT_BUTTON 1
 #define MOUSE_MIDDLE_BUTTON 2
 #define MOUSE_RIGHT_BUTTON 4
@@ -186,3 +191,7 @@ bool jamInputCheckMouseButtonReleased(uint8 button);
 
 /// \brief Clears an Input from memory
 void jamQuitInput();
+
+#ifdef __cplusplus
+}
+#endif

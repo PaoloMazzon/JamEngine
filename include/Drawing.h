@@ -10,6 +10,10 @@
 #include "TileMap.h"
 #include "Vector.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief Sets the current colour of the renderer
 /// \throws ERROR_NULL_POINTER
 void jamDrawSetColour(uint8 r, uint8 g, uint8 b, uint8 a);
@@ -76,3 +80,7 @@ void jamDrawTexturePart(JamTexture *texture, sint32 x, sint32 y, sint32 texX, si
 void jamDrawTexturePartExt(JamTexture *texture, sint32 x, sint32 y, sint32 originX,
 						   sint32 originY, float scaleX, float scaleY, double rot, uint8 alpha, sint32 texX,
 						   sint32 texY, sint32 texW, sint32 texH);
+
+#ifdef __cplusplus
+}
+#endif

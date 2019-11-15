@@ -9,6 +9,10 @@
 #include "Constants.h"
 #include "Input.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define RENDERER_WINDOWED 0
 #define RENDERER_BORDERLESS_FULLSCREEN 1
 #define RENDERER_FULLSCREEN 2
@@ -192,3 +196,7 @@ void jamProcEndFrame();
 
 /// \brief Frees a renderer
 void jamRendererQuit();
+
+#ifdef __cplusplus
+}
+#endif

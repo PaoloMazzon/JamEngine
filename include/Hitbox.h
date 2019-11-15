@@ -6,6 +6,10 @@
 #include "Constants.h"
 #include "Vector.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief A simple enum to making checking collisions easier
 typedef enum {
 	ht_Circle,
@@ -44,3 +48,7 @@ bool jamCheckHitboxCollision(JamHitbox *hitbox1, double x1, double y1, JamHitbox
 
 /// \brief Clears a hitbox from memory
 void jamFreeHitbox(JamHitbox *hitbox);
+
+#ifdef __cplusplus
+}
+#endif

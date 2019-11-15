@@ -14,6 +14,10 @@
 #include "Audio.h"
 #include "World.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 ///< Size of the asset handler asset list (the smaller it is the more likely it is for it to break)
 #define HANDLER_MAX_ASSETS 15000
 
@@ -112,3 +116,7 @@ JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, const char* key);
 
 /// \brief Frees an asset handler and all of its components
 void jamFreeAssetHandler(JamAssetHandler *handler);
+
+#ifdef __cplusplus
+}
+#endif

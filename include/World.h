@@ -8,6 +8,10 @@
 #include "EntityList.h"
 #include "Renderer.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief A thing that holds lots of info for convenience
 ///
 /// This data structure is a bit of a heavier one, so use with caution
@@ -147,3 +151,7 @@ void jamFilterEntitiesByProximity(JamWorld *world, int pointX, int pointY);
 /// tile maps are typically handled by an asset handler where as entities
 /// in a world should be copies of entities from an asset handler.
 void jamFreeWorld(JamWorld *world);
+
+#ifdef __cplusplus
+}
+#endif

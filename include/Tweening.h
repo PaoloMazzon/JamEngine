@@ -9,6 +9,10 @@
 #pragma once
 #include "Constants.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief The information on a tween, which is manipulated by jamUpdateTween* functions
 ///
 /// Typically, you create this struct not as a pointer and just pass by reference to the
@@ -52,3 +56,7 @@ void jamReverseTween(JamTweeningState* state);
 
 /// \brief This essentially just says if progress is at 1 or not, made into a function for clarity in code
 bool jamIsTweenFinished(JamTweeningState* state);
+
+#ifdef __cplusplus
+}
+#endif

@@ -13,6 +13,10 @@
 #include "Frame.h"
 #include "Constants.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief Contains information surrounding the mystical sprite
 typedef struct {
 	// Animation things
@@ -83,3 +87,7 @@ void jamDrawSpriteFrame(JamSprite *sprite, sint32 x, sint32 y, float scaleX, flo
 
 /// \brief Frees a sprite
 void jamFreeSprite(JamSprite *sprite, bool freeFrames, bool freeTextures);
+
+#ifdef __cplusplus
+}
+#endif

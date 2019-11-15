@@ -4,10 +4,14 @@
 #pragma once
 #include "Constants.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief An audio playback system for JamEngine
 typedef struct {
-	void* audioDevice; ///< The OpenAL audio device, internally ALCdevice*
-	void* audioContext; ///< OpenAL audio context, internally ALCcontext*
+	void *audioDevice; ///< The OpenAL audio device, internally ALCdevice*
+	void *audioContext; ///< OpenAL audio context, internally ALCcontext*
 	float listenerOrientation[6]; ///< The orientation of the listener
 } JamAudioPlayer;
 
@@ -41,7 +45,7 @@ typedef struct {
 /// \brief Initializes the audio system
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
-void jamInitAudioPlayer(int* argc, char** argv);
+void jamInitAudioPlayer(int *argc, char **argv);
 
 /// \brief Quits the audio system
 void jamFreeAudioPlayer();
@@ -106,10 +110,10 @@ float jamAudioGetGlobalGain();
 ///
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
-JamAudioSource* jamCreateAudioSource();
+JamAudioSource *jamCreateAudioSource();
 
 /// \brief Frees an audio source
-void jamFreeAudioSource(JamAudioSource* source);
+void jamFreeAudioSource(JamAudioSource *source);
 
 /// \brief Updates internal values of the source
 ///
@@ -121,15 +125,15 @@ void jamFreeAudioSource(JamAudioSource* source);
 ///
 /// This is for 3D audio, and if you don't need 3D audio you'll
 /// never need to call this function so don't fret about it.
-void jamUpdateAudioSource(JamAudioSource* source);
+void jamUpdateAudioSource(JamAudioSource *source);
 
 /// \brief Loads audio from a .wav file
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
-JamAudioBuffer* jamLoadAudioBufferFromWAV(const char *filename);
+JamAudioBuffer *jamLoadAudioBufferFromWAV(const char *filename);
 
 /// \brief Frees an audio buffer
-void jamFreeAudioBuffer(JamAudioBuffer* buffer);
+void jamFreeAudioBuffer(JamAudioBuffer *buffer);
 
 /// \brief Plays some audio
 ///
@@ -141,4 +145,8 @@ void jamFreeAudioBuffer(JamAudioBuffer* buffer);
 ///
 /// \throws ERROR_OPENAL_ERROR
 /// \throws ERROR_NULL_POINTER
-void jamPlayAudio(JamAudioBuffer* buffer, JamAudioSource* source, bool looping);
+void jamPlayAudio(JamAudioBuffer *buffer, JamAudioSource *source, bool looping);
+
+#ifdef __cplusplus
+}
+#endif

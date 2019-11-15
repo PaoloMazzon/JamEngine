@@ -7,6 +7,10 @@
 #include "AssetHandler.h"
 #include "Renderer.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief Loads a world from a tmx level file
 /// \param handler The handler that already has its assets loaded 
 /// \param tmxFilename The filename of the tmx file to load
@@ -26,3 +30,7 @@
 /// \throws ERROR_OPEN_FAILED
 /// \throws ERROR_ALLOC_FAILED
 JamWorld* jamLoadWorldFromTMX(JamAssetHandler *handler, const char *tmxFilename);
+
+#ifdef __cplusplus
+}
+#endif

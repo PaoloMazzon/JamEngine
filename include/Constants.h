@@ -5,6 +5,10 @@
 #pragma once
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Unsigned numbers
 typedef unsigned char uint8;
 typedef unsigned short uint16;
@@ -50,3 +54,7 @@ typedef enum {ft_Rectangle, ft_Proximity} JamFilterType;
 #define INI_TILEMAP_PREFIX 'm'
 #define INI_AUDIO_PREFIX 'a'
 #define INI_WORLD_PREFIX 'w'
+
+#ifdef __cplusplus
+}
+#endif

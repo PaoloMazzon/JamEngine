@@ -10,6 +10,10 @@
 #include "Renderer.h"
 #include "Texture.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief Contains information on a sprite frame
 ///
 /// This struct contains a texture as well as where on the texture
@@ -43,3 +47,7 @@ void jamDrawFrame(JamFrame *frame, sint32 x, sint32 y);
 
 /// \brief Empties a frame from memory
 void jamFreeFrame(JamFrame *frame, bool destroyTexture);
+
+#ifdef __cplusplus
+}
+#endif

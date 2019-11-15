@@ -5,6 +5,10 @@
 #pragma once
 #include "Entity.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief A fairly simple entity list
 ///
 /// There are a couple of features in this struct to keep
@@ -76,3 +80,7 @@ void jamEmptyEntityList(JamEntityList *list, bool destroyEntities);
 ///
 /// destroyEntities does not free any of the entities' sprites/hitboxes/whatever.
 void jamFreeEntityList(JamEntityList *list, bool destroyEntities);
+
+#ifdef __cplusplus
+}
+#endif

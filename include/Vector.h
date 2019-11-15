@@ -5,6 +5,10 @@
 #pragma once
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief A polygon struct that is very to-the-point
 typedef struct {
 	double* xVerts; ///< X component of the vertices
@@ -40,3 +44,7 @@ bool pointInCircle(double px, double py, double cx, double cy, double radius);
 
 /// \brief Returns val but clamped between min and max (eg, clamp(10, 4, 8) would return 8)
 double clamp(double val, double min, double max);
+
+#ifdef __cplusplus
+}
+#endif
