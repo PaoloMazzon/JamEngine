@@ -162,7 +162,7 @@ double atof(const char *string);
 char *ftoa(double input);
 
 /// \brief Turns a string into a number from 0 to maxNumber
-uint32 jamHashString(const char *string, uint32 maxNumber);
+uint64 jamHashString(const char *string, uint64 maxNumber);
 
 #ifdef __cplusplus
 }

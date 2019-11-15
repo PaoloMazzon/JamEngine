@@ -391,14 +391,16 @@ char* ftoa(double input) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-uint32 jamHashString(const char* string, uint32 maxNumber) {
-	int i;
-	uint32 num = 0;
+// djb2 Algorithm by Dan Bernstein
+uint64 jamHashString(const char* string, uint64 maxNumber) {
+	uint64 hash = 5381;
+	int i = 0;
 
-	for (i = 0; i < strlen(string); i++) {
-		num += string[i] + (i * 7);
+	while (string[i] != 0) {
+		hash = ((hash << 5) + hash) + string[i]; /* hash * 33 + c */
+		i++;
 	}
 
-	return (uint32)((9187591 * num % 8589935681) % maxNumber);
+	return hash % maxNumber;
 }
 ///////////////////////////////////////////////////////////////
