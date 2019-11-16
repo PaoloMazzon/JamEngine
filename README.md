@@ -37,8 +37,6 @@ To-Do List
     + Draw shapes
  - Fonts
     + TTF fonts
- - Audio
-    + .ogg file loading
  - Renderer
     + Improve/make more consistent camera support
     + Shader support

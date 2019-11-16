@@ -127,10 +127,13 @@ void jamFreeAudioSource(JamAudioSource *source);
 /// never need to call this function so don't fret about it.
 void jamUpdateAudioSource(JamAudioSource *source);
 
-/// \brief Loads audio from a .wav file
+/// \brief Loads audio from a file
+///
+/// Currently, JamEngine supports .ogg files and .wav files.
+///
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
-JamAudioBuffer *jamLoadAudioBufferFromWAV(const char *filename);
+JamAudioBuffer *jamLoadAudioBuffer(const char *filename);
 
 /// \brief Frees an audio buffer
 void jamFreeAudioBuffer(JamAudioBuffer *buffer);
