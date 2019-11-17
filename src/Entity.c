@@ -38,7 +38,7 @@ JamEntity* jamCreateEntity(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 		ent->friction = 0;
 		ent->type = et_Unassigned;
 		ent->behaviour = behaviour;
-		ent->userData = NULL;
+		ent->data = NULL;
 		ent->id = -1;
 	} else {
 		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamEntity struct (jamCreateEntity)");

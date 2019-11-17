@@ -31,15 +31,15 @@ typedef struct _JamEntity {
 	JamBehaviour* behaviour; ///< Behaviour mapping of this entity (AssetManagers will resolve this)
 	double hitboxOffsetX;    ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	double hitboxOffsetY;    ///< The hitbox's offset from the entity, this ignore the sprite's origin
-	void* userData;          ///< A place for the programmer to store their own variables and such
+	void* data;              ///< A place for the programmer to store their own variables and such
 	int id;                  ///< The ID of this entity (assigned by whatever world this entity belongs to)
 
 	// Drawing control
-	double rot;           ///< The rotation of the entity when drawn
-	uint8 alpha;          ///< The alpha of the entity when drawn
-	bool updateOnDraw;    ///< Weather or not the sprite will update on drawing
-	float scaleX;         ///< The x scale of the entity (for sprite rendering)
-	float scaleY;         ///< The y scale of the entity (for sprite rendering)
+	double rot;        ///< The rotation of the entity when drawn
+	uint8 alpha;       ///< The alpha of the entity when drawn
+	bool updateOnDraw; ///< Weather or not the sprite will update on drawing
+	float scaleX;      ///< The x scale of the entity (for sprite rendering)
+	float scaleY;      ///< The y scale of the entity (for sprite rendering)
 
 #ifdef ENTITY_ENABLE_SPEED
 	double hSpeed; ///< Horizontal speed (Can be disabled to save memory)
