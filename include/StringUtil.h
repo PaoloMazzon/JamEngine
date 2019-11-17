@@ -4,6 +4,10 @@
 #pragma once
 #include <Constants.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define END_OF_STRING (-1)
 #define LAST_OCCURRENCE (-1)
 #define FIRST_OCCURRENCE 1
@@ -16,7 +20,7 @@
 /// this class seems like it won't work with UTF-8. The
 /// length function also accounts for UTF-8.
 typedef struct {
-	char* str; ///< The internal string
+	char *str; ///< The internal string
 	int length; ///< How many characters are currently in use
 	int size; ///< Total size of the array
 	short allocAmount; ///< How many characters to allocate at a time
@@ -26,7 +30,7 @@ typedef struct {
 /// 
 /// \return Returns the new builder or NULL if it failed
 /// \throws ERROR_ALLOC_FAILED
-JamStringBuilder* jamCreateStringBuilder();
+JamStringBuilder *jamCreateStringBuilder();
 
 /// \brief Creates a string builder with a string pre loaded into it
 /// 
@@ -34,7 +38,7 @@ JamStringBuilder* jamCreateStringBuilder();
 /// 
 /// \return Returns the new builder or NULL if it failed
 /// \throws ERROR_ALLOC_FAILED
-JamStringBuilder* jamCreateBuilderFromString(const char *string);
+JamStringBuilder *jamCreateBuilderFromString(const char *string);
 
 /// \brief Inserts a string into a string builder starting at index
 /// 
@@ -53,7 +57,7 @@ JamStringBuilder* jamCreateBuilderFromString(const char *string);
 ///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-char* jamInsertStringIntoBuilder(JamStringBuilder *builder, char *string, int index);
+char *jamInsertStringIntoBuilder(JamStringBuilder *builder, char *string, int index);
 
 /// \brief Removes something from the builder
 ///
@@ -92,7 +96,7 @@ int jamFindStringInBuilder(JamStringBuilder *builder, const char *string, int oc
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OUT_OF_BOUNDS
-JamStringBuilder* jamSubstringFromBuilder(JamStringBuilder *builder, int index, int length);
+JamStringBuilder *jamSubstringFromBuilder(JamStringBuilder *builder, int index, int length);
 
 /// \brief Shrinks a string builder so it doesn't have any extra memory on the end
 /// \param builder The builder to shrink
@@ -113,7 +117,7 @@ void jamShrinkBuilder(JamStringBuilder *builder);
 ///
 /// The string this returns belongs to the builder and as
 /// such it will be destroyed with the builder.
-const char* jamGetBuilderArray(JamStringBuilder *builder);
+const char *jamGetBuilderArray(JamStringBuilder *builder);
 
 /// \brief Counts the total characters in the builder
 /// 
@@ -137,23 +141,29 @@ void jamFreeStringBuilder(JamStringBuilder *builder);
 #ifdef atof
 #undef atof
 #endif
+
 /// \brief Converts a string to a float (Works only in base-10)
 /// 
 /// \param string The string that contains only numbers and a decimal
 /// 
 /// \return Returns a double with the converted number
-double atof(const char* string);
+double atof(const char *string);
 
 #ifdef ftoa
 #undef ftoa
 #endif
+
 /// \brief Converts a double to a string
 /// 
 /// \param input The number to be converted
 /// 
 /// \return Returns the processed string which will need to be manually freed
 /// \throws ERROR_ALLOC_FAILED
-char* ftoa(double input);
+char *ftoa(double input);
 
 /// \brief Turns a string into a number from 0 to maxNumber
-uint32 jamHashString(const char* string, uint32 maxNumber);
+uint64 jamHashString(const char *string, uint64 maxNumber);
+
+#ifdef __cplusplus
+}
+#endif

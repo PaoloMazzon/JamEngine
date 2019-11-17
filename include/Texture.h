@@ -6,6 +6,10 @@
 #include "Constants.h"
 #include "Renderer.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief Simple texture class with some basic info
 ///
 /// Weather or not a texture is able to be rendered
@@ -30,3 +34,7 @@ JamTexture* jamLoadTexture(const char *filename);
 
 /// \brief Frees a texture from memory
 void jamFreeTexture(JamTexture *tex);
+
+#ifdef __cplusplus
+}
+#endif

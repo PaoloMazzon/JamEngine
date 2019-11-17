@@ -9,6 +9,10 @@
 #pragma once
 #include "stdio.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief A key/val map for string:string operations
 typedef struct {
 	int size; ///< Size of the two lists in elements
@@ -51,3 +55,7 @@ void jamThrowInGarbageStringMap(JamStringMap *smap, char *garbage);
 
 /// \brief Frees the map
 void jamFreeStringMap(JamStringMap *smap);
+
+#ifdef __cplusplus
+}
+#endif

@@ -210,7 +210,7 @@ void assetLoadAudio(JamAssetHandler* assetHandler, JamINI* ini, const char* head
 	jamLoadAssetIntoHandler(
 			assetHandler,
 			createAsset(
-					jamLoadAudioBufferFromWAV(jamGetKeyINI(ini, headerName, "file", ""))
+					jamLoadAudioBuffer(jamGetKeyINI(ini, headerName, "file", ""))
 					, at_AudioBuffer)
 			, (headerName + 1));
 }

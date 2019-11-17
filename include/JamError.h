@@ -6,6 +6,10 @@
 #pragma once
 #include "Constants.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Error codes
 
 ///< For warnings
@@ -64,3 +68,7 @@ void __jSetError(uint16 errorCode, const char* format, const char* function, int
 /// check if the return is 0 to know weather or not
 /// there were any errors
 uint16 jGetError();
+
+#ifdef __cplusplus
+}
+#endif

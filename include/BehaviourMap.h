@@ -4,6 +4,11 @@
 #pragma once
 #include "Renderer.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct _JamWorld;
 struct _JamEntity;
 
@@ -24,14 +29,14 @@ typedef struct {
 
 /// \brief A dictionary of strings to behaviours
 typedef struct {
-	JamBehaviour** behaviours; ///< The behaviours
-	const char** names; ///< The names of the behaviours
+	JamBehaviour **behaviours; ///< The behaviours
+	const char **names; ///< The names of the behaviours
 	uint32 size; ///< How many behaviours/names in this struct
 } JamBehaviourMap;
 
 /// \brief Creates a behaviour map
 /// \throws ERROR_ALLOC_FAILED
-JamBehaviourMap* jamCreateBehaviourMap();
+JamBehaviourMap *jamCreateBehaviourMap();
 
 /// \brief Adds a behaviour to a behaviour map
 /// 
@@ -49,7 +54,11 @@ void jamAddBehaviourToMap(JamBehaviourMap *map, const char *name, void (*onCreat
 /// 
 /// Contrary to other functions like this, it will not set ERROR_NULL_POINTER
 /// if you don't give it a map.
-JamBehaviour* jamGetBehaviourFromMap(JamBehaviourMap *map, const char *name);
+JamBehaviour *jamGetBehaviourFromMap(JamBehaviourMap *map, const char *name);
 
 /// \brief Frees a behaviour map
 void jamFreeBehaviourMap(JamBehaviourMap *map);
+
+#ifdef __cplusplus
+}
+#endif

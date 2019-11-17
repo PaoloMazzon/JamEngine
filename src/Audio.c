@@ -10,6 +10,7 @@
 static JamAudioPlayer* gAudioPlayer;
 static uint32 gDefaultSource;
 static float gGainMultiplier;
+extern int stb_vorbis_decode_filename(const char *filename, int *channels, int *sample_rate, short **output);
 
 ///////////////////////////////////////////////////////////////////////
 void jamInitAudioPlayer(int* argc, char** argv) {
@@ -173,25 +174,55 @@ void jamFreeAudioSource(JamAudioSource* source) {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-JamAudioBuffer* jamLoadAudioBufferFromWAV(const char *filename) {
+JamAudioBuffer* jamLoadAudioBuffer(const char *filename) {
 	JamAudioBuffer* buf = NULL;
+	size_t len = strlen(filename);
 
-	if (gAudioPlayer != NULL) {
+	// In the event we need to load stuff other than wavs
+	int channels;
+	int sampleRate;
+	int samples;
+	short* tempBuffer;
+
+	if (gAudioPlayer != NULL && len > 3) {
 		buf = (JamAudioBuffer *) calloc(1, sizeof(JamAudioSource));
 
 		if (buf != NULL) {
-			buf->bufferID = alutCreateBufferFromFile(filename);
+			if (strcmp(filename + (len - 3), "wav") == 0) {
+				buf->bufferID = alutCreateBufferFromFile(filename);
+			} else if (strcmp(filename + (len - 3), "ogg") == 0) {
+				samples = stb_vorbis_decode_filename(filename, &channels, &sampleRate, &tempBuffer);
 
-			if (alutGetError() != ALUT_ERROR_NO_ERROR) {
+				if (samples != -1) {
+					alGenBuffers(1, &buf->bufferID);
+					if (alGetError() == AL_NO_ERROR) {
+						if (channels == 1)
+							alBufferData(buf->bufferID, AL_FORMAT_MONO16, tempBuffer, samples * 2, sampleRate);
+						else
+							alBufferData(buf->bufferID, AL_FORMAT_STEREO16, tempBuffer, samples * 2, sampleRate);
+					} else {
+						jSetError(ERROR_OPENAL_ERROR, "Failed to generate audio buffer");
+					}
+				} else {
+					jSetError(ERROR_INCORRECT_FORMAT, "Failed to open ogg files %s", filename);
+				}
+			} else {
+				jSetError(ERROR_INCORRECT_FORMAT, ".%s audio files are not supported", filename + (len - 3));
+			}
+
+			if (alutGetError() != ALUT_ERROR_NO_ERROR || buf->bufferID == 0 || alGetError() != AL_NO_ERROR) {
 				free(buf);
 				buf = NULL;
-				jSetError(ERROR_OPENAL_ERROR, "Failed to create audio source");
+				jSetError(ERROR_OPENAL_ERROR, "Failed to create audio buffer");
 			}
 		} else {
-			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate audio source");
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate audio buffer");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Audio player has not been initialized");
+		if (len <= 3)
+			jSetError(ERROR_INCORRECT_FORMAT, "Unknown file format for file %s", filename);
+		if (gAudioPlayer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Audio player has not been initialized");
 	}
 
 	return buf;

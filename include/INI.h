@@ -9,6 +9,10 @@
 #include "StringMap.h"
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief Holds information pertaining to INI files
 typedef struct {
 	JamStringMap** headers; ///< Each one is a different header
@@ -71,3 +75,7 @@ void jamThrowInGarbageINI(JamINI *ini, char *string);
 
 /// \brief Destroys an INI and all memory it allocated
 void jamFreeINI(JamINI *ini);
+
+#ifdef __cplusplus
+}
+#endif
