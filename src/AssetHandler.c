@@ -22,7 +22,6 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const ch
 	int i;
 	int hash = jamHashString(id, HANDLER_MAX_ASSETS);
 	bool exists = false;
-	JamAsset** newAssets = NULL;
 	if (handler != NULL && asset != NULL) {
 		// Look and check if the ID already exists
 		if (handler->vals[hash] != NULL)
@@ -30,6 +29,9 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const ch
 
 		// Either throw it in its spot or make a new spot
 		if (exists) {
+			// Warn the user in the case of a possible hashing collision
+			jSetError(ERROR_WARNING, "Warning: Asset already exists for id %s, freeing old asset...");
+			
 			// First we must free the value there
 			if (handler->vals[exists]->type == at_Texture)
 				jamFreeTexture(handler->vals[exists]->tex);
