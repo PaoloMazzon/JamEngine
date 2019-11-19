@@ -69,6 +69,10 @@ JamEntity* jamPopEntityFromList(JamEntityList *list, JamEntity *entity);
 /// \throws ERROR_NULL_POINTER
 void jamShrinkEntityList(JamEntityList *list);
 
+/// \brief Checks for a collision between an entity and a list of entities and either returns the colliding entity or null
+// \throws ERROR_NULL_POINTER	
+JamEntity* jamEntityListCollision(int x, int y, JamEntity* entity, JamEntityList* list);
+	
 /// \brief Removes all entities from the list
 /// \throws ERROR_NULL_POINTER
 void jamEmptyEntityList(JamEntityList *list, bool destroyEntities);

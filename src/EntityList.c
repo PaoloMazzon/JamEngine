@@ -82,6 +82,25 @@ JamEntity* jamPopEntityFromList(JamEntityList *list, JamEntity *entity) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
+JamEntity* jamEntityListCollision(int x, int y, JamEntity* entity, JamEntityList* list) {
+	int i;
+	JamEntity* output = NULL;
+	if (list != NULL && entity != NULL) {
+		for (i = 0; i < list->size && output == NULL; i++)
+			if (list->entities[i] != NULL && jamCheckEntityCollision(x, y, entity, list->entities[i]))
+				output = list->entities[i];
+	} else {
+		if (list == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity list does not exist");
+		if (entity == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity does not exist");
+	}
+
+	return output;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
 /*    Implementation
  * 1. Loop through the size of the list (not capacity)
  * 2. For each NULL pointer (free slot), perform another loop starting
