@@ -220,7 +220,7 @@ void jamIntegerMaximizeScreenBuffer() {
 	if (gRenderer != NULL) {
 		// Get the window size and find the highest scale
 		SDL_GetWindowSize(gRenderer->gameWindow, &w, &h);
-		while ((scale + 1) * gRenderer->screenBuffer->w < w && (scale + 1) * gRenderer->screenBuffer->h < h)
+		while ((scale + 1) * gRenderer->screenBuffer->w <= w && (scale + 1) * gRenderer->screenBuffer->h <= h)
 			scale++;
 
 		// Scale the buffer to max and adjust the display coordinates
