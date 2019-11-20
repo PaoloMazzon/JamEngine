@@ -105,21 +105,11 @@ bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity
 	if (entity1 != NULL && entity2 != NULL && entity1->hitbox != NULL
 		&& entity2->hitbox != NULL) {
 		// Load up the values
-		x1 = x;
-		y1 = y;
-		x2 = entity2->x;
-		y2 = entity2->y;
-
-		// Account for rectangular origins
-		if (entity1->hitbox->type == ht_Rectangle) {
-			x1 -= entity1->hitboxOffsetX;
-			y1 -= entity1->hitboxOffsetY;
-		}
-		if (entity2->hitbox->type == ht_Rectangle) {
-			x2 -= entity2->hitboxOffsetX;
-			y2 -= entity2->hitboxOffsetY;
-		}
-
+		x1 = x + entity1->hitboxOffsetX;
+		y1 = y + entity1->hitboxOffsetY;
+		x2 = entity2->x + entity2->hitboxOffsetX;
+		y2 = entity2->y + entity2->hitboxOffsetY;
+		
 		// Now check the collision itself
 		coll = jamCheckHitboxCollision(entity1->hitbox, x1, y1, entity2->hitbox, x2, y2);
 	} else {
@@ -129,18 +119,12 @@ bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity
 			if (entity1->sprite == NULL) {
 				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a sprite (jamCheckEntityCollision)");
 			}
-			if (entity1->hitbox == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity1 does not have a hitbox (jamCheckEntityCollision)");
-			}
 		}
 		if (entity2 == NULL) {
 			jSetError(ERROR_NULL_POINTER, "entity2 does not exist (jamCheckEntityCollision)");
 		} else {
 			if (entity2->sprite == NULL) {
 				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a sprite (jamCheckEntityCollision)");
-			}
-			if (entity2->hitbox == NULL) {
-				jSetError(ERROR_INCORRECT_FORMAT, "entity2 does not have a hitbox (jamCheckEntityCollision)");
 			}
 		}
 	}

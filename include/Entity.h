@@ -72,6 +72,7 @@ void jamDrawEntity(JamEntity *entity);
 /// \brief Checks if two entities are colliding with one another
 ///
 /// This function uses the rx/ry coordinates for entity 1, no its x/y
+///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
 bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity2);
