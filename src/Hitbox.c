@@ -191,7 +191,7 @@ bool jamCheckHitboxCollision(JamHitbox *hitbox1, double x1, double y1, JamHitbox
 			hit = (pointDistance(x1, y1, x2, y2) < hitbox1->radius + hitbox2->radius);
 		} else if (hitbox1->type == ht_Rectangle && hitbox2->type == ht_Rectangle) {
 			// Rectangle-to-rectangle
-			hit = (y1 + hitbox1->height >= y2 && y1 <= y2 + hitbox2->height && x1 + hitbox1->width >= x2 && x1 <= x2 + hitbox2->width);
+			hit = (y1 + hitbox1->height > y2 && y1 < y2 + hitbox2->height && x1 + hitbox1->width > x2 && x1 < x2 + hitbox2->width);
 		} else if (hitbox1->type == ht_Rectangle && hitbox2->type == ht_Circle) {
 			// Rectangle-to-circle
 			hit = _circRectColl(x2, y2, hitbox2->radius, x1, y1, hitbox1->width, hitbox1->height);
