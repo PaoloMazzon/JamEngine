@@ -85,7 +85,8 @@ JamStringList* jamLoadStringList(const char *fname) {
 		}
 	}
 
-	fclose(file);
+	if (file != NULL)
+		fclose(file);
 	return list;
 }
 /////////////////////////////////////////////////////////
