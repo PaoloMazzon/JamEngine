@@ -45,6 +45,9 @@ bool pointInCircle(double px, double py, double cx, double cy, double radius);
 /// \brief Returns val but clamped between min and max (eg, clamp(10, 4, 8) would return 8)
 double clamp(double val, double min, double max);
 
+/// \brief Returns -1, 0, or 1 depending on the sign of the value
+double sign(double val);
+	
 #ifdef __cplusplus
 }
 #endif

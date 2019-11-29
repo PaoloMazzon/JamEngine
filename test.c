@@ -21,16 +21,6 @@
 
 JamAssetHandler* gHandler;
 
-// Takes a number and returns either -1, 1, or 0 depending on weather its positive negative or neither
-static inline double sign(double number) {
-	if (number > 0)
-		return 1.0;
-	else if (number < 0)
-		return -1.0;
-	else
-		return 0.0;
-}
-
 void onEnemyCreate(JamWorld* world, JamEntity* self) {
 	self->hSpeed = 3;
 }
