@@ -15,6 +15,7 @@
 #include "BehaviourMap.h"
 #include <malloc.h>
 #include <SDL.h>
+#include <JamEngine.h>
 #include "TMXWorldLoader.h"
 
 static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
@@ -22,35 +23,26 @@ static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const cha
 ///////////////////////////////////////////////////////////////
 void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const char* id) {
 	int i;
-	uint64 hash = jamHashString(id, HANDLER_MAX_ASSETS);
-	bool exists = false;
+	uint64 hash;
+	bool foundSpot = false;
+	JamAsset* next; // For crawling linked lists
 	if (handler != NULL && asset != NULL) {
-		// Look and check if the ID already exists
-		if (handler->vals[hash] != NULL)
-			exists = true;
+		hash = jamHashString(id, (uint64)handler->size);
 
-		// Either throw it in its spot or make a new spot
-		if (exists) {
-			// Warn the user in the case of a possible hashing collision
-			jSetError(ERROR_WARNING, "Warning: Asset already exists for id %s, freeing old asset...");
-			
-			// First we must free the value there
-			if (handler->vals[exists]->type == at_Texture)
-				jamFreeTexture(handler->vals[exists]->tex);
-			else if (handler->vals[exists]->type == at_Hitbox)
-				jamFreeHitbox(handler->vals[exists]->hitbox);
-			else if (handler->vals[exists]->type == at_Sprite)
-				jamFreeSprite(handler->vals[exists]->spr, true, false);
-			else if (handler->vals[exists]->type == at_Entity)
-				jamFreeEntity(handler->vals[exists]->entity, false, false, false);
-			else if (handler->vals[exists]->type == at_World)
-				jamFreeWorld(handler->vals[exists]->world);
-			else if (handler->vals[exists]->type == at_AudioBuffer)
-				jamFreeAudioBuffer(handler->vals[exists]->buffer);
-			jSetError(ERROR_WARNING, "Asset %s already exists, replacing old one.", id);
+		// If it exists we stick it to that asset's linked list
+		if (handler->vals[hash] != NULL) {
+			next = handler->vals[hash]->next;
+			while (!foundSpot) {
+				if (next->next != NULL) {
+					next = next->next;
+				} else {
+					next->next = asset;
+					foundSpot = true;
+				}
+			}
+		} else {
+			handler->vals[hash] = asset;
 		}
-		// Finally, we set the new value
-		handler->vals[hash] = asset;
 	} else {
 		if (handler == NULL) {
 			jSetError(ERROR_NULL_POINTER, "Handler does not exist (jamLoadAssetIntoHandler with ID %s)", id);
@@ -97,12 +89,13 @@ static JamAsset* createAsset(void* pointer, enum JamAssetType type, const char* 
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamAssetHandler* jamCreateAssetHandler() {
+JamAssetHandler* jamCreateAssetHandler(int size) {
 	JamAssetHandler* handler = (JamAssetHandler*)calloc(1, sizeof(JamAssetHandler));
 
 	if (handler != NULL) {
 		// Allocate the massive list
-		handler->vals = (JamAsset**)calloc(HANDLER_MAX_ASSETS, sizeof(JamAsset*));
+		handler->vals = (JamAsset**)calloc((size_t)size, sizeof(JamAsset*));
+		handler->size = size;
 
 		if (handler->vals == NULL) {
 			free(handler);
@@ -309,7 +302,7 @@ static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const cha
 		//   1. Find the asset at that hash
 		//   2. Make sure it has the same name as that asset
 		//   3. If it doesn't, run down its respective linked list and find the right one
-		asset = assetHandler->vals[jamHashString(key, HANDLER_MAX_ASSETS)];
+		asset = assetHandler->vals[jamHashString(key, (uint64)assetHandler->size)];
 
 		if (asset != NULL) {
 			if (strcmp(key, asset->name) != 0) {
@@ -460,24 +453,38 @@ JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, const char* key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
+static void jamFreeAsset(JamAsset* asset) {
+	if (asset != NULL) {
+		// Now dump whatever asset is here
+		if (asset->type == at_Texture)
+			jamFreeTexture(asset->tex);
+		else if (asset->type == at_Sprite)
+			jamFreeSprite(asset->spr, true, false);
+		else if (asset->type == at_Hitbox)
+			jamFreeHitbox(asset->hitbox);
+		else if (asset->type == at_Entity)
+			jamFreeEntity(asset->entity, false, false, false);
+		else if (asset->type == at_World)
+			jamFreeWorld(asset->world);
+		else if (asset->type == at_AudioBuffer)
+			jamFreeAudioBuffer(asset->buffer);
+		free(asset);
+	}
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
 void jamFreeAssetHandler(JamAssetHandler *handler) {
 	int i;
+	JamAsset* next;
 	if (handler != NULL) {
 		for (i = 0; i < handler->size; i++) {
-			// Now dump whatever asset is here
-			if (handler->vals[i]->type == at_Texture)
-				jamFreeTexture(handler->vals[i]->tex);
-			else if (handler->vals[i]->type == at_Sprite)
-				jamFreeSprite(handler->vals[i]->spr, true, false);
-			else if (handler->vals[i]->type == at_Hitbox)
-				jamFreeHitbox(handler->vals[i]->hitbox);
-			else if (handler->vals[i]->type == at_Entity)
-				jamFreeEntity(handler->vals[i]->entity, false, false, false);
-			else if (handler->vals[i]->type == at_World)
-				jamFreeWorld(handler->vals[i]->world);
-			else if (handler->vals[i]->type == at_AudioBuffer)
-				jamFreeAudioBuffer(handler->vals[i]->buffer);
-			free(handler->vals[i]);
+			if (handler->vals[i] != NULL) {
+				do {
+					next = handler->vals[i]->next;
+					jamFreeAsset(handler->vals[i]);
+				} while (next != NULL);
+			}
 		}
 		free(handler->vals);
 		free(handler);

@@ -18,9 +18,6 @@
 extern "C" {
 #endif
 
-///< Size of the asset handler asset list (the smaller it is the more likely it is for it to break)
-#define HANDLER_MAX_ASSETS 15000
-
 enum JamAssetType {at_Texture, at_Sprite, at_Entity, at_Hitbox, at_AudioBuffer, at_World};
 
 /// \brief A struct that can hold any of the assets the asset handler needs
@@ -52,8 +49,19 @@ typedef struct {
 } JamAssetHandler;
 
 /// \brief Creates an asset handler
+///
+/// The size parameter is how many elements to allocate in the hash
+/// bucket, bigger values means more memory taken but better performance,
+/// smaller values means less memory taken but potentially much slower.
+/// If you have a lot of assets in your game, you may want a much larger
+/// value and vice versa. For most things, 1000 should be a happy medium.
+///
+/// Please note that size is not the maximum number of elements the handler
+/// can hold, just the hash table bucket size. You can technically set it to
+/// 1 but that would be extremely slow.
+///
 /// \throws ERROR_ALLOC_FAILED
-JamAssetHandler* jamCreateAssetHandler();
+JamAssetHandler* jamCreateAssetHandler(int size);
 
 /// \brief Throws an asset into the handler
 ///
