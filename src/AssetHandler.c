@@ -17,10 +17,12 @@
 #include <SDL.h>
 #include "TMXWorldLoader.h"
 
+static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
+
 ///////////////////////////////////////////////////////////////
 void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const char* id) {
 	int i;
-	int hash = jamHashString(id, HANDLER_MAX_ASSETS);
+	uint64 hash = jamHashString(id, HANDLER_MAX_ASSETS);
 	bool exists = false;
 	if (handler != NULL && asset != NULL) {
 		// Look and check if the ID already exists
@@ -61,28 +63,24 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const ch
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamAsset* createAsset(void* pointer, enum JamAssetType type) {
+static JamAsset* createAsset(void* pointer, enum JamAssetType type, const char* key) {
 	JamAsset* asset = (JamAsset*)malloc(sizeof(JamAsset));
 
 	if (asset != NULL && pointer != NULL) {
 		asset->type = type;
+		asset->next = NULL;
+		asset->name = malloc(strlen(key) + 1);
 
-		// I know this isn't necessary, but it would be very confusing for those relatively new to c
-		// In fact the union and all that is really just for clarity and could just as well be
-		// a void* pointer to anything but that is not clear and being unclear is not what this engine's about
-		// (also it would not be as easy to change things in JamAsset later should I decide to)
-		if (type == at_Texture)
-			asset->tex = pointer;
-		if (type == at_Sprite)
-			asset->spr = pointer;
-		if (type == at_Hitbox)
-			asset->hitbox = pointer;
-		if (type == at_Entity)
-			asset->entity = pointer;
-		if (type == at_World)
-			asset->world = pointer;
-		if (type == at_AudioBuffer)
-			asset->buffer = pointer;
+		// It's a union so it doesn't matter what type of asset this is, the pointer will end up
+		// in the same place
+		asset->tex = pointer;
+
+		if (asset->name != NULL) {
+			asset->name[strlen(key)] = 0;
+			memcpy(asset->name, key, strlen(key));
+		} else {
+			jSetError(ERROR_ALLOC_FAILED, "Failed to copy asset name %s\n", key);
+		}
 	} else {
 		if (asset == NULL) {
 			jSetError(ERROR_ALLOC_FAILED, "Failed to create asset (createAsset)");
@@ -120,7 +118,7 @@ JamAssetHandler* jamCreateAssetHandler() {
 ///////////////////////////////////////////////////////////////
 
 //////////////////////// Functions that load individual pieces ////////////////////////
-void assetLoadSprite(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
+static void assetLoadSprite(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	JamSprite* spr = jamLoadSpriteFromSheet(
 			jamGetTextureFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))),
 			(uint32) atof(jamGetKeyINI(ini, headerName, "animation_length", "1")),
@@ -138,14 +136,14 @@ void assetLoadSprite(JamAssetHandler* assetHandler, JamINI* ini, const char* hea
 		spr->originY = (sint32) atof(jamGetKeyINI(ini, headerName, "y_origin", "0"));
 	}
 	if (jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
-		jamLoadAssetIntoHandler(assetHandler, createAsset(spr, at_Sprite), (headerName + 1)
+		jamLoadAssetIntoHandler(assetHandler, createAsset(spr, at_Sprite, headerName + 1), (headerName + 1)
 		);
 	} else {
 		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load sprite of id %s, tex not found (jamAssetLoadINI)\\n", headerName + 1);
 	}
 }
 
-void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName, JamBehaviourMap* map) {
+static void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName, JamBehaviourMap* map) {
 	JamEntity* ent;
 	const char* typeString;
 	const char* behaviourString;
@@ -184,13 +182,13 @@ void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const char* hea
 		ent->rot = atof(jamGetKeyINI(ini, headerName, "rotation", "0"));
 		ent->alpha = (uint8)atof(jamGetKeyINI(ini, headerName, "alpha", "255"));
 		ent->updateOnDraw = (bool)atof(jamGetKeyINI(ini, headerName, "update_on_draw", "1"));
-		jamLoadAssetIntoHandler(assetHandler, createAsset(ent, at_Entity), (headerName + 1));
+		jamLoadAssetIntoHandler(assetHandler, createAsset(ent, at_Entity, headerName + 1), (headerName + 1));
 	} else {
 		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load entity of id %s (jamAssetLoadINI)", headerName + 1);
 	}
 }
 
-void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
+static void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	JamHitboxType hType = ht_Rectangle;
 	const char* key = jamGetKeyINI(ini, headerName, "type", "rectangle");
 	if (strcmp(key, "rectangle") == 0) hType = ht_Rectangle;
@@ -203,21 +201,21 @@ void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const char* hea
 					atof(jamGetKeyINI(ini, headerName, "radius", "0")),
 					atof(jamGetKeyINI(ini, headerName, "width", "0")),
 					atof(jamGetKeyINI(ini, headerName, "height", "0")), NULL
-			), at_Hitbox),
+			), at_Hitbox, headerName + 1),
 			(headerName + 1)
 	);
 }
 
-void assetLoadAudio(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
+static void assetLoadAudio(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	jamLoadAssetIntoHandler(
 			assetHandler,
 			createAsset(
 					jamLoadAudioBuffer(jamGetKeyINI(ini, headerName, "file", ""))
-					, at_AudioBuffer)
+					, at_AudioBuffer, headerName + 1)
 			, (headerName + 1));
 }
 
-void assetLoadWorld(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
+static void assetLoadWorld(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	// Load the world filtering setup and world
 	JamWorld* world = jamLoadWorldFromTMX(assetHandler, jamGetKeyINI(ini, headerName, "file", ""));
 	uint16 width = (uint16)atof(jamGetKeyINI(ini, headerName, "width", "0"));
@@ -232,7 +230,7 @@ void assetLoadWorld(JamAssetHandler* assetHandler, JamINI* ini, const char* head
 		}
 	}
 
-	jamLoadAssetIntoHandler(assetHandler, createAsset(world, at_World), (headerName + 1));
+	jamLoadAssetIntoHandler(assetHandler, createAsset(world, at_World, headerName + 1), (headerName + 1));
 }
 //////////////////////// End of assetLoadINI support functions ////////////////////////
 
@@ -248,7 +246,7 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 				for (j = 0; j < ini->headers[i]->size; j++)
 					jamLoadAssetIntoHandler(
 							assetHandler,
-							createAsset(jamLoadTexture(ini->headers[i]->vals[j]), at_Texture),
+							createAsset(jamLoadTexture(ini->headers[i]->vals[j]), at_Texture, ini->headers[i]->keys[j]),
 							(ini->headers[i]->keys[j])
 					);
 			}
@@ -301,11 +299,32 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) {
+static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) {
 	int i;
 	JamAsset* asset = NULL;
+	bool found = true;
+
 	if (assetHandler != NULL) {
+		// How this deals with hash collisions
+		//   1. Find the asset at that hash
+		//   2. Make sure it has the same name as that asset
+		//   3. If it doesn't, run down its respective linked list and find the right one
 		asset = assetHandler->vals[jamHashString(key, HANDLER_MAX_ASSETS)];
+
+		if (asset != NULL) {
+			if (strcmp(key, asset->name) != 0) {
+				found = false;
+
+				// Crawl the linked list
+				asset = asset->next;
+				while (asset != NULL && !found) {
+					if (strcmp(key, asset->name))
+						found = true;
+					else
+						asset = asset->next;
+				}
+			}
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetAssetFromHandler)");
 	}

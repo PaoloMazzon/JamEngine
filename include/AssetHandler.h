@@ -24,18 +24,20 @@ extern "C" {
 enum JamAssetType {at_Texture, at_Sprite, at_Entity, at_Hitbox, at_AudioBuffer, at_World};
 
 /// \brief A struct that can hold any of the assets the asset handler needs
-typedef struct {
+typedef struct __sJamAsset JamAsset;
+struct __sJamAsset{
 	enum JamAssetType type; ///< The type of asset this thing holds
-
 	union {
-		JamTexture* tex; ///< The internal texture
-		JamSprite* spr; ///< The internal sprite
-		JamEntity* entity; ///< The internal entity
-		JamHitbox* hitbox; ///< The internal hitbox
+		JamTexture* tex;        ///< The internal texture
+		JamSprite* spr;         ///< The internal sprite
+		JamEntity* entity;      ///< The internal entity
+		JamHitbox* hitbox;      ///< The internal hitbox
 		JamAudioBuffer* buffer; ///< The internal audio buffer
-		JamWorld* world; ///< The internal world
+		JamWorld* world;        ///< The internal world
 	};
-} JamAsset;
+	char* name; ///< Name of the asset for hashing purposes
+	JamAsset* next;    ///< In the case of hashing collisions
+};
 
 /// \brief Loads lots of assets at once from files
 /// to manage large projects
@@ -45,7 +47,7 @@ typedef struct {
 /// they utilize a hash table internally so lookup time for assets isn't
 /// crazy.
 typedef struct {
-	int size; ///< The size of the vals array
+	int size;        ///< The size of the vals array
 	JamAsset** vals; ///< The actual assets
 } JamAssetHandler;
 
@@ -79,10 +81,6 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const ch
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OPEN_FAILED
 void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBehaviourMap *map);
-
-/// \brief Grabs an asset, or returns NULL if the key is not bound
-/// \throws ERROR_NULL_POINTER
-JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
