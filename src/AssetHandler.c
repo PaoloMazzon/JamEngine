@@ -468,6 +468,7 @@ static void jamFreeAsset(JamAsset* asset) {
 			jamFreeWorld(asset->world);
 		else if (asset->type == at_AudioBuffer)
 			jamFreeAudioBuffer(asset->buffer);
+		free(asset->name);
 		free(asset);
 	}
 }

@@ -206,6 +206,8 @@ JamAudioBuffer* jamLoadAudioBuffer(const char *filename) {
 				} else {
 					jSetError(ERROR_INCORRECT_FORMAT, "Failed to open ogg files %s", filename);
 				}
+
+				free(tempBuffer);
 			} else {
 				jSetError(ERROR_INCORRECT_FORMAT, ".%s audio files are not supported", filename + (len - 3));
 			}
