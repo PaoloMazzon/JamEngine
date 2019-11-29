@@ -292,7 +292,7 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) { // Broken
+static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) {
 	int i;
 	JamAsset* asset = NULL;
 	bool found = true;
@@ -305,16 +305,12 @@ static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const cha
 		asset = assetHandler->vals[jamHashString(key, (uint64)assetHandler->size)];
 
 		if (asset != NULL) {
-			if (strcmp(key, asset->name) != 0) {
-				found = false;
-
-				// Crawl the linked list
-				asset = asset->next;
-				while (asset != NULL && !found) {
-					if (strcmp(key, asset->name))
-						found = true;
-					else
-						asset = asset->next;
+			found = false;
+		    while (!found && asset != NULL) {
+				if (strcmp(asset->name, key) == 0) {
+					found = true;
+				} else {
+					asset = asset->next;
 				}
 			}
 		}
@@ -322,7 +318,10 @@ static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const cha
 		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetAssetFromHandler)");
 	}
 
-	return asset;
+	if (found)
+		return asset;
+	else
+		return NULL;
 }
 ///////////////////////////////////////////////////////////////
 
@@ -477,14 +476,17 @@ static void jamFreeAsset(JamAsset* asset) {
 ///////////////////////////////////////////////////////////////
 void jamFreeAssetHandler(JamAssetHandler *handler) {
 	int i;
-	JamAsset* next;
+	JamAsset* next, *old;
 	if (handler != NULL) {
 		for (i = 0; i < handler->size; i++) {
 			if (handler->vals[i] != NULL) {
-				do { // Broken
-					next = handler->vals[i]->next;
-					jamFreeAsset(handler->vals[i]);
-				} while (next != NULL);
+			    next = handler->vals[i]->next;
+				jamFreeAsset(handler->vals[i]);
+				while (next != NULL) {
+				    old = next->next;
+					jamFreeAsset(next);
+					next = old;
+				}
 			}
 		}
 		free(handler->vals);

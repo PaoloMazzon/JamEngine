@@ -13,7 +13,7 @@
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
 #define GAME_HEIGHT 360
-#define VIEW_MULTIPLIER 2
+#define VIEW_MULTIPLIER 1
 #define SCREEN_WIDTH GAME_WIDTH * VIEW_MULTIPLIER
 #define SCREEN_HEIGHT GAME_HEIGHT * VIEW_MULTIPLIER
 #define BLOCK_WIDTH 16
@@ -177,7 +177,7 @@ bool runGame(JamFont* font) {
 	jamAddBehaviourToMap(bMap, "EnemyBehaviour", onEnemyCreate, NULL, onEnemyFrame, NULL);
 
 	// Load the assets and create the world
-	gHandler = jamCreateAssetHandler(1);
+	gHandler = jamCreateAssetHandler(1000);
 	jamAssetLoadINI(gHandler, "assets/level0.ini", bMap);
 	JamWorld* gameWorld = jamGetWorldFromHandler(gHandler, "GameWorld");
 
