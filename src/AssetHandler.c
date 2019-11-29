@@ -25,19 +25,19 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const ch
 	int i;
 	uint64 hash;
 	bool foundSpot = false;
-	JamAsset* next; // For crawling linked lists
+	JamAsset* current; // For crawling linked lists
 	if (handler != NULL && asset != NULL) {
 		hash = jamHashString(id, (uint64)handler->size);
+		current = handler->vals[hash];
 
 		// If it exists we stick it to that asset's linked list
-		if (handler->vals[hash] != NULL) {
-			next = handler->vals[hash]->next;
-			while (!foundSpot) {
-				if (next->next != NULL) {
-					next = next->next;
+		if (current != NULL) {
+			while (current != NULL) {
+				if (current->next != NULL) {
+					current = current->next;
 				} else {
-					next->next = asset;
-					foundSpot = true;
+					current->next = asset;
+					current = NULL;
 				}
 			}
 		} else {
@@ -292,7 +292,7 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) {
+static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) { // Broken
 	int i;
 	JamAsset* asset = NULL;
 	bool found = true;
@@ -481,7 +481,7 @@ void jamFreeAssetHandler(JamAssetHandler *handler) {
 	if (handler != NULL) {
 		for (i = 0; i < handler->size; i++) {
 			if (handler->vals[i] != NULL) {
-				do {
+				do { // Broken
 					next = handler->vals[i]->next;
 					jamFreeAsset(handler->vals[i]);
 				} while (next != NULL);

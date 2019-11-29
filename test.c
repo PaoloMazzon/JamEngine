@@ -177,7 +177,7 @@ bool runGame(JamFont* font) {
 	jamAddBehaviourToMap(bMap, "EnemyBehaviour", onEnemyCreate, NULL, onEnemyFrame, NULL);
 
 	// Load the assets and create the world
-	gHandler = jamCreateAssetHandler(1000);
+	gHandler = jamCreateAssetHandler(1);
 	jamAssetLoadINI(gHandler, "assets/level0.ini", bMap);
 	JamWorld* gameWorld = jamGetWorldFromHandler(gHandler, "GameWorld");
 
