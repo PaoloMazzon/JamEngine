@@ -30,9 +30,9 @@ void jamDrawFillColour(uint8 r, uint8 g, uint8 b, uint8 a);
 /// \throws ERROR_NULL_POINTER
 void jamDrawRectangle(int x, int y, int w, int h);
 
-/// \brief Draws a circle with the current colour
+/// \brief Draws a filled rectangle with the current colour
 /// \throws ERROR_NULL_POINTER
-void jamDrawCircle(int x, int y, int r);
+void jamDrawRectangleFilled(int x, int y, int w, int h);
 
 /// \brief Draws a polygon
 /// \throws ERROR_NULL_POINTER

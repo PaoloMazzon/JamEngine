@@ -49,11 +49,19 @@ void jamDrawRectangle(int x, int y, int w, int h) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamDrawCircle(int x, int y, int r) {
+void jamDrawRectangleFilled(int x, int y, int w, int h) {
+	SDL_Rect rectangle;
+	jamCalculateForCamera(&x, &y);
+
+	// Very simple, just check for jamRendererGetInternalRenderer() then draw the rectangle
 	if (jamRendererGetInternalRenderer() != NULL) {
-		// TODO: This
+		rectangle.x = x;
+		rectangle.y = y;
+		rectangle.w = w;
+		rectangle.h = h;
+		SDL_RenderFillRect(jamRendererGetInternalRenderer(), &rectangle);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawCircle)");
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized (jamDrawRectangle)");
 	}
 }
 //////////////////////////////////////////////////////////////

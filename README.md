@@ -33,8 +33,6 @@ To-Do List
 ==========
  - Input
     + Gamepad input
- - Drawing functions
-    + Draw shapes
  - Fonts
     + TTF fonts
  - Renderer
