@@ -49,9 +49,12 @@ typedef struct {
 	bool renderingToScreenBuffer; ///< Until SDL_GetRenderTarget is figured out, this is a stand in
 	bool sleepEnabled;            ///< For unlocking framerates
 
-	double cameraX; ///< X Location of the camera in the game world (offset to render by)
-	double cameraY; ///< Y Location of the camera in the game world (offset to render by)
+	double cameraX;  ///< X Location of the camera in the game world (offset to render by)
+	double cameraY;  ///< Y Location of the camera in the game world (offset to render by)
+	double tempCamX; ///< X coord of camera to be pushed to the actual coord at end of frame
+    double tempCamY; ///< Y coord of camera to be pushed to the actual coord at end of frame
 
+	
 	double delta; ///< The delta multiplier (actual_frame_time/expected_frame_time used to make up for fluctuating framerates)
 } JamRenderer;
 

@@ -63,6 +63,8 @@ void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 
 					gRenderer->displayBufferY = 0;
 					gRenderer->cameraX = 0;
 					gRenderer->cameraY = 0;
+					gRenderer->tempCamX = 0;
+					gRenderer->tempCamY = 0;
 					gRenderer->delta = 1;
 					gRenderer->renderingToScreenBuffer = true;
 					SDL_SetRenderTarget(sdlRenderer, tex->tex);
@@ -125,8 +127,8 @@ double jamRendererGetCameraY() {
 /////////////////////////////////////////////////////////////
 void jamRendererSetCameraPos(double x, double y) {
 	if (gRenderer != NULL) {
-		gRenderer->cameraX = x;
-		gRenderer->cameraY = y;
+		gRenderer->tempCamX = x;
+		gRenderer->tempCamY = y;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized");
 	}
@@ -136,8 +138,8 @@ void jamRendererSetCameraPos(double x, double y) {
 /////////////////////////////////////////////////////////////
 void jamRendererMoveCamera(double x_relative, double y_relative) {
 	if (gRenderer != NULL) {
-		gRenderer->cameraX += x_relative;
-		gRenderer->cameraY += y_relative;
+		gRenderer->tempCamX += x_relative;
+		gRenderer->tempCamY += y_relative;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized");
 	}
@@ -477,6 +479,10 @@ void jamProcEndFrame() {
 		// Reset to backbuffer
 		SDL_SetRenderTarget(gRenderer->internalRenderer, gRenderer->screenBuffer->tex);
 		SDL_RenderClear(gRenderer->internalRenderer);
+
+		// Push the new camera coordinates
+		gRenderer->cameraX = gRenderer->tempCamX;
+		gRenderer->cameraY = gRenderer->tempCamY;
 
 		// Calculate time in between frames
 		gRenderer->between = ns() - gRenderer->lastTime;
