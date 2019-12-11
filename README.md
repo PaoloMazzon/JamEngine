@@ -29,12 +29,24 @@ Features
  - 3D audio support through OpenAL
  - Basic low-level tweening support for smooth animations 
 
-To-Do List
-==========
- - Input
-    + Gamepad input
- - Fonts
-    + TTF fonts
- - Renderer
-    + Improve/make more consistent camera support
-    + Shader support
+Future Additions
+================
+Near Future
+-----------
+Features that I've decided are vital to the engine itself and will be added
+at some point in the near future. This would be things you simply expect
+out of a game engine.
+ 
+ - Gamepad support
+ - TTF/OTF font support (heck)
+ 
+Possible Additions
+------------------
+Various bits and pieces I think would be cool but aren't terribly important
+to the JamEngine library itself and as such are prioritized much lower.
+
+ - Make a neat little IDE-type interface so a beginner can focus on the code and less on the AssetHandler's files/behaviour maps
+ - Some basic GUI type features in JamEngine like a textbox, buttons, drop down lists, etc...
+ - Bind JamEngine to some languages like Lua and Python (and Lisp..! maybe)
+ - Make rendering backend OpenGL instead of SDL2, but keep using SDL2 for window management and input
+ - As an extension to the previous, GLSL shader support for fancy post processing 
