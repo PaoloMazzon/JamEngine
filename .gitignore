@@ -24,3 +24,4 @@ JamEngineBuilder.cbp
 Project.cbp
 test/JamEngineTest
 libJamEngine.a
+run.sh
