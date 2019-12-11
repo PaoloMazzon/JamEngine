@@ -38,8 +38,6 @@ void onEnemyFrame(JamWorld* world, JamEntity* self) {
 }
 
 void onPlayerFrame(JamWorld* world, JamEntity* self) {
-	int i;
-
 	// Gravity
 	self->vSpeed += 0.5;
 

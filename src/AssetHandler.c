@@ -22,9 +22,7 @@ static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const cha
 
 ///////////////////////////////////////////////////////////////
 void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const char* id) {
-	int i;
 	uint64 hash;
-	bool foundSpot = false;
 	JamAsset* current; // For crawling linked lists
 	if (handler != NULL && asset != NULL) {
 		hash = jamHashString(id, (uint64)handler->size);
@@ -293,7 +291,6 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 
 ///////////////////////////////////////////////////////////////
 static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) {
-	int i;
 	JamAsset* asset = NULL;
 	bool found = true;
 

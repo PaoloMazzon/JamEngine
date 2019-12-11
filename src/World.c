@@ -146,7 +146,6 @@ void jamWorldRemoveEntity(JamWorld *world, int id) {
 	int i;
 	JamEntityType type = et_None;
 	JamEntity* ent;
-	bool found = false;
 
 	if (world != NULL) {
 		// Make sure its present in the master list
@@ -158,7 +157,6 @@ void jamWorldRemoveEntity(JamWorld *world, int id) {
 
 			// Record the type and destroy it
 			type = ent->type;
-			found = true;
 			jamFreeEntity(ent, false, false, false);
 			world->worldEntities->entities[id] = NULL;
 		}

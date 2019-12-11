@@ -96,7 +96,6 @@ JamWorld* jamLoadWorldFromTMX(JamAssetHandler *handler, const char *tmxFilename)
 	uint32 mapW, mapH, tileW, tileH;
 	tmx_layer* currentLayer;
 	unsigned char worldLayerPointer = 0;
-	char* randomString;
 
 	if (handler != NULL && tmx != NULL && world != NULL) {
 		// Load the preliminary information from the map
