@@ -228,7 +228,6 @@ bool runGame(JamFont* font) {
 	return mainMenu;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-
 int main(int argc, char* argv[]) {
 	jamInitRenderer(&argc, argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	jamSetAA(false);
@@ -247,7 +246,7 @@ int main(int argc, char* argv[]) {
 		if (run)
 			run = runGame(font);
 	}
-
+    
 	jamFreeFont(font);
 	jamRendererQuit();
 	return 0;

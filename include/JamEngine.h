@@ -27,3 +27,4 @@
 #include <Tweening.h>
 #include <StringUtil.h>
 #include <Buffer.h>
+#include <Profiler.h>
