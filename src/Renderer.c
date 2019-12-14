@@ -8,6 +8,7 @@
 #include <Renderer.h>
 #include "Clock.h"
 #include "JamError.h"
+#include <math.h>
 #include <SDL.h>
 #include <Audio.h>
 
@@ -305,8 +306,8 @@ bool jamRendererTargetIsScreenBuffer() {
 //////////////////////////////////////////////////////////////
 void jamCalculateForCamera(int *x, int *y) {
 	if (jamRendererTargetIsScreenBuffer()) {
-		*x -= gRenderer->cameraX;
-		*y -= gRenderer->cameraY;
+		*x -= roundf(gRenderer->cameraX);
+		*y -= roundf(gRenderer->cameraY);
 	}
 }
 //////////////////////////////////////////////////////////////
