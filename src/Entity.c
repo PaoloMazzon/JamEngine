@@ -144,7 +144,7 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 		y = ry + entity->hitboxOffsetY;
 
 		// Now check the collision itself
-		coll = jamCheckMapCollision(tileMap, roundToInt(x), roundToInt(y), (int) entity->hitbox->width,
+		coll = jamCheckMapCollision(tileMap, roundToInt(rx), roundToInt(y), (int) entity->hitbox->width,
 									(int) entity->hitbox->height);
 	} else {
 		if (entity == NULL) {
