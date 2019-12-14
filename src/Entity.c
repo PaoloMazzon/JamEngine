@@ -9,11 +9,7 @@
 #include <Sprite.h>
 #include "JamError.h"
 #include <malloc.h>
-
-int roundToInt(double x) {
-	x += 0.5;
-	return (int)(x);
-}
+#include <math.h>
 
 //////////////////////////////////////////////////////////
 JamEntity* jamCreateEntity(JamSprite *sprite, JamHitbox *hitbox, double x, double y, double hitboxOffsetX,
@@ -144,7 +140,7 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 		y = ry + entity->hitboxOffsetY;
 
 		// Now check the collision itself
-		coll = jamCheckMapCollision(tileMap, roundToInt(rx), roundToInt(y), (int) entity->hitbox->width,
+		coll = jamCheckMapCollision(tileMap, (int)round(x), (int)round(y), (int) entity->hitbox->width,
 									(int) entity->hitbox->height);
 	} else {
 		if (entity == NULL) {
