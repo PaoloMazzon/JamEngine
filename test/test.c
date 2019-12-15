@@ -77,9 +77,9 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 
 	// Testing
 	if (jamInputCheckKeyPressed(JAM_KB_U))
-		jamSnapEntityToTileMapX(self, world->worldMaps[0], -1);
+		jamSnapEntityToTileMapY(self, world->worldMaps[0], -1);
 	if (jamInputCheckKeyPressed(JAM_KB_I))
-		jamSnapEntityToTileMapX(self, world->worldMaps[0], 1);
+		jamSnapEntityToTileMapY(self, world->worldMaps[0], 1);
 	
 	//////////////////////// Player Animations ////////////////////////
 	// We must invert the et_Player if he is going left

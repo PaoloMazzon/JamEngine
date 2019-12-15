@@ -166,7 +166,7 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction) { // TODO: Fix this
 	int gridX, gridY;
 	uint32 gridChecks = 0;
-	bool cornerColliding;
+	bool cornerColliding = false;
 	int i;
 	double cellsOver;
 	int cellsTall;
@@ -181,17 +181,23 @@ void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int directi
 
 		gridX -= (direction == 1 ? 1 : 0);
 
-		while (tilemap->grid[gridY * tilemap->width + gridX] == NULL && gridChecks++ < MAX_GRID_CHECKS) {
+		while (!cornerColliding && gridChecks++ < MAX_GRID_CHECKS) {
 			for (i = 0; i < cellsTall && !cornerColliding; i++)
-			    if (jamGetMapPos(tilemap, gridX, gridY + i))
+			    if (jamGetMapPos(tilemap, (uint32)gridX, (uint32)(gridY + i)))
 					cornerColliding = true;
-			gridX += (int)direction;
+			gridX += direction;
 		}
 
-	    gridX -= direction;
-		
-		// Move the entity as close as possible
-		entity->x = tilemap->xInWorld + (gridX * tilemap->cellWidth) + (tilemap->cellWidth - entity->sprite->frames[0]->w + (direction == 1 ? entity->hitboxOffsetX : -entity->hitboxOffsetX));
+		// If we never found a wall, don't launch the entity x cells over
+		if (gridChecks < MAX_GRID_CHECKS) {
+			// TODO: Fix this not accounting for entity origin/hitbox offset/sprite size
+			gridX += (direction == 1) ? -1 : 3;
+
+			// Move the entity as close as possible
+			entity->x = tilemap->xInWorld + (gridX * tilemap->cellWidth) +
+						(-entity->sprite->frames[0]->w +
+						 (direction == 1 ? entity->hitboxOffsetX : -entity->hitboxOffsetX));
+		}
 	} else {
 		if (entity == NULL)
 			jSetError(ERROR_NULL_POINTER, "Entity doesn't exist");
@@ -209,7 +215,7 @@ void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int directi
 
 //////////////////////////////////////////////////////////
 void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int direction) { // TODO: Implement this once the x version of this is done
-    
+
 }
 //////////////////////////////////////////////////////////
 
