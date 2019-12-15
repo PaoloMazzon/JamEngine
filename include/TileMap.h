@@ -34,13 +34,13 @@ extern "C" {
 /// and cellHeight, you will more likely than not get really wonky collisions and
 /// strange rendering.
 typedef struct {
-	int xInWorld;               ///< X position in the world of the grid (for collisions only, drawing ignores this)
-	int yInWorld;               ///< Y position in the world of the grid (for collisions only, drawing ignores this)
-	uint32 width;               ///< Grid's width
-	uint32 height;              ///< Grid's height
-	uint32 cellWidth;           ///< Width of any given cell in the map
-	uint32 cellHeight;          ///< Height of any given cell in the map
-	JamFrame** grid;            ///< Internal grid of w*h (it is a 1D array of JamFrame pointers)
+	int xInWorld;      ///< X position in the world of the grid (for collisions only, drawing ignores this)
+	int yInWorld;      ///< Y position in the world of the grid (for collisions only, drawing ignores this)
+	uint32 width;      ///< Grid's width
+	uint32 height;     ///< Grid's height
+	uint32 cellWidth;  ///< Width of any given cell in the map
+	uint32 cellHeight; ///< Height of any given cell in the map
+	JamFrame** grid;   ///< Internal grid of w*h (it is a 1D array of JamFrame pointers)
 } JamTileMap;
 
 /// \brief Creates a tile map

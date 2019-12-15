@@ -163,6 +163,57 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
+void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction) { // TODO: Fix this
+	int gridX, gridY;
+	uint32 gridChecks = 0;
+	bool cornerColliding;
+	int i;
+	double cellsOver;
+	int cellsTall;
+
+	if (entity != NULL && tilemap != NULL && entity->hitbox != NULL && entity->sprite != NULL && entity->sprite->animationLength != 0) {
+		cellsOver = direction == 1 ? ceil(entity->hitbox->width / tilemap->cellWidth) + 1 : 0;
+		cellsTall = (uint32)ceil(entity->hitbox->height / tilemap->cellHeight) + 1;
+		
+		// Find the nearest collision in the grid, considering the full height of the entity
+		gridX = (uint32)((round(entity->x) + entity->hitboxOffsetX) / tilemap->cellWidth + cellsOver);
+		gridY = (uint32)(round(entity->y) + entity->hitboxOffsetY) / tilemap->cellHeight;
+
+		gridX -= (direction == 1 ? 1 : 0);
+
+		while (tilemap->grid[gridY * tilemap->width + gridX] == NULL && gridChecks++ < MAX_GRID_CHECKS) {
+			for (i = 0; i < cellsTall && !cornerColliding; i++)
+			    if (jamGetMapPos(tilemap, gridX, gridY + i))
+					cornerColliding = true;
+			gridX += (int)direction;
+		}
+
+	    gridX -= direction;
+		
+		// Move the entity as close as possible
+		entity->x = tilemap->xInWorld + (gridX * tilemap->cellWidth) + (tilemap->cellWidth - entity->sprite->frames[0]->w + (direction == 1 ? entity->hitboxOffsetX : -entity->hitboxOffsetX));
+	} else {
+		if (entity == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity doesn't exist");
+		else if (entity->hitbox == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity's hitbox doesn't exist");
+		if (tilemap == NULL)
+			jSetError(ERROR_NULL_POINTER, "TileMap doesn't exist");
+		if (entity->sprite == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity's sprite doesn't exist");
+		else if (entity->sprite->animationLength == 0)
+			jSetError(ERROR_NULL_POINTER, "Entity's sprite has no frames");
+	}
+}
+//////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////
+void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int direction) { // TODO: Implement this once the x version of this is done
+    
+}
+//////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////
 void jamFreeEntity(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames) {
 	if (entity != NULL) {
 		if (destroyHitbox)

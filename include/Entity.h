@@ -79,6 +79,14 @@ bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity
 /// \throws ERROR_INCORRECT_FORMAT
 bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry);
 
+/// \brief Sets an entity's x component as close to a tilemap's wall as possible
+/// \throws ERROR_NULL_POINTER
+void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction);
+
+/// \brief Sets an entity's y component as close to a tilemap's wall as possible
+/// \throws ERROR_NULL_POINTER
+void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int direction);
+	
 /// \brief Frees an entity from memory
 ///
 /// No matter what you specify with the boolean arguments,

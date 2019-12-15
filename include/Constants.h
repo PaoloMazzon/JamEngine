@@ -33,15 +33,18 @@ typedef signed long long sint64;
 /// Don't use none in an actual entity, its to denote the lack thereof
 typedef enum {et_None = -1, et_Logic = 0, et_Solid = 1, et_NPC = 2, et_Object = 3, et_Item = 4, et_Player = 5, et_Unassigned = 6} JamEntityType;
 
-/// \brief Used exclusive in worlds, sets up how to filter entities
+///< Used exclusive in worlds, sets up how to filter entities
 typedef enum {ft_Rectangle, ft_Proximity} JamFilterType;
 
-/// \brief The file that error messages will be output to
+///< The file that error messages will be output to
 #define LOG_FILENAME "jamerrorlog.txt"
 
-// This is the maximum number vertices jamCheckMapCollision is allowed to check
+///< This is the maximum number vertices jamCheckMapCollision is allowed to check
 #define MAX_GRID_VERTICES 16
 
+///< Maximum number of cells to check when calling jamSnapEntityToTileMap* as to prevent an infinite loop
+#define MAX_GRID_CHECKS 10
+	
 // The names of JamINI headers for assets
 #define INI_SPRITE_PREFIX 's'
 #define INI_ENTITY_PREFIX 'e'

@@ -43,11 +43,14 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 
 	self->hSpeed =
 			(jamInputCheckKey(JAM_KB_RIGHT) + -jamInputCheckKey(JAM_KB_LEFT)) * 3;
+	self->vSpeed =
+			(jamInputCheckKey(JAM_KB_DOWN) + -jamInputCheckKey(JAM_KB_UP)) * 3;
+	
 
 	// Jump - just shoot the et_Player up and let gravity deal with it (only if on the ground)
-	if (jamInputCheckKeyPressed(JAM_KB_UP) &&
+	/*if (jamInputCheckKeyPressed(JAM_KB_UP) &&
 			jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int) self->x, (int) self->y + 1))
-		self->vSpeed -= 10;
+			self->vSpeed -= 10;*/
 
 	// Let's not go mach speed
 	if (self->vSpeed >= BLOCK_HEIGHT)
@@ -72,6 +75,12 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 
 	jamAudioSetListenerPosition((float)self->x, (float)self->y, 0);
 
+	// Testing
+	if (jamInputCheckKeyPressed(JAM_KB_U))
+		jamSnapEntityToTileMapX(self, world->worldMaps[0], -1);
+	if (jamInputCheckKeyPressed(JAM_KB_I))
+		jamSnapEntityToTileMapX(self, world->worldMaps[0], 1);
+	
 	//////////////////////// Player Animations ////////////////////////
 	// We must invert the et_Player if he is going left
 	if (self->hSpeed > 0)
