@@ -45,16 +45,11 @@ typedef struct _JamEntity {
 	float scaleX;      ///< The x scale of the entity (for sprite rendering)
 	float scaleY;      ///< The y scale of the entity (for sprite rendering)
 
-#ifdef ENTITY_ENABLE_SPEED
-	double hSpeed; ///< Horizontal speed (Can be disabled to save memory)
-	double vSpeed; ///< Vertical speed (Can be disabled to save memory)
-#endif
-#ifdef ENTITY_ENABLE_FRICTION
-	double friction; ///< Friction for speed calculations (Can be disabled to save memory)
-#endif
-#ifdef ENTITY_ENABLE_Z
-	double z; ///< Z position in the game world (Can be disabled to save memory)
-#endif
+	// Utilities not utilized by the engine
+	double hSpeed;   ///< Horizontal speed
+	double vSpeed;   ///< Vertical speed
+	double friction; ///< Friction for speed calculations
+	double z;        ///< Z position in the game world
 } JamEntity;
 
 /// \brief Creates/initializes an entity class

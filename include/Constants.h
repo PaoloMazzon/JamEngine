@@ -42,11 +42,6 @@ typedef enum {ft_Rectangle, ft_Proximity} JamFilterType;
 // This is the maximum number vertices jamCheckMapCollision is allowed to check
 #define MAX_GRID_VERTICES 16
 
-// Optimization options - comment  out anything here to turn it off
-#define ENTITY_ENABLE_Z
-#define ENTITY_ENABLE_SPEED
-#define ENTITY_ENABLE_FRICTION
-
 // The names of JamINI headers for assets
 #define INI_SPRITE_PREFIX 's'
 #define INI_ENTITY_PREFIX 'e'
