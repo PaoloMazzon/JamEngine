@@ -164,6 +164,7 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 
 //////////////////////////////////////////////////////////
 void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction) { // TODO: Fix this
+	/* This will be implemented at a later time once hitbox/sprite origins are properly handled
 	int gridX, gridY;
 	uint32 gridChecks = 0;
 	bool cornerColliding = false;
@@ -210,6 +211,7 @@ void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int directi
 		else if (entity->sprite->animationLength == 0)
 			jSetError(ERROR_NULL_POINTER, "Entity's sprite has no frames");
 	}
+	*/
 }
 //////////////////////////////////////////////////////////
 
