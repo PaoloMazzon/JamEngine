@@ -150,7 +150,6 @@ bool jamCheckEntityCollision(double x, double y, JamEntity *entity1, JamEntity *
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-// TODO: Update with new origin-accounting functions
 bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry) {
 	bool coll = false;
 	double x, y; // Accounting for origins
