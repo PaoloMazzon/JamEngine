@@ -12,6 +12,7 @@
 #include "JamError.h"
 #include <malloc.h>
 #include <SDL.h>
+#include <Frame.h>
 
 ///////////////////////////////////////////////////
 JamSprite* jamCreateSprite(uint32 animationLength, uint16 frameDelay, bool looping) {
@@ -28,6 +29,8 @@ JamSprite* jamCreateSprite(uint32 animationLength, uint16 frameDelay, bool loopi
 		sprite->looping = looping;
 		sprite->originX = 0;
 		sprite->originY = 0;
+		sprite->width = 0;
+		sprite->height = 0;
 
 		// Check if list is a dud and shouldn't be
 		if (list == NULL && animationLength > 0) {
@@ -63,8 +66,10 @@ void jamSpriteAppendFrame(JamSprite *sprite, JamFrame *frame) {
 			// Add the frame of the hour
 			buffer[sprite->animationLength] = frame;
 
-			// Update the new animation length
+			// Update the sprite's information
 			sprite->animationLength++;
+			sprite->width = frame->w;
+			sprite->height = frame->h;
 
 			// Free the old list, then copy over the new one
 			free(sprite->frames);
@@ -92,6 +97,10 @@ JamSprite* jamLoadSpriteFromSheet(JamTexture *spriteSheet, uint32 cellCount, uin
 
 	// Check that the sprite and texture creation was successful
 	if (sprite != NULL && spriteSheet != NULL) {
+		// Set the new width/height
+		sprite->width = cellW;
+		sprite->height = cellH;
+
 		// Loop until we have all frames or run out of room in texture
 		while (continueGrabbing) {
 			// Grab the current frame

@@ -266,9 +266,10 @@ void jamDrawTexturePartExt(JamTexture *texture, sint32 x, sint32 y, sint32 origi
 				scaleY *= -1;
 			}
 
-			// Load up all the values
-			dest.x = x;
-			dest.y = y;
+			// SDL_RenderCopyEx uses "center" parameter for determining only where to rotate from,
+			// we still have to calculate the origin manually
+			dest.x = x - originX;
+			dest.y = y - originY;
 			dest.w = (int)(texW * scaleX);
 			dest.h = (int)(texH * scaleY);
 			origin.x = originX;

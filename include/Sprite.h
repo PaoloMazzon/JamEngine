@@ -17,15 +17,38 @@
 extern "C" {
 #endif
 
-/// \brief Contains information surrounding the mystical sprite
+/// \brief Contains information surrounding jam sprites
+///
+/// A sprite's width and height are in most cases the width and
+/// height of each frame in the animation. To be more specific,
+/// it is the width and height of either the most recently added
+/// frame (via jamSpriteAppendFrame) or the cellW/cellH passed
+/// to jamLoadSpriteFromSheet. It can also, of course, be whatever
+/// wacky values you wish to set it to. It is used by the engine
+/// when calculating various things like collisions (and of course
+/// its always there when you need it).
+///
+/// originX and originY are values the engine uses when drawing a
+/// sprite basically anywhere, or calculating things on the entity
+/// side of things. Technically speaking, the x/y values you pass
+/// to a function which draws a sprite will have the origin on said
+/// sprite subtracted from them. This is to say that sprites are
+/// "drawn from" their origins. For example, a sprite of width/height
+/// 16/16 with an origin of 8/8 would be drawn from the center; the
+/// x/y values passed to jamDrawSprite would represent the center of
+/// the sprite and not the top-left.
 typedef struct {
 	// Animation things
-	JamFrame** frames; ///< The list of frames in the sprite's animation
+	JamFrame** frames;      ///< The list of frames in the sprite's animation
 	uint32 animationLength; ///< The length (in frames) of the animation
-	uint16 frameDelay; ///< How many frames in between each animation frame
-	uint32 currentFrame; ///< The current frame of the animation
-	uint16 frameTime; ///< Amount of frames left till the next frame
-	bool looping; ///< Weather or not to loop the animation
+	uint16 frameDelay;      ///< How many frames in between each animation frame
+	uint32 currentFrame;    ///< The current frame of the animation
+	uint16 frameTime;       ///< Amount of frames left till the next frame
+	bool looping;           ///< Weather or not to loop the animation
+
+	// Convenience
+	sint32 width;  ///< The width of the sprite
+	sint32 height; ///< The height of the sprite
 
 	// Things for the sprite to draw properly
 	sint32 originX; ///< The x origin of the sprite

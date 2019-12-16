@@ -11,6 +11,14 @@
 #include <malloc.h>
 #include <math.h>
 
+// Grab Entity's hitbox coordinates, accounting for origins (does not check for null pointers)
+static inline double _getEntHitX(JamEntity* ent) {
+	return ent->x - ent->sprite->originX + ent->hitboxOffsetX;
+}
+static inline double _getEntHitY(JamEntity* ent) {
+	return ent->y - ent->sprite->originY + ent->hitboxOffsetY;
+}
+
 //////////////////////////////////////////////////////////
 JamEntity* jamCreateEntity(JamSprite *sprite, JamHitbox *hitbox, double x, double y, double hitboxOffsetX,
 						   double hitboxOffsetY, JamBehaviour *behaviour) {
@@ -93,6 +101,7 @@ void jamDrawEntity(JamEntity *entity) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
+// TODO: Update with new origin-accounting functions
 bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity2) {
 	bool coll = false;
 	double x1, y1, x2, y2; // Accounting for origins
@@ -130,6 +139,7 @@ bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
+// TODO: Update with new origin-accounting functions
 bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry) {
 	bool coll = false;
 	double x, y; // Accounting for origins
