@@ -19,13 +19,11 @@ extern "C" {
 
 /// \brief Defines an in-game entity
 ///
-/// Speed, friction, and Z coordinate is just a convinience
-/// and none of the Entity functions will touch them. This
-/// is a 2D engine and thus does not care about the Z coord.
-/// There are cases in 2D games you want it, but that's not
-/// the engine's problem. Since not every use case needs
-/// these things, you can turn each individually off in the
-/// Constants.h file.
+/// Since all drawing/hitbox functions are done with ints
+/// and an entity's coordinates are in doubles, it is made
+/// sure that the doubles are always rounded to ints the
+/// same way. In other words, it is guaranteed that entities
+/// are drawn and collision-tested with the same set of coords.
 typedef struct _JamEntity {
 	JamSprite* sprite;       ///< This entity's sprite (NULL is safe)
 	JamHitbox* hitbox;       ///< This entity's hitbox (NULL is safe)
@@ -66,15 +64,15 @@ void jamDrawEntity(JamEntity *entity);
 
 /// \brief Checks if two entities are colliding with one another
 ///
-/// This function uses the rx/ry coordinates for entity 1, no its x/y
+/// This function uses the x/y coordinates for entity 1, not its x/y
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-bool jamCheckEntityCollision(int x, int y, JamEntity *entity1, JamEntity *entity2);
+bool jamCheckEntityCollision(double x, double y, JamEntity *entity1, JamEntity *entity2);
 
 /// \brief Checks if an entity is colliding with a tile map
 ///
-/// This function uses the rx/ry coordinates for the entity, no the entity's x/y
+/// This function uses the rx/ry coordinates for the entity, not the entity's x/y
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
 bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry);

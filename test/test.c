@@ -75,12 +75,16 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 
 	jamAudioSetListenerPosition((float)self->x, (float)self->y, 0);
 
-	// Testing
+	/////////////// Testing ///////////////
 	if (jamInputCheckKeyPressed(JAM_KB_U))
 		jamSnapEntityToTileMapY(self, world->worldMaps[0], -1);
 	if (jamInputCheckKeyPressed(JAM_KB_I))
 		jamSnapEntityToTileMapY(self, world->worldMaps[0], 1);
-	
+	if (jamInputCheckMouseButton(MOUSE_LEFT_BUTTON)) {
+		self->x = jamInputGetMouseX() + jamRendererGetCameraX();
+		self->y = jamInputGetMouseY() + jamRendererGetCameraY();
+	}
+
 	//////////////////////// Player Animations ////////////////////////
 	// We must invert the et_Player if he is going left
 	if (self->hSpeed > 0)

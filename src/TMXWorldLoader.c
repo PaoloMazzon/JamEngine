@@ -26,9 +26,9 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 			jamWorldAddEntity(world, tempEntity);
 
 			// Adjust scale
-			if (tempEntity->sprite != NULL && tempEntity->sprite->animationLength > 0) {
-				tempEntity->scaleX = (float)currentObject->width  / tempEntity->sprite->frames[0]->w;
-				tempEntity->scaleY = (float)currentObject->height / tempEntity->sprite->frames[0]->h;
+			if (tempEntity->sprite != NULL) {
+				tempEntity->scaleX = (float)currentObject->width  / tempEntity->sprite->width;
+				tempEntity->scaleY = (float)currentObject->height / tempEntity->sprite->height;
 			}
 
 			// This is to account for the difference in sprite origins between JamEngine and Tiled

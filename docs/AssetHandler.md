@@ -41,6 +41,8 @@ And here is a list of recognized keys for every asset type
    + `x_align` Horizontal offset of the animation in the spritesheet
    + `frame_delay` In-game frames between each animation frame
    + `looping` Weather or not the animation loops
+   + `x_origin` X origin of the sprite
+   + `y_origin` Y origin of the sprite
  + Hitboxes ***(prefix = 'h')***
    + `type` Type of hitbox (default="rectangle") (types are rectangle, circle, and polygon)
    + `width` Width of a rectangular hitbox (default=0)
