@@ -77,11 +77,17 @@ bool jamCheckEntityCollision(double x, double y, JamEntity *entity1, JamEntity *
 /// \throws ERROR_INCORRECT_FORMAT
 bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry);
 
-/// \brief Sets an entity's x component as close to a tilemap's wall as possible
+/// \brief Sets an entity's x component as close to a tilemap's edge as possible
+///
+/// `direction` should be either 1 or -1 to represent right and left respectively
+///
 /// \throws ERROR_NULL_POINTER
 void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction);
 
-/// \brief Sets an entity's y component as close to a tilemap's wall as possible
+/// \brief Sets an entity's y component as close to a tilemap's edge as possible
+///
+/// `direction` should be either 1 or -1 to represent right and left respectively
+///
 /// \throws ERROR_NULL_POINTER
 void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int direction);
 	

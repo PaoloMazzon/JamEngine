@@ -43,7 +43,7 @@ typedef enum {ft_Rectangle, ft_Proximity} JamFilterType;
 #define MAX_GRID_VERTICES 16
 
 ///< Maximum number of cells to check when calling jamSnapEntityToTileMap* as to prevent an infinite loop
-#define MAX_GRID_CHECKS 10
+#define MAX_GRID_CHECKS 5
 	
 // The names of JamINI headers for assets
 #define INI_SPRITE_PREFIX 's'

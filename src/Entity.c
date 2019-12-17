@@ -9,7 +9,9 @@
 #include <Sprite.h>
 #include "JamError.h"
 #include <malloc.h>
+#include <Drawing.h>
 #include <math.h>
+#include <TileMap.h>
 
 // Grab Entity's hitbox coordinates, accounting for origins (does not check for null pointers)
 static inline double _getEntHitX(JamEntity* ent, double x) {
@@ -188,42 +190,33 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction) { // TODO: Fix this
-	/* This will be implemented at a later time once hitbox/sprite origins are properly handled
-	int gridX, gridY;
+void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction) {
+	uint32 gridX, gridY;
 	uint32 gridChecks = 0;
 	bool cornerColliding = false;
-	int i;
-	double cellsOver;
+	uint32 i;
 	int cellsTall;
 
 	if (entity != NULL && tilemap != NULL && entity->hitbox != NULL && entity->sprite != NULL) {
-		cellsOver = direction == 1 ? ceil(entity->hitbox->width / tilemap->cellWidth) + 1 : 0;
-		cellsTall = (uint32)ceil(entity->hitbox->height / tilemap->cellHeight) + 1;
-		
-		// Find the nearest collision in the grid, considering the full height of the entity
-		gridX = (uint32)((round(entity->x) + entity->hitboxOffsetX) / tilemap->cellWidth + cellsOver);
-		gridY = (uint32)(round(entity->y) + entity->hitboxOffsetY) / tilemap->cellHeight;
+		// Calculate how tall the entity is as well as how many cells over to start in
+		gridX = direction == 1 ? ((uint32)ceil(entity->hitbox->width / (double)tilemap->cellWidth) - 1) : 0;
+		cellsTall = (int)ceil(entity->hitbox->height / (double)tilemap->cellHeight) + 1;
+		gridY = (_roundDoubleToInt(entity->y) - tilemap->yInWorld) / tilemap->cellHeight;
+		gridX += (_roundDoubleToInt(entity->x) - tilemap->xInWorld) / tilemap->cellWidth;
 
-		gridX -= (direction == 1 ? 1 : 0);
-
+		// Find the first collision near the entity
 		while (!cornerColliding && gridChecks++ < MAX_GRID_CHECKS) {
-			for (i = 0; i < cellsTall && !cornerColliding; i++)
-			    if (jamGetMapPos(tilemap, (uint32)gridX, (uint32)(gridY + i)))
+			for (i = gridY; i < gridY + cellsTall && !cornerColliding; i++)
+				if (jamGetMapPos(tilemap, gridX, i) != NULL)
 					cornerColliding = true;
-			gridX += direction;
+			if (!cornerColliding)
+				gridX += direction;
 		}
 
-		// If we never found a wall, don't launch the entity x cells over
-		if (gridChecks < MAX_GRID_CHECKS) {
-			// TODO: Fix this not accounting for entity origin/hitbox offset/sprite size
-			gridX += (direction == 1) ? -1 : 3;
-
-			// Move the entity as close as possible
-			entity->x = tilemap->xInWorld + (gridX * tilemap->cellWidth) +
-						(-entity->sprite->width +
-						 (direction == 1 ? entity->hitboxOffsetX : -entity->hitboxOffsetX));
-		}
+		if (cornerColliding)
+			entity->x = gridX * tilemap->cellWidth + tilemap->xInWorld +
+					(direction == 1 ? (-entity->sprite->originX + entity->hitboxOffsetX)
+					: (entity->sprite->originX - entity->hitboxOffsetX + tilemap->cellWidth));
 	} else {
 		if (entity == NULL)
 			jSetError(ERROR_NULL_POINTER, "Entity doesn't exist");
@@ -234,7 +227,6 @@ void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int directi
 		if (entity->sprite == NULL)
 			jSetError(ERROR_NULL_POINTER, "Entity's sprite doesn't exist");
 	}
-	*/
 }
 //////////////////////////////////////////////////////////
 
