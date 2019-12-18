@@ -79,7 +79,12 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 
 /// \brief Sets an entity's x component as close to a tilemap's edge as possible
 ///
-/// `direction` should be either 1 or -1 to represent right and left respectively
+/// `direction` should be either 1 or -1 to represent right and left respectively.
+/// This function also requires the entity to meet the following requirements:
+///
+///  + It has a sprite
+///  + It has a hitbox
+///  + The hitbox is a rectangle
 ///
 /// \throws ERROR_NULL_POINTER
 void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction);
@@ -87,6 +92,11 @@ void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int directi
 /// \brief Sets an entity's y component as close to a tilemap's edge as possible
 ///
 /// `direction` should be either 1 or -1 to represent right and left respectively
+/// This function also requires the entity to meet the following requirements:
+///
+///  + It has a sprite
+///  + It has a hitbox
+///  + The hitbox is a rectangle
 ///
 /// \throws ERROR_NULL_POINTER
 void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int direction);

@@ -12,6 +12,7 @@
 #include <Drawing.h>
 #include <math.h>
 #include <TileMap.h>
+#include <Hitbox.h>
 
 // Grab Entity's hitbox coordinates, accounting for origins (does not check for null pointers)
 static inline double _getEntHitX(JamEntity* ent, double x) {
@@ -19,6 +20,12 @@ static inline double _getEntHitX(JamEntity* ent, double x) {
 }
 static inline double _getEntHitY(JamEntity* ent, double y) {
 	return y - ent->sprite->originY + ent->hitboxOffsetY;
+}
+static inline double _getEntHitX2(JamEntity* ent, double x) {
+	return x - ent->sprite->originX + ent->hitbox->width + ent->hitboxOffsetX;
+}
+static inline double _getEntHitY2(JamEntity* ent, double y) {
+	return y - ent->sprite->originY + ent->hitbox->height + ent->hitboxOffsetY;
 }
 
 // Rounds a double down to an int
@@ -191,31 +198,38 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 
 //////////////////////////////////////////////////////////
 void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction) {
-	uint32 gridX, gridY;
-	uint32 gridChecks = 0;
+	int gridX, gridY;
+	int gridChecks = 0;
 	bool cornerColliding = false;
-	uint32 i;
+	int i;
 	int cellsTall;
 
 	if (entity != NULL && tilemap != NULL && entity->hitbox != NULL && entity->sprite != NULL) {
 		// Calculate how tall the entity is as well as how many cells over to start in
-		gridX = direction == 1 ? ((uint32)ceil(entity->hitbox->width / (double)tilemap->cellWidth) - 1) : 0;
-		cellsTall = (int)ceil(entity->hitbox->height / (double)tilemap->cellHeight) + 1;
-		gridY = (_roundDoubleToInt(entity->y) - tilemap->yInWorld) / tilemap->cellHeight;
-		gridX += (_roundDoubleToInt(entity->x) - tilemap->xInWorld) / tilemap->cellWidth;
+		gridX = direction == 1 ? ((uint32)floor(entity->hitbox->width / (double)tilemap->cellWidth)) : 0;
+		gridY = (_roundDoubleToInt(_getEntHitY(entity, entity->y)) - tilemap->yInWorld) / tilemap->cellHeight;
+		gridX += (_roundDoubleToInt(_getEntHitX(entity, entity->x)) - tilemap->xInWorld) / tilemap->cellWidth;
+
+		// Cells tall is a bit painful since something that is 32px tall can take either 2 or 3 cells
+		// in a 16px tall map. As such, we use bottom cell - top cell to calculate this
+		cellsTall = (_roundDoubleToInt(_getEntHitY2(entity, entity->y - 1)) / (int)tilemap->cellHeight)
+				- (_roundDoubleToInt(_getEntHitY(entity, entity->y)) / (int)tilemap->cellHeight);
+		cellsTall++;
 
 		// Find the first collision near the entity
 		while (!cornerColliding && gridChecks++ < MAX_GRID_CHECKS) {
-			for (i = gridY; i < gridY + cellsTall && !cornerColliding; i++)
-				if (jamGetMapPos(tilemap, gridX, i) != NULL)
+			for (i = gridY; i < gridY + cellsTall && !cornerColliding; i++) {
+				if (jamGetMapPos(tilemap, (uint32)gridX, (uint32)i) != NULL) {
 					cornerColliding = true;
+				}
+			}
 			if (!cornerColliding)
 				gridX += direction;
 		}
 
 		if (cornerColliding)
 			entity->x = gridX * tilemap->cellWidth + tilemap->xInWorld +
-					(direction == 1 ? (-entity->sprite->originX + entity->hitboxOffsetX)
+					(direction == 1 ? (-entity->sprite->originX + (entity->sprite->width - entity->hitbox->width - entity->hitboxOffsetX))
 					: (entity->sprite->originX - entity->hitboxOffsetX + tilemap->cellWidth));
 	} else {
 		if (entity == NULL)

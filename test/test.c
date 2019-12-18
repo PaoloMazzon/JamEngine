@@ -76,9 +76,9 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 	jamAudioSetListenerPosition((float)self->x, (float)self->y, 0);
 
 	/////////////// Testing ///////////////
-	if (jamInputCheckKeyPressed(JAM_KB_U))
+	if (jamInputCheckKey(JAM_KB_U))
 		jamSnapEntityToTileMapX(self, world->worldMaps[0], -1);
-	if (jamInputCheckKeyPressed(JAM_KB_I))
+	else
 		jamSnapEntityToTileMapX(self, world->worldMaps[0], 1);
 	if (jamInputCheckMouseButton(MOUSE_LEFT_BUTTON)) {
 		self->x = jamInputGetMouseX() + jamRendererGetCameraX();
