@@ -229,8 +229,8 @@ void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int directi
 
 		if (cornerColliding)
 			entity->x = gridX * tilemap->cellWidth + tilemap->xInWorld +
-					(direction == 1 ? (-entity->sprite->originX + (entity->sprite->width - entity->hitbox->width - entity->hitboxOffsetX))
-					: (entity->sprite->originX - entity->hitboxOffsetX + tilemap->cellWidth));
+						(direction == 1 ? (-entity->sprite->width + (entity->sprite->width - entity->hitbox->width - entity->hitboxOffsetX) + entity->sprite->originX)
+										: (entity->sprite->originX - entity->hitboxOffsetX + tilemap->cellWidth));
 	} else {
 		if (entity == NULL)
 			jSetError(ERROR_NULL_POINTER, "Entity doesn't exist");
@@ -245,8 +245,50 @@ void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int directi
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int direction) { // TODO: Implement this once the x version of this is done
+void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int direction) {
+	int gridX, gridY;
+	int gridChecks = 0;
+	bool cornerColliding = false;
+	int i;
+	int cellsWide;
 
+	if (entity != NULL && tilemap != NULL && entity->hitbox != NULL && entity->sprite != NULL) {
+		// Calculate how tall the entity is as well as how many cells over to start in
+		gridY = direction == 1 ? ((uint32)floor(entity->hitbox->height / (double)tilemap->cellHeight)) : 0;
+		gridY += (_roundDoubleToInt(_getEntHitY(entity, entity->y)) - tilemap->yInWorld) / tilemap->cellHeight;
+		gridX = (_roundDoubleToInt(_getEntHitX(entity, entity->x)) - tilemap->xInWorld) / tilemap->cellWidth;
+
+		// Cells tall is a bit painful since something that is 32px tall can take either 2 or 3 cells
+		// in a 16px tall map. As such, we use bottom cell - top cell to calculate this
+		cellsWide = (_roundDoubleToInt(_getEntHitX2(entity, entity->x - 1)) / (int)tilemap->cellWidth)
+					- (_roundDoubleToInt(_getEntHitX(entity, entity->x)) / (int)tilemap->cellWidth);
+		cellsWide++;
+
+		// Find the first collision near the entity
+		while (!cornerColliding && gridChecks++ < MAX_GRID_CHECKS) {
+			for (i = gridX; i < gridX + cellsWide && !cornerColliding; i++) {
+				if (jamGetMapPos(tilemap, (uint32)i, (uint32)gridY) != NULL) {
+					cornerColliding = true;
+				}
+			}
+			if (!cornerColliding)
+				gridY += direction;
+		}
+
+		if (cornerColliding)
+			entity->y = gridY * tilemap->cellHeight + tilemap->yInWorld +
+						(direction == 1 ? (-entity->sprite->height + (entity->sprite->height - entity->hitbox->height - entity->hitboxOffsetY) + entity->sprite->originY)
+										: (entity->sprite->originY - entity->hitboxOffsetY + tilemap->cellHeight));
+	} else {
+		if (entity == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity doesn't exist");
+		else if (entity->hitbox == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity's hitbox doesn't exist");
+		if (tilemap == NULL)
+			jSetError(ERROR_NULL_POINTER, "TileMap doesn't exist");
+		if (entity->sprite == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity's sprite doesn't exist");
+	}
 }
 //////////////////////////////////////////////////////////
 
