@@ -63,6 +63,16 @@ JamStringList* jamExplodeString(const char *string, char delim, bool ignoreQuote
 /// \param list The list to destroy
 void jamFreeStringList(JamStringList *list);
 
+/// \brief Takes any form of a file and returns the file's name only
+///
+/// For example, "/home/somedude/myfile.tar.gz" would be converted
+/// to "myfile.tar", or "thing.txt" would be "thing"
+///
+/// You are responsible for the memory allocated by this function
+///
+/// \throws ERROR_ALLOC_FAILED
+const char* jamGetNameOfFile(const char* filename);
+	
 #ifdef __cplusplus
 }
 #endif

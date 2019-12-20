@@ -190,3 +190,34 @@ void jamFreeStringList(JamStringList *list) {
 	}
 }
 /////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////
+// You're responsible for the memory allocated here
+const char* jamGetNameOfFile(const char* filename) {
+	int i;
+	char* string;
+	int len = strlen(filename);
+	int startPos = 0;
+	int endPos = 0;
+
+	// Locate the name part of the filename
+	for (i = 0; i < len; i++) {
+		if (filename[i] == '/' || filename[i] == '\\')
+			startPos = i + 1;
+		if (filename[i] == '.')
+			endPos = i;
+	}
+
+	// Allocate the string
+	string = malloc(endPos - startPos + 1);
+
+	if (string != NULL) {
+		string[endPos - startPos] = 0;
+		memcpy(string, filename + startPos, endPos - startPos);
+	} else {
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate new string");
+	}
+	
+	return string;
+}
+///////////////////////////////////////////////////////////
