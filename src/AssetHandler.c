@@ -191,7 +191,8 @@ static void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const ch
 					hType,
 					atof(jamGetKeyINI(ini, headerName, "radius", "0")),
 					atof(jamGetKeyINI(ini, headerName, "width", "0")),
-					atof(jamGetKeyINI(ini, headerName, "height", "0")), NULL
+					atof(jamGetKeyINI(ini, headerName, "height", "0")),
+					jamLoadPolygon(jamGetKeyINI(ini, headerName, "polygon", ""))
 			), at_Hitbox, headerName + 1),
 			(headerName + 1)
 	);

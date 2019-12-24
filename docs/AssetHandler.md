@@ -48,6 +48,7 @@ And here is a list of recognized keys for every asset type
    + `width` Width of a rectangular hitbox (default=0)
    + `height` Height of a rectangular hitbox (default=0)
    + `radius` Radius of a circular hitbox (default=0)
+   + `polygon` String to load a polygon from in the form of `x1,y1/x2,y2/...` (default="")
  + Worlds ***(prefix = 'w')***
    + `file` The .tmx file to load the world from (The handler will call jamLoadWorldFromTMX internally)
    + `width` Width of the filter rectangle in the world

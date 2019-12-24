@@ -34,13 +34,13 @@ JamPolygon* jamLoadPolygon(const char* string) {
 	int i, j;
 	JamStringList* vertices = jamExplodeString(string, '/', false);
 	JamPolygon* poly = jamCreatePolygon(0);
-	bool commaLoc;
+	int commaLoc;
 	
-	if (vertices != NULL) {
+	if (vertices != NULL && strlen(string) > 0) {
 		for (i = 0; i < vertices->size; i++) {
 			// First locate the comma and replace it with a \0
 			commaLoc = -1;
-			for (j = 0; j < strlen(vertices->strList[i]) && commaLoc == -1; i++) {
+			for (j = 0; j < strlen(vertices->strList[i]) && commaLoc == -1; j++) {
 				if (vertices->strList[i][j] == ',') {
 					commaLoc = j;
 					vertices->strList[i][j] = '\0';
@@ -50,7 +50,8 @@ JamPolygon* jamLoadPolygon(const char* string) {
 			jamAddVertexToPolygon(poly, atof(vertices->strList[i]), atof(vertices->strList[i] + commaLoc + 1));
 		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to split string \"%s\"", string);
+		if (vertices == NULL)
+			jSetError(ERROR_ALLOC_FAILED, "Failed to split string \"%s\"", string);
 		jamFreePolygon(poly);
 	}
 
