@@ -61,7 +61,7 @@ typedef struct {
 /// 1 but that would be extremely slow.
 ///
 /// \throws ERROR_ALLOC_FAILED
-JamAssetHandler* jamCreateAssetHandler(int size);
+JamAssetHandler* jamAssetHandlerCreate(int size);
 
 /// \brief Throws an asset into the handler
 ///
@@ -75,7 +75,7 @@ JamAssetHandler* jamCreateAssetHandler(int size);
 ///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NUULL_POINTER
-void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const char* id);
+void jamAssetHandlerLoadAsset(JamAssetHandler *handler, JamAsset *asset, const char *id);
 
 /// \brief Loads all recognized assets from a directory
 ///
@@ -88,40 +88,40 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const ch
 /// \throws ERROR_ASSET_NOT_FOUND
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OPEN_FAILED
-void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBehaviourMap *map);
+void jamAssetHandlerLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBehaviourMap *map);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, const char* key);
+JamSprite* jamAssetHandlerGetSprite(JamAssetHandler *handler, const char *key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, const char* key);
+JamEntity* jamAssetHandlerGetEntity(JamAssetHandler *handler, const char *key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, const char* key);
+JamHitbox* jamAssetHandlerGetHitbox(JamAssetHandler *handler, const char *key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, const char* key);
+JamTexture* jamAssetHandlerGetTexture(JamAssetHandler *handler, const char *key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, const char* key);
+JamAudioBuffer* jamAssetHandlerGetAudioBuffer(JamAssetHandler *handler, const char *key);
 
 /// \brief Pulls a specific asset safely, making sure the types match up
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
-JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, const char* key);
+JamWorld* jamAssetHandlerGetWorld(JamAssetHandler *handler, const char *key);
 
 /// \brief Frees an asset handler and all of its components
-void jamFreeAssetHandler(JamAssetHandler *handler);
+void jamAssetHandlerFree(JamAssetHandler *handler);
 
 #ifdef __cplusplus
 }

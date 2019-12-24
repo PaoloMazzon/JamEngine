@@ -45,10 +45,10 @@ typedef struct {
 /// \brief Initializes the audio system
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
-void jamInitAudioPlayer(int *argc, char **argv);
+void jamAudioInit(int *argc, char **argv);
 
 /// \brief Quits the audio system
-void jamFreeAudioPlayer();
+void jamAudioQuit();
 
 /// \brief Returns weather or not the audio player was successfully initialized
 bool jamAudioIsInitialized();
@@ -110,10 +110,10 @@ float jamAudioGetGlobalGain();
 ///
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
-JamAudioSource *jamCreateAudioSource();
+JamAudioSource* jamAudioCreateSource();
 
 /// \brief Frees an audio source
-void jamFreeAudioSource(JamAudioSource *source);
+void jamAudioFreeSource(JamAudioSource *source);
 
 /// \brief Updates internal values of the source
 ///
@@ -125,7 +125,7 @@ void jamFreeAudioSource(JamAudioSource *source);
 ///
 /// This is for 3D audio, and if you don't need 3D audio you'll
 /// never need to call this function so don't fret about it.
-void jamUpdateAudioSource(JamAudioSource *source);
+void jamAudioUpdateSource(JamAudioSource *source);
 
 /// \brief Loads audio from a file
 ///
@@ -133,10 +133,10 @@ void jamUpdateAudioSource(JamAudioSource *source);
 ///
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPENAL_ERROR
-JamAudioBuffer *jamLoadAudioBuffer(const char *filename);
+JamAudioBuffer *jamAudioLoadBuffer(const char *filename);
 
 /// \brief Frees an audio buffer
-void jamFreeAudioBuffer(JamAudioBuffer *buffer);
+void jamAudioFreeBuffer(JamAudioBuffer *buffer);
 
 /// \brief Plays some audio
 ///
@@ -148,7 +148,7 @@ void jamFreeAudioBuffer(JamAudioBuffer *buffer);
 ///
 /// \throws ERROR_OPENAL_ERROR
 /// \throws ERROR_NULL_POINTER
-void jamPlayAudio(JamAudioBuffer *buffer, JamAudioSource *source, bool looping);
+void jamAudioPlay(JamAudioBuffer *buffer, JamAudioSource *source, bool looping);
 
 #ifdef __cplusplus
 }

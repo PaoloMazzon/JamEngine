@@ -27,13 +27,13 @@ own pointer as well.
 As a simple example,
 
     // Create a behaviour map and put our behaviours into it
-    JamBehaviourMap* bMap = jamCreateBehaviourMap();
-	jamAddBehaviourToMap(bMap, "PlayerBehaviour", onPlayerCreate, onPlayerDestroy, onPlayerFrame, NULL);
-	jamAddBehaviourToMap(bMap, "EnemyBehaviour", onEnemyCreate, onEnemyDestroy, onEnemyFrame, onEnemyDraw);
+    JamBehaviourMap* bMap = jamBehaviourMapCreate();
+	jamBehaviourMapAdd(bMap, "PlayerBehaviour", onPlayerCreate, onPlayerDestroy, onPlayerFrame, NULL);
+	jamBehaviourMapAdd(bMap, "EnemyBehaviour", onEnemyCreate, onEnemyDestroy, onEnemyFrame, onEnemyDraw);
 	
-	// Create and then load our asset handler, passing the behaviour map to jamAssetLoadINI
-	JamAssetHandler* handler = jamCreateAssetHandler();
-	jamAssetLoadINI(handler, renderer, "assets/level0.ini", bMap);
+	// Create and then load our asset handler, passing the behaviour map to jamAssetHandlerLoadINI
+	JamAssetHandler* handler = jamAssetHandlerCreate();
+	jamAssetHandlerLoadINI(handler, renderer, "assets/level0.ini", bMap);
 	
 	// Now we load a world from a tmx file and when we do, all of the assets' onCreate will be called
 	JamWorld* gameWorld = jamLoadWorldFromTMX(handler, renderer, "assets/level0.tmx");

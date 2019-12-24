@@ -4,20 +4,20 @@
 #include <malloc.h>
 
 /////////////////////////////////////////////////////////////////
-JamBehaviourMap* jamCreateBehaviourMap() {
+JamBehaviourMap* jamBehaviourMapCreate() {
 	JamBehaviourMap* map = (JamBehaviourMap*)calloc(1, sizeof(JamBehaviourMap));
 
 	if (map == NULL)
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate behaviour map (jamCreateBehaviourMap)");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate behaviour map (jamBehaviourMapCreate)");
 
 	return map;
 }
 /////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
-void jamAddBehaviourToMap(JamBehaviourMap *map, const char *name, void (*onCreation)(BEHAVIOUR_ARGUMENTS),
-						  void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS),
-						  void (*onDraw)(BEHAVIOUR_ARGUMENTS)) {
+void jamBehaviourMapAdd(JamBehaviourMap *map, const char *name, void (*onCreation)(BEHAVIOUR_ARGUMENTS),
+						void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS),
+						void (*onDraw)(BEHAVIOUR_ARGUMENTS)) {
 	JamBehaviour** newBehaviours;
 	const char** newNames;
 	JamBehaviour* behaviour;
@@ -39,16 +39,16 @@ void jamAddBehaviourToMap(JamBehaviourMap *map, const char *name, void (*onCreat
 			behaviour->onFrame = onFrame;
 			behaviour->onDraw = onDraw;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate map (jamAddBehaviourToMap)");
+			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate map (jamBehaviourMapAdd)");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamAddBehaviourToMap)");
+		jSetError(ERROR_NULL_POINTER, "Map doesn't exist (jamBehaviourMapAdd)");
 	}
 }
 /////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
-JamBehaviour* jamGetBehaviourFromMap(JamBehaviourMap *map, const char *name) {
+JamBehaviour* jamBehaviourMapGet(JamBehaviourMap *map, const char *name) {
 	JamBehaviour* returnBehaviour = NULL;
 	int i;
 
@@ -63,7 +63,7 @@ JamBehaviour* jamGetBehaviourFromMap(JamBehaviourMap *map, const char *name) {
 /////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
-void jamFreeBehaviourMap(JamBehaviourMap *map) {
+void jamBehaviourMapFree(JamBehaviourMap *map) {
 	int i;
 	
 	if (map != NULL) {

@@ -36,7 +36,7 @@ typedef struct {
 
 /// \brief Creates a behaviour map
 /// \throws ERROR_ALLOC_FAILED
-JamBehaviourMap *jamCreateBehaviourMap();
+JamBehaviourMap* jamBehaviourMapCreate();
 
 /// \brief Adds a behaviour to a behaviour map
 /// 
@@ -46,18 +46,18 @@ JamBehaviourMap *jamCreateBehaviourMap();
 /// \warning Strings passed to this function belong to the caller, not the map (It expects just in-code strings)
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_REALLOC_FAILED
-void jamAddBehaviourToMap(JamBehaviourMap *map, const char *name, void (*onCreation)(BEHAVIOUR_ARGUMENTS),
-						  void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS),
-						  void (*onDraw)(BEHAVIOUR_ARGUMENTS));
+void jamBehaviourMapAdd(JamBehaviourMap *map, const char *name, void (*onCreation)(BEHAVIOUR_ARGUMENTS),
+						void (*onDestruction)(BEHAVIOUR_ARGUMENTS), void (*onFrame)(BEHAVIOUR_ARGUMENTS),
+						void (*onDraw)(BEHAVIOUR_ARGUMENTS));
 
 /// \brief Grabs a behaviour struct (that still belongs to the map) from a map
 /// 
 /// Contrary to other functions like this, it will not set ERROR_NULL_POINTER
 /// if you don't give it a map.
-JamBehaviour *jamGetBehaviourFromMap(JamBehaviourMap *map, const char *name);
+JamBehaviour* jamBehaviourMapGet(JamBehaviourMap *map, const char *name);
 
 /// \brief Frees a behaviour map
-void jamFreeBehaviourMap(JamBehaviourMap *map);
+void jamBehaviourMapFree(JamBehaviourMap *map);
 
 #ifdef __cplusplus
 }

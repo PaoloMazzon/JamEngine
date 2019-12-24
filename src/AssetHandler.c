@@ -21,7 +21,7 @@
 static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
 
 ///////////////////////////////////////////////////////////////
-void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const char* id) {
+void jamAssetHandlerLoadAsset(JamAssetHandler *handler, JamAsset *asset, const char *id) {
 	uint64 hash;
 	JamAsset* current; // For crawling linked lists
 	if (handler != NULL && asset != NULL) {
@@ -43,10 +43,10 @@ void jamLoadAssetIntoHandler(JamAssetHandler *handler, JamAsset *asset, const ch
 		}
 	} else {
 		if (handler == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Handler does not exist (jamLoadAssetIntoHandler with ID %s)", id);
+			jSetError(ERROR_NULL_POINTER, "Handler does not exist (jamAssetHandlerLoadAsset with ID %s)", id);
 		}
 		if (asset == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamAsset passed was null (jamLoadAssetIntoHandler with ID %s)", id);
+			jSetError(ERROR_NULL_POINTER, "JamAsset passed was null (jamAssetHandlerLoadAsset with ID %s)", id);
 		}
 	}
 }
@@ -87,7 +87,7 @@ static JamAsset* createAsset(void* pointer, enum JamAssetType type, const char* 
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamAssetHandler* jamCreateAssetHandler(int size) {
+JamAssetHandler* jamAssetHandlerCreate(int size) {
 	JamAssetHandler* handler = (JamAssetHandler*)calloc(1, sizeof(JamAssetHandler));
 
 	if (handler != NULL) {
@@ -101,7 +101,7 @@ JamAssetHandler* jamCreateAssetHandler(int size) {
 			jSetError(ERROR_ALLOC_FAILED, "Could not allocate asset list");
 		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to create an asset handler (jamCreateAssetHandler)");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create an asset handler (jamAssetHandlerCreate)");
 	}
 
 	return handler;
@@ -111,7 +111,7 @@ JamAssetHandler* jamCreateAssetHandler(int size) {
 //////////////////////// Functions that load individual pieces ////////////////////////
 static void assetLoadSprite(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	JamSprite* spr = jamLoadSpriteFromSheet(
-			jamGetTextureFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))),
+			jamAssetHandlerGetTexture(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))),
 			(uint32) atof(jamGetKeyINI(ini, headerName, "animation_length", "1")),
 			(uint32) atof(jamGetKeyINI(ini, headerName, "x_in_texture", "0")),
 			(uint32) atof(jamGetKeyINI(ini, headerName, "y_in_texture", "0")),
@@ -127,10 +127,10 @@ static void assetLoadSprite(JamAssetHandler* assetHandler, JamINI* ini, const ch
 		spr->originY = (sint32) atof(jamGetKeyINI(ini, headerName, "y_origin", "0"));
 	}
 	if (jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
-		jamLoadAssetIntoHandler(assetHandler, createAsset(spr, at_Sprite, headerName + 1), (headerName + 1)
+		jamAssetHandlerLoadAsset(assetHandler, createAsset(spr, at_Sprite, headerName + 1), (headerName + 1)
 		);
 	} else {
-		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load sprite of id %s, tex not found (jamAssetLoadINI)\\n", headerName + 1);
+		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load sprite of id %s, tex not found (jamAssetHandlerLoadINI)\\n", headerName + 1);
 	}
 }
 
@@ -145,12 +145,12 @@ static void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const ch
 		ent = jamCreateEntity(
 				jamGetAssetFromHandler(assetHandler,
 									   (jamGetKeyINI(ini, headerName, "sprite_id", "0")))->spr,
-				jamGetHitboxFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "hitbox_id", "0"))),
+				jamAssetHandlerGetHitbox(assetHandler, (jamGetKeyINI(ini, headerName, "hitbox_id", "0"))),
 				(int) atof(jamGetKeyINI(ini, headerName, "x", "0")),
 				(int) atof(jamGetKeyINI(ini, headerName, "y", "0")),
 				(int) atof(jamGetKeyINI(ini, headerName, "hitbox_offset_x", "0")),
 				(int) atof(jamGetKeyINI(ini, headerName, "hitbox_offset_y", "0")),
-				jamGetBehaviourFromMap(map, behaviourString));
+				jamBehaviourMapGet(map, behaviourString));
 
 		// Alert the user if a behaviour was expected but not found
 		if (strcmp(behaviourString, "default") != 0 && ent->behaviour == NULL)
@@ -173,9 +173,9 @@ static void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const ch
 		ent->rot = atof(jamGetKeyINI(ini, headerName, "rotation", "0"));
 		ent->alpha = (uint8)atof(jamGetKeyINI(ini, headerName, "alpha", "255"));
 		ent->updateOnDraw = (bool)atof(jamGetKeyINI(ini, headerName, "update_on_draw", "1"));
-		jamLoadAssetIntoHandler(assetHandler, createAsset(ent, at_Entity, headerName + 1), (headerName + 1));
+		jamAssetHandlerLoadAsset(assetHandler, createAsset(ent, at_Entity, headerName + 1), (headerName + 1));
 	} else {
-		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load entity of id %s (jamAssetLoadINI)", headerName + 1);
+		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load entity of id %s (jamAssetHandlerLoadINI)", headerName + 1);
 	}
 }
 
@@ -185,7 +185,7 @@ static void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const ch
 	if (strcmp(key, "rectangle") == 0) hType = ht_Rectangle;
 	else if (strcmp(key, "cirlce") == 0) hType = ht_Circle;
 	else if (strcmp(key, "polygon") == 0) hType = ht_ConvexPolygon;
-	jamLoadAssetIntoHandler(
+	jamAssetHandlerLoadAsset(
 			assetHandler,
 			createAsset(jamCreateHitbox(
 					hType,
@@ -199,12 +199,11 @@ static void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const ch
 }
 
 static void assetLoadAudio(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
-	jamLoadAssetIntoHandler(
+	jamAssetHandlerLoadAsset(
 			assetHandler,
 			createAsset(
-					jamLoadAudioBuffer(jamGetKeyINI(ini, headerName, "file", ""))
-					, at_AudioBuffer, headerName + 1)
-			, (headerName + 1));
+					jamAudioLoadBuffer(jamGetKeyINI(ini, headerName, "file", "")), at_AudioBuffer, headerName + 1),
+			(headerName + 1));
 }
 
 static void assetLoadWorld(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
@@ -222,12 +221,12 @@ static void assetLoadWorld(JamAssetHandler* assetHandler, JamINI* ini, const cha
 		}
 	}
 
-	jamLoadAssetIntoHandler(assetHandler, createAsset(world, at_World, headerName + 1), (headerName + 1));
+	jamAssetHandlerLoadAsset(assetHandler, createAsset(world, at_World, headerName + 1), (headerName + 1));
 }
 //////////////////////// End of assetLoadINI support functions ////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBehaviourMap *map) {
+void jamAssetHandlerLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBehaviourMap *map) {
 	JamINI* ini = jamLoadINI(filename);
 	uint32 i, j;
 
@@ -236,7 +235,7 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
 				for (j = 0; j < ini->headers[i]->size; j++)
-					jamLoadAssetIntoHandler(
+					jamAssetHandlerLoadAsset(
 							assetHandler,
 							createAsset(jamLoadTexture(ini->headers[i]->vals[j]), at_Texture, ini->headers[i]->keys[j]),
 							(ini->headers[i]->keys[j])
@@ -276,13 +275,13 @@ void jamAssetLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBeh
 		}
 	} else {
 		if (assetHandler == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamAsset loader does not exist for file %s (jamAssetLoadINI)", filename);
+			jSetError(ERROR_NULL_POINTER, "JamAsset loader does not exist for file %s (jamAssetHandlerLoadINI)", filename);
 		}
 		if (jamRendererGetInternalRenderer() == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist for file %s (jamAssetLoadINI)", filename);
+			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist for file %s (jamAssetHandlerLoadINI)", filename);
 		}
 		if (ini == NULL) {
-			jSetError(ERROR_OPEN_FAILED, "Failed to load JamINI for file %s (jamAssetLoadINI)", filename);
+			jSetError(ERROR_OPEN_FAILED, "Failed to load JamINI for file %s (jamAssetHandlerLoadINI)", filename);
 		}
 	}
 
@@ -324,7 +323,7 @@ static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const cha
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, const char* key) {
+JamSprite* jamAssetHandlerGetSprite(JamAssetHandler *handler, const char *key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamSprite* returnVal = NULL;
 
@@ -332,12 +331,12 @@ JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, const char* key) {
 		if (asset != NULL && asset->type == at_Sprite) {
 			returnVal = asset->spr;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected sprite (jamGetSpriteFromHandler)", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected sprite (jamAssetHandlerGetSprite)", key);
 		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find sprite for key %s (jamGetSpriteFromHandler)", key);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find sprite for key %s (jamAssetHandlerGetSprite)", key);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetSpriteFromHandler)");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamAssetHandlerGetSprite)");
 	}
 
 	return returnVal;
@@ -345,7 +344,7 @@ JamSprite* jamGetSpriteFromHandler(JamAssetHandler *handler, const char* key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, const char* key) {
+JamEntity* jamAssetHandlerGetEntity(JamAssetHandler *handler, const char *key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamEntity* returnVal = NULL;
 
@@ -353,12 +352,12 @@ JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, const char* key) {
 		if (asset != NULL && asset->type == at_Entity) {
 			returnVal = asset->entity;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected entity (jamGetEntityFromHandler)", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected entity (jamAssetHandlerGetEntity)", key);
 		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find entity for key %s (jamGetEntityFromHandler)", key);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find entity for key %s (jamAssetHandlerGetEntity)", key);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetEntityFromHandler)");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamAssetHandlerGetEntity)");
 	}
 
 	return returnVal;
@@ -366,7 +365,7 @@ JamEntity* jamGetEntityFromHandler(JamAssetHandler *handler, const char* key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, const char* key) {
+JamHitbox* jamAssetHandlerGetHitbox(JamAssetHandler *handler, const char *key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamHitbox* returnVal = NULL;
 
@@ -374,12 +373,12 @@ JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, const char* key) {
 		if (asset != NULL && asset->type == at_Hitbox) {
 			returnVal = asset->hitbox;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected hitbox (jamGetHitboxFromHandler)", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected hitbox (jamAssetHandlerGetHitbox)", key);
 		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find hitbox for key %s (jamGetHitboxFromHandler)", key);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find hitbox for key %s (jamAssetHandlerGetHitbox)", key);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamGetHitboxFromHandler)");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist (jamAssetHandlerGetHitbox)");
 	}
 
 	return returnVal;
@@ -387,7 +386,7 @@ JamHitbox* jamGetHitboxFromHandler(JamAssetHandler *handler, const char* key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, const char* key) {
+JamTexture* jamAssetHandlerGetTexture(JamAssetHandler *handler, const char *key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamTexture* returnVal = NULL;
 
@@ -395,12 +394,12 @@ JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, const char* key) 
 		if (asset != NULL && asset->type == at_Texture) {
 			returnVal = asset->tex;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected texture (jamGetTextureFromHandler)", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected texture (jamAssetHandlerGetTexture)", key);
 		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find texture for key %s (jamGetTextureFromHandler)", key);
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find texture for key %s (jamAssetHandlerGetTexture)", key);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist(jamGetTextureFromHandler)");
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist(jamAssetHandlerGetTexture)");
 	}
 
 	return returnVal;
@@ -408,7 +407,7 @@ JamTexture* jamGetTextureFromHandler(JamAssetHandler *handler, const char* key) 
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, const char* key) {
+JamAudioBuffer* jamAssetHandlerGetAudioBuffer(JamAssetHandler *handler, const char *key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamAudioBuffer* returnVal = NULL;
 
@@ -429,7 +428,7 @@ JamAudioBuffer* jamGetAudioBufferFromHandler(JamAssetHandler *handler, const cha
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamWorld* jamGetWorldFromHandler(JamAssetHandler *handler, const char* key) {
+JamWorld* jamAssetHandlerGetWorld(JamAssetHandler *handler, const char *key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
 	JamWorld* returnVal = NULL;
 
@@ -464,7 +463,7 @@ static void jamFreeAsset(JamAsset* asset) {
 		else if (asset->type == at_World)
 			jamFreeWorld(asset->world);
 		else if (asset->type == at_AudioBuffer)
-			jamFreeAudioBuffer(asset->buffer);
+			jamAudioFreeBuffer(asset->buffer);
 		free(asset->name);
 		free(asset);
 	}
@@ -472,7 +471,7 @@ static void jamFreeAsset(JamAsset* asset) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void jamFreeAssetHandler(JamAssetHandler *handler) {
+void jamAssetHandlerFree(JamAssetHandler *handler) {
 	int i;
 	JamAsset* next, *old;
 	if (handler != NULL) {

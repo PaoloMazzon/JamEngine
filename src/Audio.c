@@ -13,7 +13,7 @@ static float gGainMultiplier;
 extern int stb_vorbis_decode_filename(const char *filename, int *channels, int *sample_rate, short **output);
 
 ///////////////////////////////////////////////////////////////////////
-void jamInitAudioPlayer(int* argc, char** argv) {
+void jamAudioInit(int *argc, char **argv) {
 	if (gAudioPlayer == NULL) {
 		gAudioPlayer = (JamAudioPlayer*)malloc(sizeof(JamAudioPlayer));
 		gGainMultiplier = 1;
@@ -66,7 +66,7 @@ void jamInitAudioPlayer(int* argc, char** argv) {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-void jamFreeAudioPlayer() {
+void jamAudioQuit() {
 	if (gAudioPlayer != NULL) {
 		alDeleteSources(1, &gDefaultSource);
 		alcDestroyContext(gAudioPlayer->audioContext);
@@ -137,7 +137,7 @@ float jamAudioGetGlobalGain() {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-JamAudioSource* jamCreateAudioSource() {
+JamAudioSource* jamAudioCreateSource() {
 	JamAudioSource* src = NULL;
 
 	if (gAudioPlayer != NULL) {
@@ -165,7 +165,7 @@ JamAudioSource* jamCreateAudioSource() {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-void jamFreeAudioSource(JamAudioSource* source) {
+void jamAudioFreeSource(JamAudioSource *source) {
 	if (source != NULL) {
 		alDeleteSources(1, &source->soundID);
 		free(source);
@@ -174,7 +174,7 @@ void jamFreeAudioSource(JamAudioSource* source) {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-JamAudioBuffer* jamLoadAudioBuffer(const char *filename) {
+JamAudioBuffer* jamAudioLoadBuffer(const char *filename) {
 	JamAudioBuffer* buf = NULL;
 	size_t len = strlen(filename);
 
@@ -232,7 +232,7 @@ JamAudioBuffer* jamLoadAudioBuffer(const char *filename) {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-void jamFreeAudioBuffer(JamAudioBuffer* buffer) {
+void jamAudioFreeBuffer(JamAudioBuffer *buffer) {
 	if (buffer != NULL) {
 		alDeleteBuffers(1, &buffer->bufferID);
 		free(buffer);
@@ -241,7 +241,7 @@ void jamFreeAudioBuffer(JamAudioBuffer* buffer) {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-void jamUpdateAudioSource(JamAudioSource* source) {
+void jamAudioUpdateSource(JamAudioSource *source) {
 	if (source != NULL) {
 		alSourcef(source->soundID, AL_PITCH, source->pitch);
 		alSourcef(source->soundID, AL_GAIN, source->gain * gGainMultiplier);
@@ -255,7 +255,7 @@ void jamUpdateAudioSource(JamAudioSource* source) {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-void jamPlayAudio(JamAudioBuffer* buffer, JamAudioSource* source, bool looping) {
+void jamAudioPlay(JamAudioBuffer *buffer, JamAudioSource *source, bool looping) {
 	if (buffer != NULL && gAudioPlayer != NULL) {
 		// Setup the surrounding audio playback parameters
 		if (source != NULL) {

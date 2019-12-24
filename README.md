@@ -29,6 +29,17 @@ Features
  - 3D audio support through OpenAL
  - Basic low-level tweening support for smooth animations 
 
+Naming Conventions
+==================
+Since I'm starting to try and organize the names and make everything more consistent,
+I'll set it in stone here.
+
+ + Typedefs (and thus all JamEngine structs) all start with `Jam` and every word is capitalized
+ + Functions begin with `jam` and every word after than is capitalized (`jSetError` is not an exception, its a macro. Its function counterpart is the exception)
+ + Internally, variables names start with lowercase and every word after is uppercase (Java style)
+ + Enum values start with their enum's abbreviation followed by an underscore (for example, `JamEntityType`'s things start with `et_*`)
+ + Functions in the same file must all start with the same prefix (with some obvious exceptions, this is basically namespaces) (like how all functions in AssetHandler.h start with `jamAssetHandler*`)
+
 Future Additions
 ================
 Near Future

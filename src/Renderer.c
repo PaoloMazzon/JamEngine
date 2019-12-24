@@ -21,7 +21,7 @@ void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 
 	JamTexture* tex;
 	gRenderer = (JamRenderer*)malloc(sizeof(JamRenderer));
 	jamInitInput();
-	jamInitAudioPlayer(argc, argv);
+	jamAudioInit(argc, argv);
 
 	// Check if we were given a dud
 	if (gRenderer != NULL && jamInputIsInitialized() && jamAudioIsInitialized()) {
@@ -317,7 +317,7 @@ void jamRendererQuit() {
 	if (gRenderer != NULL) {
 		jamFreeTexture(gRenderer->screenBuffer);
 		jamQuitInput();
-		jamFreeAudioPlayer();
+		jamAudioQuit();
 		SDL_DestroyRenderer(gRenderer->internalRenderer);
 		SDL_DestroyWindow(gRenderer->gameWindow);
 		SDL_Quit();

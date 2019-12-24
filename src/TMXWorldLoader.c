@@ -19,7 +19,7 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 
 	// Loop the linked list
 	while (currentObject != NULL) {
-		tempEntity = jamCopyEntity(jamGetEntityFromHandler(handler, currentObject->type), currentObject->x,
+		tempEntity = jamCopyEntity(jamAssetHandlerGetEntity(handler, currentObject->type), currentObject->x,
 								   currentObject->y);
 
 		if (tempEntity != NULL) {
@@ -68,7 +68,7 @@ JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer
 
 			if (tile != NULL) {
 				// Find the frame in the handler and load it into the map
-				currentSprite = jamGetSpriteFromHandler(handler, tile->tileset->name);
+				currentSprite = jamAssetHandlerGetSprite(handler, tile->tileset->name);
 				if (currentSprite != NULL && tile->id < currentSprite->animationLength) {
 					map->grid[i] = currentSprite->frames[tile->id];
 				} else {
@@ -107,7 +107,7 @@ JamWorld* jamLoadWorldFromTMX(JamAssetHandler *handler, const char *tmxFilename)
 
 		// Warn the user if they are trying to load anything but an orthogonal map
 		if (tmx->orient != O_ORT)
-			fprintf(stderr, "Warning: jamLoadWorldFromTMX does not support any view besides orthogonal. Attempting to load anyway.\n");
+			jSetError(ERROR_WARNING, "jamLoadWorldFromTMX does not support any view besides orthogonal. Attempting to load anyway");
 
 		while (currentLayer != NULL) {
 			if (currentLayer->type == L_OBJGR) {

@@ -88,12 +88,12 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 
 	// Walking/standing animations
 	if (self->hSpeed != 0)
-		self->sprite = jamGetSpriteFromHandler(gHandler, "PlayerMovingSprite");
+		self->sprite = jamAssetHandlerGetSprite(gHandler, "PlayerMovingSprite");
 	else
-		self->sprite = jamGetSpriteFromHandler(gHandler, "PlayerStandingSprite");
+		self->sprite = jamAssetHandlerGetSprite(gHandler, "PlayerStandingSprite");
 
 	if (!jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + 1))
-		self->sprite = jamGetSpriteFromHandler(gHandler, "PlayerJumpingSprite");
+		self->sprite = jamAssetHandlerGetSprite(gHandler, "PlayerJumpingSprite");
 }
 
 bool runGame(JamFont* font);
@@ -167,19 +167,19 @@ bool runGame(JamFont* font) {
 	int i;
 
 	// Create the behaviour map
-	JamBehaviourMap* bMap = jamCreateBehaviourMap();
-	jamAddBehaviourToMap(bMap, "PlayerBehaviour", NULL, NULL, onPlayerFrame, NULL);
-	jamAddBehaviourToMap(bMap, "EnemyBehaviour", onEnemyCreate, NULL, onEnemyFrame, NULL);
+	JamBehaviourMap* bMap = jamBehaviourMapCreate();
+	jamBehaviourMapAdd(bMap, "PlayerBehaviour", NULL, NULL, onPlayerFrame, NULL);
+	jamBehaviourMapAdd(bMap, "EnemyBehaviour", onEnemyCreate, NULL, onEnemyFrame, NULL);
 
 	// Load the assets and create the world
-	gHandler = jamCreateAssetHandler(1000);
-	jamAssetLoadINI(gHandler, "assets/level0.ini", bMap);
-	JamWorld* gameWorld = jamGetWorldFromHandler(gHandler, "GameWorld");
+	gHandler = jamAssetHandlerCreate(1000);
+	jamAssetHandlerLoadINI(gHandler, "assets/level0.ini", bMap);
+	JamWorld* gameWorld = jamAssetHandlerGetWorld(gHandler, "GameWorld");
 
 	// Some setup
 	jamRendererSetCameraPos(25, 25);
-	JamAudioBuffer* sound = jamGetAudioBufferFromHandler(gHandler, "PopSound");
-	JamAudioSource* source = jamCreateAudioSource();
+	JamAudioBuffer* sound = jamAssetHandlerGetAudioBuffer(gHandler, "PopSound");
+	JamAudioSource* source = jamAudioCreateSource();
 
 	// We don't really care what went wrong, but if something went wrong while
 	// while loading assets, we cannot continue.
@@ -203,12 +203,12 @@ bool runGame(JamFont* font) {
 				if (jamInputCheckKeyPressed(JAM_KB_P)) {
 					source->xPosition = jamInputGetMouseX();
 					source->yPosition = jamInputGetMouseY();
-					jamPlayAudio(sound, source, false);
+					jamAudioPlay(sound, source, false);
 				}
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				// Draw the background
-				jamDrawTexture(jamGetTextureFromHandler(gHandler, "BackgroundTexture"), (sint32)jamRendererGetCameraX(), (sint32)jamRendererGetCameraX());
+				jamDrawTexture(jamAssetHandlerGetTexture(gHandler, "BackgroundTexture"), (sint32)jamRendererGetCameraX(), (sint32)jamRendererGetCameraX());
 
 				// Draw the game world
 				for (i = 0; i < MAX_TILEMAPS; i++)
@@ -226,11 +226,11 @@ bool runGame(JamFont* font) {
 	}
 
 	// Free up the resources
-	jamFreeAssetHandler(gHandler);
-	jamFreeBehaviourMap(bMap);
+	jamAssetHandlerFree(gHandler);
+	jamBehaviourMapFree(bMap);
 
 	// Test stuff
-	jamFreeAudioSource(source);
+	jamAudioFreeSource(source);
 
 	return mainMenu;
 }
