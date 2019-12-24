@@ -51,7 +51,6 @@ out of a game engine.
  - Gamepad support
  - TTF/OTF font support (heck)
  - Spatial hash tables (And probably replacing entity types with a uint8 for flexibility)
- - Support for loading polygonal hitboxes from the asset handler
  
 Possible Additions
 ------------------
