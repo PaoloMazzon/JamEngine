@@ -256,5 +256,13 @@ int main(int argc, char* argv[]) {
     
 	jamFreeFont(font);
 	jamRendererQuit();
+
+	// TESTING TIME
+	JamPolygon* poly = jamLoadPolygon("2,2/4,2/4,4/2,4");
+	int i;
+	for (i = 0; i < poly->vertices; i++)
+		printf("(%f,%f)\n", poly->xVerts[i], poly->yVerts[i]);
+	jamFreePolygon(poly);
+	
 	return 0;
 }

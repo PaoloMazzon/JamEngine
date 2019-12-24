@@ -21,6 +21,14 @@ typedef struct {
 /// \throws ERROR_ALLOC_FAILED
 JamPolygon* jamCreatePolygon(unsigned int vertices);
 
+/// \brief Loads a polygon from a specifically formatted string
+///
+/// The expected form is `x1,y1/x2,y2/x3,y3/x4,y4/...`.
+/// There must not be a trailing slash.
+///
+/// \throws ERROR_ALLOC_FAILED
+JamPolygon* jamLoadPolygon(const char* string);
+
 /// \brief Adds a vertex to a polygon (appending it)
 ///
 /// \throws ERROR_NULL_POINTER

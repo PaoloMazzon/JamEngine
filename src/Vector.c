@@ -8,12 +8,9 @@
 #include <malloc.h>
 #include <Vector.h>
 #include <stdlib.h>
-
-/*typedef struct {
-	double* xVerts; ///< X component of the vertices
-	double* yVerts; ///< Y component of the vertices
-	unsigned int vertices; ///< The total number of vertices in this polygon
-} JamPolygon;*/
+#include "StringUtil.h"
+#include "File.h"
+#include <string.h>
 
 //////////////////////////////////////////////////
 JamPolygon* jamCreatePolygon(unsigned int vertices) {
@@ -27,6 +24,37 @@ JamPolygon* jamCreatePolygon(unsigned int vertices) {
 		jSetError(ERROR_ALLOC_FAILED, "Memory could not be allocated.");
 		free(poly);
 	}
+
+	return poly;
+}
+//////////////////////////////////////////////////
+
+//////////////////////////////////////////////////
+JamPolygon* jamLoadPolygon(const char* string) {
+	int i, j;
+	JamStringList* vertices = jamExplodeString(string, '/', false);
+	JamPolygon* poly = jamCreatePolygon(0);
+	bool commaLoc;
+	
+	if (vertices != NULL) {
+		for (i = 0; i < vertices->size; i++) {
+			// First locate the comma and replace it with a \0
+			commaLoc = -1;
+			for (j = 0; j < strlen(vertices->strList[i]) && commaLoc == -1; i++) {
+				if (vertices->strList[i][j] == ',') {
+					commaLoc = j;
+					vertices->strList[i][j] = '\0';
+				}
+			}
+			
+			jamAddVertexToPolygon(poly, atof(vertices->strList[i]), atof(vertices->strList[i] + commaLoc + 1));
+		}
+	} else {
+		jSetError(ERROR_ALLOC_FAILED, "Failed to split string \"%s\"", string);
+		jamFreePolygon(poly);
+	}
+
+	jamFreeStringList(vertices);
 
 	return poly;
 }
