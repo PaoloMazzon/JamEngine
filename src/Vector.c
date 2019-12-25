@@ -32,7 +32,7 @@ JamPolygon* jamCreatePolygon(unsigned int vertices) {
 //////////////////////////////////////////////////
 JamPolygon* jamLoadPolygon(const char* string) {
 	int i, j;
-	JamStringList* vertices = jamExplodeString(string, '/', false);
+	JamStringList* vertices = jamStringExplode(string, '/', false);
 	JamPolygon* poly = jamCreatePolygon(0);
 	int commaLoc;
 	
@@ -55,7 +55,7 @@ JamPolygon* jamLoadPolygon(const char* string) {
 		jamFreePolygon(poly);
 	}
 
-	jamFreeStringList(vertices);
+	jamStringListFree(vertices);
 
 	return poly;
 }

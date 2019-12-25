@@ -27,8 +27,9 @@ void onEnemyCreate(JamWorld* world, JamEntity* self) {
 
 void onEnemyFrame(JamWorld* world, JamEntity* self) {
 	// We change direction when there is a wall in our way or a cliff in front of us
-	if (jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int)self->x +self-> hSpeed, (int)self->y) ||
-		!jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int)self->x + sign(self->hSpeed) * 16, (int)self->y + 17))
+	if (jamEntityTileMapCollision(self, world->worldMaps[0], (int) self->x + self->hSpeed, (int) self->y) ||
+		!jamEntityTileMapCollision(self, world->worldMaps[0], (int) self->x + sign(self->hSpeed) * 16,
+								   (int) self->y + 17))
 		self->hSpeed = -self->hSpeed;
 
 	// Make them face the direction they are walking in
@@ -47,24 +48,24 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 
 	// Jump - just shoot the et_Player up and let gravity deal with it (only if on the ground)
 	if (jamInputCheckKeyPressed(JAM_KB_UP) &&
-			jamCheckEntityTileMapCollision(self, world->worldMaps[0], (int) self->x, (int) self->y + 1))
+			jamEntityTileMapCollision(self, world->worldMaps[0], (int) self->x, (int) self->y + 1))
 			self->vSpeed -= 10;
 
 	// Let's not go mach speed
 	if (self->vSpeed >= BLOCK_HEIGHT)
 		self->vSpeed = BLOCK_HEIGHT - 1;
 
-	if (jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x + self->hSpeed, self->y)) {
+	if (jamEntityTileMapCollision(self, world->worldMaps[0], self->x + self->hSpeed, self->y)) {
 		self->x -= sign(self->hSpeed);
 		self->x = round(self->x);
-		while (!jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x + sign(self->hSpeed), self->y))
+		while (!jamEntityTileMapCollision(self, world->worldMaps[0], self->x + sign(self->hSpeed), self->y))
 			self->x += sign(self->hSpeed);
 		self->hSpeed = 0;
 	}
-	if (jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + self->vSpeed)) {
+	if (jamEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + self->vSpeed)) {
 		self->y -= sign(self->vSpeed);
 		self->y = round(self->y);
-		while (!jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + sign(self->vSpeed)))
+		while (!jamEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + sign(self->vSpeed)))
 			self->y += sign(self->vSpeed);
 		self->vSpeed = 0;
 	}
@@ -92,7 +93,7 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 	else
 		self->sprite = jamAssetHandlerGetSprite(gHandler, "PlayerStandingSprite");
 
-	if (!jamCheckEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + 1))
+	if (!jamEntityTileMapCollision(self, world->worldMaps[0], self->x, self->y + 1))
 		self->sprite = jamAssetHandlerGetSprite(gHandler, "PlayerJumpingSprite");
 }
 
@@ -217,7 +218,8 @@ bool runGame(JamFont* font) {
 				jamWorldProcFrame(gameWorld);
 
 				// Debug
-				jamRenderFontExt(16, 16, "FPS: %f\nDelta: %f", font, 999, jamRendererGetFramerate(), jamRendererGetDelta());
+				jamFontRenderExt(16, 16, "FPS: %f\nDelta: %f", font, 999, jamRendererGetFramerate(),
+								 jamRendererGetDelta());
 				/////////////////////////////////////////////////////////////////////
 
 				jamProcEndFrame();
@@ -238,7 +240,7 @@ bool runGame(JamFont* font) {
 int main(int argc, char* argv[]) {
 	jamInitRenderer(&argc, argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	jamSetAA(false);
-	JamFont* font = jamCreateFont("assets/standardlatinwhitebg.png", NULL);
+	JamFont* font = jamFontCreate("assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;
 	font->characterWidth = 8;
 	bool run = true;
@@ -253,8 +255,8 @@ int main(int argc, char* argv[]) {
 		if (run)
 			run = runGame(font);
 	}
-    
-	jamFreeFont(font);
+
+	jamFontFree(font);
 	jamRendererQuit();
 	return 0;
 }

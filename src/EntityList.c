@@ -9,11 +9,11 @@
 #include <malloc.h>
 
 ///////////////////////////////////////////////////////////////
-JamEntityList* jamCreateEntityList() {
+JamEntityList* jamEntityListCreate() {
 	JamEntityList* list = (JamEntityList*)calloc(1, sizeof(JamEntityList));
 
 	if (list == NULL) {
-		jSetError(ERROR_NULL_POINTER, "Failed to allocate entity list (jamCreateEntityList)");
+		jSetError(ERROR_NULL_POINTER, "Failed to allocate entity list (jamEntityListCreate)");
 	}
 
 	return list;
@@ -21,7 +21,7 @@ JamEntityList* jamCreateEntityList() {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-int jamAddEntityToList(JamEntityList *list, JamEntity *entity) {
+int jamEntityListAdd(JamEntityList *list, JamEntity *entity) {
 	int i = 0;
 	JamEntity** newList;
 	bool foundSpot = false;
@@ -50,11 +50,11 @@ int jamAddEntityToList(JamEntityList *list, JamEntity *entity) {
 				newList[list->size - 1] = entity;
 				i = list->size - 1; // Record entity position in list
 			} else {
-				jSetError(ERROR_REALLOC_FAILED, "Could not reallocate entity list to accommodate for new entity (jamAddEntityToList)");
+				jSetError(ERROR_REALLOC_FAILED, "Could not reallocate entity list to accommodate for new entity (jamEntityListAdd)");
 			}
 		}
 	} else if (list == NULL) {
-		jSetError(ERROR_NULL_POINTER, "List does not exist (jamAddEntityToList)");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (jamEntityListAdd)");
 	}
 
 	return i;
@@ -62,7 +62,7 @@ int jamAddEntityToList(JamEntityList *list, JamEntity *entity) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamEntity* jamPopEntityFromList(JamEntityList *list, JamEntity *entity) {
+JamEntity* jamEntityListPop(JamEntityList *list, JamEntity *entity) {
 	int i = 0;
 	bool found = false;
 	if (list != NULL) {
@@ -87,7 +87,7 @@ JamEntity* jamEntityListCollision(int x, int y, JamEntity* entity, JamEntityList
 	JamEntity* output = NULL;
 	if (list != NULL && entity != NULL) {
 		for (i = 0; i < list->size && output == NULL; i++)
-			if (list->entities[i] != NULL && jamCheckEntityCollision(x, y, entity, list->entities[i]))
+			if (list->entities[i] != NULL && jamEntityCheckCollision(x, y, entity, list->entities[i]))
 				output = list->entities[i];
 	} else {
 		if (list == NULL)
@@ -110,7 +110,7 @@ JamEntity* jamEntityListCollision(int x, int y, JamEntity* entity, JamEntityList
  * 4. One the loop is done, loop until you hit a NULL, and resize the list to that size
  * 5. Adjust size and capacity accordingly
 */
-void jamShrinkEntityList(JamEntityList *list) {
+void jamEntityListShrink(JamEntityList *list) {
 	int i, j, posInList;
 	JamEntity** newList;
 	if (list != NULL) {
@@ -144,36 +144,36 @@ void jamShrinkEntityList(JamEntityList *list) {
 			list->size = (uint32)posInList;
 			list->capacity = (uint32)posInList;
 		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate entity list (jamShrinkEntityList)");
+			jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate entity list (jamEntityListShrink)");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "List does not exist (jamShrinkEntityList)");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (jamEntityListShrink)");
 	}
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void jamEmptyEntityList(JamEntityList *list, bool destroyEntities) {
+void jamEntityListEmpty(JamEntityList *list, bool destroyEntities) {
 	int i;
 
 	if (list != NULL) {
 		if (destroyEntities)
 			for (i = 0; i < list->size; i++)
-				jamFreeEntity(list->entities[i], false, false, false);
+				jamEntityFree(list->entities[i], false, false, false);
 		free(list->entities);
 		list->entities = NULL;
 		list->size = 0;
 		list->capacity = 0;
 	} else {
-		jSetError(ERROR_NULL_POINTER, "List does not exist (jamEmptyEntityList)");
+		jSetError(ERROR_NULL_POINTER, "List does not exist (jamEntityListEmpty)");
 	}
 }
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-void jamFreeEntityList(JamEntityList *list, bool destroyEntities) {
+void jamEntityListFree(JamEntityList *list, bool destroyEntities) {
 	if (list != NULL) {
-		jamEmptyEntityList(list, destroyEntities);
+		jamEntityListEmpty(list, destroyEntities);
 		free(list);
 	}
 }

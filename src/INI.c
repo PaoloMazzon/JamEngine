@@ -36,7 +36,7 @@ JamINI* jamLoadINI(const char *filename) {
 	int lineLength;
 	int i;
 	JamINI* ini = jamCreateINI();
-	JamStringList* file = jamLoadStringList(filename);
+	JamStringList* file = jamStringListLoad(filename);
 	currentHeader = NULL;
 
 	if (ini != NULL && file != NULL) {
@@ -93,7 +93,7 @@ JamINI* jamLoadINI(const char *filename) {
 			jSetError(ERROR_OPEN_FAILED, "File [%s] could not be loaded (jamLoadINI)", filename);
 	}
 
-	jamFreeStringList(file);
+	jamStringListFree(file);
 	return ini;
 }
 //////////////////////////////////////////////////////

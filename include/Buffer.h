@@ -57,7 +57,7 @@ typedef struct {
 ///
 /// \throws ERROR_ALLOC_FAILED
 ////////////////////////////////////////////////
-JamBuffer* jamCreateBuffer(uint64 size);
+JamBuffer* jamBufferCreate(uint64 size);
 
 ////////////////////////////////////////////////
 /// \brief Creates a new buffer
@@ -72,17 +72,17 @@ JamBuffer* jamCreateBuffer(uint64 size);
 /// \throws ERROR_FILE_FAILED
 /// \throws ERROR_ALLOC_FAILED
 ////////////////////////////////////////////////
-JamBuffer* jamLoadBuffer(const char *filename);
+JamBuffer* jamBufferLoad(const char *filename);
 
 /// \brief Places the contents of a buffer in a binary
-void jamSaveBuffer(JamBuffer* buffer, const char* filename);
+void jamBufferSave(JamBuffer *buffer, const char *filename);
 
 ////////////////////////////////////////////////
 /// \brief Frees a buffer
 ///
 /// \param buffer The buffer to free
 ////////////////////////////////////////////////
-void jamFreeBuffer(JamBuffer *buffer);
+void jamBufferFree(JamBuffer *buffer);
 
 ////////////////////////////////////////////////
 /// \brief Resizes a buffer
@@ -95,7 +95,7 @@ void jamFreeBuffer(JamBuffer *buffer);
 ///
 /// \throws ERROR_REALLOC_FAILED
 ////////////////////////////////////////////////
-void jamResizeBuffer(JamBuffer *buffer, uint64 newSize);
+void jamBufferResize(JamBuffer *buffer, uint64 newSize);
 
 /// \brief Sets the buffer pointer to a new location
 void jamBufferSeek(JamBuffer* buffer, uint64 position);
@@ -105,9 +105,10 @@ void jamBufferSeek(JamBuffer* buffer, uint64 position);
 ///
 /// \param buffer The buffer to zero
 ////////////////////////////////////////////////
-void jamZeroBuffer(JamBuffer *buffer);
+void jamBufferZero(JamBuffer *buffer);
 
-////////////////////////////////////////////////
+///////////////////
+/// /////////////////////////////
 /// \brief Places a byte at the pointer
 ///
 /// \param buffer The buffer to use
@@ -118,7 +119,7 @@ void jamZeroBuffer(JamBuffer *buffer);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-void jamAddByte1(JamBuffer *buffer, void* data);
+void jamBufferAddByte1(JamBuffer *buffer, void *data);
 
 ////////////////////////////////////////////////
 /// \brief Places bytes at the pointer
@@ -131,7 +132,7 @@ void jamAddByte1(JamBuffer *buffer, void* data);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-void jamAddByte2(JamBuffer *buffer, void* data);
+void jamBufferAddByte2(JamBuffer *buffer, void* data);
 
 ////////////////////////////////////////////////
 /// \brief Places bytes at the pointer
@@ -144,7 +145,7 @@ void jamAddByte2(JamBuffer *buffer, void* data);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-void jamAddByte4(JamBuffer *buffer, void* data);
+void jamBufferAddByte4(JamBuffer *buffer, void *data);
 
 ////////////////////////////////////////////////
 /// \brief Places bytes at the pointer
@@ -157,10 +158,10 @@ void jamAddByte4(JamBuffer *buffer, void* data);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 ////////////////////////////////////////////////
-void jamAddByte8(JamBuffer *buffer, void* data);
+void jamBufferAddByte8(JamBuffer *buffer, void *data);
 
 /// \brief Adds a variable amount of data to a buffer
-void jamAddByteX(JamBuffer* buffer, void* data, uint32 size);
+void jamBufferAddByteX(JamBuffer *buffer, void *data, uint32 size);
 
 ////////////////////////////////////////////////
 /// \brief Reads a byte at the pointer
@@ -173,7 +174,7 @@ void jamAddByteX(JamBuffer* buffer, void* data, uint32 size);
 /// data should be at least 1 byte long or the program
 /// will crash
 ////////////////////////////////////////////////
-void jamReadByte1(JamBuffer *buffer, void* data);
+void jamBufferReadByte1(JamBuffer *buffer, void *data);
 
 ////////////////////////////////////////////////
 /// \brief Reads bytes at the pointer
@@ -186,7 +187,7 @@ void jamReadByte1(JamBuffer *buffer, void* data);
 /// data should be at least 2 byte long or the program
 /// will crash
 ////////////////////////////////////////////////
-void jamReadByte2(JamBuffer *buffer, void* data);
+void jamBufferReadByte2(JamBuffer *buffer, void *data);
 
 ////////////////////////////////////////////////
 /// \brief Reads bytes at the pointer
@@ -199,7 +200,7 @@ void jamReadByte2(JamBuffer *buffer, void* data);
 /// data should be at least 4 byte long or the program
 /// will crash
 ////////////////////////////////////////////////
-void jamReadByte4(JamBuffer *buffer, void* data);
+void jamBufferReadByte4(JamBuffer *buffer, void *data);
 
 ////////////////////////////////////////////////
 /// \brief Reads bytes at the pointer
@@ -212,10 +213,10 @@ void jamReadByte4(JamBuffer *buffer, void* data);
 /// data should be at least 8 byte long or the program
 /// will crash
 ////////////////////////////////////////////////
-void jamReadByte8(JamBuffer *buffer, void* data);
+void jamBufferReadByte8(JamBuffer *buffer, void *data);
 
 /// \brief Reads a variable amount of data from a buffer into data
-void jamReadByteX(JamBuffer* buffer, void* data, uint32 size);
+void jamBufferReadByteX(JamBuffer *buffer, void *data, uint32 size);
 
 #ifdef __cplusplus
 }

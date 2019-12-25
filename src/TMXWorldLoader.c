@@ -19,7 +19,7 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 
 	// Loop the linked list
 	while (currentObject != NULL) {
-		tempEntity = jamCopyEntity(jamAssetHandlerGetEntity(handler, currentObject->type), currentObject->x,
+		tempEntity = jamEntityCopy(jamAssetHandlerGetEntity(handler, currentObject->type), currentObject->x,
 								   currentObject->y);
 
 		if (tempEntity != NULL) {

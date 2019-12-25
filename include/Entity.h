@@ -52,15 +52,15 @@ typedef struct _JamEntity {
 
 /// \brief Creates/initializes an entity class
 /// \throws ERROR_ALLOC_FAILED
-JamEntity* jamCreateEntity(JamSprite *sprite, JamHitbox *hitbox, double x, double y, double hitboxOffsetX,
+JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, double y, double hitboxOffsetX,
 						   double hitboxOffsetY, JamBehaviour *behaviour);
 
 /// \brief Makes a 1:1 copy of an entity and returns the new copy
-JamEntity* jamCopyEntity(JamEntity *baseEntity, double x, double y);
+JamEntity* jamEntityCopy(JamEntity *baseEntity, double x, double y);
 
 /// \brief Draws an entity
 /// \throws ERROR_NULL_POINTER
-void jamDrawEntity(JamEntity *entity);
+void jamEntityDraw(JamEntity *entity);
 
 /// \brief Checks if two entities are colliding with one another
 ///
@@ -68,14 +68,14 @@ void jamDrawEntity(JamEntity *entity);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-bool jamCheckEntityCollision(double x, double y, JamEntity *entity1, JamEntity *entity2);
+bool jamEntityCheckCollision(double x, double y, JamEntity *entity1, JamEntity *entity2);
 
 /// \brief Checks if an entity is colliding with a tile map
 ///
 /// This function uses the rx/ry coordinates for the entity, not the entity's x/y
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry);
+bool jamEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry);
 
 /// \brief Sets an entity's x component as close to a tilemap's edge as possible
 ///
@@ -87,7 +87,7 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 ///  + The hitbox is a rectangle
 ///
 /// \throws ERROR_NULL_POINTER
-void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction);
+void jamEntitySnapX(JamEntity *entity, JamTileMap *tilemap, int direction);
 
 /// \brief Sets an entity's y component as close to a tilemap's edge as possible
 ///
@@ -99,13 +99,13 @@ void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int directi
 ///  + The hitbox is a rectangle
 ///
 /// \throws ERROR_NULL_POINTER
-void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int direction);
+void jamEntitySnapY(JamEntity *entity, JamTileMap *tilemap, int direction);
 	
 /// \brief Frees an entity from memory
 ///
 /// No matter what you specify with the boolean arguments,
 /// the sprite's frames' textures will NOT be freed.
-void jamFreeEntity(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames);
+void jamEntityFree(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames);
 
 #ifdef __cplusplus
 }

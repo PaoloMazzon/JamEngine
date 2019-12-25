@@ -34,7 +34,7 @@ static inline int _roundDoubleToInt(double x) {
 }
 
 //////////////////////////////////////////////////////////
-JamEntity* jamCreateEntity(JamSprite *sprite, JamHitbox *hitbox, double x, double y, double hitboxOffsetX,
+JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, double y, double hitboxOffsetX,
 						   double hitboxOffsetY, JamBehaviour *behaviour) {
 	JamEntity* ent = (JamEntity*)malloc(sizeof(JamEntity));
 
@@ -67,11 +67,11 @@ JamEntity* jamCreateEntity(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-JamEntity* jamCopyEntity(JamEntity *baseEntity, double x, double y) {
+JamEntity* jamEntityCopy(JamEntity *baseEntity, double x, double y) {
 	JamEntity* newEnt = NULL;
 
 	if (baseEntity != NULL) {
-		newEnt = jamCreateEntity(baseEntity->sprite, baseEntity->hitbox, x, y, baseEntity->hitboxOffsetX,
+		newEnt = jamEntityCreate(baseEntity->sprite, baseEntity->hitbox, x, y, baseEntity->hitboxOffsetX,
 								 baseEntity->hitboxOffsetY, baseEntity->behaviour);
 		if (newEnt != NULL) {
 			newEnt->type = baseEntity->type;
@@ -102,7 +102,7 @@ JamEntity* jamCopyEntity(JamEntity *baseEntity, double x, double y) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void jamDrawEntity(JamEntity *entity) {
+void jamEntityDraw(JamEntity *entity) {
 	if (entity != NULL) {
 		if (entity->sprite != NULL)
 			jamDrawSprite(
@@ -122,7 +122,7 @@ void jamDrawEntity(JamEntity *entity) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool jamCheckEntityCollision(double x, double y, JamEntity *entity1, JamEntity *entity2) {
+bool jamEntityCheckCollision(double x, double y, JamEntity *entity1, JamEntity *entity2) {
 	bool coll = false;
 	double x1, y1, x2, y2; // Accounting for origins
 
@@ -159,7 +159,7 @@ bool jamCheckEntityCollision(double x, double y, JamEntity *entity1, JamEntity *
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry) {
+bool jamEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx, double ry) {
 	bool coll = false;
 	double x, y; // Accounting for origins
 
@@ -197,7 +197,7 @@ bool jamCheckEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, doub
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int direction) {
+void jamEntitySnapX(JamEntity *entity, JamTileMap *tilemap, int direction) {
 	int gridX, gridY;
 	int gridChecks = 0;
 	bool cornerColliding = false;
@@ -245,7 +245,7 @@ void jamSnapEntityToTileMapX(JamEntity* entity, JamTileMap* tilemap, int directi
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int direction) {
+void jamEntitySnapY(JamEntity *entity, JamTileMap *tilemap, int direction) {
 	int gridX, gridY;
 	int gridChecks = 0;
 	bool cornerColliding = false;
@@ -293,7 +293,7 @@ void jamSnapEntityToTileMapY(JamEntity* entity, JamTileMap* tilemap, int directi
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void jamFreeEntity(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames) {
+void jamEntityFree(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames) {
 	if (entity != NULL) {
 		if (destroyHitbox)
 			jamFreeHitbox(entity->hitbox);

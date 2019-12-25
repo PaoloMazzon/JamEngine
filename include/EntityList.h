@@ -43,7 +43,7 @@ typedef struct {
 
 /// \brief Creates an entity list
 /// \throws ERROR_NULL_POINTER
-JamEntityList* jamCreateEntityList();
+JamEntityList* jamEntityListCreate();
 
 /// \brief Puts an entity into the list, making it bigger or possibly using a free spot
 ///
@@ -57,17 +57,17 @@ JamEntityList* jamCreateEntityList();
 ///
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-int jamAddEntityToList(JamEntityList *list, JamEntity *entity);
+int jamEntityListAdd(JamEntityList *list, JamEntity *entity);
 
 /// \brief Removes an entity from the list and returns it
 /// \return Returns NULL if it was not found
 /// \throws ERROR_NULL_POINTER
-JamEntity* jamPopEntityFromList(JamEntityList *list, JamEntity *entity);
+JamEntity* jamEntityListPop(JamEntityList *list, JamEntity *entity);
 
 /// \brief Shrinks an entity list down to no bigger than needed
 /// \throws ERROR_REALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-void jamShrinkEntityList(JamEntityList *list);
+void jamEntityListShrink(JamEntityList *list);
 
 /// \brief Checks for a collision between an entity and a list of entities and either returns the colliding entity or null
 // \throws ERROR_NULL_POINTER	
@@ -75,7 +75,7 @@ JamEntity* jamEntityListCollision(int x, int y, JamEntity* entity, JamEntityList
 	
 /// \brief Removes all entities from the list
 /// \throws ERROR_NULL_POINTER
-void jamEmptyEntityList(JamEntityList *list, bool destroyEntities);
+void jamEntityListEmpty(JamEntityList *list, bool destroyEntities);
 
 /// \brief Destroys an entity list
 ///
@@ -83,7 +83,7 @@ void jamEmptyEntityList(JamEntityList *list, bool destroyEntities);
 /// \param destroyEntities Weather or not to also free the entities
 ///
 /// destroyEntities does not free any of the entities' sprites/hitboxes/whatever.
-void jamFreeEntityList(JamEntityList *list, bool destroyEntities);
+void jamEntityListFree(JamEntityList *list, bool destroyEntities);
 
 #ifdef __cplusplus
 }

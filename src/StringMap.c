@@ -31,7 +31,7 @@ JamStringMap* jamCreateStringMap() {
 ///////////////////////////////////////////////////////////
 JamStringMap* jamLoadStringMap(const char *filename) {
 	JamStringMap* map = jamCreateStringMap();
-	JamStringList* list = jamLoadStringList(filename);
+	JamStringList* list = jamStringListLoad(filename);
 	char* key;
 	char* val;
 	int len, i, j;
@@ -87,7 +87,7 @@ JamStringMap* jamLoadStringMap(const char *filename) {
 	}
 
 	// Clean up
-	jamFreeStringList(list);
+	jamStringListFree(list);
 
 	return map;
 }

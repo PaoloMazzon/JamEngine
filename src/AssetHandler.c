@@ -142,7 +142,7 @@ static void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const ch
 	if (jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
 		&& jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
 		behaviourString = jamGetKeyINI(ini, headerName, "behaviour", "default");
-		ent = jamCreateEntity(
+		ent = jamEntityCreate(
 				jamGetAssetFromHandler(assetHandler,
 									   (jamGetKeyINI(ini, headerName, "sprite_id", "0")))->spr,
 				jamAssetHandlerGetHitbox(assetHandler, (jamGetKeyINI(ini, headerName, "hitbox_id", "0"))),
@@ -459,7 +459,7 @@ static void jamFreeAsset(JamAsset* asset) {
 		else if (asset->type == at_Hitbox)
 			jamFreeHitbox(asset->hitbox);
 		else if (asset->type == at_Entity)
-			jamFreeEntity(asset->entity, false, false, false);
+			jamEntityFree(asset->entity, false, false, false);
 		else if (asset->type == at_World)
 			jamFreeWorld(asset->world);
 		else if (asset->type == at_AudioBuffer)

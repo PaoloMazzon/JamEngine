@@ -5,7 +5,7 @@
 #include <string.h>
 
 ////////////////////////////////////////////////
-JamBuffer* jamCreateBuffer(uint64 size) {
+JamBuffer* jamBufferCreate(uint64 size) {
 	// Create the buffer and internal buffer
 	uint8* internalBuffer = (uint8*)malloc((size_t)size);
 	JamBuffer* buffer = (JamBuffer*)malloc(sizeof(JamBuffer));
@@ -27,10 +27,10 @@ JamBuffer* jamCreateBuffer(uint64 size) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-JamBuffer* jamLoadBuffer(const char *filename) {
+JamBuffer* jamBufferLoad(const char *filename) {
 	FILE* bufferFile = fopen(filename, "rb");
 	uint64 bufferSize = 0;
-	JamBuffer* returnBuffer = jamCreateBuffer(0);
+	JamBuffer* returnBuffer = jamBufferCreate(0);
 
 	// Make sure the file actually opened
 	if (bufferFile != NULL && returnBuffer != NULL) {
@@ -45,13 +45,13 @@ JamBuffer* jamLoadBuffer(const char *filename) {
 		rewind(bufferFile);
 
 		// Resize buffer to new size
-		jamResizeBuffer(returnBuffer, bufferSize);
+		jamBufferResize(returnBuffer, bufferSize);
 		if (returnBuffer->size == bufferSize) {
 			// Fill the buffer
 			fread((uint64*)returnBuffer->buffer, 1, bufferSize, bufferFile);
 
 			if (ferror(bufferFile) != 0) {
-				jamFreeBuffer(returnBuffer);
+				jamBufferFree(returnBuffer);
 				returnBuffer = NULL;
 				jSetError(ERROR_FILE_FAILED, "Failed to read buffer from file '%s'\n", filename);
 			}
@@ -68,7 +68,7 @@ JamBuffer* jamLoadBuffer(const char *filename) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamSaveBuffer(JamBuffer* buffer, const char* filename) {
+void jamBufferSave(JamBuffer *buffer, const char *filename) {
 	FILE* file = fopen(filename, "wb");
 
 	if (buffer != NULL && file != NULL) {
@@ -84,7 +84,7 @@ void jamSaveBuffer(JamBuffer* buffer, const char* filename) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamFreeBuffer(JamBuffer *buffer) {
+void jamBufferFree(JamBuffer *buffer) {
 	if (buffer != NULL) {
 		if (buffer->buffer != NULL)
 			free(buffer->buffer);
@@ -94,7 +94,7 @@ void jamFreeBuffer(JamBuffer *buffer) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamResizeBuffer(JamBuffer *buffer, uint64 newSize) {
+void jamBufferResize(JamBuffer *buffer, uint64 newSize) {
 	uint8* newBuffer;
 	if (buffer != NULL) {
 		newBuffer = (uint8*)realloc(buffer->buffer, newSize);
@@ -125,7 +125,7 @@ void jamBufferSeek(JamBuffer* buffer, uint64 position) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamZeroBuffer(JamBuffer *buffer) {
+void jamBufferZero(JamBuffer *buffer) {
 	uint64 i;
 	if (buffer != NULL) {
 		for (i = 0; i < buffer->size; i++)
@@ -137,7 +137,7 @@ void jamZeroBuffer(JamBuffer *buffer) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamAddByte1(JamBuffer *buffer, void* data) {
+void jamBufferAddByte1(JamBuffer *buffer, void *data) {
 	if (buffer != NULL && buffer->pointer + 1 <= buffer->size) {
 		memcpy(&buffer->buffer[buffer->pointer], data, 1);
 		buffer->pointer += 1;
@@ -165,7 +165,7 @@ void jamAddByte2(JamBuffer *buffer, void* data) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamAddByte4(JamBuffer *buffer, void* data) {
+void jamBufferAddByte4(JamBuffer *buffer, void *data) {
 	if (buffer != NULL && buffer->pointer + 4 <= buffer->size) {
 		memcpy(&buffer->buffer[buffer->pointer], data, 4);
 		buffer->pointer += 4;
@@ -179,7 +179,7 @@ void jamAddByte4(JamBuffer *buffer, void* data) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamAddByte8(JamBuffer *buffer, void* data) {
+void jamBufferAddByte8(JamBuffer *buffer, void *data) {
 	if (buffer != NULL && buffer->pointer + 8 <= buffer->size) {
 		memcpy(&buffer->buffer[buffer->pointer], data, 8);
 		buffer->pointer += 8;
@@ -193,7 +193,7 @@ void jamAddByte8(JamBuffer *buffer, void* data) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamAddByteX(JamBuffer *buffer, void* data, uint32 size) {
+void jamBufferAddByteX(JamBuffer *buffer, void *data, uint32 size) {
 	if (buffer != NULL && buffer->pointer + size <= buffer->size) {
 		memcpy(&buffer->buffer[buffer->pointer], data, size);
 		buffer->pointer += size;
@@ -207,7 +207,7 @@ void jamAddByteX(JamBuffer *buffer, void* data, uint32 size) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByte1(JamBuffer *buffer, void* data) {
+void jamBufferReadByte1(JamBuffer *buffer, void *data) {
 	if (buffer != NULL && buffer->pointer + 1 <= buffer->size) {
 		memcpy(data, &buffer->buffer[buffer->pointer], 1);
 		buffer->pointer += 1;
@@ -221,7 +221,7 @@ void jamReadByte1(JamBuffer *buffer, void* data) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByte2(JamBuffer *buffer, void* data) {
+void jamBufferReadByte2(JamBuffer *buffer, void *data) {
 	if (buffer != NULL && buffer->pointer + 2 <= buffer->size) {
 		memcpy(data, &buffer->buffer[buffer->pointer], 2);
 		buffer->pointer += 2;
@@ -235,7 +235,7 @@ void jamReadByte2(JamBuffer *buffer, void* data) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByte4(JamBuffer *buffer, void* data) {
+void jamBufferReadByte4(JamBuffer *buffer, void *data) {
 	if (buffer != NULL && buffer->pointer + 4 <= buffer->size) {
 		memcpy(data, &buffer->buffer[buffer->pointer], 4);
 		buffer->pointer += 4;
@@ -249,7 +249,7 @@ void jamReadByte4(JamBuffer *buffer, void* data) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByte8(JamBuffer *buffer, void* data) {
+void jamBufferReadByte8(JamBuffer *buffer, void *data) {
 	if (buffer != NULL && buffer->pointer + 8 <= buffer->size) {
 		memcpy(data, &buffer->buffer[buffer->pointer], 8);
 		buffer->pointer += 8;
@@ -263,7 +263,7 @@ void jamReadByte8(JamBuffer *buffer, void* data) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamReadByteX(JamBuffer *buffer, void* data, uint32 size) {
+void jamBufferReadByteX(JamBuffer *buffer, void *data, uint32 size) {
 	if (buffer != NULL && buffer->pointer + size <= buffer->size) {
 		memcpy(data, &buffer->buffer[buffer->pointer], size);
 		buffer->pointer += size;

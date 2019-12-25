@@ -36,7 +36,7 @@ SDL_Texture* loadTex(const char* fname) {
 ///////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-JamFont* jamCreateFont(const char *latinFname, const char *fontFname) {
+JamFont* jamFontCreate(const char *latinFname, const char *fontFname) {
 	JamFont* font = (JamFont*)calloc(1, sizeof(JamFont));
 	SDL_Texture* tex = NULL;
 
@@ -49,7 +49,7 @@ JamFont* jamCreateFont(const char *latinFname, const char *fontFname) {
 
 		// Some more checks
 		if (latin == NULL) {
-			jamFreeFont(font);
+			jamFontFree(font);
 			jSetError(ERROR_OPEN_FAILED, "Failed to load latin font texture, SDL error: %s\n", SDL_GetError());
 			font = NULL;
 		} else {
@@ -67,7 +67,7 @@ JamFont* jamCreateFont(const char *latinFname, const char *fontFname) {
 				tex = loadTex(fontFname);
 
 				if (tex == NULL) {
-					jamFreeFont(font);
+					jamFontFree(font);
 					jSetError(ERROR_OPEN_FAILED, "Failed to load font texture, SDL error: %s\n", SDL_GetError());
 					font = NULL;
 				} else {
@@ -85,7 +85,7 @@ JamFont* jamCreateFont(const char *latinFname, const char *fontFname) {
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void jamFreeFont(JamFont *font) {
+void jamFontFree(JamFont *font) {
 	if (font != NULL) {
 		if (font->font != NULL)
 			SDL_DestroyTexture(font->font);
@@ -116,7 +116,7 @@ bool is4ByteCharacter(uint8 byte) {
 	return ((byte & 128) == 128 && (byte & 64) == 64 && (byte & 32) == 32 && (byte & 16) == 16 && (byte & 8) == 0);
 }
 
-void jamRenderFont(int x, int y, const char *string, JamFont *font) {
+void jamFontRender(int x, int y, const char *string, JamFont *font) {
 	uint32 unichar;
 	uint32 tempChar;
 	bool ready = false;
@@ -218,7 +218,7 @@ void jamRenderFont(int x, int y, const char *string, JamFont *font) {
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void jamRenderFontExt(int x, int y, const char *string, JamFont *font, int w, ...) {
+void jamFontRenderExt(int x, int y, const char *string, JamFont *font, int w, ...) {
 	// Variable length parameter things
 	va_list params;
 	va_start(params, w);
@@ -351,7 +351,7 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, int w, ..
 						// Print the character
 						SDL_RenderCopy(jamRendererGetInternalRenderer(), font->font, &charSheetBox, &charPlace);
 					} else { // Not in the font
-						jSetError(ERROR_OUT_OF_BOUNDS, "Error: Character '%u' is out of the font's range. (jamRenderFontExt)", unichar);
+						jSetError(ERROR_OUT_OF_BOUNDS, "Error: Character '%u' is out of the font's range. (jamFontRenderExt)", unichar);
 					}
 
 					// Check for text width
@@ -391,16 +391,16 @@ void jamRenderFontExt(int x, int y, const char *string, JamFont *font, int w, ..
 		}
 	} else {
 		if (jamRendererGetInternalRenderer() == NULL)
-			fprintf(stderr, "JamRenderer does not exist (jamRenderFontExt)");
+			fprintf(stderr, "JamRenderer does not exist (jamFontRenderExt)");
 		if (font == NULL)
-		jSetError(ERROR_NULL_POINTER, "JamFont does not exist (jamRenderFontExt)");
+		jSetError(ERROR_NULL_POINTER, "JamFont does not exist (jamFontRenderExt)");
 	}
 	va_end(params);
 }
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void jamRenderFontWrap(int x, int y, uint16 w, const char *string, JamFont *font) {
+void jamFontRenderWrap(int x, int y, uint16 w, const char *string, JamFont *font) {
 	uint32 unichar;
 	uint32 tempChar;
 	bool ready = false;
@@ -507,7 +507,7 @@ void jamRenderFontWrap(int x, int y, uint16 w, const char *string, JamFont *font
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-uint16 jamGetStringWidth(JamFont *font, const char *string) {
+uint16 jamFontStringWidth(JamFont *font, const char *string) {
 	int i = 0;
 	uint16 lw = 0;
 	uint16 w = 0;
@@ -534,7 +534,7 @@ uint16 jamGetStringWidth(JamFont *font, const char *string) {
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-uint16 jamGetStringHeight(JamFont *font, const char *string) {
+uint16 jamFontStringHeight(JamFont *font, const char *string) {
 	int i = 0;
 	uint16 h = font->characterHeight;
 
@@ -551,7 +551,7 @@ uint16 jamGetStringHeight(JamFont *font, const char *string) {
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-uint16 jamGetStringHeightWrap(JamFont *font, const char *string, uint16 w) {
+uint16 jamFontStringHeightWrap(JamFont *font, const char *string, uint16 w) {
 	int i = 0;
 	uint16 h = font->characterHeight;
 	uint16 width = 0;

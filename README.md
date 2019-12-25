@@ -51,6 +51,7 @@ out of a game engine.
  - Gamepad support
  - TTF/OTF font support (heck)
  - Spatial hash tables (And probably replacing entity types with a uint8 for flexibility)
+ - Font support in JamAssetHandler
  
 Possible Additions
 ------------------

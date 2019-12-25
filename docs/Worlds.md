@@ -22,8 +22,8 @@ a world to look like
 
     JamAssetHandler* handler = jamAssetHandlerCreate();
     jamAssetHandlerLoadINI(handler, renderer, "assets/mygame.ini", myBehaviourMap);
-    jamWorldAddEntity(gameWorld, jamCopyEntity(jamAssetHandlerGetEntity(handler, "EnemyEntity"), 80, 500));
-    jamWorldAddEntity(gameWorld, jamCopyEntity(jamAssetHandlerGetEntity(handler, "BirdEntity"), 200, 100));
+    jamWorldAddEntity(gameWorld, jamEntityCopy(jamAssetHandlerGetEntity(handler, "EnemyEntity"), 80, 500));
+    jamWorldAddEntity(gameWorld, jamEntityCopy(jamAssetHandlerGetEntity(handler, "BirdEntity"), 200, 100));
     // Now my entity copies will be safely freed by the world, and the "real" entities loaded by
     // the asset handler (and its associated sprites/whatever) will be freed by the handler.
 

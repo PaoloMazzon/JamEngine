@@ -19,7 +19,7 @@ typedef struct {
 /// \brief Creates a string list
 /// \return Returns the new list or NULL
 /// \throws ERROR_ALLOC_FAILED
-JamStringList* jamCreateStringList();
+JamStringList* jamStringListCreate();
 
 /// \brief Reads a file line-by-line into a string list
 /// \param fname The file to load as a list of strings
@@ -29,7 +29,7 @@ JamStringList* jamCreateStringList();
 ///
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPEN_FAILED
-JamStringList* jamLoadStringList(const char *fname);
+JamStringList* jamStringListLoad(const char *fname);
 
 /// \brief Appends a string to an string list
 /// \param list The list to append to
@@ -42,7 +42,7 @@ JamStringList* jamLoadStringList(const char *fname);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_REALLOC_FAILED
-void jamAppendStringToList(JamStringList *list, char *string, bool heapBased);
+void jamStringListAppend(JamStringList *list, char *string, bool heapBased);
 
 /// \brief Separates a string based on a delimiter
 /// \param string The string to explode
@@ -57,11 +57,11 @@ void jamAppendStringToList(JamStringList *list, char *string, bool heapBased);
 /// quotation marks will be ignored.
 ///
 /// \throws ERROR_ALLOC_FAILED
-JamStringList* jamExplodeString(const char *string, char delim, bool ignoreQuotes);
+JamStringList* jamStringExplode(const char *string, char delim, bool ignoreQuotes);
 
 /// \brief Frees a string list as well as its contents
 /// \param list The list to destroy
-void jamFreeStringList(JamStringList *list);
+void jamStringListFree(JamStringList *list);
 
 /// \brief Takes any form of a file and returns the file's name only
 ///
