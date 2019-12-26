@@ -48,17 +48,17 @@ typedef struct {
 /// Tile maps are initialized with false as every value
 ///
 /// \throws ERROR_ALLOC_FAILED
-JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight);
+JamTileMap* jamTileMapCreate(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight);
 
 /// \brief Sets a position in a tile map
 /// Returns true if it worked
 ///
 /// \throws ERROR_NULL_POINTER
-bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame* val);
+bool jamTileMapSet(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame *val);
 
 /// \brief Gets a position in a tile map
 /// \throws ERROR_NULL_POINTER
-JamFrame* jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y);
+JamFrame* jamTileMapGet(JamTileMap *tileMap, uint32 x, uint32 y);
 
 /// \brief Auto-tiles a tile map using a 48-frame sprite
 ///
@@ -75,7 +75,7 @@ JamFrame* jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_INCORRECT_FORMAT
-void jamAutoTileMap(JamTileMap *map, JamSprite *spr);
+void jamTileMapAuto(JamTileMap *map, JamSprite *spr);
 
 /// \brief Checks For a collision
 ///
@@ -86,7 +86,7 @@ void jamAutoTileMap(JamTileMap *map, JamSprite *spr);
 /// check as the fast one will not find all.
 ///
 /// \throws ERROR_NULL_POINTER
-bool jamCheckMapCollFast(JamTileMap *tileMap, int x, int y, int w, int h);
+bool jamTileMapFastCollision(JamTileMap *tileMap, int x, int y, int w, int h);
 
 /// \brief Checks for a collision in a tile map
 ///
@@ -98,10 +98,10 @@ bool jamCheckMapCollFast(JamTileMap *tileMap, int x, int y, int w, int h);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OUT_OF_BOUNDS
-bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h);
+bool jamTileMapCollision(JamTileMap *tileMap, int x, int y, int w, int h);
 
 /// \brief Frees a tile map from memory
-void jamFreeTileMap(JamTileMap *tileMap);
+void jamTileMapFree(JamTileMap *tileMap);
 
 #ifdef __cplusplus
 }

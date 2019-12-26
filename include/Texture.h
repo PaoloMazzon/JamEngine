@@ -24,16 +24,16 @@ struct _JamTexture {
 
 /// \brief Creates a texture that can be rendered to
 /// \throws ERROR_SDL_ERROR
-JamTexture* jamCreateTexture(int w, int h);
+JamTexture* jamTextureCreate(int w, int h);
 
 /// \brief Loads a texture from a file
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
-JamTexture* jamLoadTexture(const char *filename);
+JamTexture* jamTextureLoad(const char *filename);
 
 /// \brief Frees a texture from memory
-void jamFreeTexture(JamTexture *tex);
+void jamTextureFree(JamTexture *tex);
 
 #ifdef __cplusplus
 }

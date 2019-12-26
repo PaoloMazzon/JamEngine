@@ -35,7 +35,7 @@ typedef struct {
 /// for that is completely redundant
 ///
 /// \throws ERROR_ALLOC_FAILED
-JamFrame* jamCreateFrame(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h);
+JamFrame* jamFrameCreate(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h);
 
 /// \brief Draws a frame
 ///
@@ -46,7 +46,7 @@ JamFrame* jamCreateFrame(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h
 void jamDrawFrame(JamFrame *frame, sint32 x, sint32 y);
 
 /// \brief Empties a frame from memory
-void jamFreeFrame(JamFrame *frame, bool destroyTexture);
+void jamFrameFree(JamFrame *frame, bool destroyTexture);
 
 #ifdef __cplusplus
 }

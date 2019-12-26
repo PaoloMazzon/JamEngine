@@ -38,7 +38,7 @@ I'll set it in stone here.
  + Functions begin with `jam` and every word after than is capitalized (`jSetError` is not an exception, its a macro. Its function counterpart is the exception)
  + Internally, variables names start with lowercase and every word after is uppercase (Java style)
  + Enum values start with their enum's abbreviation followed by an underscore (for example, `JamEntityType`'s things start with `et_*`)
- + Functions in the same file must all start with the same prefix (with some obvious exceptions, this is basically namespaces) (like how all functions in AssetHandler.h start with `jamAssetHandler*`)
+ + Functions in the same file must all start with the same prefix (with some obvious exceptions, this is basically namespaces) (like how all functions in AssetHandler.h start with `jamAssetHandler*`) A rather large exception is no matter what file drawing functions belong to, they should be prefixed with `jamDraw*`
 
 Future Additions
 ================

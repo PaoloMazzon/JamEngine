@@ -64,7 +64,7 @@ typedef struct {
 /// you can just set the latter two arguments to 0/false.
 ///
 /// \throws ERROR_ALLOC_FAILED
-JamSprite* jamCreateSprite(uint32 animationLength, uint16 frameDelay, bool looping);
+JamSprite* jamSpriteCreate(uint32 animationLength, uint16 frameDelay, bool looping);
 
 /// \brief Adds a frame to a sprite
 /// \throws ERROR_ALLOC_FAILED
@@ -85,7 +85,7 @@ void jamSpriteAppendFrame(JamSprite *sprite, JamFrame *frame);
 /// \param looping Does the animation loop?
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_SDL_ERROR
-JamSprite* jamLoadSpriteFromSheet(JamTexture *spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet,
+JamSprite* jamSpriteLoadFromSheet(JamTexture *spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet,
 								  uint32 cellW, uint32 cellH, uint32 paddingW, uint32 paddingH, uint32 xAlign,
 								  uint16 frameDelay, bool looping);
 
@@ -95,7 +95,7 @@ JamSprite* jamLoadSpriteFromSheet(JamTexture *spriteSheet, uint32 cellCount, uin
 /// run this multiple times a frame
 ///
 /// \throws ERROR_NULL_POINTER
-void jamUpdateSprite(JamSprite *sprite);
+void jamSpriteUpdate(JamSprite *sprite);
 
 /// \brief Draws a sprite on screen
 /// \throws ERROR_NULL_POINTER
@@ -109,7 +109,7 @@ void jamDrawSpriteFrame(JamSprite *sprite, sint32 x, sint32 y, float scaleX, flo
 						double rot, uint8 alpha, uint32 frame);
 
 /// \brief Frees a sprite
-void jamFreeSprite(JamSprite *sprite, bool freeFrames, bool freeTextures);
+void jamSpriteFree(JamSprite *sprite, bool freeFrames, bool freeTextures);
 
 #ifdef __cplusplus
 }

@@ -10,7 +10,28 @@
 #include "JamError.h"
 
 ///////////////////////////////////////////////////////////
-JamStringMap* jamCreateStringMap() {
+static void jamThrowInGarbageStringMap(JamStringMap *smap, char *garbage) {
+	char** tempPointer;
+	// Check that it exists
+	if (smap != NULL) {
+		tempPointer = (char**)realloc((void*)smap->garbage, (1 + smap->sizeOfGarbagePile) * sizeof(char*));
+
+		if (tempPointer != NULL) {
+			// Make the map one bigger and load it up
+			smap->sizeOfGarbagePile++;
+			smap->garbage = tempPointer;
+			smap->garbage[smap->sizeOfGarbagePile - 1] = garbage;
+		} else {
+			jSetError(ERROR_REALLOC_FAILED, "Failed to increase size of garbage pile (jamThrowInGarbageStringMap)");
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Passed JamStringMap does not exist (jamThrowInGarbageStringMap)");
+	}
+}
+///////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////
+JamStringMap* jamStringMapCreate() {
 	JamStringMap* smap = (JamStringMap*)malloc(sizeof(JamStringMap));
 
 	// Check that it worked
@@ -21,7 +42,7 @@ JamStringMap* jamCreateStringMap() {
 		smap->size = 0;
 		smap->sizeOfGarbagePile = 0;
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate JamStringMap (jamCreateStringMap)");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate JamStringMap (jamStringMapCreate)");
 	}
 
 	return smap;
@@ -29,8 +50,8 @@ JamStringMap* jamCreateStringMap() {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-JamStringMap* jamLoadStringMap(const char *filename) {
-	JamStringMap* map = jamCreateStringMap();
+JamStringMap* jamStringMapLoad(const char *filename) {
+	JamStringMap* map = jamStringMapCreate();
 	JamStringList* list = jamStringListLoad(filename);
 	char* key;
 	char* val;
@@ -41,7 +62,7 @@ JamStringMap* jamLoadStringMap(const char *filename) {
 	if (list != NULL && map != NULL) {
 		// Now we begin looping through every line
 		for (i = 0; i < list->size; i++) {
-			len = strlen(list->strList[i]);
+			len = (int)strlen(list->strList[i]);
 			delimPos = -1;
 
 			// We don't need empty lines/comments
@@ -64,26 +85,26 @@ JamStringMap* jamLoadStringMap(const char *filename) {
 							memcpy(val, list->strList[i] + delimPos + 1, (size_t)(len - delimPos));
 
 							// Then we put them into the map and keep track of garbage
-							jamSetStringMapVal(map, key, val);
+							jamStringMapSet(map, key, val);
 							jamThrowInGarbageStringMap(map, key);
 							jamThrowInGarbageStringMap(map, val);
 						} else {
-							jSetError(ERROR_ALLOC_FAILED, "Could not allocate strings, line %i (jamLoadStringMap)", i + 1);
+							jSetError(ERROR_ALLOC_FAILED, "Could not allocate strings, line %i (jamStringMapLoad)", i + 1);
 						}
 					} else {
-						jSetError(ERROR_INCORRECT_FORMAT, "Error in JamStringMap file, line %i '%s' (jamLoadStringMap)", i + 1, list->strList[i]);
+						jSetError(ERROR_INCORRECT_FORMAT, "Error in JamStringMap file, line %i '%s' (jamStringMapLoad)", i + 1, list->strList[i]);
 					}
 				}
 			}
 		}
 	} else {
 		if (list == NULL) {
-			jSetError(ERROR_OPEN_FAILED, "File could not be opened (jamLoadStringMap)");
+			jSetError(ERROR_OPEN_FAILED, "File could not be opened (jamStringMapLoad)");
 		}
 		if (map == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "JamStringMap could not be allocated (jamLoadStringMap)");
+			jSetError(ERROR_ALLOC_FAILED, "JamStringMap could not be allocated (jamStringMapLoad)");
 		}
-		jamFreeStringMap(map);
+		jamStringMapFree(map);
 	}
 
 	// Clean up
@@ -94,7 +115,7 @@ JamStringMap* jamLoadStringMap(const char *filename) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-void jamOutputStringMap(JamStringMap *smap, FILE *stream) {
+void jamStringMapOutput(JamStringMap *smap, FILE *stream) {
 	int i;
 
 	// Check both things exist of course
@@ -104,15 +125,15 @@ void jamOutputStringMap(JamStringMap *smap, FILE *stream) {
 			fprintf(stream, "%s=%s\n", smap->keys[i], smap->vals[i]);
 	} else {
 		if (smap == NULL)
-			jSetError(ERROR_NULL_POINTER, "Passed JamStringMap does not exist (jamOutputStringMap)");
+			jSetError(ERROR_NULL_POINTER, "Passed JamStringMap does not exist (jamStringMapOutput)");
 		if (stream == NULL)
-			jSetError(ERROR_NULL_POINTER, "Passed FILE does not exist (jamOutputStringMap)");
+			jSetError(ERROR_NULL_POINTER, "Passed FILE does not exist (jamStringMapOutput)");
 	}
 }
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-void jamSetStringMapVal(JamStringMap *smap, const char *key, char *val) {
+void jamStringMapSet(JamStringMap *smap, const char *key, char *val) {
 	bool found = false;
 	int i;
 
@@ -136,13 +157,13 @@ void jamSetStringMapVal(JamStringMap *smap, const char *key, char *val) {
 			smap->vals[smap->size - 1] = val;
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Passed JamStringMap does not exist (jamSetStringMapVal with key %s)", key);
+		jSetError(ERROR_NULL_POINTER, "Passed JamStringMap does not exist (jamStringMapSet with key %s)", key);
 	}
 }
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-const char* jamGetStringMapVal(JamStringMap *smap, const char *key, char *def) {
+const char* jamStringMapGet(JamStringMap *smap, const char *key, char *def) {
 	char* ret = def;
 	int i;
 
@@ -155,7 +176,7 @@ const char* jamGetStringMapVal(JamStringMap *smap, const char *key, char *def) {
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Passed JamStringMap does not exist (jamGetStringMapVal for key %s)", key);
+		jSetError(ERROR_NULL_POINTER, "Passed JamStringMap does not exist (jamStringMapGet for key %s)", key);
 	}
 
 	return ret;
@@ -163,28 +184,7 @@ const char* jamGetStringMapVal(JamStringMap *smap, const char *key, char *def) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-void jamThrowInGarbageStringMap(JamStringMap *smap, char *garbage) {
-	char** tempPointer;
-	// Check that it exists
-	if (smap != NULL) {
-		tempPointer = (char**)realloc((void*)smap->garbage, (1 + smap->sizeOfGarbagePile) * sizeof(char*));
-
-		if (tempPointer != NULL) {
-			// Make the map one bigger and load it up
-			smap->sizeOfGarbagePile++;
-			smap->garbage = tempPointer;
-			smap->garbage[smap->sizeOfGarbagePile - 1] = garbage;
-		} else {
-			jSetError(ERROR_REALLOC_FAILED, "Failed to increase size of garbage pile (jamThrowInGarbageStringMap)");
-		}
-	} else {
-		jSetError(ERROR_NULL_POINTER, "Passed JamStringMap does not exist (jamThrowInGarbageStringMap)");
-	}
-}
-///////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////
-void jamFreeStringMap(JamStringMap *smap) {
+void jamStringMapFree(JamStringMap *smap) {
 	int i;
 	if (smap != NULL) {
 		free(smap->keys);

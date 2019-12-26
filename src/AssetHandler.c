@@ -110,23 +110,23 @@ JamAssetHandler* jamAssetHandlerCreate(int size) {
 
 //////////////////////// Functions that load individual pieces ////////////////////////
 static void assetLoadSprite(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
-	JamSprite* spr = jamLoadSpriteFromSheet(
-			jamAssetHandlerGetTexture(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))),
-			(uint32) atof(jamGetKeyINI(ini, headerName, "animation_length", "1")),
-			(uint32) atof(jamGetKeyINI(ini, headerName, "x_in_texture", "0")),
-			(uint32) atof(jamGetKeyINI(ini, headerName, "y_in_texture", "0")),
-			(uint32) atof(jamGetKeyINI(ini, headerName, "frame_width", "16")),
-			(uint32) atof(jamGetKeyINI(ini, headerName, "frame_height", "16")),
-			(uint32) atof(jamGetKeyINI(ini, headerName, "padding_width", "0")),
-			(uint32) atof(jamGetKeyINI(ini, headerName, "padding_height", "0")),
-			(uint32) atof(jamGetKeyINI(ini, headerName, "x_align", "0")),
-			(uint16) atof(jamGetKeyINI(ini, headerName, "frame_delay", "0")),
-			(bool) atof(jamGetKeyINI(ini, headerName, "looping", "0")));
+	JamSprite* spr = jamSpriteLoadFromSheet(
+			jamAssetHandlerGetTexture(assetHandler, (jamINIGetKey(ini, headerName, "texture_id", "0"))),
+			(uint32) atof(jamINIGetKey(ini, headerName, "animation_length", "1")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "x_in_texture", "0")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "y_in_texture", "0")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "frame_width", "16")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "frame_height", "16")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "padding_width", "0")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "padding_height", "0")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "x_align", "0")),
+			(uint16) atof(jamINIGetKey(ini, headerName, "frame_delay", "0")),
+			(bool) atof(jamINIGetKey(ini, headerName, "looping", "0")));
 	if (spr != NULL) {
-		spr->originX = (sint32) atof(jamGetKeyINI(ini, headerName, "x_origin", "0"));
-		spr->originY = (sint32) atof(jamGetKeyINI(ini, headerName, "y_origin", "0"));
+		spr->originX = (sint32) atof(jamINIGetKey(ini, headerName, "x_origin", "0"));
+		spr->originY = (sint32) atof(jamINIGetKey(ini, headerName, "y_origin", "0"));
 	}
-	if (jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "texture_id", "0"))) != NULL) {
+	if (jamGetAssetFromHandler(assetHandler, (jamINIGetKey(ini, headerName, "texture_id", "0"))) != NULL) {
 		jamAssetHandlerLoadAsset(assetHandler, createAsset(spr, at_Sprite, headerName + 1), (headerName + 1)
 		);
 	} else {
@@ -139,17 +139,17 @@ static void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const ch
 	const char* typeString;
 	const char* behaviourString;
 	// Make sure we have all necessary assets
-	if (jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "sprite_id", "0"))) != NULL
-		&& jamGetAssetFromHandler(assetHandler, (jamGetKeyINI(ini, headerName, "hitbox_id", "0"))) != NULL) {
-		behaviourString = jamGetKeyINI(ini, headerName, "behaviour", "default");
+	if (jamGetAssetFromHandler(assetHandler, (jamINIGetKey(ini, headerName, "sprite_id", "0"))) != NULL
+		&& jamGetAssetFromHandler(assetHandler, (jamINIGetKey(ini, headerName, "hitbox_id", "0"))) != NULL) {
+		behaviourString = jamINIGetKey(ini, headerName, "behaviour", "default");
 		ent = jamEntityCreate(
 				jamGetAssetFromHandler(assetHandler,
-									   (jamGetKeyINI(ini, headerName, "sprite_id", "0")))->spr,
-				jamAssetHandlerGetHitbox(assetHandler, (jamGetKeyINI(ini, headerName, "hitbox_id", "0"))),
-				(int) atof(jamGetKeyINI(ini, headerName, "x", "0")),
-				(int) atof(jamGetKeyINI(ini, headerName, "y", "0")),
-				(int) atof(jamGetKeyINI(ini, headerName, "hitbox_offset_x", "0")),
-				(int) atof(jamGetKeyINI(ini, headerName, "hitbox_offset_y", "0")),
+									   (jamINIGetKey(ini, headerName, "sprite_id", "0")))->spr,
+				jamAssetHandlerGetHitbox(assetHandler, (jamINIGetKey(ini, headerName, "hitbox_id", "0"))),
+				(int) atof(jamINIGetKey(ini, headerName, "x", "0")),
+				(int) atof(jamINIGetKey(ini, headerName, "y", "0")),
+				(int) atof(jamINIGetKey(ini, headerName, "hitbox_offset_x", "0")),
+				(int) atof(jamINIGetKey(ini, headerName, "hitbox_offset_y", "0")),
 				jamBehaviourMapGet(map, behaviourString));
 
 		// Alert the user if a behaviour was expected but not found
@@ -157,7 +157,7 @@ static void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const ch
 			jSetError(ERROR_WARNING, "Expected behaviour '%s' for entity '%s'", behaviourString, headerName);
 		
 		// Figure out the type
-		typeString = jamGetKeyINI(ini, headerName, "type", "none");
+		typeString = jamINIGetKey(ini, headerName, "type", "none");
 		if (strcmp(typeString, "Logic") == 0)
 			ent->type = et_Logic;
 		if (strcmp(typeString, "Solid") == 0)
@@ -170,9 +170,9 @@ static void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const ch
 			ent->type = et_Item;
 		if (strcmp(typeString, "Player") == 0)
 			ent->type = et_Player;
-		ent->rot = atof(jamGetKeyINI(ini, headerName, "rotation", "0"));
-		ent->alpha = (uint8)atof(jamGetKeyINI(ini, headerName, "alpha", "255"));
-		ent->updateOnDraw = (bool)atof(jamGetKeyINI(ini, headerName, "update_on_draw", "1"));
+		ent->rot = atof(jamINIGetKey(ini, headerName, "rotation", "0"));
+		ent->alpha = (uint8)atof(jamINIGetKey(ini, headerName, "alpha", "255"));
+		ent->updateOnDraw = (bool)atof(jamINIGetKey(ini, headerName, "update_on_draw", "1"));
 		jamAssetHandlerLoadAsset(assetHandler, createAsset(ent, at_Entity, headerName + 1), (headerName + 1));
 	} else {
 		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load entity of id %s (jamAssetHandlerLoadINI)", headerName + 1);
@@ -181,18 +181,18 @@ static void assetLoadEntity(JamAssetHandler* assetHandler, JamINI* ini, const ch
 
 static void assetLoadHitbox(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	JamHitboxType hType = ht_Rectangle;
-	const char* key = jamGetKeyINI(ini, headerName, "type", "rectangle");
+	const char* key = jamINIGetKey(ini, headerName, "type", "rectangle");
 	if (strcmp(key, "rectangle") == 0) hType = ht_Rectangle;
 	else if (strcmp(key, "cirlce") == 0) hType = ht_Circle;
 	else if (strcmp(key, "polygon") == 0) hType = ht_ConvexPolygon;
 	jamAssetHandlerLoadAsset(
 			assetHandler,
-			createAsset(jamCreateHitbox(
+			createAsset(jamHitboxCreate(
 					hType,
-					atof(jamGetKeyINI(ini, headerName, "radius", "0")),
-					atof(jamGetKeyINI(ini, headerName, "width", "0")),
-					atof(jamGetKeyINI(ini, headerName, "height", "0")),
-					jamLoadPolygon(jamGetKeyINI(ini, headerName, "polygon", ""))
+					atof(jamINIGetKey(ini, headerName, "radius", "0")),
+					atof(jamINIGetKey(ini, headerName, "width", "0")),
+					atof(jamINIGetKey(ini, headerName, "height", "0")),
+					jamPolygonLoad(jamINIGetKey(ini, headerName, "polygon", ""))
 			), at_Hitbox, headerName + 1),
 			(headerName + 1)
 	);
@@ -202,22 +202,22 @@ static void assetLoadAudio(JamAssetHandler* assetHandler, JamINI* ini, const cha
 	jamAssetHandlerLoadAsset(
 			assetHandler,
 			createAsset(
-					jamAudioLoadBuffer(jamGetKeyINI(ini, headerName, "file", "")), at_AudioBuffer, headerName + 1),
+					jamAudioLoadBuffer(jamINIGetKey(ini, headerName, "file", "")), at_AudioBuffer, headerName + 1),
 			(headerName + 1));
 }
 
 static void assetLoadWorld(JamAssetHandler* assetHandler, JamINI* ini, const char* headerName) {
 	// Load the world filtering setup and world
-	JamWorld* world = jamLoadWorldFromTMX(assetHandler, jamGetKeyINI(ini, headerName, "file", ""));
-	uint16 width = (uint16)atof(jamGetKeyINI(ini, headerName, "width", "0"));
-	uint16 height = (uint16)atof(jamGetKeyINI(ini, headerName, "height", "0"));
-	uint16 radius = (uint16)atof(jamGetKeyINI(ini, headerName, "radius", "0"));
+	JamWorld* world = jamTMXLoadWorld(assetHandler, jamINIGetKey(ini, headerName, "file", ""));
+	uint16 width = (uint16)atof(jamINIGetKey(ini, headerName, "width", "0"));
+	uint16 height = (uint16)atof(jamINIGetKey(ini, headerName, "height", "0"));
+	uint16 radius = (uint16)atof(jamINIGetKey(ini, headerName, "radius", "0"));
 
 	if (world != NULL) {
 		if (width != 0) {
-			jamSetWorldFilterTypeRectangle(world, width, height);
+			jamWorldSetFilterTypeRectangle(world, width, height);
 		} else if (radius != 0) {
-			jamSetWorldFilterTypeCircle(world, radius);
+			jamWorldSetFilterTypeCircle(world, radius);
 		}
 	}
 
@@ -227,7 +227,7 @@ static void assetLoadWorld(JamAssetHandler* assetHandler, JamINI* ini, const cha
 
 ///////////////////////////////////////////////////////////////
 void jamAssetHandlerLoadINI(JamAssetHandler *assetHandler, const char *filename, JamBehaviourMap *map) {
-	JamINI* ini = jamLoadINI(filename);
+	JamINI* ini = jamINILoad(filename);
 	uint32 i, j;
 
 	if (assetHandler != NULL && jamRendererGetInternalRenderer() != NULL && ini != NULL) {
@@ -237,7 +237,7 @@ void jamAssetHandlerLoadINI(JamAssetHandler *assetHandler, const char *filename,
 				for (j = 0; j < ini->headers[i]->size; j++)
 					jamAssetHandlerLoadAsset(
 							assetHandler,
-							createAsset(jamLoadTexture(ini->headers[i]->vals[j]), at_Texture, ini->headers[i]->keys[j]),
+							createAsset(jamTextureLoad(ini->headers[i]->vals[j]), at_Texture, ini->headers[i]->keys[j]),
 							(ini->headers[i]->keys[j])
 					);
 			}
@@ -285,7 +285,7 @@ void jamAssetHandlerLoadINI(JamAssetHandler *assetHandler, const char *filename,
 		}
 	}
 
-	jamFreeINI(ini);
+	jamINIFree(ini);
 }
 ///////////////////////////////////////////////////////////////
 
@@ -453,15 +453,15 @@ static void jamFreeAsset(JamAsset* asset) {
 	if (asset != NULL) {
 		// Now dump whatever asset is here
 		if (asset->type == at_Texture)
-			jamFreeTexture(asset->tex);
+			jamTextureFree(asset->tex);
 		else if (asset->type == at_Sprite)
-			jamFreeSprite(asset->spr, true, false);
+			jamSpriteFree(asset->spr, true, false);
 		else if (asset->type == at_Hitbox)
-			jamFreeHitbox(asset->hitbox);
+			jamHitboxFree(asset->hitbox);
 		else if (asset->type == at_Entity)
 			jamEntityFree(asset->entity, false, false, false);
 		else if (asset->type == at_World)
-			jamFreeWorld(asset->world);
+			jamWorldFree(asset->world);
 		else if (asset->type == at_AudioBuffer)
 			jamAudioFreeBuffer(asset->buffer);
 		free(asset->name);

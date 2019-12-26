@@ -31,31 +31,31 @@ typedef struct {
 } JamTweeningState;
 
 /// \brief Sets all the values automatically
-void jamInitTween(JamTweeningState* state, float progressPerStep, double initialValue, double finalValue);
+void jamTweenInit(JamTweeningState *state, float progressPerStep, double initialValue, double finalValue);
 
 /// \brief Updates a tweening state using a positive-slope linear graph
 /// \return The current value the tween is at in the animation
 ///
 /// Once a tweening animation is finished, this will continually return final value
-double jamUpdateTweenLinear(JamTweeningState* state);
+double jamTweenUpdateLinear(JamTweeningState *state);
 
 /// \brief Updates a tweening state using a parabolic curve for a smooth finish
 /// \return The current value the tween is at in the animation
 ///
 /// Once a tweening animation is finished, this will continually return final value
-double jamUpdateTweenParabolic(JamTweeningState* state);
+double jamTweenUpdateParabolic(JamTweeningState *state);
 
 /// \brief Updates a tweening state using a parabolic curve with a jump over 1 before reaching 1 for some "punch"
 /// \return The current value the tween is at in the animation
 ///
 /// Once a tweening animation is finished, this will continually return final value
-double jamUpdateTweenParabolicJump(JamTweeningState* state);
+double jamTweenUpdateParabolicJump(JamTweeningState *state);
 
 /// \brief Swaps the initial and final state then inverses the progress
-void jamReverseTween(JamTweeningState* state);
+void jamTweenReverse(JamTweeningState *state);
 
 /// \brief This essentially just says if progress is at 1 or not, made into a function for clarity in code
-bool jamIsTweenFinished(JamTweeningState* state);
+bool jamTweenFinished(JamTweeningState *state);
 
 #ifdef __cplusplus
 }

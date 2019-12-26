@@ -24,7 +24,7 @@ typedef struct {
 
 /// \brief Creates a new INI struct
 /// \throws ERROR_ALLOC_FAILED
-JamINI* jamCreateINI();
+JamINI* jamINICreate();
 
 /// \brief Loads an INI from a file
 ///
@@ -40,7 +40,7 @@ JamINI* jamCreateINI();
 ///
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OPEN_FAILED
-JamINI* jamLoadINI(const char *filename);
+JamINI* jamINILoad(const char *filename);
 
 /// \brief This will print the INI file to a stream
 ///
@@ -52,29 +52,19 @@ JamINI* jamLoadINI(const char *filename);
 /// to stdout/stderr/whatever.
 ///
 /// \throws ERROR_NULL_POINTER
-void jamOutputINI(JamINI *ini, FILE *stream);
+void jamINIOutput(JamINI *ini, FILE *stream);
 
 /// \brief Set a key in an INI
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_NULL_POINTER
-void jamSetKeyINI(JamINI *ini, const char *header, const char *key, char *val);
+void jamINISetKey(JamINI *ini, const char *header, const char *key, char *val);
 
 /// \brief Gets a key from an INI
 /// \throws ERROR_NULL_POINTER
-char* jamGetKeyINI(JamINI *ini, const char *header, const char *key, char *def);
-
-/// \brief Puts something to the garbage pile to be freed on destruction
-///
-/// Don't use this function yourself unless you specifically
-/// want your string destroyed at precisely the time the ini
-/// will be.
-///
-/// \throws ERROR_NULL_POINTER
-/// \throws ERROR_REALLOC_FAILED
-void jamThrowInGarbageINI(JamINI *ini, char *string);
+char* jamINIGetKey(JamINI *ini, const char *header, const char *key, char *def);
 
 /// \brief Destroys an INI and all memory it allocated
-void jamFreeINI(JamINI *ini);
+void jamINIFree(JamINI *ini);
 
 #ifdef __cplusplus
 }

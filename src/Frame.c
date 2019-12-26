@@ -10,7 +10,7 @@
 #include <JamError.h>
 
 //////////////////////////////////////////////////////////////
-JamFrame* jamCreateFrame(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h) {
+JamFrame* jamFrameCreate(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h) {
 	JamFrame* frame = (JamFrame*)malloc(sizeof(JamFrame));
 
 	// Check for its validity
@@ -21,7 +21,7 @@ JamFrame* jamCreateFrame(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h
 		frame->w = w;
 		frame->h = h;
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Could not allocate frame. (jamCreateFrame)");
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate frame. (jamFrameCreate)");
 	}
 
 	return frame;
@@ -39,10 +39,10 @@ void jamDrawFrame(JamFrame *frame, sint32 x, sint32 y) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamFreeFrame(JamFrame *frame, bool destroyTexture) {
+void jamFrameFree(JamFrame *frame, bool destroyTexture) {
 	if (frame != NULL) {
 		if (destroyTexture) {
-			jamFreeTexture(frame->tex);
+			jamTextureFree(frame->tex);
 		}
 		free(frame);
 	}

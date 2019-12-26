@@ -5,7 +5,7 @@ screen at once without crazy headaches over managing the entities or memory.
 Worlds have a couple key features
 
  + Entities are automatically sorted into two categories: type and range (although there is still a list of every entity)
- + jamFilterEntitiesByProximity will automatically sort entities into in-range and out-of-range categories
+ + jamWorldFilter will automatically sort entities into in-range and out-of-range categories
  + Integrated `JamBehaviourMap` support (or more precisely `JamBehaviour` support)
  + Automatic memory management for all entities in the world
  + An array to store tile maps relevant to the world in
@@ -28,7 +28,7 @@ a world to look like
     // the asset handler (and its associated sprites/whatever) will be freed by the handler.
 
 That would, however, take quite a bit of time to write out each entity by hand like that so
-instead you can just load worlds from .tmx files using `jamLoadWorldFromTMX` Using Tiled to
+instead you can just load worlds from .tmx files using `jamTMXLoadWorld` Using Tiled to
 create worlds can make the level-building process much quicker, but using Tiled comes
 with a few caveats to be aware of due to the limitations of JamEngine
 

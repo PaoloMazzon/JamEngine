@@ -19,7 +19,7 @@ typedef struct {
 /// \brief Creates a polygon
 ///
 /// \throws ERROR_ALLOC_FAILED
-JamPolygon* jamCreatePolygon(unsigned int vertices);
+JamPolygon* jamPolygonCreate(unsigned int vertices);
 
 /// \brief Loads a polygon from a specifically formatted string
 ///
@@ -27,16 +27,16 @@ JamPolygon* jamCreatePolygon(unsigned int vertices);
 /// There must not be a trailing slash.
 ///
 /// \throws ERROR_ALLOC_FAILED
-JamPolygon* jamLoadPolygon(const char* string);
+JamPolygon* jamPolygonLoad(const char *string);
 
 /// \brief Adds a vertex to a polygon (appending it)
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_REALLOC_FAILED
-void jamAddVertexToPolygon(JamPolygon *poly, double x, double y);
+void jamPolygonAddVertex(JamPolygon *poly, double x, double y);
 
 /// \brief Frees a polygon from memory
-void jamFreePolygon(JamPolygon *poly);
+void jamPolygonFree(JamPolygon *poly);
 
 /// \brief Checks the distance between two points
 double pointDistance(double x1, double y1, double x2, double y2);

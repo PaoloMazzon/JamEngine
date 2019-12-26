@@ -15,12 +15,12 @@
 static JamRenderer* gRenderer;
 
 /////////////////////////////////////////////////////////////
-void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 h, double framerate) {
+void jamRendererInit(int *argc, char **argv, const char *name, uint32 w, uint32 h, double framerate) {
 	SDL_Renderer* sdlRenderer;
 	SDL_Window* window;
 	JamTexture* tex;
 	gRenderer = (JamRenderer*)malloc(sizeof(JamRenderer));
-	jamInitInput();
+	jamInputInit();
 	jamAudioInit(argc, argv);
 
 	// Check if we were given a dud
@@ -45,7 +45,7 @@ void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 
 			// Once again, check for a dud
 			if (sdlRenderer != NULL) {
 				// Last piece - create the internal texture to draw to
-				tex = jamCreateTexture(w, h);
+				tex = jamTextureCreate(w, h);
 
 				// More dud checks
 				if (tex != NULL) {
@@ -72,18 +72,18 @@ void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 
 				} else {
 					jamRendererQuit();
 					gRenderer = NULL;
-					jamFreeTexture(tex);
-					jSetError(ERROR_SDL_ERROR, "Failed to create internal texture (jamInitRenderer). SDL Error: %s\n", SDL_GetError());
+					jamTextureFree(tex);
+					jSetError(ERROR_SDL_ERROR, "Failed to create internal texture (jamRendererInit). SDL Error: %s\n", SDL_GetError());
 				}
 			} else {
 				jamRendererQuit();
 				gRenderer = NULL;
-				jSetError(ERROR_SDL_ERROR, "Failed to create SDL gRenderer (jamInitRenderer). SDL Error: %s\n", SDL_GetError());
+				jSetError(ERROR_SDL_ERROR, "Failed to create SDL gRenderer (jamRendererInit). SDL Error: %s\n", SDL_GetError());
 			}
 		} else {
 			jamRendererQuit();
 			gRenderer = NULL;
-			jSetError(ERROR_SDL_ERROR, "Failed to create SDL window (jamInitRenderer). SDL Error: %s\n", SDL_GetError());
+			jSetError(ERROR_SDL_ERROR, "Failed to create SDL window (jamRendererInit). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
 		free(gRenderer);
@@ -159,7 +159,7 @@ double jamRendererGetFramerate() {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool jamResetRenderer(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen) {
+bool jamRendererReset(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen) {
 	SDL_DisplayMode mode;
 	bool pass = false;
 	int w, h;
@@ -186,7 +186,7 @@ bool jamResetRenderer(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen)
 				// Check for errors
 				if (gRenderer->screenBuffer == NULL) {
 					jSetError(ERROR_SDL_ERROR,
-							  "Failed to create screen buffer in fullscreen (jamResetRenderer). SDL Error: %s\n",
+							  "Failed to create screen buffer in fullscreen (jamRendererReset). SDL Error: %s\n",
 							  SDL_GetError());
 				} else {
 					pass = true;
@@ -202,13 +202,13 @@ bool jamResetRenderer(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen)
 
 			// Check for errors
 			if (gRenderer->screenBuffer == NULL) {
-				jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (jamResetRenderer). SDL Error: %s\n", SDL_GetError());
+				jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (jamRendererReset). SDL Error: %s\n", SDL_GetError());
 			} else {
 				pass = true;
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamProcEvents)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererProcEvents)");
 	}
 
 	return pass;
@@ -216,7 +216,7 @@ bool jamResetRenderer(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen)
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamIntegerMaximizeScreenBuffer() {
+void jamRendererIntegerScale() {
 	int w, h;
 	uint32 scale = 1;
 
@@ -238,7 +238,7 @@ void jamIntegerMaximizeScreenBuffer() {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamSetVSync(bool vsync) {
+void jamRendererSetVSync(bool vsync) {
 	if (gRenderer != NULL) {
 		if (vsync)
 			SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
@@ -251,7 +251,7 @@ void jamSetVSync(bool vsync) {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamSetAA(bool aa) {
+void jamRendererSetAA(bool aa) {
 	if (gRenderer != NULL) {
 		if (aa)
 			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
@@ -264,7 +264,7 @@ void jamSetAA(bool aa) {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamSetWindowTitle(const char *name) {
+void jamRendererSetTitle(const char *name) {
 	if (gRenderer != NULL) {
 		SDL_SetWindowTitle(gRenderer->gameWindow, name);
 	} else {
@@ -274,7 +274,7 @@ void jamSetWindowTitle(const char *name) {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamSetFramerate(double framerate) {
+void jamRendererSetFramerate(double framerate) {
 	if (gRenderer != NULL) {
 		if (framerate != 0) {
 			gRenderer->timePerFrame = 1000000000 / (uint64_t) framerate;
@@ -304,7 +304,7 @@ bool jamRendererTargetIsScreenBuffer() {
 /////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamCalculateForCamera(int *x, int *y) {
+void jamRendererCalculateForCamera(int *x, int *y) {
 	if (jamRendererTargetIsScreenBuffer()) {
 		*x -= roundf(gRenderer->cameraX);
 		*y -= roundf(gRenderer->cameraY);
@@ -315,8 +315,8 @@ void jamCalculateForCamera(int *x, int *y) {
 /////////////////////////////////////////////////////////////
 void jamRendererQuit() {
 	if (gRenderer != NULL) {
-		jamFreeTexture(gRenderer->screenBuffer);
-		jamQuitInput();
+		jamTextureFree(gRenderer->screenBuffer);
+		jamInputQuit();
 		jamAudioQuit();
 		SDL_DestroyRenderer(gRenderer->internalRenderer);
 		SDL_DestroyWindow(gRenderer->gameWindow);
@@ -327,7 +327,7 @@ void jamRendererQuit() {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool jamProcEvents() {
+bool jamRendererProcEvents() {
 	SDL_Event event;
 	bool ret = true;
 	int wW = 0;
@@ -336,7 +336,7 @@ bool jamProcEvents() {
 	if (gRenderer != NULL) {
 		// Update input
 		SDL_GetWindowSize(gRenderer->gameWindow, &wW, NULL);
-		jamUpdateInput((double) wW / gRenderer->screenBuffer->w);
+		jamInputUpdate((double) wW / gRenderer->screenBuffer->w);
 
 		// Update the events queue and keyboard and etc you get the point
 		SDL_PumpEvents();
@@ -346,7 +346,7 @@ bool jamProcEvents() {
 				ret = false;
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamProcEvents)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererProcEvents)");
 	}
 
 	return ret;
@@ -354,7 +354,7 @@ bool jamProcEvents() {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamSetRenderTarget(JamTexture *texture) {
+void jamRenderSetTarget(JamTexture *texture) {
 	// The preliminary check
 	if (gRenderer != NULL) {
 		if (texture == NULL) {
@@ -365,14 +365,14 @@ void jamSetRenderTarget(JamTexture *texture) {
 			SDL_SetRenderTarget(gRenderer->internalRenderer, texture->tex);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamSetRenderTarget)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRenderSetTarget)");
 	}
 }
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool jamConfigScreenBuffer(uint32 internalWidth, uint32 internalHeight, uint32 displayWidth,
-						   uint32 displayHeight) {
+bool jamRendererConfig(uint32 internalWidth, uint32 internalHeight, uint32 displayWidth,
+					   uint32 displayHeight) {
 	bool pass = false;
 	JamTexture* tempTex;
 	int w, h;
@@ -380,7 +380,7 @@ bool jamConfigScreenBuffer(uint32 internalWidth, uint32 internalHeight, uint32 d
 	// Check for gRenderer
 	if (gRenderer != NULL) {
 		// Create the texture that will likely become the new screen buffer
-		tempTex = jamCreateTexture(internalWidth, internalHeight);
+		tempTex = jamTextureCreate(internalWidth, internalHeight);
 
 		// Check that it worked
 		if (tempTex != NULL) {
@@ -388,7 +388,7 @@ bool jamConfigScreenBuffer(uint32 internalWidth, uint32 internalHeight, uint32 d
 			SDL_GetWindowSize(gRenderer->gameWindow, &w, &h);
 
 			// Free the old one, then update values
-			jamFreeTexture(gRenderer->screenBuffer);
+			jamTextureFree(gRenderer->screenBuffer);
 
 			gRenderer->screenBuffer = tempTex;
 			gRenderer->displayBufferW = displayWidth;
@@ -396,10 +396,10 @@ bool jamConfigScreenBuffer(uint32 internalWidth, uint32 internalHeight, uint32 d
 			gRenderer->displayBufferX = (w - displayWidth) / 2;
 			gRenderer->displayBufferY = (h - displayHeight) / 2;
 		} else {
-			jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (jamConfigScreenBuffer).");
+			jSetError(ERROR_SDL_ERROR, "Failed to create screen buffer (jamRendererConfig).");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamConfigScreenBuffer)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererConfig)");
 	}
 
 	return pass;
@@ -407,7 +407,7 @@ bool jamConfigScreenBuffer(uint32 internalWidth, uint32 internalHeight, uint32 d
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamConvertCoords(int *x, int *y) {
+void jamRendererConvertCoords(int *x, int *y) {
 	SDL_DisplayMode mode;
 	double widthRatio, heightRatio;
 	int rX = *x;
@@ -425,7 +425,7 @@ void jamConvertCoords(int *x, int *y) {
 		*x = (int)(((double)rX - (double)gRenderer->displayBufferX) * widthRatio);
 		*y = (int)(((double)rY - (double)gRenderer->displayBufferY) * heightRatio);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamConvertCoords)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererConvertCoords)");
 	}
 }
 /////////////////////////////////////////////////////////////
@@ -443,7 +443,7 @@ double jamRendererGetDelta() {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamProcEndFrame() {
+void jamRendererProcEndFrame() {
 	SDL_Rect rect;
 	Uint8 r, g, b, a;
 
@@ -500,7 +500,7 @@ void jamProcEndFrame() {
 		// Update the last time
 		gRenderer->lastTime = ns();
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamProcEndFrame)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererProcEndFrame)");
 	}
 }
 /////////////////////////////////////////////////////////////

@@ -19,7 +19,7 @@ static void _updatePos(JamTweeningState* state) {
 }
 
 ////////////////////////////////////////////////////////////////////
-void jamInitTween(JamTweeningState* state, float progressPerStep, double initialValue, double finalValue) {
+void jamTweenInit(JamTweeningState *state, float progressPerStep, double initialValue, double finalValue) {
 	state->tempValue = 0;
 	state->progress = 0;
 	state->progressPerStep = progressPerStep;
@@ -30,28 +30,28 @@ void jamInitTween(JamTweeningState* state, float progressPerStep, double initial
 ////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////
-double jamUpdateTweenLinear(JamTweeningState* state) {
+double jamTweenUpdateLinear(JamTweeningState *state) {
 	_updatePos(state);
 	return state->initialValue + (state->progress * (state->finalValue - state->initialValue));
 }
 ////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////
-double jamUpdateTweenParabolic(JamTweeningState* state) {
+double jamTweenUpdateParabolic(JamTweeningState *state) {
 	_updatePos(state);
 	return state->initialValue + ((-pow(state->progress - 1, 2) + 1) * (state->finalValue - state->initialValue));
 }
 ////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////
-double jamUpdateTweenParabolicJump(JamTweeningState* state) {
+double jamTweenUpdateParabolicJump(JamTweeningState *state) {
 	_updatePos(state);
 	return state->initialValue + ((1.168056 - (2.2222222 * pow(state->progress - 0.725, 2))) * (state->finalValue - state->initialValue));
 }
 ////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////
-void jamReverseTween(JamTweeningState* state) {
+void jamTweenReverse(JamTweeningState *state) {
 	double x;
 	if (state->progress == 1 || state->progress == 0) {
 		x = state->initialValue;
@@ -76,7 +76,7 @@ void jamReverseTween(JamTweeningState* state) {
 ////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////
-bool jamIsTweenFinished(JamTweeningState* state) {
+bool jamTweenFinished(JamTweeningState *state) {
 	return state->progress == 1;
 }
 ////////////////////////////////////////////////////////////////////

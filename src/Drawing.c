@@ -33,7 +33,7 @@ void jamDrawGetColour(uint8 *r, uint8 *g, uint8 *b, uint8 *a) {
 //////////////////////////////////////////////////////////////
 void jamDrawRectangle(int x, int y, int w, int h) {
 	SDL_Rect rectangle;
-	jamCalculateForCamera(&x, &y);
+	jamRendererCalculateForCamera(&x, &y);
 
 	// Very simple, just check for jamRendererGetInternalRenderer() then draw the rectangle
 	if (jamRendererGetInternalRenderer() != NULL) {
@@ -51,7 +51,7 @@ void jamDrawRectangle(int x, int y, int w, int h) {
 //////////////////////////////////////////////////////////////
 void jamDrawRectangleFilled(int x, int y, int w, int h) {
 	SDL_Rect rectangle;
-	jamCalculateForCamera(&x, &y);
+	jamRendererCalculateForCamera(&x, &y);
 
 	// Very simple, just check for jamRendererGetInternalRenderer() then draw the rectangle
 	if (jamRendererGetInternalRenderer() != NULL) {
@@ -118,7 +118,7 @@ void jamDrawFillColour(uint8 r, uint8 g, uint8 b, uint8 a) {
 //////////////////////////////////////////////////////////////
 void jamDrawTexture(JamTexture *texture, sint32 x, sint32 y) {
 	SDL_Rect dest;
-	jamCalculateForCamera(&x, &y);
+	jamRendererCalculateForCamera(&x, &y);
 
 	// Check for both pieces
 	if (jamRendererGetInternalRenderer() != NULL && texture != NULL) {
@@ -148,7 +148,7 @@ void jamDrawTileMap(JamTileMap *map, int x, int y, uint32 xInMapStart, uint32 yI
 
 		for (i = yInMapStart; i <= yInMapFinish; i++) {
 			for (j = xInMapStart; j <= xInMapFinish; j++) {
-				val = jamGetMapPos(map, (uint16) j, (uint16) i);
+				val = jamTileMapGet(map, (uint16) j, (uint16) i);
 				if (val != NULL)
 					jamDrawFrame(val, x, y);
 				x += map->cellWidth;
@@ -172,7 +172,7 @@ void jamDrawTextureExt(JamTexture *texture, sint32 x, sint32 y, sint32 originX, 
 	SDL_Point origin;
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 	Uint8 previousAlpha;
-	jamCalculateForCamera(&x, &y);
+	jamRendererCalculateForCamera(&x, &y);
 
 	// Check for both pieces
 	if (jamRendererGetInternalRenderer() != NULL && texture != NULL) {
@@ -217,7 +217,7 @@ void jamDrawTexturePart(JamTexture *texture, sint32 x, sint32 y, sint32 texX, si
 						sint32 texW, sint32 texH) {
 	SDL_Rect dest;
 	SDL_Rect src;
-	jamCalculateForCamera(&x, &y);
+	jamRendererCalculateForCamera(&x, &y);
 
 	// Check for both pieces
 	if (jamRendererGetInternalRenderer() != NULL && texture != NULL) {
@@ -248,7 +248,7 @@ void jamDrawTexturePartExt(JamTexture *texture, sint32 x, sint32 y, sint32 origi
 	SDL_Point origin;
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 	Uint8 previousAlpha;
-	jamCalculateForCamera(&x, &y);
+	jamRendererCalculateForCamera(&x, &y);
 
 	// Check for both pieces
 	if (jamRendererGetInternalRenderer() != NULL && texture != NULL) {

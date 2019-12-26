@@ -14,14 +14,14 @@ animation that comes from an infinite number of different textures, several
 textures each with a couple frames a piece, or most commonly many frames using
 only a single texture with different regions for each frame. You could sprites
 for anything from rendering a character's many-frame animation to a tileset used
-to render the game world (as is the case with `jamAutoTileMap`).
+to render the game world (as is the case with `jamTileMapAuto`).
 
 Other than manually setting up the arrays in the sprite, you have three JamEngine
 things to help you with loading sprites
 
- + `jamSpriteAppendFrame` will append a frame to a sprite (see `jamCreateFrame`)
- + `jamLoadSpriteFromSheet` is used to load an animation from a single texture
- + Use a JamAssetHandler (although it only supports `jamLoadSpriteFromSheet` for loading, but streamlines the process)
+ + `jamSpriteAppendFrame` will append a frame to a sprite (see `jamFrameCreate`)
+ + `jamSpriteLoadFromSheet` is used to load an animation from a single texture
+ + Use a JamAssetHandler (although it only supports `jamSpriteLoadFromSheet` for loading, but streamlines the process)
 
 Tweening
 --------

@@ -24,37 +24,28 @@ typedef struct {
 
 /// \brief Creates an empty map
 /// \throws ERROR_ALLOC_FAILED
-JamStringMap* jamCreateStringMap();
+JamStringMap* jamStringMapCreate();
 
 /// \brief Loads a map from an smap file
 /// \throws ERROR_OPEN_FAILED
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_INCORRECT_FORMAT
-JamStringMap* jamLoadStringMap(const char *filename);
+JamStringMap* jamStringMapLoad(const char *filename);
 
 /// \brief Prints the map in INI format to the given stream
 /// \throws ERROR_NULL_POINTER
-void jamOutputStringMap(JamStringMap *smap, FILE *stream);
+void jamStringMapOutput(JamStringMap *smap, FILE *stream);
 
 /// \brief Sets a value to a key in a map
 /// \throws ERROR_NULL_POINTER
-void jamSetStringMapVal(JamStringMap *smap, const char *key, char *val);
+void jamStringMapSet(JamStringMap *smap, const char *key, char *val);
 
 /// \brief Gets a value from a map
 /// \throws ERROR_NULL_POINTER
-const char* jamGetStringMapVal(JamStringMap *smap, const char *key, char *def);
-
-/// \brief Throws a string into the garbage
-///
-/// Do this for strings you're using in this thing that are dynamically
-/// allocated so freeSMap can take care of them.
-///
-/// \throws ERROR_REALLOC_FAILED
-/// \throws ERROR_NULL_POINTER
-void jamThrowInGarbageStringMap(JamStringMap *smap, char *garbage);
+const char* jamStringMapGet(JamStringMap *smap, const char *key, char *def);
 
 /// \brief Frees the map
-void jamFreeStringMap(JamStringMap *smap);
+void jamStringMapFree(JamStringMap *smap);
 
 #ifdef __cplusplus
 }

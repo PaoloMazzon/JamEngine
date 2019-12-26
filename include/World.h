@@ -80,15 +80,15 @@ typedef struct _JamWorld {
 
 /// \brief Creates a world to work with
 /// \throws ERROR_ALLOC_FAILED
-JamWorld* jamCreateWorld();
+JamWorld* jamWorldCreate();
 
 /// \brief Sets up a rectangular filter in a world
 /// \throws ERROR_NULL_POINTER
-void jamSetWorldFilterTypeRectangle(JamWorld *world, uint16 inRangeRectangleWidth, uint16 inRangeRectangleHeight);
+void jamWorldSetFilterTypeRectangle(JamWorld *world, uint16 inRangeRectangleWidth, uint16 inRangeRectangleHeight);
 
 /// \brief Sets up a circular filter in a world
 /// \throws ERROR_NULL_POINTER
-void jamSetWorldFilterTypeCircle(JamWorld *world, uint16 inRangeRadius);
+void jamWorldSetFilterTypeCircle(JamWorld *world, uint16 inRangeRadius);
 
 /// \brief Adds an entity to the world
 ///
@@ -102,7 +102,7 @@ void jamWorldAddEntity(JamWorld *world, JamEntity *entity);
 /// \brief Finds an entity in the world using its ID
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_OUT_OF_BOUNDS
-JamEntity* jamFindEntityFromID(JamWorld* world, int id);
+JamEntity* jamWorldFindEntity(JamWorld *world, int id);
 
 /// \brief Processes and draws the entities in the world
 ///
@@ -142,7 +142,7 @@ void jamWorldRemoveEntity(JamWorld *world, int id);
 ///
 /// \warning This function is very heavy on the CPU
 /// \throws ERROR_NULL_POINTER
-void jamFilterEntitiesByProximity(JamWorld *world, int pointX, int pointY);
+void jamWorldFilter(JamWorld *world, int pointX, int pointY);
 
 /// \brief Frees a world
 ///
@@ -150,7 +150,7 @@ void jamFilterEntitiesByProximity(JamWorld *world, int pointX, int pointY);
 /// it holds and things that createWorld allocated itself. This is because
 /// tile maps are typically handled by an asset handler where as entities
 /// in a world should be copies of entities from an asset handler.
-void jamFreeWorld(JamWorld *world);
+void jamWorldFree(JamWorld *world);
 
 #ifdef __cplusplus
 }

@@ -68,7 +68,7 @@ typedef struct {
 ///
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_ALLOC_FAILED
-void jamInitRenderer(int* argc, char** argv, const char *name, uint32 w, uint32 h, double framerate);
+void jamRendererInit(int *argc, char **argv, const char *name, uint32 w, uint32 h, double framerate);
 
 /// \brief Returns the internal renderer used by JamRenderer
 /// \throws ERROR_NULL_POINTER
@@ -122,7 +122,7 @@ double jamRendererGetDelta();
 ///
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
-bool jamResetRenderer(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen);
+bool jamRendererReset(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen);
 
 /// \brief Upscales your screen buffer as much as it can while retaining its aspect ratio and integer scaling
 ///
@@ -130,10 +130,10 @@ bool jamResetRenderer(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen)
 /// the maximum size it can be given the current window resolution
 ///
 /// \throws ERROR_NULL_POINTER
-void jamIntegerMaximizeScreenBuffer();
+void jamRendererIntegerScale();
 
 /// \brief Sets the title of the window for the renderer
-void jamSetWindowTitle(const char *name);
+void jamRendererSetTitle(const char *name);
 
 /// \brief Enables or disables anti-aliasing
 ///
@@ -141,7 +141,7 @@ void jamSetWindowTitle(const char *name);
 /// sure your platform does before turning it on (Most do).
 ///
 /// \throws ERROR_NULL_POINTER
-void jamSetAA(bool aa);
+void jamRendererSetAA(bool aa);
 
 /// \brief Enables or disables vertical synchronization
 ///
@@ -149,14 +149,14 @@ void jamSetAA(bool aa);
 /// screen tear at the cost of a bit of performance.
 ///
 /// \throws ERROR_NULL_POINTER
-void jamSetVSync(bool vsync);
+void jamRendererSetVSync(bool vsync);
 
 /// \brief Sets the renderer's framerate
 ///
 /// Set `framerate` to 0 to unlock the framerate.
 ///
 /// \throws ERROR_NULL_POINTER
-void jamSetFramerate(double framerate);
+void jamRendererSetFramerate(double framerate);
 
 /// \brief Checks if the render target is the screen buffer or not
 /// \throws ERROR_NULL_POINTER
@@ -167,17 +167,17 @@ bool jamRendererTargetIsScreenBuffer();
 /// If renderer is NULL, this function won't complain or anything,
 /// so you can throw this anywhere. This only changes the x and y
 /// if the renderer's render target is the screen.
-void jamCalculateForCamera(int *x, int *y);
+void jamRendererCalculateForCamera(int *x, int *y);
 
 /// \brief Sets the render target, or null for the screen
 /// \throws ERROR_NULL_POINTER
-void jamSetRenderTarget(JamTexture *texture);
+void jamRenderSetTarget(JamTexture *texture);
 
 /// \brief Updates the screen buffer. Returns false if this fails.
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_SDL_ERROR
-bool jamConfigScreenBuffer(uint32 internalWidth, uint32 internalHeight, uint32 displayWidth,
-						   uint32 displayHeight);
+bool jamRendererConfig(uint32 internalWidth, uint32 internalHeight, uint32 displayWidth,
+					   uint32 displayHeight);
 
 /// \brief Converts window coordinates to screen buffer coordinates
 ///
@@ -186,16 +186,16 @@ bool jamConfigScreenBuffer(uint32 internalWidth, uint32 internalHeight, uint32 d
 /// have some crazy shenanigans going on.
 ///
 /// \throws ERROR_NULL_POINTER
-void jamConvertCoords(int *x, int *y);
+void jamRendererConvertCoords(int *x, int *y);
 
 /// \brief Run this every frame at the start of the frame,
 ///  returns false if it's time to break the game loop
 /// \throws ERROR_NULL_POINTER
-bool jamProcEvents();
+bool jamRendererProcEvents();
 
 /// \brief Run this at the end of a frame to clock and render it
 /// \throws ERROR_NULL_POINTER
-void jamProcEndFrame();
+void jamRendererProcEndFrame();
 
 /// \brief Frees a renderer
 void jamRendererQuit();

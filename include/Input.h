@@ -141,7 +141,7 @@ typedef struct {
 
 /// \brief Creates an input struct for keeping track of user-input
 /// \throws ERROR_ALLOC_FAILED
-void jamInitInput();
+void jamInputInit();
 
 /// \brief Returns true if input was initialized properly or false otherwise
 bool jamInputIsInitialized();
@@ -152,7 +152,7 @@ bool jamInputIsInitialized();
 /// input class given to rendererProcEvents for input to work properly
 ///
 /// \throws ERROR_NULL_POINTER
-void jamUpdateInput(double screenMultiplier);
+void jamInputUpdate(double screenMultiplier);
 
 /// \brief Checks if a key is currently pressed
 /// \throws ERROR_OUT_OF_BOUNDS
@@ -190,7 +190,7 @@ bool jamInputCheckMouseButtonPressed(uint8 button);
 bool jamInputCheckMouseButtonReleased(uint8 button);
 
 /// \brief Clears an Input from memory
-void jamQuitInput();
+void jamInputQuit();
 
 #ifdef __cplusplus
 }

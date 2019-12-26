@@ -14,7 +14,7 @@ world and removed respectively. onFrame is called each frame by the world when y
 is called, and onDraw is a bit more tricky. If onDraw is a null pointer, the world will just draw
 the entity as normal, but if onDraw is not null, the world will not draw the entity at all and that
 responsibility then falls to the function. This allows you to render certain entities differently
-than other without wasting time rendering the entity via `jamEntityDraw`.
+than other without wasting time rendering the entity via `jamDrawEntity`.
 
 The function pointers that behaviour maps expect should be as follows
 
@@ -36,6 +36,6 @@ As a simple example,
 	jamAssetHandlerLoadINI(handler, renderer, "assets/level0.ini", bMap);
 	
 	// Now we load a world from a tmx file and when we do, all of the assets' onCreate will be called
-	JamWorld* gameWorld = jamLoadWorldFromTMX(handler, renderer, "assets/level0.tmx");
+	JamWorld* gameWorld = jamTMXLoadWorld(handler, renderer, "assets/level0.tmx");
 
 TMX loading is covered in the JamWorld documentation.

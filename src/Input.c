@@ -11,7 +11,7 @@
 static JamInput* gInputPointer;
 
 //////////////////////////////////////////////////////////////
-void jamInitInput() {
+void jamInputInit() {
 	gInputPointer = (JamInput*)malloc(sizeof(JamInput));
 
 	// Double check, of course
@@ -41,7 +41,7 @@ bool jamInputIsInitialized() {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamUpdateInput(double screenMultiplier) {
+void jamInputUpdate(double screenMultiplier) {
 	int i;
 
 	// Check that the gInputPointer exists
@@ -189,7 +189,7 @@ bool jamInputCheckMouseButtonReleased(uint8 button) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamQuitInput() {
+void jamInputQuit() {
 	if (gInputPointer != NULL) {
 		free(gInputPointer->previousInput);
 		free(gInputPointer);

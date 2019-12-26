@@ -36,18 +36,22 @@ typedef struct {
 /// hitbox (It will be freed by the hitbox).
 ///
 /// \throws ERROR_ALLOC_FAILED
-JamHitbox* jamCreateHitbox(JamHitboxType type, double radius, double width, double height, JamPolygon *polygon);
+JamHitbox* jamHitboxCreate(JamHitboxType type, double radius, double width, double height, JamPolygon *polygon);
 
 /// \brief Checks for a collision between any two convex polygons
 /// \throws ERROR_NULL_POINTER
-bool jamCheckConvexPolygonCollision(JamPolygon *poly1, JamPolygon *poly2, double x1, double y1, double x2, double y2);
+bool jamHitboxPolygonCollision(JamPolygon *poly1, JamPolygon *poly2, double x1, double y1, double x2, double y2);
 
 /// \brief Checks for a collision between two hitboxes
+///
+/// This function accounts for any two combination of hitboxes, you can pass in
+/// a convex polygon and rectangle, rectangle and circle, etc...
+///
 /// \throws ERROR_NULL_POINTER
-bool jamCheckHitboxCollision(JamHitbox *hitbox1, double x1, double y1, JamHitbox *hitbox2, double x2, double y2);
+bool jamHitboxCollision(JamHitbox *hitbox1, double x1, double y1, JamHitbox *hitbox2, double x2, double y2);
 
 /// \brief Clears a hitbox from memory
-void jamFreeHitbox(JamHitbox *hitbox);
+void jamHitboxFree(JamHitbox *hitbox);
 
 #ifdef __cplusplus
 }

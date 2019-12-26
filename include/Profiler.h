@@ -4,7 +4,7 @@
 #include "Constants.h"
 
 /// \brief Starts a performance profile
-uint64 jamStartProfile();
+uint64 jamProfileStart();
 
 /// \brief Calculates the average amount of time over x iterations in seconds
-double jamGetProfileTimeSeconds(uint64 profile, double iterations);
+double jamProfileGetSeconds(uint64 profile, double iterations);

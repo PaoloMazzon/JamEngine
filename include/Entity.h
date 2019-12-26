@@ -60,7 +60,7 @@ JamEntity* jamEntityCopy(JamEntity *baseEntity, double x, double y);
 
 /// \brief Draws an entity
 /// \throws ERROR_NULL_POINTER
-void jamEntityDraw(JamEntity *entity);
+void jamDrawEntity(JamEntity *entity);
 
 /// \brief Checks if two entities are colliding with one another
 ///

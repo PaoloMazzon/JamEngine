@@ -15,7 +15,7 @@
 #include <Frame.h>
 
 ///////////////////////////////////////////////////
-JamSprite* jamCreateSprite(uint32 animationLength, uint16 frameDelay, bool looping) {
+JamSprite* jamSpriteCreate(uint32 animationLength, uint16 frameDelay, bool looping) {
 	JamSprite* sprite = (JamSprite*)malloc(sizeof(JamSprite));
 	JamFrame** list = (JamFrame**)calloc(sizeof(JamFrame*), animationLength);
 
@@ -35,11 +35,11 @@ JamSprite* jamCreateSprite(uint32 animationLength, uint16 frameDelay, bool loopi
 		// Check if list is a dud and shouldn't be
 		if (list == NULL && animationLength > 0) {
 			free(sprite);
-			jSetError(ERROR_ALLOC_FAILED, "Could not allocate list. (jamCreateSprite).\n Animation Length: %i\n", animationLength);
+			jSetError(ERROR_ALLOC_FAILED, "Could not allocate list. (jamSpriteCreate).\n Animation Length: %i\n", animationLength);
 			sprite = NULL;
 		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Could not allocate sprite. (jamCreateSprite)");
+		jSetError(ERROR_ALLOC_FAILED, "Could not allocate sprite. (jamSpriteCreate)");
 		free(list);
 	}
 
@@ -84,7 +84,7 @@ void jamSpriteAppendFrame(JamSprite *sprite, JamFrame *frame) {
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-JamSprite* jamLoadSpriteFromSheet(JamTexture *spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet,
+JamSprite* jamSpriteLoadFromSheet(JamTexture *spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet,
 								  uint32 cellW, uint32 cellH, uint32 paddingW, uint32 paddingH, uint32 xAlign,
 								  uint16 frameDelay, bool looping) {
 	JamSprite* sprite;
@@ -93,7 +93,7 @@ JamSprite* jamLoadSpriteFromSheet(JamTexture *spriteSheet, uint32 cellCount, uin
 	bool failedGrab = false;      // This is for later when check if we got all frames successfully
 
 	// Create a sprite for the sheet
-	sprite = jamCreateSprite(cellCount, frameDelay, looping);
+	sprite = jamSpriteCreate(cellCount, frameDelay, looping);
 
 	// Check that the sprite and texture creation was successful
 	if (sprite != NULL && spriteSheet != NULL) {
@@ -104,7 +104,7 @@ JamSprite* jamLoadSpriteFromSheet(JamTexture *spriteSheet, uint32 cellCount, uin
 		// Loop until we have all frames or run out of room in texture
 		while (continueGrabbing) {
 			// Grab the current frame
-			sprite->frames[currentFrame] = jamCreateFrame(spriteSheet, xInSheet, yInSheet, cellW, cellH);
+			sprite->frames[currentFrame] = jamFrameCreate(spriteSheet, xInSheet, yInSheet, cellW, cellH);
 
 			// Move the pointer to the next frame
 			xInSheet += cellW + paddingW;
@@ -130,18 +130,18 @@ JamSprite* jamLoadSpriteFromSheet(JamTexture *spriteSheet, uint32 cellCount, uin
 
 		// Stop the whole ordeal if a frame could not be grabbed
 		if (failedGrab) {
-			jSetError(ERROR_SDL_ERROR, "Failed to load all frames (jamLoadSpriteFromSheet). SDL Error: %s\n", SDL_GetError());
-			jamFreeSprite(sprite, true, false);
+			jSetError(ERROR_SDL_ERROR, "Failed to load all frames (jamSpriteLoadFromSheet). SDL Error: %s\n", SDL_GetError());
+			jamSpriteFree(sprite, true, false);
 			sprite = NULL;
 		}
 	} else {
 		if (sprite == NULL) {
-			jSetError(ERROR_SDL_ERROR, "Failed to create the sprite (jamLoadSpriteFromSheet)");
+			jSetError(ERROR_SDL_ERROR, "Failed to create the sprite (jamSpriteLoadFromSheet)");
 		}
 		if (spriteSheet == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamTexture does not exist (jamLoadSpriteFromSheet)");
+			jSetError(ERROR_NULL_POINTER, "JamTexture does not exist (jamSpriteLoadFromSheet)");
 		}
-		jamFreeSprite(sprite, true, false);
+		jamSpriteFree(sprite, true, false);
 		sprite = NULL;
 	}
 
@@ -150,7 +150,7 @@ JamSprite* jamLoadSpriteFromSheet(JamTexture *spriteSheet, uint32 cellCount, uin
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void jamUpdateSprite(JamSprite *sprite) {
+void jamSpriteUpdate(JamSprite *sprite) {
 	if (sprite != NULL) {
 		// No need to do anything if only 1 frame
 		if (sprite->animationLength > 1) {
@@ -178,7 +178,7 @@ void jamUpdateSprite(JamSprite *sprite) {
 			}
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamUpdateSprite)");
+		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamSpriteUpdate)");
 	}
 }
 ///////////////////////////////////////////////////
@@ -189,7 +189,7 @@ void jamDrawSprite(JamSprite *sprite, sint32 x, sint32 y, float scaleX, float sc
 	if (sprite != NULL) {
 		// Update the sprite if that is to be done before drawing
 		if (updateOnDraw)
-			jamUpdateSprite(sprite);
+			jamSpriteUpdate(sprite);
 
 		// Draw it to the screen with all the crazy parameters
 		jamDrawTexturePartExt(sprite->frames[sprite->currentFrame]->tex,
@@ -242,12 +242,12 @@ void jamDrawSpriteFrame(JamSprite *sprite, sint32 x, sint32 y, float scaleX, flo
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void jamFreeSprite(JamSprite *sprite, bool freeFrames, bool freeTextures) {
+void jamSpriteFree(JamSprite *sprite, bool freeFrames, bool freeTextures) {
 	int i;
 	if (sprite != NULL) {
 		if (freeFrames) {
 			for (i = 0; i < sprite->animationLength; i++)
-				jamFreeFrame(sprite->frames[i], freeTextures);
+				jamFrameFree(sprite->frames[i], freeTextures);
 		}
 		// Either way the frames list has to go
 		free(sprite->frames);

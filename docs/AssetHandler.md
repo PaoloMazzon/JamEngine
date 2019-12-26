@@ -29,7 +29,7 @@ And here is a list of recognized keys for every asset type
    + `hitbox_offset_y` Default hitbox offset in the y direction (default=0)
    + `behaviour` The entity's behaviour to load from a `JamBehaviourMap` is the handler is given one (default="default")
    + `type` Type of entity this is (default="et_None") (types are Player, Item, Object, NPC, Solid, and Logic)
- + Sprites (the handler internally calls `jamLoadSpriteFromSheet` for every sprite) ***(prefix = 's')***
+ + Sprites (the handler internally calls `jamSpriteLoadFromSheet` for every sprite) ***(prefix = 's')***
    + `texture_id` JamTexture to pull the sprite's frames from (default=0 (NULL pointer))
    + `animation_length` How many frames need to be loaded from the sheet (default=1)
    + `x_in_texture` X in the texture the spritesheet starts (default=0)
@@ -50,7 +50,7 @@ And here is a list of recognized keys for every asset type
    + `radius` Radius of a circular hitbox (default=0)
    + `polygon` String to load a polygon from in the form of `x1,y1/x2,y2/...` (default="")
  + Worlds ***(prefix = 'w')***
-   + `file` The .tmx file to load the world from (The handler will call jamLoadWorldFromTMX internally)
+   + `file` The .tmx file to load the world from (The handler will call jamTMXLoadWorld internally)
    + `width` Width of the filter rectangle in the world
    + `height` Height of the filter rectangle in the world
    + `radius` Radius of the filter circle in the world, although rectangle settings take precedence if both are provided

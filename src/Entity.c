@@ -102,7 +102,7 @@ JamEntity* jamEntityCopy(JamEntity *baseEntity, double x, double y) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void jamEntityDraw(JamEntity *entity) {
+void jamDrawEntity(JamEntity *entity) {
 	if (entity != NULL) {
 		if (entity->sprite != NULL)
 			jamDrawSprite(
@@ -136,7 +136,7 @@ bool jamEntityCheckCollision(double x, double y, JamEntity *entity1, JamEntity *
 		y2 = _getEntHitY(entity2, entity2->y);
 		
 		// Now check the collision itself
-		coll = jamCheckHitboxCollision(entity1->hitbox, x1, y1, entity2->hitbox, x2, y2);
+		coll = jamHitboxCollision(entity1->hitbox, x1, y1, entity2->hitbox, x2, y2);
 	} else {
 		if (entity1 == NULL) {
 			jSetError(ERROR_NULL_POINTER, "entity1 does not exist");
@@ -169,7 +169,7 @@ bool jamEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx
 		y = _getEntHitY(entity, ry);
 
 		// Now check the collision itself
-		coll = jamCheckMapCollision(
+		coll = jamTileMapCollision(
 				tileMap,
 				_roundDoubleToInt(x),
 				_roundDoubleToInt(y),
@@ -219,7 +219,7 @@ void jamEntitySnapX(JamEntity *entity, JamTileMap *tilemap, int direction) {
 		// Find the first collision near the entity
 		while (!cornerColliding && gridChecks++ < MAX_GRID_CHECKS) {
 			for (i = gridY; i < gridY + cellsTall && !cornerColliding; i++) {
-				if (jamGetMapPos(tilemap, (uint32)gridX, (uint32)i) != NULL) {
+				if (jamTileMapGet(tilemap, (uint32) gridX, (uint32) i) != NULL) {
 					cornerColliding = true;
 				}
 			}
@@ -267,7 +267,7 @@ void jamEntitySnapY(JamEntity *entity, JamTileMap *tilemap, int direction) {
 		// Find the first collision near the entity
 		while (!cornerColliding && gridChecks++ < MAX_GRID_CHECKS) {
 			for (i = gridX; i < gridX + cellsWide && !cornerColliding; i++) {
-				if (jamGetMapPos(tilemap, (uint32)i, (uint32)gridY) != NULL) {
+				if (jamTileMapGet(tilemap, (uint32) i, (uint32) gridY) != NULL) {
 					cornerColliding = true;
 				}
 			}
@@ -296,9 +296,9 @@ void jamEntitySnapY(JamEntity *entity, JamTileMap *tilemap, int direction) {
 void jamEntityFree(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames) {
 	if (entity != NULL) {
 		if (destroyHitbox)
-			jamFreeHitbox(entity->hitbox);
+			jamHitboxFree(entity->hitbox);
 		if (destroySprite)
-			jamFreeSprite(entity->sprite, destroyFrames, false);
+			jamSpriteFree(entity->sprite, destroyFrames, false);
 		free(entity);
 	}
 }

@@ -11,7 +11,7 @@
 #include <Sprite.h>
 
 //////////////////////////////////////////////////////////
-JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
+JamTileMap* jamTileMapCreate(uint32 width, uint32 height, uint32 cellWidth, uint32 cellHeight) {
 	JamTileMap* map = (JamTileMap*)malloc(sizeof(JamTileMap));
 
 	// Check it worked
@@ -41,7 +41,7 @@ JamTileMap* jamCreateTileMap(uint32 width, uint32 height, uint32 cellWidth, uint
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame* val) {
+bool jamTileMapSet(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame *val) {
 	bool worked = false;
 
 	// Make sure the map is here
@@ -56,9 +56,9 @@ bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame* val) {
 		}
 	} else {
 		if (tileMap != NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamSetMapPos)");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamTileMapSet)");
 		else
-			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamSetMapPos)");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamTileMapSet)");
 	}
 
 	return worked;
@@ -66,7 +66,7 @@ bool jamSetMapPos(JamTileMap *tileMap, uint32 x, uint32 y, JamFrame* val) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-JamFrame* jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y) {
+JamFrame* jamTileMapGet(JamTileMap *tileMap, uint32 x, uint32 y) {
 	JamFrame* val = 0;
 
 	// Make sure the map is here
@@ -86,7 +86,7 @@ JamFrame* jamGetMapPos(JamTileMap *tileMap, uint32 x, uint32 y) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool jamCheckMapCollFast(JamTileMap *tileMap, int x, int y, int w, int h) {
+bool jamTileMapFastCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
 	bool coll = false;
 	int x1, y1, x2, y2;
 
@@ -107,9 +107,9 @@ bool jamCheckMapCollFast(JamTileMap *tileMap, int x, int y, int w, int h) {
 					(tileMap->grid[y2 * tileMap->width + x2] != NULL));
 	} else {
 		if (tileMap != NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamCheckMapCollFast)");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamTileMapFastCollision)");
 		else
-			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamCheckMapCollFast)");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamTileMapFastCollision)");
 	}
 
 	return coll;
@@ -117,7 +117,7 @@ bool jamCheckMapCollFast(JamTileMap *tileMap, int x, int y, int w, int h) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
+bool jamTileMapCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
 	// I have no idea why this is needed but it is so whatever
 	w--;
 	h--;
@@ -165,14 +165,14 @@ bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
 					coll = tileMap->grid[verticesY[i] * tileMap->width + verticesX[i]] != NULL;
 			}
 		} else {
-			jSetError(ERROR_OUT_OF_BOUNDS, "Rectangle  [%i, %i, %i, %i] requires too many vertices (jamCheckMapCollision)", x, y, w, h);
+			jSetError(ERROR_OUT_OF_BOUNDS, "Rectangle  [%i, %i, %i, %i] requires too many vertices (jamTileMapCollision)", x, y, w, h);
 		}
 
 	} else {
 		if (tileMap != NULL)
-			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamCheckMapCollision)");
+			jSetError(ERROR_NULL_POINTER, "Map does not exist (jamTileMapCollision)");
 		else
-			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamCheckMapCollision)");
+			jSetError(ERROR_NULL_POINTER, "Map grid does not exist (jamTileMapCollision)");
 	}
 
 	return coll;
@@ -180,7 +180,7 @@ bool jamCheckMapCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamAutoTileMap(JamTileMap *map, JamSprite *spr) {
+void jamTileMapAuto(JamTileMap *map, JamSprite *spr) {
 	uint32 i, j;
 	bool n, e, s, w, ne, nw, se, sw;
 	int frame;
@@ -191,16 +191,16 @@ void jamAutoTileMap(JamTileMap *map, JamSprite *spr) {
 		// We gotta run through every cell
 		for (i = 0; i < map->height; i++) {
 			for (j = 0; j < map->width; j++) {
-				if (jamGetMapPos(map, j, i) != NULL) {
+				if (jamTileMapGet(map, j, i) != NULL) {
 					// Where there are adjacent tiles
-					w = (jamGetMapPos(map, j - 1, i) != NULL);
-					e = (jamGetMapPos(map, j + 1, i) != NULL);
-					n = (jamGetMapPos(map, j, i - 1) != NULL);
-					s = (jamGetMapPos(map, j, i + 1) != NULL);
-					ne = (jamGetMapPos(map, j + 1, i - 1) != NULL);
-					nw = (jamGetMapPos(map, j - 1, i - 1) != NULL);
-					se = (jamGetMapPos(map, j + 1, i + 1) != NULL);
-					sw = (jamGetMapPos(map, j - 1, i + 1) != NULL);
+					w = (jamTileMapGet(map, j - 1, i) != NULL);
+					e = (jamTileMapGet(map, j + 1, i) != NULL);
+					n = (jamTileMapGet(map, j, i - 1) != NULL);
+					s = (jamTileMapGet(map, j, i + 1) != NULL);
+					ne = (jamTileMapGet(map, j + 1, i - 1) != NULL);
+					nw = (jamTileMapGet(map, j - 1, i - 1) != NULL);
+					se = (jamTileMapGet(map, j + 1, i + 1) != NULL);
+					sw = (jamTileMapGet(map, j - 1, i + 1) != NULL);
 
 					// Calculate the tile
 					if (!w && !e && !s && n/* && !nw && !ne && !se && !sw*/) {
@@ -299,7 +299,7 @@ void jamAutoTileMap(JamTileMap *map, JamSprite *spr) {
 						frame = 44;
 					}
 
-					jamSetMapPos(map, j, i, spr->frames[frame]);
+					jamTileMapSet(map, j, i, spr->frames[frame]);
 				}
 			}
 		}
@@ -315,7 +315,7 @@ void jamAutoTileMap(JamTileMap *map, JamSprite *spr) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-void jamFreeTileMap(JamTileMap *tileMap) {
+void jamTileMapFree(JamTileMap *tileMap) {
 	if (tileMap != NULL) {
 		free(tileMap->grid);
 		free(tileMap);

@@ -11,7 +11,7 @@
 JamAsset* createAsset(void*, enum JamAssetType);
 
 ///////////////////////////////////////////////////////////////////////////////
-// This function is meant for jamLoadWorldFromTMX and is not safe to call
+// This function is meant for jamTMXLoadWorld and is not safe to call
 bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_layer* layer) {
 	JamEntity* tempEntity;
 	tmx_object* currentObject = layer->content.objgr->head;
@@ -53,9 +53,9 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// This function is meant for jamLoadWorldFromTMX and is not safe to call
+// This function is meant for jamTMXLoadWorld and is not safe to call
 JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH, tmx_map* tmx) {
-	JamTileMap* map = jamCreateTileMap(mapW, mapH, tileW, tileH);
+	JamTileMap* map = jamTileMapCreate(mapW, mapH, tileW, tileH);
 	JamSprite* currentSprite;
 	tmx_tile* tile;
 	bool mapLoadFailed = false;
@@ -75,7 +75,7 @@ JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer
 					jSetError(ERROR_TMX_TILEMAP_ERROR,
 							  "Tile layer %s contains tiles not present in the handler or the tile is out of range of the sprite");
 					mapLoadFailed = true;
-					jamFreeTileMap(map);
+					jamTileMapFree(map);
 					map = NULL;
 				}
 			}
@@ -89,9 +89,9 @@ JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-JamWorld* jamLoadWorldFromTMX(JamAssetHandler *handler, const char *tmxFilename) {
+JamWorld* jamTMXLoadWorld(JamAssetHandler *handler, const char *tmxFilename) {
 	tmx_map* tmx = tmx_load(tmxFilename);
-	JamWorld* world = jamCreateWorld();
+	JamWorld* world = jamWorldCreate();
 	JamTileMap* currentTileMap = NULL;
 	uint32 mapW, mapH, tileW, tileH;
 	tmx_layer* currentLayer;
@@ -107,12 +107,12 @@ JamWorld* jamLoadWorldFromTMX(JamAssetHandler *handler, const char *tmxFilename)
 
 		// Warn the user if they are trying to load anything but an orthogonal map
 		if (tmx->orient != O_ORT)
-			jSetError(ERROR_WARNING, "jamLoadWorldFromTMX does not support any view besides orthogonal. Attempting to load anyway");
+			jSetError(ERROR_WARNING, "jamTMXLoadWorld does not support any view besides orthogonal. Attempting to load anyway");
 
 		while (currentLayer != NULL) {
 			if (currentLayer->type == L_OBJGR) {
 				if (!loadObjectLayerIntoWorld(handler, world, currentLayer)) {
-					jSetError(ERROR_TMX_ENTITY_ERROR, "JamEntity layer %s could not be loaded (jamLoadWorldFromTMX)", currentLayer->name);
+					jSetError(ERROR_TMX_ENTITY_ERROR, "JamEntity layer %s could not be loaded (jamTMXLoadWorld)", currentLayer->name);
 				}
 			}
 			else if (currentLayer->type == L_LAYER) {
@@ -122,11 +122,11 @@ JamWorld* jamLoadWorldFromTMX(JamAssetHandler *handler, const char *tmxFilename)
 					if (worldLayerPointer < MAX_TILEMAPS - 1) {
 						world->worldMaps[worldLayerPointer++] = currentTileMap;
 					} else {
-						jamFreeTileMap(currentTileMap);
-						jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded because the world has no more map slots (jamLoadWorldFromTMX)", currentLayer->name);
+						jamTileMapFree(currentTileMap);
+						jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded because the world has no more map slots (jamTMXLoadWorld)", currentLayer->name);
 					}
 				} else {
-					jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded (jamLoadWorldFromTMX)", currentLayer->name);
+					jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded (jamTMXLoadWorld)", currentLayer->name);
 				}
 			}
 
@@ -139,13 +139,13 @@ JamWorld* jamLoadWorldFromTMX(JamAssetHandler *handler, const char *tmxFilename)
 		}
 	} else {
 		if (handler == NULL) {
-			jSetError(ERROR_NULL_POINTER, "Handler doesn't exist (jamLoadWorldFromTMX)");
+			jSetError(ERROR_NULL_POINTER, "Handler doesn't exist (jamTMXLoadWorld)");
 		}
 		if (tmx == NULL) {
-			jSetError(ERROR_OPEN_FAILED, "Failed to open tmx file [%s] (jamLoadWorldFromTMX)", tmx_strerr());
+			jSetError(ERROR_OPEN_FAILED, "Failed to open tmx file [%s] (jamTMXLoadWorld)", tmx_strerr());
 		}
 		if (world == NULL) {
-			jSetError(ERROR_ALLOC_FAILED, "Failed to create the world (jamLoadWorldFromTMX)");
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create the world (jamTMXLoadWorld)");
 		}
 	}
 

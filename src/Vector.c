@@ -13,7 +13,7 @@
 #include <string.h>
 
 //////////////////////////////////////////////////
-JamPolygon* jamCreatePolygon(unsigned int vertices) {
+JamPolygon* jamPolygonCreate(unsigned int vertices) {
 	JamPolygon* poly = (JamPolygon*)malloc(sizeof(JamPolygon));
 
 	if (poly != NULL) {
@@ -30,10 +30,10 @@ JamPolygon* jamCreatePolygon(unsigned int vertices) {
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-JamPolygon* jamLoadPolygon(const char* string) {
+JamPolygon* jamPolygonLoad(const char *string) {
 	int i, j;
 	JamStringList* vertices = jamStringExplode(string, '/', false);
-	JamPolygon* poly = jamCreatePolygon(0);
+	JamPolygon* poly = jamPolygonCreate(0);
 	int commaLoc;
 	
 	if (vertices != NULL && strlen(string) > 0) {
@@ -46,13 +46,13 @@ JamPolygon* jamLoadPolygon(const char* string) {
 					vertices->strList[i][j] = '\0';
 				}
 			}
-			
-			jamAddVertexToPolygon(poly, atof(vertices->strList[i]), atof(vertices->strList[i] + commaLoc + 1));
+
+			jamPolygonAddVertex(poly, atof(vertices->strList[i]), atof(vertices->strList[i] + commaLoc + 1));
 		}
 	} else {
 		if (vertices == NULL)
 			jSetError(ERROR_ALLOC_FAILED, "Failed to split string \"%s\"", string);
-		jamFreePolygon(poly);
+		jamPolygonFree(poly);
 	}
 
 	jamStringListFree(vertices);
@@ -62,7 +62,7 @@ JamPolygon* jamLoadPolygon(const char* string) {
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-void jamAddVertexToPolygon(JamPolygon *poly, double x, double y) {
+void jamPolygonAddVertex(JamPolygon *poly, double x, double y) {
 	double* xVerts;
 	double* yVerts;
 
@@ -86,7 +86,7 @@ void jamAddVertexToPolygon(JamPolygon *poly, double x, double y) {
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-void jamFreePolygon(JamPolygon *poly) {
+void jamPolygonFree(JamPolygon *poly) {
 	if (poly != NULL) {
 		free(poly->xVerts);
 		free(poly->yVerts);

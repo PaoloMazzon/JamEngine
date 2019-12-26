@@ -104,15 +104,15 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 	// Menu-related variables
 	bool play = false;
 	bool runLoop = true;
-	JamTexture* logoTex = jamLoadTexture("assets/jamengine.png");
+	JamTexture* logoTex = jamTextureLoad("assets/jamengine.png");
 
 	// The menu buttons
-	JamTexture* playTex = jamLoadTexture("assets/playbutton.png");
-	JamTexture* exitTex = jamLoadTexture("assets/exitbutton.png");
+	JamTexture* playTex = jamTextureLoad("assets/playbutton.png");
+	JamTexture* exitTex = jamTextureLoad("assets/exitbutton.png");
 	JamTweeningState playTween;
 	JamTweeningState exitTween;
-	jamInitTween(&playTween, 0.05, GAME_WIDTH - 172, GAME_WIDTH - 96);
-	jamInitTween(&exitTween, 0.05, GAME_WIDTH - 172, GAME_WIDTH - 96);
+	jamTweenInit(&playTween, 0.05, GAME_WIDTH - 172, GAME_WIDTH - 96);
+	jamTweenInit(&exitTween, 0.05, GAME_WIDTH - 172, GAME_WIDTH - 96);
 	bool inPlayButtonPreviousFrame = false;
 	bool inExitButtonPreviousFrame = false;
 	bool inPlayButton = false;
@@ -122,7 +122,7 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 
 	while (runLoop) {
 		// Update the renderer and check for a quit signal
-		runLoop = jamProcEvents();
+		runLoop = jamRendererProcEvents();
 
 		if (runLoop) {
 			jamDrawFillColour(255, 255, 255, 255);
@@ -133,9 +133,9 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 
 			// Handle tweening changes
 			if (inPlayButton != inPlayButtonPreviousFrame)
-				jamReverseTween(&playTween);
+				jamTweenReverse(&playTween);
 			if (inExitButton != inExitButtonPreviousFrame)
-				jamReverseTween(&exitTween);
+				jamTweenReverse(&exitTween);
 
 			// And button presses
 			if ((jamInputCheckMouseButtonPressed(MOUSE_LEFT_BUTTON) && inPlayButton) || jamInputCheckKeyPressed(JAM_KB_SPACE))
@@ -144,20 +144,20 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 				runLoop = false;
 
 			// Draw the buttons
-			jamDrawTexture(playTex, (sint32)jamUpdateTweenParabolic(&playTween), playButtonY);
-			jamDrawTexture(exitTex, (sint32)jamUpdateTweenParabolic(&exitTween), exitButtonY);
+			jamDrawTexture(playTex, (sint32) jamTweenUpdateParabolic(&playTween), playButtonY);
+			jamDrawTexture(exitTex, (sint32) jamTweenUpdateParabolic(&exitTween), exitButtonY);
 
 			jamDrawTexture(logoTex, 0, 0);
 
 			inPlayButtonPreviousFrame = inPlayButton;
 			inExitButtonPreviousFrame = inExitButton;
-			jamProcEndFrame();
+			jamRendererProcEndFrame();
 		}
 	}
 
-	jamFreeTexture(playTex);
-	jamFreeTexture(exitTex);
-	jamFreeTexture(logoTex);
+	jamTextureFree(playTex);
+	jamTextureFree(exitTex);
+	jamTextureFree(logoTex);
 	return play;
 }
 ////////////////////////////////////////// The game /////////////////////////////////////////
@@ -187,19 +187,19 @@ bool runGame(JamFont* font) {
 	if (jGetError() == 0) {
 		while (runLoop) {
 			// Update the renderer and check for a quit signal
-			runLoop = jamProcEvents();
+			runLoop = jamRendererProcEvents();
 
 			if (runLoop) {
 				jamDrawFillColour(0, 0, 0, 255);
 
 				// Testing suite
 				if (jamInputCheckKeyPressed(JAM_KB_F)) {
-					jamResetRenderer(0, 0, RENDERER_BORDERLESS_FULLSCREEN);
-					jamIntegerMaximizeScreenBuffer();
+					jamRendererReset(0, 0, RENDERER_BORDERLESS_FULLSCREEN);
+					jamRendererIntegerScale();
 				}
 				if (jamInputCheckKeyPressed(JAM_KB_G)) {
-					jamResetRenderer(GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
-					jamIntegerMaximizeScreenBuffer();
+					jamRendererReset(GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
+					jamRendererIntegerScale();
 				}
 				if (jamInputCheckKeyPressed(JAM_KB_P)) {
 					source->xPosition = jamInputGetMouseX();
@@ -222,7 +222,7 @@ bool runGame(JamFont* font) {
 								 jamRendererGetDelta());
 				/////////////////////////////////////////////////////////////////////
 
-				jamProcEndFrame();
+				jamRendererProcEndFrame();
 			}
 		}
 	}
@@ -238,15 +238,15 @@ bool runGame(JamFont* font) {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[]) {
-	jamInitRenderer(&argc, argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
-	jamSetAA(false);
+	jamRendererInit(&argc, argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
+	jamRendererSetAA(false);
 	JamFont* font = jamFontCreate("assets/standardlatinwhitebg.png", NULL);
 	font->characterHeight = 16;
 	font->characterWidth = 8;
 	bool run = true;
 
 	// Setup the screen
-	jamConfigScreenBuffer(GAME_WIDTH, GAME_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+	jamRendererConfig(GAME_WIDTH, GAME_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// A very simple loop that allows the et_Player to bounce between
 	// the menu and the game infinitely
