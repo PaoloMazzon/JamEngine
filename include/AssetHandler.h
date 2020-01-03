@@ -13,12 +13,13 @@
 #include "BehaviourMap.h"
 #include "Audio.h"
 #include "World.h"
+#include "Font.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-enum JamAssetType {at_Texture, at_Sprite, at_Entity, at_Hitbox, at_AudioBuffer, at_World};
+enum JamAssetType {at_Texture, at_Sprite, at_Entity, at_Hitbox, at_AudioBuffer, at_World, at_Font};
 
 /// \brief A struct that can hold any of the assets the asset handler needs
 typedef struct __sJamAsset JamAsset;
@@ -31,9 +32,10 @@ struct __sJamAsset{
 		JamHitbox* hitbox;      ///< The internal hitbox
 		JamAudioBuffer* buffer; ///< The internal audio buffer
 		JamWorld* world;        ///< The internal world
+		JamFont* font;          ///< The internal font
 	};
-	char* name; ///< Name of the asset for hashing purposes
-	JamAsset* next;    ///< In the case of hashing collisions
+	char* name;     ///< Name of the asset for hashing purposes
+	JamAsset* next; ///< In the case of hashing collisions
 };
 
 /// \brief Loads lots of assets at once from files
@@ -119,6 +121,11 @@ JamAudioBuffer* jamAssetHandlerGetAudioBuffer(JamAssetHandler *handler, const ch
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
 JamWorld* jamAssetHandlerGetWorld(JamAssetHandler *handler, const char *key);
+
+/// \brief Pulls a specific asset safely, making sure the types match up
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ASSET_WRONG_TYPE
+JamFont* jamAssetHandlerGetFont(JamAssetHandler *handler, const char *key);
 
 /// \brief Frees an asset handler and all of its components
 void jamAssetHandlerFree(JamAssetHandler *handler);

@@ -97,10 +97,10 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 		self->sprite = jamAssetHandlerGetSprite(gHandler, "PlayerJumpingSprite");
 }
 
-bool runGame(JamFont* font);
+bool runGame();
 
 /////////////////////////////////////// The main menu ///////////////////////////////////////
-bool runMenu(JamFont* font) { // Returns false if quit game
+bool runMenu() { // Returns false if quit game
 	// Menu-related variables
 	bool play = false;
 	bool runLoop = true;
@@ -139,7 +139,7 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 
 			// And button presses
 			if ((jamInputCheckMouseButtonPressed(MOUSE_LEFT_BUTTON) && inPlayButton) || jamInputCheckKeyPressed(JAM_KB_SPACE))
-				runLoop = runGame(font);
+				runLoop = runGame();
 			if ((jamInputCheckMouseButtonPressed(MOUSE_LEFT_BUTTON) && inExitButton) || jamInputCheckKeyPressed(JAM_KB_ESCAPE))
 				runLoop = false;
 
@@ -161,7 +161,7 @@ bool runMenu(JamFont* font) { // Returns false if quit game
 	return play;
 }
 ////////////////////////////////////////// The game /////////////////////////////////////////
-bool runGame(JamFont* font) {
+bool runGame() {
 	// Core game pieces
 	bool mainMenu = false; // Weather or not return to main menu
 	bool runLoop = true;
@@ -176,6 +176,7 @@ bool runGame(JamFont* font) {
 	gHandler = jamAssetHandlerCreate(1000);
 	jamAssetHandlerLoadINI(gHandler, "assets/level0.ini", bMap);
 	JamWorld* gameWorld = jamAssetHandlerGetWorld(gHandler, "GameWorld");
+	JamFont* font = jamAssetHandlerGetFont(gHandler, "GameFont");
 
 	// Some setup
 	jamRendererSetCameraPos(25, 25);
@@ -240,9 +241,6 @@ bool runGame(JamFont* font) {
 int main(int argc, char* argv[]) {
 	jamRendererInit(&argc, argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	jamRendererSetAA(false);
-	JamFont* font = jamFontCreate("assets/standardlatinwhitebg.png", NULL);
-	font->characterHeight = 16;
-	font->characterWidth = 8;
 	bool run = true;
 
 	// Setup the screen
@@ -251,12 +249,11 @@ int main(int argc, char* argv[]) {
 	// A very simple loop that allows the et_Player to bounce between
 	// the menu and the game infinitely
 	while (run) {
-		run = runMenu(font);
+		run = runMenu();
 		if (run)
-			run = runGame(font);
+			run = runGame();
 	}
 
-	jamFontFree(font);
 	jamRendererQuit();
 	return 0;
 }

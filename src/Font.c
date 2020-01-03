@@ -4,6 +4,7 @@
 
 #include "Font.h"
 #include <SDL.h>
+#include <string.h>
 #include <SDL_image.h>
 #include <malloc.h>
 #include <stdio.h>
@@ -62,7 +63,7 @@ JamFont* jamFontCreate(const char *latinFname, const char *fontFname) {
 			font->font = NULL;
 			SDL_QueryTexture(latin, NULL, NULL, (int*)&font->latinWidth, (int*)&font->latinHeight);
 
-			if (fontFname != NULL) {
+			if (fontFname != NULL && strcmp(fontFname, "") == 0) {
 				// Load the texture
 				tex = loadTex(fontFname);
 

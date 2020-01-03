@@ -52,6 +52,7 @@ typedef enum {ft_Rectangle, ft_Proximity} JamFilterType;
 #define INI_TILEMAP_PREFIX 'm'
 #define INI_AUDIO_PREFIX 'a'
 #define INI_WORLD_PREFIX 'w'
+#define INI_FONT_PREFIX 'f'
 
 #ifdef __cplusplus
 }
