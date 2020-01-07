@@ -1,5 +1,7 @@
 ![JamEngine](https://i.imgur.com/eF0nArB.png)
 
+![Screenshot](https://i.ibb.co/8cgZmvf/screenshot.png)s
+
 Important Info
 --------------
 Right now JamEngine is only tested on Windows and Linux (and to be
