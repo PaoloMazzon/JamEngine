@@ -52,7 +52,6 @@ out of a game engine.
  
  - Gamepad support
  - TTF/OTF font support (heck)
- - Spatial hash tables (And probably replacing entity types with a uint8 for flexibility)
  
 Possible Additions
 ------------------
@@ -64,3 +63,4 @@ to the JamEngine library itself and as such are prioritized much lower.
  - Bind JamEngine to some languages like Lua and Python (and Lisp..! maybe)
  - Make rendering backend OpenGL instead of SDL2, but keep using SDL2 for window management and input
  - As an extension to the previous, GLSL shader support for fancy post processing 
+ - Use .json files instead of .ini files to load assets (as a way to ditch the prefix system)

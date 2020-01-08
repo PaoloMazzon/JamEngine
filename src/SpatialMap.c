@@ -1,0 +1,9 @@
+//
+// Created by plo on 1/7/20.
+//
+
+/////////////////////////////////////////////////////
+JamSpatialMap* jamSpatialMapCreate(uint32 gridWidth, uint32 gridHeight, uint32 cellWidth, uint32 cellHeight) {
+
+}
+/////////////////////////////////////////////////////
