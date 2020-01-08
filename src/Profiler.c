@@ -2,14 +2,25 @@
 #include <SDL.h>
 
 /////////////////////////////////////////////////////////////////
-uint64 jamStartProfile() {
-	return SDL_GetPerformanceCounter();
+JamProfile jamProfileStart() {
+	JamProfile prof;
+	prof.iterations = 0;
+	prof.totalTicks = 0;
+	prof.previousTime = SDL_GetPerformanceCounter();
+	return prof;
 }
 /////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
-double jamGetProfileTimeSeconds(uint64 profile, double iterations) {
-	uint64 diff = SDL_GetPerformanceCounter() - profile;
-	return ((double)diff / iterations) / SDL_GetPerformanceFrequency();
+void jamProfileTick(JamProfile* profile) {
+	profile->totalTicks += SDL_GetPerformanceCounter() - profile->previousTime;
+	profile->iterations++;
+	profile->previousTime = SDL_GetPerformanceCounter();
+}
+/////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////
+double jamProfileGetMilliseconds(JamProfile* profile) {
+	return (((double)profile->totalTicks / (double)profile->iterations) / (double)SDL_GetPerformanceFrequency()) * 1000;
 }
 /////////////////////////////////////////////////////////////////
