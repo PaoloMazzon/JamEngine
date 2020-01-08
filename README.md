@@ -1,6 +1,6 @@
 ![JamEngine](https://i.imgur.com/eF0nArB.png)
 
-![Screenshot](https://i.ibb.co/8cgZmvf/screenshot.png)s
+![Screenshot](https://i.ibb.co/9q7hrSX/screenshot.png)
 
 Important Info
 --------------
