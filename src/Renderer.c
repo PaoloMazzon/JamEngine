@@ -11,6 +11,7 @@
 #include <math.h>
 #include <SDL.h>
 #include <Audio.h>
+#include <SDL_image.h>
 
 static JamRenderer* gRenderer;
 
@@ -100,6 +101,18 @@ void* jamRendererGetInternalRenderer() {
 		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized");
 	}
 	return NULL;
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+void jamRendererSetIcon(const char* imageFilename) {
+	if (gRenderer != NULL) {
+		SDL_Surface *surf = IMG_Load(imageFilename);
+		SDL_SetWindowIcon(gRenderer->gameWindow, surf);
+		SDL_FreeSurface(surf);
+	} else {
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized");
+	}
 }
 /////////////////////////////////////////////////////////////
 

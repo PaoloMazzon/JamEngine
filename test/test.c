@@ -241,6 +241,7 @@ bool runGame() {
 int main(int argc, char* argv[]) {
 	jamRendererInit(&argc, argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	jamRendererSetAA(false);
+	jamRendererSetIcon("assets/icon.png");
 	bool run = true;
 
 	// Setup the screen

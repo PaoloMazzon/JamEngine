@@ -22,14 +22,14 @@ Features
  - Between `JamWorld`s and `JamAssetHandler`s, memory management is quite simple as well
  - `JamBehaviourMap`s to automate most of each frame
  - Supports the use of [Tiled](https://www.mapeditor.org/) as a level editor
- - Written purely in C and thus cross platform
+ - Written purely in C
  - JamINI file I/O built in and extremely easy to use
  - Unicode text rendering (although bitmap fonts only at the moment)
  - Cross-platform implementations of atof and ftoa (string to double and vice-versa)
  - SAT collisions and simple rectangle/circle collisions are interchangeable
- - Collision grids (`JamTileMap`) for lightning-fast grid-to-rectangle collisions (or just rendering tiles (or both))
+ - TileMaps that can be used for rendering complex tile layers and checking collisions
  - 3D audio support through OpenAL
- - Basic low-level tweening support for smooth animations 
+ - Basic profiling support for cross-platform performance breakdowns
 
 Naming Conventions
 ==================

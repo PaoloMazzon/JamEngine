@@ -74,6 +74,10 @@ void jamRendererInit(int *argc, char **argv, const char *name, uint32 w, uint32 
 /// \throws ERROR_NULL_POINTER
 void* jamRendererGetInternalRenderer();
 
+/// \brief Sets the window's icon to an image (png, jpg, bmp, etc...)
+/// \throws ERROR_NULL_POINTER
+void jamRendererSetIcon(const char* imageFilename);
+
 /// \brief Gets the camera's x position in the game world
 /// \throws ERROR_NULL_POINTER
 double jamRendererGetCameraX();
