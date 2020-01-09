@@ -27,7 +27,7 @@ extern "C" {
 typedef struct _JamEntity {
 	JamSprite* sprite;       ///< This entity's sprite (NULL is safe)
 	JamHitbox* hitbox;       ///< This entity's hitbox (NULL is safe)
-	JamEntityType type;      ///< Type of entity this is
+	uint32 type;             ///< Type of entity this is
 	double x;                ///< X position in the game world
 	double y;                ///< Y position in the game world
 	JamBehaviour* behaviour; ///< Behaviour mapping of this entity (AssetManagers will resolve this)

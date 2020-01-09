@@ -158,19 +158,7 @@ static void _assetLoadEntity(JamAssetHandler *assetHandler, JamINI *ini, const c
 			jSetError(ERROR_WARNING, "Expected behaviour '%s' for entity '%s'", behaviourString, headerName);
 		
 		// Figure out the type
-		typeString = jamINIGetKey(ini, headerName, "type", "none");
-		if (strcmp(typeString, "Logic") == 0)
-			ent->type = et_Logic;
-		if (strcmp(typeString, "Solid") == 0)
-			ent->type = et_Solid;
-		if (strcmp(typeString, "NPC") == 0)
-			ent->type = et_NPC;
-		if (strcmp(typeString, "Object") == 0)
-			ent->type = et_Object;
-		if (strcmp(typeString, "Item") == 0)
-			ent->type = et_Item;
-		if (strcmp(typeString, "Player") == 0)
-			ent->type = et_Player;
+		ent->type = (uint32)atof(jamINIGetKey(ini, headerName, "type", "none"));
 		ent->rot = atof(jamINIGetKey(ini, headerName, "rotation", "0"));
 		ent->alpha = (uint8)atof(jamINIGetKey(ini, headerName, "alpha", "255"));
 		ent->updateOnDraw = (bool)atof(jamINIGetKey(ini, headerName, "update_on_draw", "1"));
@@ -212,15 +200,6 @@ static void _assetLoadWorld(JamAssetHandler *assetHandler, JamINI *ini, const ch
 	JamWorld* world = jamTMXLoadWorld(assetHandler, jamINIGetKey(ini, headerName, "file", ""));
 	uint16 width = (uint16)atof(jamINIGetKey(ini, headerName, "width", "0"));
 	uint16 height = (uint16)atof(jamINIGetKey(ini, headerName, "height", "0"));
-	uint16 radius = (uint16)atof(jamINIGetKey(ini, headerName, "radius", "0"));
-
-	if (world != NULL) {
-		if (width != 0) {
-			jamWorldSetFilterTypeRectangle(world, width, height);
-		} else if (radius != 0) {
-			jamWorldSetFilterTypeCircle(world, radius);
-		}
-	}
 
 	jamAssetHandlerLoadAsset(assetHandler, createAsset(world, at_World, headerName + 1), (headerName + 1));
 }

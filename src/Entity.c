@@ -54,7 +54,7 @@ JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 		ent->hSpeed = 0;
 		ent->vSpeed = 0;
 		ent->friction = 0;
-		ent->type = et_Unassigned;
+		ent->type = 0;
 		ent->behaviour = behaviour;
 		ent->data = NULL;
 		ent->id = -1;
