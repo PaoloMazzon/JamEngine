@@ -19,11 +19,17 @@ typedef struct _JamWorld {
 	JamEntityList* inRangeCache;         ///< "In-range" entities that have been placed here via
 	bool cacheInRangeEntities;           ///< Weather or not to use inRangeCache instead of the space map frame-to-frame
 
+	// Stuff pertaining to space map
+	JamEntityList** entityGrid; ///< List of entity lists, made 2D through trickery (I hate 2D arrays)
+	int gridWidth;              ///< Width of the grid in cells
+	int gridHeight;             ///< Height of the grid in cells
+	int cellWidth;              ///< Width of any given cell in pixels
+	int cellHeight;             ///< Height of any given cell in pixels
 } JamWorld;
 
 /// \brief Creates a world to work with
 /// \throws ERROR_ALLOC_FAILED
-JamWorld* jamWorldCreate();
+JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellHeight);
 
 /// \brief Adds an entity to the world
 ///

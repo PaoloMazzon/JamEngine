@@ -14,13 +14,35 @@
 #include "JamError.h"
 
 ///////////////////////////////////////////////////////
-JamWorld* jamWorldCreate() {
+JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellHeight) {
 	JamWorld* world = (JamWorld*)calloc(1, sizeof(JamWorld));
+	bool error = false;
+	int i;
 
+	// Allocate the map first, then the 2D grid, then the countless lists
 	if (world != NULL) {
-		// TODO: This
+		world->entityGrid = (JamEntityList**)malloc(((gridWidth * gridHeight) + 1) * sizeof(JamEntityList));
+		world->worldEntities = jamEntityListCreate();
+		world->gridWidth = gridWidth;
+		world->gridHeight = gridHeight;
+		world->cellWidth = cellWidth;
+		world->cellHeight = cellHeight;
+
+		if (world->entityGrid != NULL) {
+			for (i = 0; i < (gridWidth * gridHeight) + 1; i++) {
+				world->entityGrid[i] = jamEntityListCreate();
+				if (world->entityGrid[i] == NULL)
+					error = true;
+			}
+
+			// If any list could not be created, delet
+			if (error)
+				jamWorldFree(world);
+		} else {
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate spatial map's grid");
+		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Could not allocate world (jamWorldCreate)");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate world");
 	}
 
 	return world;

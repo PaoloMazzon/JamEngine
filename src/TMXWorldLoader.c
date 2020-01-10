@@ -91,50 +91,57 @@ JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer
 ///////////////////////////////////////////////////////////////////////////////
 JamWorld* jamTMXLoadWorld(JamAssetHandler *handler, const char *tmxFilename) {
 	tmx_map* tmx = tmx_load(tmxFilename);
-	JamWorld* world = jamWorldCreate();
+	JamWorld* world;
 	JamTileMap* currentTileMap = NULL;
 	uint32 mapW, mapH, tileW, tileH;
 	tmx_layer* currentLayer;
 	unsigned char worldLayerPointer = 0;
 
-	if (handler != NULL && tmx != NULL && world != NULL) {
+	if (handler != NULL && tmx != NULL) {
 		// Load the preliminary information from the map
 		currentLayer = tmx->ly_head;
 		mapW = tmx->width;
 		mapH = tmx->height;
 		tileW = tmx->tile_width;
 		tileH = tmx->tile_height;
+		world = jamWorldCreate(mapW / 2, mapH / 2, tileW * 2, tileH * 2);
 
-		// Warn the user if they are trying to load anything but an orthogonal map
-		if (tmx->orient != O_ORT)
-			jSetError(ERROR_WARNING, "jamTMXLoadWorld does not support any view besides orthogonal. Attempting to load anyway");
+		if (world != NULL) {
+			// Warn the user if they are trying to load anything but an orthogonal map
+			if (tmx->orient != O_ORT)
+				jSetError(ERROR_WARNING,
+						  "jamTMXLoadWorld does not support any view besides orthogonal. Attempting to load anyway");
 
-		while (currentLayer != NULL) {
-			if (currentLayer->type == L_OBJGR) {
-				if (!loadObjectLayerIntoWorld(handler, world, currentLayer)) {
-					jSetError(ERROR_TMX_ENTITY_ERROR, "JamEntity layer %s could not be loaded (jamTMXLoadWorld)", currentLayer->name);
-				}
-			}
-			else if (currentLayer->type == L_LAYER) {
-				currentTileMap = createTileMapFromTMXLayer(handler, currentLayer, mapW, mapH, tileW, tileH, tmx);
-				if (currentTileMap != NULL) {
-					// Is there room in the world?
-					if (worldLayerPointer < MAX_TILEMAPS - 1) {
-						world->worldMaps[worldLayerPointer++] = currentTileMap;
-					} else {
-						jamTileMapFree(currentTileMap);
-						jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded because the world has no more map slots (jamTMXLoadWorld)", currentLayer->name);
+			while (currentLayer != NULL) {
+				if (currentLayer->type == L_OBJGR) {
+					if (!loadObjectLayerIntoWorld(handler, world, currentLayer)) {
+						jSetError(ERROR_TMX_ENTITY_ERROR, "JamEntity layer %s could not be loaded (jamTMXLoadWorld)",
+								  currentLayer->name);
 					}
-				} else {
-					jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded (jamTMXLoadWorld)", currentLayer->name);
+				} else if (currentLayer->type == L_LAYER) {
+					currentTileMap = createTileMapFromTMXLayer(handler, currentLayer, mapW, mapH, tileW, tileH, tmx);
+					if (currentTileMap != NULL) {
+						// Is there room in the world?
+						if (worldLayerPointer < MAX_TILEMAPS - 1) {
+							world->worldMaps[worldLayerPointer++] = currentTileMap;
+						} else {
+							jamTileMapFree(currentTileMap);
+							jSetError(ERROR_TMX_TILEMAP_ERROR,
+									  "Tile layer %s could not be loaded because the world has no more map slots (jamTMXLoadWorld)",
+									  currentLayer->name);
+						}
+					} else {
+						jSetError(ERROR_TMX_TILEMAP_ERROR, "Tile layer %s could not be loaded (jamTMXLoadWorld)",
+								  currentLayer->name);
+					}
 				}
-			}
 
-			// Go to the next layer in the list
-			if (currentLayer->type == L_GROUP) {
-				currentLayer = currentLayer->content.group_head;
-			} else {
-				currentLayer = currentLayer->next;
+				// Go to the next layer in the list
+				if (currentLayer->type == L_GROUP) {
+					currentLayer = currentLayer->content.group_head;
+				} else {
+					currentLayer = currentLayer->next;
+				}
 			}
 		}
 	} else {

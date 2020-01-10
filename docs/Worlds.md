@@ -51,3 +51,6 @@ you can just add it to your assets' .ini file
     
     [wUnderwaterLevel]
     file=level2.tmx
+
+Loading from .tmx files automatically sets the spatial map width and height to double the tile
+width and height.

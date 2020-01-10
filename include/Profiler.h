@@ -4,6 +4,10 @@
 #pragma once
 #include "Constants.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \brief Holds data for profiling a few different ways
 ///
 /// To properly measure how long it takes to execute some bit of code,
@@ -23,7 +27,7 @@ typedef struct {
 JamProfile jamProfileStart();
 
 /// \brief Calculates the average amount of time over x iterations in seconds
-void jamProfileTick(JamProfile* profile);
+void jamProfileTick(JamProfile *profile);
 
 /// \brief Returns the average amount of time in milliseconds for a profiler
 ///
@@ -32,4 +36,8 @@ void jamProfileTick(JamProfile* profile);
 /// its really just a fairly accurate estimate of the average time some code takes
 /// to execute. It is best for checking weather or not you are actually improving
 /// performance with some optimizations (and by how much).
-double jamProfileGetMilliseconds(JamProfile* profile);
+double jamProfileGetMilliseconds(JamProfile *profile);
+
+#ifdef __cplusplus
+}
+#endif
