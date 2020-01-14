@@ -24,6 +24,11 @@ extern "C" {
 /// sure that the doubles are always rounded to ints the
 /// same way. In other words, it is guaranteed that entities
 /// are drawn and collision-tested with the same set of coords.
+///
+/// \warning Do not change/use the following variables: `xPrev`,
+/// `yPrev`, `procs`, and `cells`. These variables are required
+/// by whatever world this entity belongs to and changing them
+/// could very easily cause dangling pointers and segfaults.
 typedef struct _JamEntity {
 	JamSprite* sprite;       ///< This entity's sprite (NULL is safe)
 	JamHitbox* hitbox;       ///< This entity's hitbox (NULL is safe)

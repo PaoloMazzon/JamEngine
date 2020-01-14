@@ -19,7 +19,16 @@ typedef struct _JamWorld {
 	JamEntityList* inRangeCache;         ///< "In-range" entities that have been placed here via
 	bool cacheInRangeEntities;           ///< Weather or not to use inRangeCache instead of the space map frame-to-frame
 
-	// Stuff pertaining to space map
+	/* Spatial hash maps (or organizing entities into a grid in layman's terms)
+	 * For the uninitialized, this is a fairly simple concept to understand but
+	 * a little technical in terms of the details. Instead of storing the world's
+	 * entities in a list and drawing the list, we sort the entities into a spatial
+	 * map which is essentially just storing entities by their position in the
+	 * game world (Storing all entities in a list and using only that is still an
+	 * option, and in some cases its more efficient - all entities are still stored
+	 * in the master list for a couple reasons, but that isn't normally used for
+	 * rendering/processing frames).
+	 */
 	JamEntityList** entityGrid; ///< List of entity lists, made 2D through trickery (I hate 2D arrays)
 	int gridWidth;              ///< Width of the grid in cells
 	int gridHeight;             ///< Height of the grid in cells

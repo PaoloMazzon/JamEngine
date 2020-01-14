@@ -26,8 +26,11 @@ static inline int _refreshGridPos(int a, int b, int c, int d) { // TODO: Place e
 			if (nums[j] == nums[i])
 				instanceUnique = false;
 		}
-		if (instanceUnique)
+
+		// We mark down that this entry is unique while also placing the entity here
+		if (instanceUnique) {
 			unique++;
+		}
 	}
 
 	return unique;
