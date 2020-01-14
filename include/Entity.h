@@ -30,6 +30,8 @@ typedef struct _JamEntity {
 	uint32 type;             ///< Type of entity this is
 	double x;                ///< X position in the game world
 	double y;                ///< Y position in the game world
+	double xPrev;            ///< Last frame's x position (JamWorlds will handle this automatically)
+	double yPrev;            ///< Last frame's y position (JamWorlds will handle this automatically)
 	JamBehaviour* behaviour; ///< Behaviour mapping of this entity (AssetManagers will resolve this)
 	double hitboxOffsetX;    ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	double hitboxOffsetY;    ///< The hitbox's offset from the entity, this ignore the sprite's origin
@@ -100,7 +102,35 @@ void jamEntitySnapX(JamEntity *entity, JamTileMap *tilemap, int direction);
 ///
 /// \throws ERROR_NULL_POINTER
 void jamEntitySnapY(JamEntity *entity, JamTileMap *tilemap, int direction);
-	
+
+/// \brief Calculates the visible x1 (top-left) of an entity
+/// \param entity Entity to calculate for
+/// \return The calculated value
+///
+/// \throws ERROR_NULL_POINTER
+double jamEntityVisibleX1(JamEntity* entity);
+
+/// \brief Calculates the visible y1 (top-left) of an entity
+/// \param entity Entity to calculate for
+/// \return The calculated value
+///
+/// \throws ERROR_NULL_POINTER
+double jamEntityVisibleY1(JamEntity* entity);
+
+/// \brief Calculates the visible x2 (bottom-right) of an entity
+/// \param entity Entity to calculate for
+/// \return The calculated value
+///
+/// \throws ERROR_NULL_POINTER
+double jamEntityVisibleX2(JamEntity* entity);
+
+/// \brief Calculates the visible y2 (bottom-right) of an entity
+/// \param entity Entity to calculate for
+/// \return The calculated value
+///
+/// \throws ERROR_NULL_POINTER
+double jamEntityVisibleY2(JamEntity* entity);
+
 /// \brief Frees an entity from memory
 ///
 /// No matter what you specify with the boolean arguments,

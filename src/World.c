@@ -13,6 +13,18 @@
 #include <JamEngine.h>
 #include "JamError.h"
 
+// Updates an entity's position in the spatial map
+// This function will add the entity to the world if its id
+// is not yet assigned, or update the position if the xPrev
+// or yPrev are different
+static inline void _updateEntInMap(JamWorld* world, JamEntity* ent) {
+	if (ent->id == 1) { // Its not yet in the world
+
+	} else { // Its position just needs to be updated
+
+	}
+}
+
 ///////////////////////////////////////////////////////
 JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellHeight) {
 	JamWorld* world = (JamWorld*)calloc(1, sizeof(JamWorld));
@@ -52,7 +64,11 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
 ///////////////////////////////////////////////////////
 void jamWorldAddEntity(JamWorld *world, JamEntity *entity) {
 	if (world != NULL && entity != NULL) {
-		// TODO: This
+		// First it gets put into the space map
+		_updateEntInMap(world, entity);
+
+		// Then we add it to the entity list and assign it an id
+		entity->id = jamEntityListAdd(world->worldEntities, entity);
 	} else {
 		if (world == NULL) {
 			jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldAddEntity)");

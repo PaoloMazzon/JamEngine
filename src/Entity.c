@@ -293,6 +293,70 @@ void jamEntitySnapY(JamEntity *entity, JamTileMap *tilemap, int direction) {
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
+double jamEntityVisibleX1(JamEntity* entity) {
+	if (entity != NULL) {
+		if (entity->sprite != NULL) {
+			return entity->x + entity->sprite->originX;
+		} else {
+			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Entity does not exist");
+	}
+
+	return 0;
+}
+//////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////
+double jamEntityVisibleY1(JamEntity* entity) {
+	if (entity != NULL) {
+		if (entity->sprite != NULL) {
+			return entity->y + entity->sprite->originY;
+		} else {
+			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Entity does not exist");
+	}
+
+	return 0;
+}
+//////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////
+double jamEntityVisibleX2(JamEntity* entity) {
+	if (entity != NULL) {
+		if (entity->sprite != NULL) {
+			return entity->x + entity->sprite->originX + entity->sprite->width;
+		} else {
+			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Entity does not exist");
+	}
+
+	return 0;
+}
+//////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////
+double jamEntityVisibleY2(JamEntity* entity) {
+	if (entity != NULL) {
+		if (entity->sprite != NULL) {
+			return entity->y + entity->sprite->originY + entity->sprite->height;
+		} else {
+			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Entity does not exist");
+	}
+
+	return 0;
+}
+//////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////
 void jamEntityFree(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames) {
 	if (entity != NULL) {
 		if (destroyHitbox)
