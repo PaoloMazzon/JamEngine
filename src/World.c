@@ -10,18 +10,73 @@
 #include <EntityList.h>
 #include <Sprite.h>
 #include <BehaviourMap.h>
-#include <JamEngine.h>
 #include "JamError.h"
+
+// Places an entity into a world's spatial map in all applicable boxes and updates
+// the entity's relavent values
+static inline int _refreshGridPos(int a, int b, int c, int d) { // TODO: Place entity in maps while counting unique positions
+	int nums[] = {a, b, c, d};
+	int unique = 1;
+	bool instanceUnique;
+	int i, j;
+
+	for (i = 1; i < 4; i++) {
+		instanceUnique = true;
+		for (j = i - 1; j >= 0; j--) {
+			if (nums[j] == nums[i])
+				instanceUnique = false;
+		}
+		if (instanceUnique)
+			unique++;
+	}
+
+	return unique;
+}
+
+// Calculates a spatial map's grid x value from a double x value in the world
+static inline int _gridXFromDouble(JamWorld* world, double x) {
+	return (int)(x / (double)world->cellWidth);
+}
+
+// Calculates a spatial map's grid y value from a double y value in the world
+static inline int _gridYFromDouble(JamWorld* world, double y) {
+	return (int)(y / (double)world->cellHeight);
+}
 
 // Updates an entity's position in the spatial map
 // This function will add the entity to the world if its id
 // is not yet assigned, or update the position if the xPrev
 // or yPrev are different
 static inline void _updateEntInMap(JamWorld* world, JamEntity* ent) {
-	if (ent->id == 1) { // Its not yet in the world
+	// Grab the corners of the entity then calculate its corners' positions
+	// in the spatial map
+	double x1, y1, x2, y2;
+	int topLeft, topRight, bottomLeft, bottomRight;
 
-	} else { // Its position just needs to be updated
+	// We only calculate all the values if we need to
+	if (ent->id == ID_NOT_ASSIGNED) { // Its not yet in the world, just add it
+		// We only need the current corners
+		x1 = jamEntityVisibleX1(ent, ent->x);
+		y1 = jamEntityVisibleY1(ent, ent->y);
+		x2 = jamEntityVisibleX2(ent, ent->x);
+		y2 = jamEntityVisibleY2(ent, ent->y);
+		topLeft = (_gridYFromDouble(world, y1) * world->gridWidth) + _gridXFromDouble(world, x1);
+		topRight = (_gridYFromDouble(world, y1) * world->gridWidth) + _gridXFromDouble(world, x2);
+		bottomLeft = (_gridYFromDouble(world, y2) * world->gridWidth) + _gridXFromDouble(world, x1);
+		bottomRight = (_gridYFromDouble(world, y2) * world->gridWidth) + _gridXFromDouble(world, x2);
 
+		// Place the entity into the appropriate cells and update the entity's world-related values
+		_refreshGridPos(topLeft, topRight, bottomLeft, bottomRight);
+	} else if (ent->x != ent->xPrev || ent->y != ent->yPrev) { // Its position needs to be updated, remove the old locations first
+		// First we calculate the spots to remove this entity from
+		x1 = jamEntityVisibleX1(ent, ent->x);
+		y1 = jamEntityVisibleY1(ent, ent->y);
+		x2 = jamEntityVisibleX2(ent, ent->x);
+		y2 = jamEntityVisibleY2(ent, ent->y);
+		// TODO: This
+
+		// Now we place it into its new spot
+		// TODO: This
 	}
 }
 

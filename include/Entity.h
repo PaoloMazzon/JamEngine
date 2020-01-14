@@ -30,8 +30,6 @@ typedef struct _JamEntity {
 	uint32 type;             ///< Type of entity this is
 	double x;                ///< X position in the game world
 	double y;                ///< Y position in the game world
-	double xPrev;            ///< Last frame's x position (JamWorlds will handle this automatically)
-	double yPrev;            ///< Last frame's y position (JamWorlds will handle this automatically)
 	JamBehaviour* behaviour; ///< Behaviour mapping of this entity (AssetManagers will resolve this)
 	double hitboxOffsetX;    ///< The hitbox's offset from the entity, this ignore the sprite's origin
 	double hitboxOffsetY;    ///< The hitbox's offset from the entity, this ignore the sprite's origin
@@ -44,6 +42,12 @@ typedef struct _JamEntity {
 	bool updateOnDraw; ///< Weather or not the sprite will update on drawing
 	float scaleX;      ///< The x scale of the entity (for sprite rendering)
 	float scaleY;      ///< The y scale of the entity (for sprite rendering)
+
+	// Things to help worlds
+	double xPrev; ///< Last frame's x position (JamWorlds will handle this automatically)
+	double yPrev; ///< Last frame's y position (JamWorlds will handle this automatically)
+	uint32 procs; ///< How many times the world has seen this entity so far (to prevent it from being processed/drawn multiple times when its in multiple map positions)
+	uint32 cells; ///< How many cells this entity is in in the world map
 
 	// Utilities not utilized by the engine
 	double hSpeed;   ///< Horizontal speed
@@ -105,31 +109,35 @@ void jamEntitySnapY(JamEntity *entity, JamTileMap *tilemap, int direction);
 
 /// \brief Calculates the visible x1 (top-left) of an entity
 /// \param entity Entity to calculate for
+/// \param x x Value to start from (usually just the entity's current x value)
 /// \return The calculated value
 ///
 /// \throws ERROR_NULL_POINTER
-double jamEntityVisibleX1(JamEntity* entity);
+double jamEntityVisibleX1(JamEntity* entity, double x);
 
 /// \brief Calculates the visible y1 (top-left) of an entity
 /// \param entity Entity to calculate for
+/// \param y y Value to start from (usually just the entity's current y value)
 /// \return The calculated value
 ///
 /// \throws ERROR_NULL_POINTER
-double jamEntityVisibleY1(JamEntity* entity);
+double jamEntityVisibleY1(JamEntity* entity, double y);
 
 /// \brief Calculates the visible x2 (bottom-right) of an entity
 /// \param entity Entity to calculate for
+/// \param x x Value to start from (usually just the entity's current x value)
 /// \return The calculated value
 ///
 /// \throws ERROR_NULL_POINTER
-double jamEntityVisibleX2(JamEntity* entity);
+double jamEntityVisibleX2(JamEntity* entity, double x);
 
 /// \brief Calculates the visible y2 (bottom-right) of an entity
 /// \param entity Entity to calculate for
+/// \param y y Value to start from (usually just the entity's current y value)
 /// \return The calculated value
 ///
 /// \throws ERROR_NULL_POINTER
-double jamEntityVisibleY2(JamEntity* entity);
+double jamEntityVisibleY2(JamEntity* entity, double y);
 
 /// \brief Frees an entity from memory
 ///

@@ -33,6 +33,9 @@ typedef signed long long sint64;
 
 ///< Maximum number of cells to check when calling jamSnapEntityToTileMap* as to prevent an infinite loop
 #define MAX_GRID_CHECKS 5
+
+///< The ID of an entity not within a world
+#define ID_NOT_ASSIGNED (-1)
 	
 // The names of JamINI headers for assets
 #define INI_SPRITE_PREFIX 's'
