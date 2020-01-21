@@ -201,8 +201,12 @@ void jamWorldFilter(JamWorld *world, int pointX, int pointY) {
 void jamWorldFree(JamWorld *world) {
 	int i;
 	if (world != NULL) {
-		// TODO: This
-		free(world->worldMaps);
+		for (i = 0; i < (world->gridWidth * world->gridHeight) + 1; i++)
+			jamEntityListFree(world->entityGrid[i], false);
+		free(world->entityGrid);
+		jamEntityListFree(world->inRangeCache, false);
+		jamEntityListFree(world->worldEntities, true);
+
 	}
 }
 ///////////////////////////////////////////////////////

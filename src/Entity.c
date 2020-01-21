@@ -300,7 +300,7 @@ void jamEntitySnapY(JamEntity *entity, JamTileMap *tilemap, int direction) {
 double jamEntityVisibleX1(JamEntity* entity, double x) {
 	if (entity != NULL) {
 		if (entity->sprite != NULL) {
-			return x + entity->sprite->originX;
+			return x - entity->sprite->originX;
 		} else {
 			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
 		}
@@ -316,7 +316,7 @@ double jamEntityVisibleX1(JamEntity* entity, double x) {
 double jamEntityVisibleY1(JamEntity* entity, double y) {
 	if (entity != NULL) {
 		if (entity->sprite != NULL) {
-			return y + entity->sprite->originY;
+			return y - entity->sprite->originY;
 		} else {
 			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
 		}
@@ -332,7 +332,7 @@ double jamEntityVisibleY1(JamEntity* entity, double y) {
 double jamEntityVisibleX2(JamEntity* entity, double x) {
 	if (entity != NULL) {
 		if (entity->sprite != NULL) {
-			return x + entity->sprite->originX + entity->sprite->width;
+			return x - entity->sprite->originX + entity->sprite->width;
 		} else {
 			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
 		}
@@ -348,7 +348,7 @@ double jamEntityVisibleX2(JamEntity* entity, double x) {
 double jamEntityVisibleY2(JamEntity* entity, double y) {
 	if (entity != NULL) {
 		if (entity->sprite != NULL) {
-			return y + entity->sprite->originY + entity->sprite->height;
+			return y - entity->sprite->originY + entity->sprite->height;
 		} else {
 			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
 		}

@@ -28,6 +28,10 @@ typedef struct _JamWorld {
 	 * option, and in some cases its more efficient - all entities are still stored
 	 * in the master list for a couple reasons, but that isn't normally used for
 	 * rendering/processing frames).
+	 *
+	 * As an important note, the entityGrid is always of size (in cells) `(gridWidth * gridHeight) + 1`,
+	 * as the last cell is used to store each entity that is out of bounds. This is why
+	 * you may see `(gridWidth * gridHeight) + 1` in various functions.
 	 */
 	JamEntityList** entityGrid; ///< List of entity lists, made 2D through trickery (I hate 2D arrays)
 	int gridWidth;              ///< Width of the grid in cells

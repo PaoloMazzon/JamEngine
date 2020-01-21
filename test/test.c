@@ -8,6 +8,7 @@
 #include <Audio.h>
 #include <Tweening.h>
 #include <EntityList.h>
+#include <memory.h>
 #include "JamEngine.h"
 
 /////////////////// Constants ///////////////////
@@ -97,9 +98,8 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 		self->sprite = jamAssetHandlerGetSprite(gHandler, "PlayerJumpingSprite");
 }
 
-bool runGame();
-
 /////////////////////////////////////// The main menu ///////////////////////////////////////
+bool runGame();
 bool runMenu() { // Returns false if quit game
 	// Menu-related variables
 	bool play = false;
@@ -239,6 +239,12 @@ bool runGame() {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[]) {
+	// Decide if we're in testing suite mode or not
+	bool testingSuite = false;
+	if (argc > 1 && strcmp("--testing-suite", argv[1]) == 0)
+		testingSuite = true;
+
+	// Initialize JamEngine
 	jamRendererInit(&argc, argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
 	jamRendererSetAA(false);
 	jamRendererSetIcon("assets/icon.png");
@@ -247,12 +253,28 @@ int main(int argc, char* argv[]) {
 	// Setup the screen
 	jamRendererConfig(GAME_WIDTH, GAME_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	// A very simple loop that allows the et_Player to bounce between
-	// the menu and the game infinitely
-	while (run) {
-		run = runMenu();
-		if (run)
-			run = runGame();
+	if (!testingSuite) { // Run normally
+		while (run) {
+			run = runMenu();
+			if (run)
+				run = runGame();
+		}
+	} else { // Test specific functionality of JamEngine
+		// Load things
+		gHandler = jamAssetHandlerCreate(1000);
+		jamAssetHandlerLoadINI(gHandler, "assets/testassets.ini", NULL);
+
+		// World testing
+		JamWorld* world = jamWorldCreate(20, 15, 32, 32);
+		JamEntity* testEnt =jamAssetHandlerGetEntity(gHandler, "PlayerEntity");
+		JamEntity* copiedEnt = jamEntityCopy(testEnt, 32, 32);
+
+		// Tests
+		jamWorldAddEntity(world, copiedEnt);
+		printf("[World Data]\nWidth/Height: %i/%i\n", world->gridWidth, world->gridHeight);
+
+		// Free memory
+		jamAssetHandlerFree(gHandler);
 	}
 
 	jamRendererQuit();
