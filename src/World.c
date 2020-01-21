@@ -205,10 +205,12 @@ void jamWorldFree(JamWorld *world) {
 	if (world != NULL) {
 		for (i = 0; i < (world->gridWidth * world->gridHeight) + 1; i++)
 			jamEntityListFree(world->entityGrid[i], false);
+		for (i = 0; i < MAX_TILEMAPS; i++)
+			jamTileMapFree(world->worldMaps[i]);
 		free(world->entityGrid);
 		jamEntityListFree(world->inRangeCache, false);
 		jamEntityListFree(world->worldEntities, true);
-
+		free(world);
 	}
 }
 ///////////////////////////////////////////////////////
