@@ -270,12 +270,7 @@ int main(int argc, char* argv[]) {
 		JamEntity* copiedEnt = jamEntityCopy(testEnt, 50, 50);
 
 		// Tests
-		jamWorldAddEntity(world, copiedEnt);/*
-		copiedEnt->x = 120;
-		copiedEnt->y = 120;
-		copiedEnt->xPrev = 50;
-		copiedEnt->yPrev = 50;
-		jamWorldAddEntity(world, copiedEnt);*/
+		jamWorldAddEntity(world, copiedEnt);
 		printf("[World Data]\nWidth/Height: %i/%i\n", world->gridWidth, world->gridHeight);
 
 		// Free memory
