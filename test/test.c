@@ -267,7 +267,7 @@ int main(int argc, char* argv[]) {
 		// World testing
 		JamWorld* world = jamWorldCreate(20, 15, 32, 32);
 		JamEntity* testEnt =jamAssetHandlerGetEntity(gHandler, "PlayerEntity");
-		JamEntity* copiedEnt = jamEntityCopy(testEnt, 8, 16);
+		JamEntity* copiedEnt = jamEntityCopy(testEnt, -50, -50);
 
 		// Tests
 		jamWorldAddEntity(world, copiedEnt);

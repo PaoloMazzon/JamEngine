@@ -37,7 +37,7 @@ static void _refreshGridPos(JamWorld* world, JamEntity* ent, int a, int b, int c
 		if (instanceUnique) {
 			ent->cells++;
 			uniqueAccumulator++;
-			ent->cellsIn[uniqueAccumulator] = nums[uniqueAccumulator];
+			ent->cellsIn[uniqueAccumulator] = nums[i];
 			ent->cellsLoc[uniqueAccumulator] = jamEntityListAdd(world->entityGrid[nums[i]], ent);
 		}
 	}
