@@ -41,14 +41,15 @@ static void _refreshGridPos(JamWorld* world, JamEntity* ent, int a, int b, int c
 	}
 }
 
-// Calculates a spatial map's grid x value from a double x value in the world
-static inline int _gridXFromDouble(JamWorld* world, double x) {
-	return (int)(x / (double)world->cellWidth);
-}
+// Calculates a coordinate's equivalent cell in a world's space map, accounting for out of bounds values
+static inline int _gridPosFromCoords(JamWorld* world, double x, double y) {
+	int xInGrid = (int)(x / (double)world->cellWidth);
+	int yInGrid = (int)(y / (double)world->cellHeight);
 
-// Calculates a spatial map's grid y value from a double y value in the world
-static inline int _gridYFromDouble(JamWorld* world, double y) {
-	return (int)(y / (double)world->cellHeight);
+	if (xInGrid >= world->gridWidth || xInGrid < 0 || yInGrid >= world->gridHeight || yInGrid < 0)
+		return world->gridWidth * world->gridHeight;
+	else
+		return (yInGrid * world->gridWidth) + xInGrid;
 }
 
 // Updates an entity's position in the spatial map
@@ -77,10 +78,10 @@ static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 		y1 = jamEntityVisibleY1(ent, ent->y);
 		x2 = jamEntityVisibleX2(ent, ent->x);
 		y2 = jamEntityVisibleY2(ent, ent->y);
-		topLeft = (_gridYFromDouble(world, y1) * world->gridWidth) + _gridXFromDouble(world, x1);
-		topRight = (_gridYFromDouble(world, y1) * world->gridWidth) + _gridXFromDouble(world, x2);
-		bottomLeft = (_gridYFromDouble(world, y2) * world->gridWidth) + _gridXFromDouble(world, x1);
-		bottomRight = (_gridYFromDouble(world, y2) * world->gridWidth) + _gridXFromDouble(world, x2);
+		topLeft = _gridPosFromCoords(world, x1, y1);
+		topRight = _gridPosFromCoords(world, x2, y1);
+		bottomLeft = _gridPosFromCoords(world, x1, y2);
+		bottomRight = _gridPosFromCoords(world, x2, y2);
 
 		// Place the entity into the appropriate cells and update the entity's world-related values
 		_refreshGridPos(world, ent, topLeft, topRight, bottomLeft, bottomRight);
