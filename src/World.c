@@ -10,15 +10,20 @@
 #include <EntityList.h>
 #include <Sprite.h>
 #include <BehaviourMap.h>
+#include <JamEngine.h>
 #include "JamError.h"
 
 // Places an entity into a world's spatial map in all applicable boxes and updates
 // the entity's relavent values
-static inline int _refreshGridPos(int a, int b, int c, int d) { // TODO: Place entity in maps while counting unique positions
+static void _refreshGridPos(JamWorld* world, JamEntity* ent, int a, int b, int c, int d) {
 	int nums[] = {a, b, c, d};
-	int unique = 1;
 	bool instanceUnique;
 	int i, j;
+
+	// The first occurrence is guaranteed unique so just pop it in now
+	ent->cells = 1;
+	ent->cellsIn[0] = a;
+	ent->cellsLoc[0] = jamEntityListAdd(world->entityGrid[nums[0]], ent);
 
 	for (i = 1; i < 4; i++) {
 		instanceUnique = true;
@@ -29,11 +34,11 @@ static inline int _refreshGridPos(int a, int b, int c, int d) { // TODO: Place e
 
 		// We mark down that this entry is unique while also placing the entity here
 		if (instanceUnique) {
-			unique++;
+			ent->cells++;
+			ent->cellsIn[i] = nums[i];
+			ent->cellsLoc[0] = jamEntityListAdd(world->entityGrid[nums[i]], ent);
 		}
 	}
-
-	return unique;
 }
 
 // Calculates a spatial map's grid x value from a double x value in the world
@@ -50,15 +55,24 @@ static inline int _gridYFromDouble(JamWorld* world, double y) {
 // This function will add the entity to the world if its id
 // is not yet assigned, or update the position if the xPrev
 // or yPrev are different
-static inline void _updateEntInMap(JamWorld* world, JamEntity* ent) {
+static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 	// Grab the corners of the entity then calculate its corners' positions
 	// in the spatial map
 	double x1, y1, x2, y2;
 	int topLeft, topRight, bottomLeft, bottomRight;
+	int i;
 
-	// We only calculate all the values if we need to
-	if (ent->id == ID_NOT_ASSIGNED) { // Its not yet in the world, just add it
-		// We only need the current corners
+	// We only need to process this entity if it is either A) Not already in the world or
+	// B) its position has changed.
+	if (ent->id != ID_NOT_ASSIGNED || ent->xPrev != ent->x || ent->yPrev != ent->y) {
+		// If its not in the world, add it
+		if (ent->id == ID_NOT_ASSIGNED)
+			ent->id = jamEntityListAdd(world->worldEntities, ent);
+		else // Otherwise, remove it from its old locations
+			for (i = 0; i < ent->cells; i++)
+				world->entityGrid[ent->cellsIn[i]]->entities[ent->cellsLoc[i]] = NULL;
+
+		// Find the entity's corners then drop them into the grid
 		x1 = jamEntityVisibleX1(ent, ent->x);
 		y1 = jamEntityVisibleY1(ent, ent->y);
 		x2 = jamEntityVisibleX2(ent, ent->x);
@@ -69,17 +83,7 @@ static inline void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 		bottomRight = (_gridYFromDouble(world, y2) * world->gridWidth) + _gridXFromDouble(world, x2);
 
 		// Place the entity into the appropriate cells and update the entity's world-related values
-		_refreshGridPos(topLeft, topRight, bottomLeft, bottomRight);
-	} else if (ent->x != ent->xPrev || ent->y != ent->yPrev) { // Its position needs to be updated, remove the old locations first
-		// First we calculate the spots to remove this entity from
-		x1 = jamEntityVisibleX1(ent, ent->x);
-		y1 = jamEntityVisibleY1(ent, ent->y);
-		x2 = jamEntityVisibleX2(ent, ent->x);
-		y2 = jamEntityVisibleY2(ent, ent->y);
-		// TODO: This
-
-		// Now we place it into its new spot
-		// TODO: This
+		_refreshGridPos(world, ent, topLeft, topRight, bottomLeft, bottomRight);
 	}
 }
 
@@ -122,11 +126,8 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
 ///////////////////////////////////////////////////////
 void jamWorldAddEntity(JamWorld *world, JamEntity *entity) {
 	if (world != NULL && entity != NULL) {
-		// First it gets put into the space map
+		// Place it into the spatial map
 		_updateEntInMap(world, entity);
-
-		// Then we add it to the entity list and assign it an id
-		entity->id = jamEntityListAdd(world->worldEntities, entity);
 	} else {
 		if (world == NULL) {
 			jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldAddEntity)");

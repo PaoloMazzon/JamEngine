@@ -49,10 +49,12 @@ typedef struct _JamEntity {
 	float scaleY;      ///< The y scale of the entity (for sprite rendering)
 
 	// Things to help worlds
-	double xPrev; ///< Last frame's x position (JamWorlds will handle this automatically)
-	double yPrev; ///< Last frame's y position (JamWorlds will handle this automatically)
-	uint32 procs; ///< How many times the world has seen this entity so far (to prevent it from being processed/drawn multiple times when its in multiple map positions)
-	uint32 cells; ///< How many cells this entity is in in the world map
+	double xPrev;    ///< Last frame's x position (JamWorlds will handle this automatically)
+	double yPrev;    ///< Last frame's y position (JamWorlds will handle this automatically)
+	uint32 procs;    ///< How many times the world has seen this entity so far (to prevent it from being processed/drawn multiple times when its in multiple map positions)
+	uint32 cells;    ///< How many cells this entity is in in the world map
+	int cellsIn[4];  ///< The specific cells this entity is in
+	int cellsLoc[4]; ///< Where in the entity list this entity is
 
 	// Utilities not utilized by the engine
 	double hSpeed;   ///< Horizontal speed
