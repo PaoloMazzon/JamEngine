@@ -18,6 +18,7 @@
 static void _refreshGridPos(JamWorld* world, JamEntity* ent, int a, int b, int c, int d) {
 	int nums[] = {a, b, c, d};
 	bool instanceUnique;
+	int uniqueAccumulator = 0; // This ensures that cellsIn/cellsLoc will be in order
 	int i, j;
 
 	// The first occurrence is guaranteed unique so just pop it in now
@@ -35,8 +36,9 @@ static void _refreshGridPos(JamWorld* world, JamEntity* ent, int a, int b, int c
 		// We mark down that this entry is unique while also placing the entity here
 		if (instanceUnique) {
 			ent->cells++;
-			ent->cellsIn[i] = nums[i];
-			ent->cellsLoc[0] = jamEntityListAdd(world->entityGrid[nums[i]], ent);
+			uniqueAccumulator++;
+			ent->cellsIn[uniqueAccumulator] = nums[uniqueAccumulator];
+			ent->cellsLoc[uniqueAccumulator] = jamEntityListAdd(world->entityGrid[nums[i]], ent);
 		}
 	}
 }
