@@ -7,6 +7,7 @@
 #include "Entity.h"
 #include "EntityList.h"
 #include "Renderer.h"
+#include <pthread.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,6 +19,8 @@ typedef struct _JamWorld {
 	JamEntityList* worldEntities;        ///< The full list of entities in this world
 	JamEntityList* inRangeCache;         ///< "In-range" entities that have been placed here via
 	bool cacheInRangeEntities;           ///< Weather or not to use inRangeCache instead of the space map frame-to-frame
+	pthread_mutex_t entityCacheMutex;    ///< The mutex for when the old cache gets replaced by the new cache
+	int chunkOutOfViewAmount;            ///< How many cells out of view to process (or cache if caching is enabled) 1-3 is best, but feel free to play around with it
 
 	/* Spatial hash maps (or organizing entities into a grid in layman's terms)
 	 * For the uninitialized, this is a fairly simple concept to understand but
@@ -76,10 +79,7 @@ void jamWorldRotateEntity(JamWorld *world, int id);
 /// \throws ERROR_NULL_POINTER
 void jamWorldRemoveEntity(JamWorld *world, int id);
 
-/// \brief Sorts a world's entities into lists filtered by distance
-///
-/// This function sorts the
-///
+/// \brief Caches in-range entities if that is enabled
 /// \throws ERROR_NULL_POINTER
 void jamWorldFilter(JamWorld *world, int pointX, int pointY);
 

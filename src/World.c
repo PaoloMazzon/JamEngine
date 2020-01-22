@@ -104,6 +104,7 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
 		world->gridHeight = gridHeight;
 		world->cellWidth = cellWidth;
 		world->cellHeight = cellHeight;
+		world->entityCacheMutex = PTHREAD_MUTEX_INITIALIZER;
 
 		if (world->entityGrid != NULL) {
 			for (i = 0; i < (gridWidth * gridHeight) + 1; i++) {
@@ -162,11 +163,33 @@ JamEntity* jamWorldFindEntity(JamWorld *world, int id) {
 
 ///////////////////////////////////////////////////////
 void jamWorldProcFrame(JamWorld *world) {
-	int i;
+	int i, j, k;
 	JamEntity* ent;
 
 	if (world != NULL) {
-		// TODO: This
+		// If we're using the in-range cache we must lock the cache
+		if (world->cacheInRangeEntities) {
+			pthread_mutex_lock(&world->entityCacheMutex);
+			// Process frames
+			for (i = 0; i < world->inRangeCache->size; i++) {
+				if (world->inRangeCache->entities[i] != NULL &&
+					world->inRangeCache->entities[i]->behaviour != NULL &&
+					world->inRangeCache->entities[i]->behaviour->onFrame != NULL)
+					(*world->inRangeCache->entities[i]->behaviour->onFrame)(world, world->inRangeCache->entities[i]);
+			}
+
+			// Process drawing functions
+			for (i = 0; i < world->inRangeCache->size; i++) {
+				if (world->inRangeCache->entities[i] != NULL &&
+					world->inRangeCache->entities[i]->behaviour != NULL &&
+					world->inRangeCache->entities[i]->behaviour->onFrame != NULL)
+					(*world->inRangeCache->entities[i]->behaviour->onFrame)(world, world->inRangeCache->entities[i]);
+			}
+			pthread_mutex_unlock(&world->entityCacheMutex);
+		} else {
+			// In this case, we are to just go through the space map and find all entities in the viewport
+			// TODO: This
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldProcFrame)");
 	}
