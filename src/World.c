@@ -13,22 +13,16 @@
 #include <JamEngine.h>
 #include "JamError.h"
 
-// Calls an entity's update function safely
-static void _updateEntity(JamWorld* world, JamEntity* ent) {
-	if (ent != NULL && ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
-		(*ent->behaviour->onFrame)(world, ent);
-}
+/*
+ * Most of the following functions are for managing the world's spatial
+ * hash map. Since the user never needs to actually interact with the
+ * space map beyond configuring a couple settings, the function that interact
+ * with a world's space map are all static (I also don't want the average
+ * user to have access to space map functions because messing this up
+ * is a very quick way to get segfaults/memory leaks/thread leaks)
+ */
 
-// Draws an entity using the entity's own draw function or if that doesn't exist just draws it
-static void _drawEntity(JamWorld* world, JamEntity* ent) {
-	if (ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
-		(*ent->behaviour->onDraw)(world, ent);
-	else if ((ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw == NULL)
-		jamDrawEntity(ent);
-}
-
-// Places an entity into a world's spatial map in all applicable boxes and updates
-// the entity's relavent values
+/// \brief Places an entity into all non-duplicate cells in the space map
 static void _refreshGridPos(JamWorld* world, JamEntity* ent, int a, int b, int c, int d) {
 	int nums[] = {a, b, c, d};
 	bool instanceUnique;
@@ -57,17 +51,17 @@ static void _refreshGridPos(JamWorld* world, JamEntity* ent, int a, int b, int c
 	}
 }
 
-// Calculates the x in the space grid for a real-world x
+/// \brief Calculates an in-grid position from a real x value
 static inline int _gridPosFromRealX(JamWorld* world, double x) {
 	return (int)(x / (double)world->cellWidth);
 }
 
-// Calculates the y in the space grid for a real-world y
+/// \brief Calculates an in-grid position from a real y value
 static inline int _gridPosFromRealY(JamWorld* world, double y) {
 	return (int)(y / (double)world->cellHeight);
 }
 
-// Returns the entity list at a position in the space grid
+/// \brief Finds the entity list associated with a position in the space map
 static inline JamEntityList* _getListAtPos(JamWorld* world, int xInGrid, int yInGrid) {
 	if (xInGrid >= world->gridWidth || xInGrid < 0 || yInGrid >= world->gridHeight || yInGrid < 0)
 		return world->entityGrid[world->gridWidth * world->gridHeight];
@@ -75,7 +69,7 @@ static inline JamEntityList* _getListAtPos(JamWorld* world, int xInGrid, int yIn
 		return world->entityGrid[(yInGrid * world->gridWidth) + xInGrid];
 }
 
-// Calculates a coordinate's equivalent cell in a world's space map, accounting for out of bounds values
+/// \brief Calculates the corresponding cell in a space map given a real x/y
 static int _gridPosFromCoords(JamWorld* world, double x, double y) {
 	int xInGrid = (int)(x / (double)world->cellWidth);
 	int yInGrid = (int)(y / (double)world->cellHeight);
@@ -86,10 +80,12 @@ static int _gridPosFromCoords(JamWorld* world, double x, double y) {
 		return (yInGrid * world->gridWidth) + xInGrid;
 }
 
-// Updates an entity's position in the spatial map
-// This function will add the entity to the world if its id
-// is not yet assigned, or update the position if the xPrev
-// or yPrev are different
+/// \brief Updates an entity's position in a world's spatial map
+///
+/// If the entity is already in the world and its position has
+/// changed, it will be removed from its old position and stuck
+/// into its new one. Otherwise, it is simply added to its position
+/// in the map.
 static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 	// Grab the corners of the entity then calculate its corners' positions
 	// in the spatial map
@@ -120,6 +116,29 @@ static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 		// Place the entity into the appropriate cells and update the entity's world-related values
 		_refreshGridPos(world, ent, topLeft, topRight, bottomLeft, bottomRight);
 	}
+}
+
+/// \brief Safely calls an entity's behaviour's onFrame function as well as updates its position in the world
+static void _updateEntity(JamWorld* world, JamEntity* ent) {
+	if (ent != NULL) {
+		if (ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
+			(*ent->behaviour->onFrame)(world, ent);
+
+		// Update the entity's position in the grid
+		_updateEntInMap(world, ent);
+
+		// Update previous coordinates
+		ent->xPrev = ent->x;
+		ent->yPrev = ent->y;
+	}
+}
+
+/// \brief Safely call an entity's behaviour's onDraw function or draws it if it doesn't have one
+static void _drawEntity(JamWorld* world, JamEntity* ent) {
+	if (ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
+		(*ent->behaviour->onDraw)(world, ent);
+	else if ((ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw == NULL)
+		jamDrawEntity(ent);
 }
 
 ///////////////////////////////////////////////////////
