@@ -13,6 +13,8 @@
 #include <JamEngine.h>
 #include "JamError.h"
 
+static bool gThreadComplete;
+
 /*
  * Most of the following functions are for managing the world's spatial
  * hash map. Since the user never needs to actually interact with the
@@ -137,8 +139,18 @@ static void _updateEntity(JamWorld* world, JamEntity* ent) {
 static void _drawEntity(JamWorld* world, JamEntity* ent) {
 	if (ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
 		(*ent->behaviour->onDraw)(world, ent);
-	else if ((ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw == NULL)
+	else if ((ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw == NULL))
 		jamDrawEntity(ent);
+}
+
+/// \brief Filters the entities in the space map into a new filtered cache.
+static void* _filterEntitiesIntoCache(void* voidWorld) {
+	JamWorld* world = voidWorld;
+
+	pthread_mutex_lock(&world->entityAddingLock);
+	pthread_mutex_unlock(&world->entityAddingLock);
+
+	return NULL;
 }
 
 ///////////////////////////////////////////////////////
@@ -155,7 +167,7 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
 		world->gridHeight = gridHeight;
 		world->cellWidth = cellWidth;
 		world->cellHeight = cellHeight;
-		world->entityCacheMutex = PTHREAD_MUTEX_INITIALIZER;
+		pthread_mutex_init(&world->entityCacheMutex, PTHREAD_MUTEX_DEFAULT);
 
 		if (world->entityGrid != NULL) {
 			for (i = 0; i < (gridWidth * gridHeight) + 1; i++) {
@@ -181,12 +193,17 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
 ///////////////////////////////////////////////////////
 void jamWorldAddEntity(JamWorld *world, JamEntity *entity) {
 	if (world != NULL && entity != NULL) {
+		// We can't add entities while filtering is occurring lest the cache end up wrong
+		pthread_mutex_lock(&world->entityAddingLock);
+
 		// Place it into the spatial map
 		_updateEntInMap(world, entity);
 
 		// All entities added are automatically added to the cache
 		if (world->cacheInRangeEntities)
 			jamEntityListAdd(world->inRangeCache, entity);
+
+		pthread_mutex_unlock(&world->entityAddingLock);
 	} else {
 		if (world == NULL) {
 			jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldAddEntity)");
@@ -281,14 +298,21 @@ void jamWorldRemoveEntity(JamWorld *world, int id) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void jamWorldFilter(JamWorld *world, int pointX, int pointY) {
+void jamWorldFilter(JamWorld *world, int pointX, int pointY) { // TODO: Fix this
 	uint32 i, j;
 	JamEntity* entity;
+	pthread_attr_t attr;
 
-	if (world != NULL) {
-		// TODO: This
+	if (world != NULL && world->cacheInRangeEntities) {
+		// Create the new filtering thread
+		pthread_attr_init(&attr);
+		pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+		pthread_create(&world->cacheBuilderThread, &attr, _filterEntitiesIntoCache, world);
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldFilter)");
+		if (world == NULL)
+			jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldFilter)");
+		else
+			jSetError(ERROR_WARNING, "Attempting to filter a world with filtering disabled");
 	}
 }
 ///////////////////////////////////////////////////////

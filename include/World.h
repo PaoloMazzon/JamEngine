@@ -20,7 +20,9 @@ typedef struct _JamWorld {
 	JamEntityList* inRangeCache;         ///< "In-range" entities that have been placed here via
 	bool cacheInRangeEntities;           ///< Weather or not to use inRangeCache instead of the space map frame-to-frame
 	pthread_mutex_t entityCacheMutex;    ///< The mutex for when the old cache gets replaced by the new cache
+	pthread_mutex_t entityAddingLock;    ///< The lock that prevents entities from being added while caching is occurring
 	int procDistance;                    ///< How many pixels outside the viewport to still process/draw entities
+	pthread_t cacheBuilderThread;        ///< Thread responsible for filtering the entities into the cache
 
 	/* Spatial hash maps (or organizing entities into a grid in layman's terms)
 	 * For the uninitialized, this is a fairly simple concept to understand but
@@ -80,6 +82,17 @@ void jamWorldRotateEntity(JamWorld *world, int id);
 void jamWorldRemoveEntity(JamWorld *world, int id);
 
 /// \brief Caches in-range entities if that is enabled
+///
+/// To be a bit more technical, this function starts the caching
+/// process in another thread, and once that thread has successfully
+/// finished filtering entities into a new cache, it will quickly
+/// swap out the old cache with the new one and free the old one.
+/// For all intents and purposes, this bit doesn't matter, but it
+/// is important to note that this is not instantaneous and the new
+/// cache is not guaranteed to be fully processed until after this
+/// function is called a second time; although it will likely be
+/// done filtering quite quickly.
+///
 /// \throws ERROR_NULL_POINTER
 void jamWorldFilter(JamWorld *world, int pointX, int pointY);
 
