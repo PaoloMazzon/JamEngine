@@ -20,7 +20,7 @@ typedef struct _JamWorld {
 	JamEntityList* inRangeCache;         ///< "In-range" entities that have been placed here via
 	bool cacheInRangeEntities;           ///< Weather or not to use inRangeCache instead of the space map frame-to-frame
 	pthread_mutex_t entityCacheMutex;    ///< The mutex for when the old cache gets replaced by the new cache
-	int chunkOutOfViewAmount;            ///< How many cells out of view to process (or cache if caching is enabled) 1-3 is best, but feel free to play around with it
+	int procDistance;                    ///< How many pixels outside the viewport to still process/draw entities
 
 	/* Spatial hash maps (or organizing entities into a grid in layman's terms)
 	 * For the uninitialized, this is a fairly simple concept to understand but

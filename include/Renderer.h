@@ -78,6 +78,14 @@ void* jamRendererGetInternalRenderer();
 /// \throws ERROR_NULL_POINTER
 void jamRendererSetIcon(const char* imageFilename);
 
+/// \brief Gets the width of the buffer thats drawn on (viewport, if you will)
+/// \throws ERROR_NULL_POINTER
+uint32 jamRendererGetBufferWidth();
+
+/// \brief Gets the height of the buffer thats drawn on (viewport, if you will)
+/// \throws ERROR_NULL_POINTER
+uint32 jamRendererGetBufferHeight();
+
 /// \brief Gets the camera's x position in the game world
 /// \throws ERROR_NULL_POINTER
 double jamRendererGetCameraX();

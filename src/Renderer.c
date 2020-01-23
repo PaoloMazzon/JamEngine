@@ -117,6 +117,30 @@ void jamRendererSetIcon(const char* imageFilename) {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
+uint32 jamRendererGetBufferWidth() {
+	if (gRenderer != NULL) {
+		return gRenderer->displayBufferW;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized");
+	}
+
+	return 0;
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+uint32 jamRendererGetBufferHeight() {
+	if (gRenderer != NULL) {
+		return gRenderer->displayBufferH;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized");
+	}
+
+	return 0;
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
 double jamRendererGetCameraX() {
 	if (gRenderer != NULL) {
 		return gRenderer->cameraX;
@@ -319,8 +343,8 @@ bool jamRendererTargetIsScreenBuffer() {
 //////////////////////////////////////////////////////////////
 void jamRendererCalculateForCamera(int *x, int *y) {
 	if (jamRendererTargetIsScreenBuffer()) {
-		*x -= roundf(gRenderer->cameraX);
-		*y -= roundf(gRenderer->cameraY);
+		*x -= roundl(gRenderer->cameraX);
+		*y -= roundl(gRenderer->cameraY);
 	}
 }
 //////////////////////////////////////////////////////////////

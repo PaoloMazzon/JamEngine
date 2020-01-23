@@ -13,6 +13,20 @@
 #include <JamEngine.h>
 #include "JamError.h"
 
+// Calls an entity's update function safely
+static void _updateEntity(JamWorld* world, JamEntity* ent) {
+	if (ent != NULL && ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
+		(*ent->behaviour->onFrame)(world, ent);
+}
+
+// Draws an entity using the entity's own draw function or if that doesn't exist just draws it
+static void _drawEntity(JamWorld* world, JamEntity* ent) {
+	if (ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
+		(*ent->behaviour->onDraw)(world, ent);
+	else if ((ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw == NULL)
+		jamDrawEntity(ent);
+}
+
 // Places an entity into a world's spatial map in all applicable boxes and updates
 // the entity's relavent values
 static void _refreshGridPos(JamWorld* world, JamEntity* ent, int a, int b, int c, int d) {
@@ -43,8 +57,26 @@ static void _refreshGridPos(JamWorld* world, JamEntity* ent, int a, int b, int c
 	}
 }
 
+// Calculates the x in the space grid for a real-world x
+static inline int _gridPosFromRealX(JamWorld* world, double x) {
+	return (int)(x / (double)world->cellWidth);
+}
+
+// Calculates the y in the space grid for a real-world y
+static inline int _gridPosFromRealY(JamWorld* world, double y) {
+	return (int)(y / (double)world->cellHeight);
+}
+
+// Returns the entity list at a position in the space grid
+static inline JamEntityList* _getListAtPos(JamWorld* world, int xInGrid, int yInGrid) {
+	if (xInGrid >= world->gridWidth || xInGrid < 0 || yInGrid >= world->gridHeight || yInGrid < 0)
+		return world->entityGrid[world->gridWidth * world->gridHeight];
+	else
+		return world->entityGrid[(yInGrid * world->gridWidth) + xInGrid];
+}
+
 // Calculates a coordinate's equivalent cell in a world's space map, accounting for out of bounds values
-static inline int _gridPosFromCoords(JamWorld* world, double x, double y) {
+static int _gridPosFromCoords(JamWorld* world, double x, double y) {
 	int xInGrid = (int)(x / (double)world->cellWidth);
 	int yInGrid = (int)(y / (double)world->cellHeight);
 
@@ -132,6 +164,10 @@ void jamWorldAddEntity(JamWorld *world, JamEntity *entity) {
 	if (world != NULL && entity != NULL) {
 		// Place it into the spatial map
 		_updateEntInMap(world, entity);
+
+		// All entities added are automatically added to the cache
+		if (world->cacheInRangeEntities)
+			jamEntityListAdd(world->inRangeCache, entity);
 	} else {
 		if (world == NULL) {
 			jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldAddEntity)");
@@ -164,31 +200,47 @@ JamEntity* jamWorldFindEntity(JamWorld *world, int id) {
 ///////////////////////////////////////////////////////
 void jamWorldProcFrame(JamWorld *world) {
 	int i, j, k;
+	int cellStartX, cellStartY;
+	int cellEndX, cellEndY;
+	JamEntityList* currentList;
 	JamEntity* ent;
 
 	if (world != NULL) {
 		// If we're using the in-range cache we must lock the cache
 		if (world->cacheInRangeEntities) {
+			// If the cache changes while we're using it here we're most likely getting a segfault
 			pthread_mutex_lock(&world->entityCacheMutex);
+
 			// Process frames
-			for (i = 0; i < world->inRangeCache->size; i++) {
-				if (world->inRangeCache->entities[i] != NULL &&
-					world->inRangeCache->entities[i]->behaviour != NULL &&
-					world->inRangeCache->entities[i]->behaviour->onFrame != NULL)
-					(*world->inRangeCache->entities[i]->behaviour->onFrame)(world, world->inRangeCache->entities[i]);
-			}
+			for (i = 0; i < world->inRangeCache->size; i++)
+				_updateEntity(world, world->inRangeCache->entities[i]);
 
 			// Process drawing functions
-			for (i = 0; i < world->inRangeCache->size; i++) {
-				if (world->inRangeCache->entities[i] != NULL &&
-					world->inRangeCache->entities[i]->behaviour != NULL &&
-					world->inRangeCache->entities[i]->behaviour->onFrame != NULL)
-					(*world->inRangeCache->entities[i]->behaviour->onFrame)(world, world->inRangeCache->entities[i]);
-			}
+			for (i = 0; i < world->inRangeCache->size; i++)
+				_drawEntity(world, world->inRangeCache->entities[i]);
+
 			pthread_mutex_unlock(&world->entityCacheMutex);
 		} else {
 			// In this case, we are to just go through the space map and find all entities in the viewport
-			// TODO: This
+			// Calculate the starting and ending cells
+			cellStartX = _gridPosFromRealX(world, jamRendererGetCameraX() - world->procDistance);
+			cellStartY = _gridPosFromRealY(world, jamRendererGetCameraY() - world->procDistance);
+			cellEndX = _gridPosFromRealX(world, jamRendererGetCameraX() + jamRendererGetBufferWidth() + world->procDistance);
+			cellEndY = _gridPosFromRealY(world, jamRendererGetCameraY() + jamRendererGetBufferHeight() + world->procDistance);
+
+			for (i = cellStartY; i <= cellEndY; i++) {
+				for (j = cellStartX; j <= cellEndX; j++) {
+					currentList = _getListAtPos(world, j, i);
+
+					// Call this one's frame update
+					for (k = 0; k < currentList->size; k++)
+						_updateEntity(world, currentList->entities[k]);
+
+					// Now to draw it
+					for (k = 0; k < currentList->size; k++)
+						_drawEntity(world, currentList->entities[k]);
+				}
+			}
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldProcFrame)");
