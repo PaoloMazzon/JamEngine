@@ -104,7 +104,7 @@ JamWorld* jamTMXLoadWorld(JamAssetHandler *handler, const char *tmxFilename) {
 		mapH = tmx->height;
 		tileW = tmx->tile_width;
 		tileH = tmx->tile_height;
-		world = jamWorldCreate(mapW / 2, mapH / 2, tileW * 2, tileH * 2);
+		world = jamWorldCreate(mapW / 2, mapH / 2, tileW * 2, tileH * 2, false);
 
 		if (world != NULL) {
 			// Warn the user if they are trying to load anything but an orthogonal map

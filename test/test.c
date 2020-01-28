@@ -274,7 +274,7 @@ int main(int argc, char* argv[]) {
 		// Load things
 		gHandler = jamAssetHandlerCreate(1000);
 		jamAssetHandlerLoadINI(gHandler, "assets/testassets.ini", NULL);
-		JamWorld* world = jamWorldCreate(20, 15, 32, 32);
+		JamWorld* world = jamWorldCreate(20, 15, 32, 32, false);
 		JamBehaviour behaviour;
 		behaviour.onFrame = onFrame;
 		behaviour.onDestruction = NULL;

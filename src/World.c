@@ -166,7 +166,7 @@ static void* _filterEntitiesIntoCache(void* voidWorld) {
 }
 
 ///////////////////////////////////////////////////////
-JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellHeight) {
+JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellHeight, bool cache) {
 	JamWorld* world = (JamWorld*)calloc(1, sizeof(JamWorld));
 	bool error = false;
 	int i;
@@ -179,6 +179,13 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
 		world->gridHeight = gridHeight;
 		world->cellWidth = cellWidth;
 		world->cellHeight = cellHeight;
+		world->cacheInRangeEntities = cache;
+
+		if (world->cacheInRangeEntities) {
+			world->inRangeCache = jamEntityListCreate();
+			if (world->inRangeCache == NULL)
+				error = true;
+		}
 
 		// Setup the mutexes
 		pthread_mutexattr_t t;
@@ -207,6 +214,21 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
 	}
 
 	return world;
+}
+///////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////
+void jamWorldEnableCaching(JamWorld* world) {
+	if (world != NULL && !world->cacheInRangeEntities) {
+		world->inRangeCache = jamEntityListCreate();
+		if (world->inRangeCache != NULL) {
+			world->cacheInRangeEntities;
+			_filterEntitiesIntoCache(world);
+		}
+	} else {
+		if (world == NULL)
+			jSetError(ERROR_NULL_POINTER, "World does not exist");
+	}
 }
 ///////////////////////////////////////////////////////
 

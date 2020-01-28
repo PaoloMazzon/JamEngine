@@ -46,8 +46,25 @@ typedef struct _JamWorld {
 } JamWorld;
 
 /// \brief Creates a world to work with
+/// \param gridWidth Width of the spatial map in cells
+/// \param gridHeight Height of the spatial map in cells
+/// \param cellWidth Width of each cell in pixels
+/// \param cellHeight Height of each cell in pixels
+/// \param cache Weather or not to cache in-range entities in another thread
+///
 /// \throws ERROR_ALLOC_FAILED
-JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellHeight);
+JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellHeight, bool cache);
+
+/// \brief Enables entity caching for a given world if it isn't already enabled
+///
+/// Assuming this function works, it will immediately halt the program to
+/// build the in-range cache, then after that you must call the function
+/// manually to do it (but of course jamWorldFilter filters in another
+/// thread unlike this function).
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ALLOC_FAILED
+void jamWorldEnableCaching(JamWorld* world);
 
 /// \brief Adds an entity to the world
 ///
