@@ -240,11 +240,9 @@ bool runGame() {
 }
 
 void onFrame(JamWorld* world, JamEntity* self) {
-	printf("onframe\n");
 }
 
 void onDraw(JamWorld* world, JamEntity* self) {
-	printf("ondraw\n");
 	jamDrawEntity(self);
 }
 
@@ -283,10 +281,15 @@ int main(int argc, char* argv[]) {
 		JamEntity* testEnt =jamAssetHandlerGetEntity(gHandler, "PlayerEntity");
 		testEnt->behaviour = &behaviour;
 		jamWorldAddEntity(world, jamEntityCopy(testEnt, 60, 50));
+		jamWorldAddEntity(world, jamEntityCopy(testEnt, 80, 50));
+		jamWorldAddEntity(world, jamEntityCopy(testEnt, 100, 50));
+		jamWorldAddEntity(world, jamEntityCopy(testEnt, 120, 50));
+		jamWorldEnableCaching(world);
 
 		// Testing
 		while (jamRendererProcEvents()) {
-			printf("-------------FrameStart-------------\n");
+			if (jamInputCheckKeyPressed(JAM_KB_DOWN))
+				jamWorldFilter(world);
 			jamDrawFillColour(255, 255, 255, 255);
 			jamWorldProcFrame(world);
 			jamRendererProcEndFrame();

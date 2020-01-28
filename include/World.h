@@ -111,7 +111,7 @@ void jamWorldRemoveEntity(JamWorld *world, int id);
 /// done filtering quite quickly.
 ///
 /// \throws ERROR_NULL_POINTER
-void jamWorldFilter(JamWorld *world, int pointX, int pointY);
+void jamWorldFilter(JamWorld *world);
 
 /// \brief Frees a world
 ///

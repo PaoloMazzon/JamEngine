@@ -185,6 +185,7 @@ static void* _filterEntitiesIntoCache(void* voidWorld) {
 	cellEndX = _gridPosFromRealX(world, jamRendererGetCameraX() + jamRendererGetBufferWidth() + world->procDistance);
 	cellEndY = _gridPosFromRealY(world, jamRendererGetCameraY() + jamRendererGetBufferHeight() + world->procDistance);
 
+	// TODO: This function is adding dangling pointers to the list somehow
 	for (i = cellStartY; i <= cellEndY; i++) {
 		for (j = cellStartX; j <= cellEndX; j++) {
 			currentList = _getListAtPos(world, j, i);
@@ -265,7 +266,7 @@ void jamWorldEnableCaching(JamWorld* world) {
 	if (world != NULL && !world->cacheInRangeEntities) {
 		world->inRangeCache = jamEntityListCreate();
 		if (world->inRangeCache != NULL) {
-			world->cacheInRangeEntities;
+			world->cacheInRangeEntities = true;
 			_filterEntitiesIntoCache(world);
 		}
 	} else {
@@ -383,7 +384,7 @@ void jamWorldRemoveEntity(JamWorld *world, int id) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
-void jamWorldFilter(JamWorld *world, int pointX, int pointY) { // TODO: Fix this
+void jamWorldFilter(JamWorld *world) {
 	uint32 i, j;
 	JamEntity* entity;
 	pthread_attr_t attr;
