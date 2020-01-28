@@ -9,6 +9,7 @@
 #include <Tweening.h>
 #include <EntityList.h>
 #include <memory.h>
+#include <JamEngine.h>
 #include "JamEngine.h"
 
 /////////////////// Constants ///////////////////
@@ -238,6 +239,15 @@ bool runGame() {
 	return mainMenu;
 }
 
+void onFrame(JamWorld* world, JamEntity* self) {
+	printf("onframe\n");
+}
+
+void onDraw(JamWorld* world, JamEntity* self) {
+	printf("ondraw\n");
+	jamDrawEntity(self);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[]) {
 	// Decide if we're in testing suite mode or not
@@ -265,11 +275,18 @@ int main(int argc, char* argv[]) {
 		gHandler = jamAssetHandlerCreate(1000);
 		jamAssetHandlerLoadINI(gHandler, "assets/testassets.ini", NULL);
 		JamWorld* world = jamWorldCreate(20, 15, 32, 32);
+		JamBehaviour behaviour;
+		behaviour.onFrame = onFrame;
+		behaviour.onDestruction = NULL;
+		behaviour.onCreation = NULL;
+		behaviour.onDraw = onDraw;
 		JamEntity* testEnt =jamAssetHandlerGetEntity(gHandler, "PlayerEntity");
-		jamWorldAddEntity(world, jamEntityCopy(testEnt, 50, 50));
+		testEnt->behaviour = &behaviour;
+		jamWorldAddEntity(world, jamEntityCopy(testEnt, 60, 50));
 
 		// Testing
 		while (jamRendererProcEvents()) {
+			printf("-------------FrameStart-------------\n");
 			jamDrawFillColour(255, 255, 255, 255);
 			jamWorldProcFrame(world);
 			jamRendererProcEndFrame();
