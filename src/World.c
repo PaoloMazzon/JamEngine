@@ -156,12 +156,55 @@ static void _drawEntity(JamWorld* world, JamEntity* ent) {
 }
 
 /// \brief Filters the entities in the space map into a new filtered cache.
+///
+/// Here is a not-so-brief rundown on whats cooking in this function.
+/// First we lock the mutex that blocks entities from being added,
+/// because that would just muck up this whole process. Next, we run
+/// through every entity list in the selected portion of the space map
+/// and add all actual entities to the in-range cache. As of right now,
+/// this function will add duplicates of entity pointers should they
+/// exist in the space map (ie, entity in multiple cells), since the
+/// update and draw functions make sure that they aren't processed multiple
+/// times anyway. Once this bit is done, the cache mutex is locked very
+/// briefly only to swap the new cache and old cache, which is then
+/// destroyed. A new cache is built in memory while the old one still
+/// exists so we only have to lock the mutex to swap caches.
 static void* _filterEntitiesIntoCache(void* voidWorld) {
 	JamWorld* world = voidWorld;
+	int cellStartX, cellStartY, cellEndX, cellEndY;
+	JamEntityList* currentList; // Also used to swap lists nearer the end of the functions
+	int i, j, k;
+
+	// The new list that is being built
+	JamEntityList* newList = jamEntityListCreate();
 
 	pthread_mutex_lock(&world->entityAddingLock);
-	pthread_mutex_unlock(&world->entityAddingLock);
 
+	cellStartX = _gridPosFromRealX(world, jamRendererGetCameraX() - world->procDistance);
+	cellStartY = _gridPosFromRealY(world, jamRendererGetCameraY() - world->procDistance);
+	cellEndX = _gridPosFromRealX(world, jamRendererGetCameraX() + jamRendererGetBufferWidth() + world->procDistance);
+	cellEndY = _gridPosFromRealY(world, jamRendererGetCameraY() + jamRendererGetBufferHeight() + world->procDistance);
+
+	for (i = cellStartY; i <= cellEndY; i++) {
+		for (j = cellStartX; j <= cellEndX; j++) {
+			currentList = _getListAtPos(world, j, i);
+
+			// Call this one's frame update
+			for (k = 0; k < currentList->size; k++)
+				if (currentList->entities[k] != NULL)
+					jamEntityListAdd(newList, currentList->entities[i]);
+		}
+	}
+
+	// New cache is built, swap caches
+	pthread_mutex_lock(&world->entityCacheMutex);
+	currentList = world->inRangeCache;
+	world->inRangeCache = newList;
+	pthread_mutex_unlock(&world->entityCacheMutex);
+
+	jamEntityListFree(currentList, false);
+
+	pthread_mutex_unlock(&world->entityAddingLock);
 	return NULL;
 }
 
