@@ -97,10 +97,14 @@ static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 
 	// We only need to process this entity if it is either A) Not already in the world or
 	// B) its position has changed.
-	if (ent->id != ID_NOT_ASSIGNED || ent->xPrev != ent->x || ent->yPrev != ent->y) {
-		// If its not in the world, add it
-		if (ent->id == ID_NOT_ASSIGNED)
+	if (ent->id == ID_NOT_ASSIGNED || ent->xPrev != ent->x || ent->yPrev != ent->y) {
+		// If its not in the world, add it and potentially call its initialization function
+		if (ent->id == ID_NOT_ASSIGNED) {
 			ent->id = jamEntityListAdd(world->worldEntities, ent);
+
+			if (ent->behaviour != NULL && ent->behaviour->onCreation != NULL)
+				(*ent->behaviour->onCreation)(world, ent);
+		}
 		else // Otherwise, remove it from its old locations
 			for (i = 0; i < ent->cells; i++)
 				world->entityGrid[ent->cellsIn[i]]->entities[ent->cellsLoc[i]] = NULL;
@@ -123,24 +127,32 @@ static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 /// \brief Safely calls an entity's behaviour's onFrame function as well as updates its position in the world
 static void _updateEntity(JamWorld* world, JamEntity* ent) {
 	if (ent != NULL) {
-		if (ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
-			(*ent->behaviour->onFrame)(world, ent);
+		if (ent->procs++ == 0) {
+			if (ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
+				(*ent->behaviour->onFrame)(world, ent);
 
-		// Update the entity's position in the grid
-		_updateEntInMap(world, ent);
+			// Update the entity's position in the grid
+			_updateEntInMap(world, ent);
 
-		// Update previous coordinates
-		ent->xPrev = ent->x;
-		ent->yPrev = ent->y;
+			// Update previous coordinates
+			ent->xPrev = ent->x;
+			ent->yPrev = ent->y;
+		}
 	}
 }
 
 /// \brief Safely call an entity's behaviour's onDraw function or draws it if it doesn't have one
 static void _drawEntity(JamWorld* world, JamEntity* ent) {
-	if (ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
-		(*ent->behaviour->onDraw)(world, ent);
-	else if ((ent != NULL && ent->behaviour != NULL && ent->behaviour->onDraw == NULL))
-		jamDrawEntity(ent);
+	if (ent != NULL && ent->procs == 1) {
+		if (ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
+			(*ent->behaviour->onDraw)(world, ent);
+		else if (ent->behaviour == NULL ||
+				 (ent->behaviour != NULL && ent->behaviour->onDraw == NULL))
+			jamDrawEntity(ent);
+	}
+
+	if (ent != NULL && ent->procs == ent->cells)
+		ent->procs = 0;
 }
 
 /// \brief Filters the entities in the space map into a new filtered cache.
@@ -167,7 +179,15 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
 		world->gridHeight = gridHeight;
 		world->cellWidth = cellWidth;
 		world->cellHeight = cellHeight;
-		pthread_mutex_init(&world->entityCacheMutex, PTHREAD_MUTEX_DEFAULT);
+
+		// Setup the mutexes
+		pthread_mutexattr_t t;
+		pthread_mutexattr_init(&t);
+		pthread_mutexattr_setprotocol(&t, PTHREAD_MUTEX_DEFAULT);
+		pthread_mutex_init(&world->entityCacheMutex, &t);
+		pthread_mutexattr_init(&t);
+		pthread_mutexattr_setprotocol(&t, PTHREAD_MUTEX_DEFAULT);
+		pthread_mutex_init(&world->entityAddingLock, &t);
 
 		if (world->entityGrid != NULL) {
 			for (i = 0; i < (gridWidth * gridHeight) + 1; i++) {
@@ -325,6 +345,12 @@ void jamWorldFree(JamWorld *world) {
 			jamEntityListFree(world->entityGrid[i], false);
 		for (i = 0; i < MAX_TILEMAPS; i++)
 			jamTileMapFree(world->worldMaps[i]);
+		for (i = 0; i < world->worldEntities->size; i++)
+			if (world->worldEntities->entities[i] != NULL &&
+				world->worldEntities->entities[i]->behaviour != NULL &&
+					world->worldEntities->entities[i]->behaviour->onDestruction != NULL)
+				(*world->worldEntities->entities[i]->behaviour->onDestruction)(world, world->worldEntities->entities[i]);
+
 		free(world->entityGrid);
 		jamEntityListFree(world->inRangeCache, false);
 		jamEntityListFree(world->worldEntities, true);

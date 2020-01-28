@@ -237,6 +237,7 @@ bool runGame() {
 
 	return mainMenu;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[]) {
 	// Decide if we're in testing suite mode or not
@@ -263,15 +264,16 @@ int main(int argc, char* argv[]) {
 		// Load things
 		gHandler = jamAssetHandlerCreate(1000);
 		jamAssetHandlerLoadINI(gHandler, "assets/testassets.ini", NULL);
-
-		// World testing
 		JamWorld* world = jamWorldCreate(20, 15, 32, 32);
 		JamEntity* testEnt =jamAssetHandlerGetEntity(gHandler, "PlayerEntity");
-		JamEntity* copiedEnt = jamEntityCopy(testEnt, 50, 50);
+		jamWorldAddEntity(world, jamEntityCopy(testEnt, 50, 50));
 
-		// Tests
-		jamWorldAddEntity(world, copiedEnt);
-		printf("[World Data]\nWidth/Height: %i/%i\n", world->gridWidth, world->gridHeight);
+		// Testing
+		while (jamRendererProcEvents()) {
+			jamDrawFillColour(255, 255, 255, 255);
+			jamWorldProcFrame(world);
+			jamRendererProcEndFrame();
+		}
 
 		// Free memory
 		jamAssetHandlerFree(gHandler);
