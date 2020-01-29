@@ -41,7 +41,7 @@ int jamEntityListAdd(JamEntityList *list, JamEntity *entity) {
 			list->size++;
 		} else if (!foundSpot) {
 			// When all else fails, allocate more memory
-			newList = realloc(list->entities, (list->size + ENTITY_LIST_ALLOCATION_AMOUNT) * sizeof(JamEntity*));
+			newList = (JamEntity**)realloc(list->entities, (list->size + ENTITY_LIST_ALLOCATION_AMOUNT) * sizeof(JamEntity*));
 
 			if (newList != NULL) {
 				list->entities = newList;

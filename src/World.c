@@ -138,12 +138,15 @@ static void _updateEntity(JamWorld* world, JamEntity* ent) {
 			ent->xPrev = ent->x;
 			ent->yPrev = ent->y;
 		}
+
+		if (ent->procs == ent->cells)
+			ent->procs = 0;
 	}
 }
 
 /// \brief Safely call an entity's behaviour's onDraw function or draws it if it doesn't have one
 static void _drawEntity(JamWorld* world, JamEntity* ent) {
-	if (ent != NULL && ent->procs == 1) {
+	if (ent != NULL && ent->draws++ == 0) {
 		if (ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
 			(*ent->behaviour->onDraw)(world, ent);
 		else if (ent->behaviour == NULL ||
@@ -151,8 +154,8 @@ static void _drawEntity(JamWorld* world, JamEntity* ent) {
 			jamDrawEntity(ent);
 	}
 
-	if (ent != NULL && ent->procs == ent->cells)
-		ent->procs = 0;
+	if (ent != NULL && ent->draws == ent->cells)
+		ent->draws = 0;
 }
 
 /// \brief Filters the entities in the space map into a new filtered cache.
@@ -191,9 +194,11 @@ static void* _filterEntitiesIntoCache(void* voidWorld) {
 			currentList = _getListAtPos(world, j, i);
 
 			// Call this one's frame update
-			for (k = 0; k < currentList->size; k++)
-				if (currentList->entities[k] != NULL)
-					jamEntityListAdd(newList, currentList->entities[i]);
+			for (k = 0; k < currentList->size; k++) {
+				if (currentList->entities[k] != NULL) {
+					jamEntityListAdd(newList, currentList->entities[k]);
+				}
+			}
 		}
 	}
 

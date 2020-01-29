@@ -11,6 +11,7 @@
 #include <memory.h>
 #include <JamEngine.h>
 #include "JamEngine.h"
+#include <stdlib.h>
 
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480
@@ -240,6 +241,12 @@ bool runGame() {
 }
 
 void onFrame(JamWorld* world, JamEntity* self) {
+	self->x += rand() % 2;
+	self->y += rand() % 2;
+	if (self->x > 480) self->x = 480;
+	if (self->x < 0) self->x = 0;
+	if (self->y > 360) self->y = 360;
+	if (self->y < 0) self->y = 0;
 }
 
 void onDraw(JamWorld* world, JamEntity* self) {
@@ -280,11 +287,11 @@ int main(int argc, char* argv[]) {
 		behaviour.onDraw = onDraw;
 		JamEntity* testEnt =jamAssetHandlerGetEntity(gHandler, "PlayerEntity");
 		testEnt->behaviour = &behaviour;
-		jamWorldAddEntity(world, jamEntityCopy(testEnt, 60, 50));
-		jamWorldAddEntity(world, jamEntityCopy(testEnt, 80, 50));
-		jamWorldAddEntity(world, jamEntityCopy(testEnt, 100, 50));
-		jamWorldAddEntity(world, jamEntityCopy(testEnt, 120, 50));
+		int i;
+		//for (i = 0; i < 10; i++)
+		jamWorldAddEntity(world, jamEntityCopy(testEnt, 50, 50));
 		jamWorldEnableCaching(world);
+		int squareX = 0;
 
 		// Testing
 		while (jamRendererProcEvents()) {
@@ -292,6 +299,8 @@ int main(int argc, char* argv[]) {
 				jamWorldFilter(world);
 			jamDrawFillColour(255, 255, 255, 255);
 			jamWorldProcFrame(world);
+			jamDrawRectangleFilled(squareX++, 150, 32, 32);
+			if (squareX > 200) squareX = 0;
 			jamRendererProcEndFrame();
 		}
 
