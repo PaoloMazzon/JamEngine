@@ -51,8 +51,8 @@ typedef struct _JamEntity {
 	// Things to help worlds
 	double xPrev;    ///< Last frame's x position (JamWorlds will handle this automatically)
 	double yPrev;    ///< Last frame's y position (JamWorlds will handle this automatically)
-	uint8 procs;     ///< Keeping track of weather or not this entity has been updated yet
-	uint8 draws;     ///< Keeping track of weather or not this entity has been drawn yet
+	uint32 procs;    ///< Keeping track of weather or not this entity has been updated yet
+	uint32 draws;    ///< Keeping track of weather or not this entity has been drawn yet
 	uint32 cells;    ///< How many cells this entity is in in the world map
 	int cellsIn[4];  ///< The specific cells this entity is in
 	int cellsLoc[4]; ///< Where in the entity list this entity is

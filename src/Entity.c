@@ -86,17 +86,10 @@ JamEntity* jamEntityCopy(JamEntity *baseEntity, double x, double y) {
 			newEnt->behaviour = baseEntity->behaviour;
 			newEnt->scaleX = baseEntity->scaleX;
 			newEnt->scaleY = baseEntity->scaleY;
-			
-			#ifdef ENTITY_ENABLE_SPEED
 			newEnt->hSpeed = baseEntity->hSpeed;
 			newEnt->vSpeed = baseEntity->vSpeed;
-			#endif
-			#ifdef ENTITY_ENABLE_FRICTION
 			newEnt->friction = baseEntity->friction;
-			#endif
-			#ifdef ENTITY_ENABLE_Z
 			newEnt->z = baseEntity->z;
-			#endif
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Base entity doesn't exist");

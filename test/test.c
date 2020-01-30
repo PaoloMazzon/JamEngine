@@ -241,8 +241,8 @@ bool runGame() {
 }
 
 void onFrame(JamWorld* world, JamEntity* self) {
-	self->x += rand() % 2;
-	self->y += rand() % 2;
+	self->x += 4.0f - ((double)rand() / RAND_MAX * 8.0f);
+	self->y += 4.0f - ((double)rand() / RAND_MAX * 8.0f);
 	if (self->x > 480) self->x = 480;
 	if (self->x < 0) self->x = 0;
 	if (self->y > 360) self->y = 360;
@@ -289,12 +289,16 @@ int main(int argc, char* argv[]) {
 		testEnt->behaviour = &behaviour;
 		int i;
 		//for (i = 0; i < 10; i++)
-		jamWorldAddEntity(world, jamEntityCopy(testEnt, 50, 50));
-		//jamWorldEnableCaching(world);
+			jamWorldAddEntity(world, jamEntityCopy(testEnt, 50, 50));
+		jamWorldEnableCaching(world);
 		int squareX = 0;
+
+		for (i = 0; i < world->inRangeCache->size; i++)
+			printf("Gamer[%i]: %p\n", i, world->inRangeCache->entities[i]);
 
 		// Testing
 		while (jamRendererProcEvents()) {
+			printf("------FRAME START\n");
 			if (jamInputCheckKeyPressed(JAM_KB_DOWN))
 				jamWorldFilter(world);
 			jamDrawFillColour(255, 255, 255, 255);

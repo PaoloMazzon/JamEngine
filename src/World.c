@@ -127,7 +127,7 @@ static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 /// \brief Safely calls an entity's behaviour's onFrame function as well as updates its position in the world
 static void _updateEntity(JamWorld* world, JamEntity* ent) {
 	if (ent != NULL) {
-		if (ent->procs++ == 0) {
+		if (ent->procs == 0) {
 			if (ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
 				(*ent->behaviour->onFrame)(world, ent);
 
@@ -137,25 +137,35 @@ static void _updateEntity(JamWorld* world, JamEntity* ent) {
 			// Update previous coordinates
 			ent->xPrev = ent->x;
 			ent->yPrev = ent->y;
+			printf("P\n");
 		}
 
-		if (ent->procs == ent->cells)
+		if (ent->procs == ent->cells) {
 			ent->procs = 0;
+		} else {
+			ent->procs++;
+		}
 	}
 }
 
 /// \brief Safely call an entity's behaviour's onDraw function or draws it if it doesn't have one
 static void _drawEntity(JamWorld* world, JamEntity* ent) {
-	if (ent != NULL && ent->draws++ == 0) {
-		if (ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
-			(*ent->behaviour->onDraw)(world, ent);
-		else if (ent->behaviour == NULL ||
-				 (ent->behaviour != NULL && ent->behaviour->onDraw == NULL))
-			jamDrawEntity(ent);
-	}
+	if (ent != NULL) {
+		if (ent->draws == 0) {
+			if (ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
+				(*ent->behaviour->onDraw)(world, ent);
+			else if (ent->behaviour == NULL ||
+					 (ent->behaviour != NULL && ent->behaviour->onDraw == NULL))
+				jamDrawEntity(ent);
+			printf("D\n");
+		}
 
-	if (ent != NULL && ent->draws == ent->cells)
-		ent->draws = 0;
+		if (ent->draws == ent->cells) {
+			ent->draws = 0;
+		} else {
+			ent->draws++;
+		}
+	}
 }
 
 /// \brief Filters the entities in the space map into a new filtered cache.
