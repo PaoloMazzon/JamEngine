@@ -126,6 +126,10 @@ static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 
 /// \brief Safely calls an entity's behaviour's onFrame function as well as updates its position in the world
 static void _updateEntity(JamWorld* world, JamEntity* ent) {
+	// TODO: Entities need to know when they are in the cache so when they inevitably
+	// change cells they don't start skipping draws/drawing multiple times a frame, and
+	// to that end, entities must not be added to the cache multiple times
+
 	if (ent != NULL) {
 		if (ent->procs == 0) {
 			if (ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
@@ -140,11 +144,9 @@ static void _updateEntity(JamWorld* world, JamEntity* ent) {
 			printf("P\n");
 		}
 
-		if (ent->procs == ent->cells) {
+		ent->procs++;
+		if (ent->procs == ent->cells)
 			ent->procs = 0;
-		} else {
-			ent->procs++;
-		}
 	}
 }
 
@@ -160,11 +162,9 @@ static void _drawEntity(JamWorld* world, JamEntity* ent) {
 			printf("D\n");
 		}
 
-		if (ent->draws == ent->cells) {
+		ent->draws++;
+		if (ent->draws == ent->cells)
 			ent->draws = 0;
-		} else {
-			ent->draws++;
-		}
 	}
 }
 
