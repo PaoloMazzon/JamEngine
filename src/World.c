@@ -188,7 +188,6 @@ static void* _filterEntitiesIntoCache(void* voidWorld) {
 	cellEndX = _gridPosFromRealX(world, jamRendererGetCameraX() + jamRendererGetBufferWidth() + world->procDistance);
 	cellEndY = _gridPosFromRealY(world, jamRendererGetCameraY() + jamRendererGetBufferHeight() + world->procDistance);
 
-	// TODO: This function is adding dangling pointers to the list somehow
 	for (i = cellStartY; i <= cellEndY; i++) {
 		for (j = cellStartX; j <= cellEndX; j++) {
 			currentList = _getListAtPos(world, j, i);

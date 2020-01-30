@@ -290,7 +290,7 @@ int main(int argc, char* argv[]) {
 		int i;
 		//for (i = 0; i < 10; i++)
 		jamWorldAddEntity(world, jamEntityCopy(testEnt, 50, 50));
-		jamWorldEnableCaching(world);
+		//jamWorldEnableCaching(world);
 		int squareX = 0;
 
 		// Testing

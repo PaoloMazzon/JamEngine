@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <EntityList.h>
 #include <malloc.h>
+#include <memory.h>
+#include <JamEngine.h>
 
 ///////////////////////////////////////////////////////////////
 JamEntityList* jamEntityListCreate() {
@@ -48,6 +50,11 @@ int jamEntityListAdd(JamEntityList *list, JamEntity *entity) {
 				list->size++;
 				list->capacity += ENTITY_LIST_ALLOCATION_AMOUNT;
 				newList[list->size - 1] = entity;
+
+				// Null all new cells
+				for (i = list->size; i < list->capacity; i++)
+					list->entities[i] = NULL;
+
 				i = list->size - 1; // Record entity position in list
 			} else {
 				jSetError(ERROR_REALLOC_FAILED, "Could not reallocate entity list to accommodate for new entity (jamEntityListAdd)");
@@ -57,7 +64,7 @@ int jamEntityListAdd(JamEntityList *list, JamEntity *entity) {
 		jSetError(ERROR_NULL_POINTER, "List does not exist (jamEntityListAdd)");
 	}
 
-	return i;
+	return (foundSpot) ? i - 1 : i;
 }
 ///////////////////////////////////////////////////////////////
 
