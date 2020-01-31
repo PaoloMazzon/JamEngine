@@ -126,12 +126,8 @@ static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 
 /// \brief Safely calls an entity's behaviour's onFrame function as well as updates its position in the world
 static void _updateEntity(JamWorld* world, JamEntity* ent) {
-	// TODO: Entities need to know when they are in the cache so when they inevitably
-	// change cells they don't start skipping draws/drawing multiple times a frame, and
-	// to that end, entities must not be added to the cache multiple times
-
 	if (ent != NULL) {
-		if (ent->procs == 0) {
+		if (ent->procs == 0 || ent->inCache) {
 			if (ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
 				(*ent->behaviour->onFrame)(world, ent);
 
@@ -153,7 +149,7 @@ static void _updateEntity(JamWorld* world, JamEntity* ent) {
 /// \brief Safely call an entity's behaviour's onDraw function or draws it if it doesn't have one
 static void _drawEntity(JamWorld* world, JamEntity* ent) {
 	if (ent != NULL) {
-		if (ent->draws == 0) {
+		if (ent->draws == 0 || ent->inCache) {
 			if (ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
 				(*ent->behaviour->onDraw)(world, ent);
 			else if (ent->behaviour == NULL ||
@@ -190,7 +186,7 @@ static void* _filterEntitiesIntoCache(void* voidWorld) {
 
 	// The new list that is being built
 	JamEntityList* newList = jamEntityListCreate();
-
+	
 	pthread_mutex_lock(&world->entityAddingLock);
 
 	cellStartX = _gridPosFromRealX(world, jamRendererGetCameraX() - world->procDistance);
@@ -211,12 +207,23 @@ static void* _filterEntitiesIntoCache(void* voidWorld) {
 		}
 	}
 
-	// New cache is built, swap caches
+	// New cache is built, swap caches and remove their "in cache attribute"
 	pthread_mutex_lock(&world->entityCacheMutex);
 	currentList = world->inRangeCache;
+
+	for (i = 0; i < currentList->size; i++) {
+		if (currentList->entities[i] != NULL)
+			currentList->entities[i]->inCache = false;
+	}
+
+	for (i = 0; i < newList->size; i++) {
+		if (newList->entities[i] != NULL)
+			newList->entities[i]->inCache = true;
+	}
+	
 	world->inRangeCache = newList;
 	pthread_mutex_unlock(&world->entityCacheMutex);
-
+	
 	jamEntityListFree(currentList, false);
 
 	pthread_mutex_unlock(&world->entityAddingLock);

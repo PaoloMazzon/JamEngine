@@ -63,6 +63,7 @@ JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 		ent->procs = 0;
 		ent->draws = 0;
 		ent->cells = 0;
+		ent->inCache = false;
 	} else {
 		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamEntity struct");
 	}

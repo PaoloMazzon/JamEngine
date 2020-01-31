@@ -49,13 +49,14 @@ typedef struct _JamEntity {
 	float scaleY;      ///< The y scale of the entity (for sprite rendering)
 
 	// Things to help worlds
-	double xPrev;    ///< Last frame's x position (JamWorlds will handle this automatically)
-	double yPrev;    ///< Last frame's y position (JamWorlds will handle this automatically)
-	uint32 procs;    ///< Keeping track of weather or not this entity has been updated yet
-	uint32 draws;    ///< Keeping track of weather or not this entity has been drawn yet
-	uint32 cells;    ///< How many cells this entity is in in the world map
-	int cellsIn[4];  ///< The specific cells this entity is in
-	int cellsLoc[4]; ///< Where in the entity list this entity is
+	double xPrev;          ///< Last frame's x position (JamWorlds will handle this automatically)
+	double yPrev;          ///< Last frame's y position (JamWorlds will handle this automatically)
+	uint32 procs;          ///< Keeping track of weather or not this entity has been updated yet
+	uint32 draws;          ///< Keeping track of weather or not this entity has been drawn yet
+	uint32 cells;          ///< How many cells this entity is in in the world map
+	int cellsIn[4];        ///< The specific cells this entity is in
+	int cellsLoc[4];       ///< Where in the entity list this entity is
+	volatile bool inCache; ///< Weather or not this specific entity is in entity cache
 
 	// Utilities not utilized by the engine
 	double hSpeed;   ///< Horizontal speed

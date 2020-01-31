@@ -16,13 +16,14 @@ extern "C" {
 /// \brief A thing that holds lots of info for convenience
 typedef struct _JamWorld {
 	JamTileMap* worldMaps[MAX_TILEMAPS]; ///< Worlds can store tilemaps for convenience, its best if you use constants to denote their meaning and not [0] or whatever
-	JamEntityList* worldEntities;        ///< The full list of entities in this world
-	JamEntityList* inRangeCache;         ///< "In-range" entities that have been placed here via
-	bool cacheInRangeEntities;           ///< Weather or not to use inRangeCache instead of the space map frame-to-frame
-	pthread_mutex_t entityCacheMutex;    ///< The mutex for when the old cache gets replaced by the new cache
-	pthread_mutex_t entityAddingLock;    ///< The lock that prevents entities from being added while caching is occurring
-	int procDistance;                    ///< How many pixels outside the viewport to still process/draw entities
-	pthread_t cacheBuilderThread;        ///< Thread responsible for filtering the entities into the cache
+	JamEntityList* worldEntities;     ///< The full list of entities in this world
+	JamEntityList* inRangeCache;      ///< "In-range" entities that have been placed here via
+	bool cacheInRangeEntities;        ///< Weather or not to use inRangeCache instead of the space map frame-to-frame
+	pthread_mutex_t entityCacheMutex; ///< The mutex for when the old cache gets replaced by the new cache
+	pthread_mutex_t entityAddingLock; ///< The lock that prevents entities from being added while caching is occurring
+	pthread_mutex_t cacheBoolLock;    ///< The lock responsible for preventing entities from being removed from cache while updating
+	int procDistance;                 ///< How many pixels outside the viewport to still process/draw entities
+	pthread_t cacheBuilderThread;     ///< Thread responsible for filtering the entities into the cache
 
 	/* Spatial hash maps (or organizing entities into a grid in layman's terms)
 	 * For the uninitialized, this is a fairly simple concept to understand but
