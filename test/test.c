@@ -243,10 +243,6 @@ bool runGame() {
 void onFrame(JamWorld* world, JamEntity* self) {
 	self->x += 4.0f - ((double)rand() / RAND_MAX * 8.0f);
 	self->y += 4.0f - ((double)rand() / RAND_MAX * 8.0f);
-	if (self->x > 480) self->x = 480;
-	if (self->x < 0) self->x = 0;
-	if (self->y > 360) self->y = 360;
-	if (self->y < 0) self->y = 0;
 }
 
 void onDraw(JamWorld* world, JamEntity* self) {
@@ -279,7 +275,7 @@ int main(int argc, char* argv[]) {
 		// Load things
 		gHandler = jamAssetHandlerCreate(1000);
 		jamAssetHandlerLoadINI(gHandler, "assets/testassets.ini", NULL);
-		JamWorld* world = jamWorldCreate(20, 15, 32, 32, false);
+		JamWorld* world = jamWorldCreate(50, 50, 32, 32, false);
 		JamBehaviour behaviour;
 		behaviour.onFrame = onFrame;
 		behaviour.onDestruction = NULL;
@@ -288,19 +284,18 @@ int main(int argc, char* argv[]) {
 		JamEntity* testEnt =jamAssetHandlerGetEntity(gHandler, "PlayerEntity");
 		testEnt->behaviour = &behaviour;
 		int i;
-		//for (i = 0; i < 10; i++)
+		for (i = 0; i < 1000; i++)
 			jamWorldAddEntity(world, jamEntityCopy(testEnt, 50, 50));
-		jamWorldEnableCaching(world);
+		for (i = 0; i < 10000; i++)
+			jamWorldAddEntity(world, jamEntityCopy(testEnt, 1000, 1000));
+		//jamWorldEnableCaching(world);
 		int squareX = 0;
-
-		for (i = 0; i < world->inRangeCache->size; i++)
-			printf("Gamer[%i]: %p\n", i, world->inRangeCache->entities[i]);
 
 		// Testing
 		while (jamRendererProcEvents()) {
-			printf("------FRAME START\n");
 			if (jamInputCheckKeyPressed(JAM_KB_DOWN))
 				jamWorldFilter(world);
+			jamRendererMoveCamera(((int)jamInputCheckKey(JAM_KB_D) - (int)jamInputCheckKey(JAM_KB_A)) * 10, ((int)jamInputCheckKey(JAM_KB_S) - (int)jamInputCheckKey(JAM_KB_W)) * 10);
 			jamDrawFillColour(255, 255, 255, 255);
 			jamWorldProcFrame(world);
 			jamDrawRectangleFilled(squareX++, 150, 32, 32);

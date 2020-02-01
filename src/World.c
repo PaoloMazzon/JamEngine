@@ -137,7 +137,6 @@ static void _updateEntity(JamWorld* world, JamEntity* ent) {
 			// Update previous coordinates
 			ent->xPrev = ent->x;
 			ent->yPrev = ent->y;
-			printf("P\n");
 		}
 
 		ent->procs++;
@@ -155,7 +154,6 @@ static void _drawEntity(JamWorld* world, JamEntity* ent) {
 			else if (ent->behaviour == NULL ||
 					 (ent->behaviour != NULL && ent->behaviour->onDraw == NULL))
 				jamDrawEntity(ent);
-			printf("D\n");
 		}
 
 		ent->draws++;
@@ -170,19 +168,20 @@ static void _drawEntity(JamWorld* world, JamEntity* ent) {
 /// First we lock the mutex that blocks entities from being added,
 /// because that would just muck up this whole process. Next, we run
 /// through every entity list in the selected portion of the space map
-/// and add all actual entities to the in-range cache. As of right now,
-/// this function will add duplicates of entity pointers should they
-/// exist in the space map (ie, entity in multiple cells), since the
-/// update and draw functions make sure that they aren't processed multiple
-/// times anyway. Once this bit is done, the cache mutex is locked very
-/// briefly only to swap the new cache and old cache, which is then
-/// destroyed. A new cache is built in memory while the old one still
-/// exists so we only have to lock the mutex to swap caches.
+/// and add all actual entities to the in-range cache. Entities are
+/// guaranteed to not be added to the cache multiple times because
+/// this creates wierd timing issues when they are changing cells but
+/// not the amount of times they were added to the cache. Once this
+/// bit is done, the cache mutex is locked very briefly only to swap
+/// the new cache and old cache, which is then destroyed. A new cache
+/// is built in memory while the old one still exists so we only have
+/// to lock the mutex to swap caches.
 static void* _filterEntitiesIntoCache(void* voidWorld) {
 	JamWorld* world = voidWorld;
 	int cellStartX, cellStartY, cellEndX, cellEndY;
 	JamEntityList* currentList; // Also used to swap lists nearer the end of the functions
-	int i, j, k;
+	int i, j, k, l;
+	bool exists;
 
 	// The new list that is being built
 	JamEntityList* newList = jamEntityListCreate();
@@ -201,7 +200,15 @@ static void* _filterEntitiesIntoCache(void* voidWorld) {
 			// Call this one's frame update
 			for (k = 0; k < currentList->size; k++) {
 				if (currentList->entities[k] != NULL) {
-					jamEntityListAdd(newList, currentList->entities[k]);
+					exists = false;
+
+					// Make sure this isn't in the list
+					for (l = 0; l < newList->size; l++)
+						if (currentList->entities[k] == newList->entities[l])
+							exists = true;
+
+					if (!exists)
+						jamEntityListAdd(newList, currentList->entities[k]);
 				}
 			}
 		}
