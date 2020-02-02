@@ -127,7 +127,7 @@ static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 /// \brief Safely calls an entity's behaviour's onFrame function as well as updates its position in the world
 static void _updateEntity(JamWorld* world, JamEntity* ent) {
 	if (ent != NULL) {
-		if (ent->procs == 0 || ent->inCache) {
+		if (ent->procs++ == 0 || ent->inCache) {
 			if (ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
 				(*ent->behaviour->onFrame)(world, ent);
 
@@ -139,8 +139,7 @@ static void _updateEntity(JamWorld* world, JamEntity* ent) {
 			ent->yPrev = ent->y;
 		}
 
-		ent->procs++;
-		if (ent->procs == ent->cells)
+		if (ent->procs >= ent->cells)
 			ent->procs = 0;
 	}
 }
@@ -148,7 +147,7 @@ static void _updateEntity(JamWorld* world, JamEntity* ent) {
 /// \brief Safely call an entity's behaviour's onDraw function or draws it if it doesn't have one
 static void _drawEntity(JamWorld* world, JamEntity* ent) {
 	if (ent != NULL) {
-		if (ent->draws == 0 || ent->inCache) {
+		if (ent->draws++ == 0 || ent->inCache) {
 			if (ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
 				(*ent->behaviour->onDraw)(world, ent);
 			else if (ent->behaviour == NULL ||
@@ -156,8 +155,7 @@ static void _drawEntity(JamWorld* world, JamEntity* ent) {
 				jamDrawEntity(ent);
 		}
 
-		ent->draws++;
-		if (ent->draws == ent->cells)
+		if (ent->draws >= ent->cells)
 			ent->draws = 0;
 	}
 }
