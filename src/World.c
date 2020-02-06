@@ -127,7 +127,7 @@ static void _updateEntInMap(JamWorld* world, JamEntity* ent) {
 /// \brief Safely calls an entity's behaviour's onFrame function as well as updates its position in the world
 static void _updateEntity(JamWorld* world, JamEntity* ent) {
 	if (ent != NULL) {
-		if (ent->procs++ == 0 || ent->inCache) {
+		if (!ent->proc || ent->inCache) {
 			if (ent->behaviour != NULL && ent->behaviour->onFrame != NULL)
 				(*ent->behaviour->onFrame)(world, ent);
 
@@ -137,17 +137,16 @@ static void _updateEntity(JamWorld* world, JamEntity* ent) {
 			// Update previous coordinates
 			ent->xPrev = ent->x;
 			ent->yPrev = ent->y;
-		}
 
-		if (ent->procs >= ent->cells)
-			ent->procs = 0;
+			ent->proc = true;
+		}
 	}
 }
 
 /// \brief Safely call an entity's behaviour's onDraw function or draws it if it doesn't have one
 static void _drawEntity(JamWorld* world, JamEntity* ent) {
 	if (ent != NULL) {
-		if (ent->draws++ == 0 || ent->inCache) {
+		if (!ent->draw || ent->inCache) {
 			if (ent->behaviour != NULL && ent->behaviour->onDraw != NULL)
 				(*ent->behaviour->onDraw)(world, ent);
 			else if (ent->behaviour == NULL ||
@@ -155,8 +154,7 @@ static void _drawEntity(JamWorld* world, JamEntity* ent) {
 				jamDrawEntity(ent);
 		}
 
-		if (ent->draws >= ent->cells)
-			ent->draws = 0;
+		ent->draw = true;
 	}
 }
 
@@ -375,6 +373,19 @@ void jamWorldProcFrame(JamWorld *world) {
 			cellStartY = _gridPosFromRealY(world, jamRendererGetCameraY() - world->procDistance);
 			cellEndX = _gridPosFromRealX(world, jamRendererGetCameraX() + jamRendererGetBufferWidth() + world->procDistance);
 			cellEndY = _gridPosFromRealY(world, jamRendererGetCameraY() + jamRendererGetBufferHeight() + world->procDistance);
+
+			// Tell them they haven't been processed yet
+			for (i = cellStartY; i <= cellEndY; i++) {
+				for (j = cellStartX; j <= cellEndX; j++) {
+					currentList = _getListAtPos(world, j, i);
+					for (k = 0; k < currentList->size; k++) {
+						if (currentList->entities[k] != NULL) {
+							currentList->entities[k]->proc = false;
+							currentList->entities[k]->draw = false;
+						}
+					}
+				}
+			}
 
 			for (i = cellStartY; i <= cellEndY; i++) {
 				for (j = cellStartX; j <= cellEndX; j++) {

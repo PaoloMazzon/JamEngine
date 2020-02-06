@@ -60,8 +60,8 @@ JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 		ent->id = ID_NOT_ASSIGNED;
 		ent->xPrev = 0;
 		ent->yPrev = 0;
-		ent->procs = 0;
-		ent->draws = 0;
+		ent->proc = false;
+		ent->draw = false;
 		ent->cells = 0;
 		ent->inCache = false;
 	} else {
