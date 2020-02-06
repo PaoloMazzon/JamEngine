@@ -17,6 +17,11 @@ extern "C" {
 /// 1000 is generally a good starting point), and at the end of each iteration
 /// of your code, call `jamProfileTick`. Once your done, call `jamProfileGetMilliseconds`
 /// to get the average amount of time the code took to execute in milliseconds.
+///
+/// If you have some large project and you want to profile a specific portion
+/// of it and can't really just stick it in a for loop, you can use jamProfileSetPreviousTime
+/// before you call said function then call jamProfileTick after it and only
+/// that specific function will be profiled.
 typedef struct {
 	uint64 previousTime; ///< Previous recorded time
 	uint64 totalTicks;   ///< The total time recorded
@@ -25,6 +30,9 @@ typedef struct {
 
 /// \brief Starts a performance profile
 JamProfile jamProfileStart();
+
+/// \brief Records the current time as the previous time for profiling specific things
+void jamProfileSetPreviousTime(JamProfile* profile);
 
 /// \brief Calculates the average amount of time over x iterations in seconds
 void jamProfileTick(JamProfile *profile);

@@ -285,10 +285,10 @@ int main(int argc, char* argv[]) {
 		testEnt->behaviour = &behaviour;
 		int i;
 		for (i = 0; i < 1000; i++)
-			jamWorldAddEntity(world, jamEntityCopy(testEnt, 50, 50));
+			jamWorldAddEntity(world, jamEntityCopy(testEnt, 200, 200));
 		for (i = 0; i < 10000; i++)
 			jamWorldAddEntity(world, jamEntityCopy(testEnt, 1000, 1000));
-		jamWorldEnableCaching(world);
+		//jamWorldEnableCaching(world);
 		int squareX = 0;
 
 		// Testing
