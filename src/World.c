@@ -305,6 +305,7 @@ JamEntity* jamWorldEntityCollision(JamWorld* world, JamEntity* ent, double x, do
 		for (i = 0; i < 4 && returnEnt == NULL; i++) {
 			for (j = 0; j < world->entityGrid[cells[i]]->size && returnEnt == NULL; j++) {
 				if (world->entityGrid[cells[i]]->entities[j] != NULL &&
+						world->entityGrid[cells[i]]->entities[j] != ent &&
 						jamEntityCheckCollision(x, y, ent, world->entityGrid[cells[i]]->entities[j]))
 					returnEnt = world->entityGrid[cells[i]]->entities[j];
 			}

@@ -58,6 +58,18 @@ void onPlayerFrame(JamWorld* world, JamEntity* self) {
 	if (self->vSpeed >= BLOCK_HEIGHT)
 		self->vSpeed = BLOCK_HEIGHT - 1;
 
+	// TESTING - check for world collisions and draw the entity should there be one
+	JamEntity* collEnt = jamWorldEntityCollision(world, self, self->x, self->y);
+	if (collEnt != NULL)
+		jamDrawSprite(collEnt->sprite,
+					  (int)jamRendererGetCameraX(),
+					  (int)jamRendererGetCameraY(),
+					  1,
+					  1,
+					  0,
+					  255,
+					  false);
+
 	if (jamEntityTileMapCollision(self, world->worldMaps[0], self->x + self->hSpeed, self->y)) {
 		self->x -= sign(self->hSpeed);
 		self->x = round(self->x);
