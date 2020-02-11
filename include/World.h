@@ -56,6 +56,11 @@ typedef struct _JamWorld {
 /// \throws ERROR_ALLOC_FAILED
 JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellHeight, bool cache);
 
+/// \brief Finds any collisions between ent and other entities in the world
+/// \return Returns the first entity found to be colliding with ent or NULL
+/// \throws ERROR_NULL_POINTER
+JamEntity* jamWorldEntityCollision(JamWorld* world, JamEntity* ent, double x, double y);
+
 /// \brief Enables entity caching for a given world if it isn't already enabled
 ///
 /// Assuming this function works, it will immediately halt the program to

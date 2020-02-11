@@ -286,6 +286,41 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
+/*********How this function works
+ * 1. Locate the 4 cells ent would hypothetically be in at the given x/y coords
+ * 2. For each of the 4 cells, check each entity in them for a collision against ent
+ * 3. As soon as a collision is found, we can stop searching and just return that one
+ */
+JamEntity* jamWorldEntityCollision(JamWorld* world, JamEntity* ent, double x, double y) {
+	JamEntity* returnEnt = NULL;
+	int cells[4];
+	int i, j;
+
+	if (ent != NULL && world != NULL) {
+		cells[0] = _gridPosFromCoords(world, jamEntityVisibleX1(ent, x), jamEntityVisibleY1(ent, y));
+		cells[1] = _gridPosFromCoords(world, jamEntityVisibleX2(ent, x), jamEntityVisibleY1(ent, y));
+		cells[2] = _gridPosFromCoords(world, jamEntityVisibleX1(ent, x), jamEntityVisibleY2(ent, y));
+		cells[3] = _gridPosFromCoords(world, jamEntityVisibleX2(ent, x), jamEntityVisibleY2(ent, y));
+
+		for (i = 0; i < 4 && returnEnt == NULL; i++) {
+			for (j = 0; j < world->entityGrid[cells[i]]->size && returnEnt == NULL; j++) {
+				if (world->entityGrid[cells[i]]->entities[j] != NULL &&
+						jamEntityCheckCollision(x, y, ent, world->entityGrid[cells[i]]->entities[j]))
+					returnEnt = world->entityGrid[cells[i]]->entities[j];
+			}
+		}
+	} else {
+		if (world == NULL)
+			jSetError(ERROR_NULL_POINTER, "World does not exist");
+		if (ent == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity does not exist");
+	}
+
+	return returnEnt;
+}
+///////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////
 void jamWorldEnableCaching(JamWorld* world) {
 	if (world != NULL && !world->cacheInRangeEntities) {
 		world->inRangeCache = jamEntityListCreate();

@@ -23,6 +23,8 @@ JamEntityList* jamEntityListCreate() {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
+// This function is in most cases the most called function in all of JamEngine in real-world
+// scenarios. This will be optimized again later, it must be as fast as humanly possibly.
 int jamEntityListAdd(JamEntityList *list, JamEntity *entity) {
 	int i = 0;
 	JamEntity** newList;

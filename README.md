@@ -49,8 +49,7 @@ Near Future
 Features that I've decided are vital to the engine itself and will be added
 at some point in the near future. This would be things you simply expect
 out of a game engine.
- 
- - Collisions that use the world's hash map
+
  - Gamepad support
  - TTF/OTF font support (heck)
  
