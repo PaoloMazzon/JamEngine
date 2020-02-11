@@ -26,9 +26,9 @@ JamEntityList* jamEntityListCreate() {
 // This function is in most cases the most called function in all of JamEngine in real-world
 // scenarios. This will be optimized again later, it must be as fast as humanly possibly.
 int jamEntityListAdd(JamEntityList *list, JamEntity *entity) {
-	int i = 0;
+	register int i = 0;
 	JamEntity** newList;
-	bool foundSpot = false;
+	register bool foundSpot = false;
 	if (list != NULL && entity != NULL) {
 		// First we look for a free spot in the list
 		while (i < list->size && !foundSpot) {
