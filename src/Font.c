@@ -43,7 +43,7 @@ JamFont* jamFontCreate(const char *latinFname, const char *fontFname) {
 
 	// Check it
 	if (font == NULL) {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate font struct.\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate font struct.");
 	} else {
 		// Load latin font
 		SDL_Texture* latin = loadTex(latinFname);

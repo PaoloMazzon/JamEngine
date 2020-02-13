@@ -30,10 +30,10 @@ JamTileMap* jamTileMapCreate(uint32 width, uint32 height, uint32 cellWidth, uint
 			map->yInWorld = 0;
 		} else {
 			free(map);
-			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate tile map's grid.\n");
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate tile map's grid.");
 		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate tile map.\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate tile map.");
 	}
 
 	return map;

@@ -12,7 +12,7 @@ JamBuffer* jamBufferCreate(uint64 size) {
 
 	// Check them
 	if (internalBuffer == NULL || buffer == NULL) {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate one of the buffers.\n");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate one of the buffers.");
 		free(buffer);
 		free(internalBuffer);
 	} else {

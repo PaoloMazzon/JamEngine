@@ -114,24 +114,21 @@ static void _assetLoadSprite(JamAssetHandler *assetHandler, JamINI *ini, const c
 	JamSprite* spr = jamSpriteLoadFromSheet(
 			jamAssetHandlerGetTexture(assetHandler, (jamINIGetKey(ini, headerName, "texture_id", "0"))),
 			(uint32) atof(jamINIGetKey(ini, headerName, "animation_length", "1")),
-			(uint32) atof(jamINIGetKey(ini, headerName, "x_in_texture", "0")),
-			(uint32) atof(jamINIGetKey(ini, headerName, "y_in_texture", "0")),
-			(uint32) atof(jamINIGetKey(ini, headerName, "frame_width", "16")),
-			(uint32) atof(jamINIGetKey(ini, headerName, "frame_height", "16")),
-			(uint32) atof(jamINIGetKey(ini, headerName, "padding_width", "0")),
-			(uint32) atof(jamINIGetKey(ini, headerName, "padding_height", "0")),
-			(uint32) atof(jamINIGetKey(ini, headerName, "x_align", "0")),
-			(uint16) atof(jamINIGetKey(ini, headerName, "frame_delay", "0")),
-			(bool) atof(jamINIGetKey(ini, headerName, "looping", "0")));
+			(uint32) atof(jamINIGetKey(ini, headerName, "x_in_texture",     "0")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "y_in_texture",     "0")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "frame_width",      "16")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "frame_height",     "16")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "padding_width",    "0")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "padding_height",   "0")),
+			(uint32) atof(jamINIGetKey(ini, headerName, "x_align",          "0")),
+			(uint16) atof(jamINIGetKey(ini, headerName, "frame_delay",      "0")),
+			(bool)   atof(jamINIGetKey(ini, headerName, "looping",          "0")));
 	if (spr != NULL) {
 		spr->originX = (sint32) atof(jamINIGetKey(ini, headerName, "x_origin", "0"));
 		spr->originY = (sint32) atof(jamINIGetKey(ini, headerName, "y_origin", "0"));
-	}
-	if (jamGetAssetFromHandler(assetHandler, (jamINIGetKey(ini, headerName, "texture_id", "0"))) != NULL) {
-		jamAssetHandlerLoadAsset(assetHandler, createAsset(spr, at_Sprite, headerName + 1), (headerName + 1)
-		);
+		jamAssetHandlerLoadAsset(assetHandler, createAsset(spr, at_Sprite, headerName + 1), (headerName + 1));
 	} else {
-		jSetError(ERROR_ASSET_NOT_FOUND, "Failed to load sprite of id %s, tex not found (jamAssetHandlerLoadINI)\\n", headerName + 1);
+		jSetError(ERROR_WARNING, "Warning: failed to load asset '%s'", headerName);
 	}
 }
 
