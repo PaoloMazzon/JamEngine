@@ -130,7 +130,6 @@ bool jamTileMapCollision(JamTileMap *tileMap, int x, int y, int w, int h) {
 	int verticesY[MAX_GRID_VERTICES];
 	int currentVertex = 0;
 
-	// Make sure the map is here
 	if (tileMap != NULL && tileMap->grid != NULL) {
 		xFactor = (int)ceil((double)w / (double)tileMap->cellWidth) + 1;
 		yFactor = (int)ceil((double)h / (double)tileMap->cellHeight) + 1;

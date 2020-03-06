@@ -43,7 +43,7 @@ void onEnemyFrame(JamWorld* world, JamEntity* self) {
 
 void onPlayerFrame(JamWorld* world, JamEntity* self) {
 	// Gravity
-	self->vSpeed += 0.5;
+	self->vSpeed += 0.5 * jamRendererGetDelta();
 
 	self->hSpeed =
 			(jamInputCheckKey(JAM_KB_RIGHT) + -jamInputCheckKey(JAM_KB_LEFT)) * 3;
