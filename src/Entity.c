@@ -172,8 +172,8 @@ bool jamEntityTileMapCollision(JamEntity *entity, JamTileMap *tileMap, double rx
 				tileMap,
 				_roundDoubleToInt(x),
 				_roundDoubleToInt(y),
-				_roundDoubleToInt(entity->hitbox->width),
-				_roundDoubleToInt(entity->hitbox->height)
+				(int)entity->hitbox->width,
+				(int)entity->hitbox->height
 		);
 	} else {
 		if (entity == NULL) {
