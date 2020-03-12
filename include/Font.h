@@ -32,6 +32,11 @@ typedef struct {
 	uint16 latinHeight; ///< The height in pixels of the latin page
 	uint16 fontWidth; ///< The width in pixels of the font page
 	uint16 fontHeight; ///< The height in pixels of the font page
+} JamBitmapFont;
+
+/// \brief A true type font for rendering .ttf/.otf type fonts
+typedef struct {
+
 } JamFont;
 
 /////////////////////////////////////////////////////
@@ -45,14 +50,14 @@ typedef struct {
 /// \throws ERROR_OPEN_FAILED
 /// \throws ERROR_ALLOC_FAILED
 /////////////////////////////////////////////////////
-JamFont* jamFontCreate(const char *latinFname, const char *fontFname);
+JamBitmapFont* jamFontCreate(const char *latinFname, const char *fontFname);
 
 /////////////////////////////////////////////////////
 /// \brief Frees a font
 ///
 /// \param font The font to free
 /////////////////////////////////////////////////////
-void jamFontFree(JamFont *font);
+void jamFontFree(JamBitmapFont *font);
 
 /////////////////////////////////////////////////////
 /// \brief Renders text to a renderer
@@ -64,7 +69,7 @@ void jamFontFree(JamFont *font);
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
-void jamFontRender(int x, int y, const char *string, JamFont *font);
+void jamFontRender(int x, int y, const char *string, JamBitmapFont *font);
 
 /////////////////////////////////////////////////////
 /// \brief Renders text to a renderer with wrapping
@@ -80,7 +85,7 @@ void jamFontRender(int x, int y, const char *string, JamFont *font);
 /// \throws ERROR_OUT_OF_BOUNDS
 /// \throws ERROR_NULL_POINTER
 /////////////////////////////////////////////////////
-void jamFontRenderExt(int x, int y, const char *string, JamFont *font, int w, ...);
+void jamFontRenderExt(int x, int y, const char *string, JamBitmapFont *font, int w, ...);
 
 /////////////////////////////////////////////////////
 /// \brief Renders text to a renderer with wrapping
@@ -93,7 +98,7 @@ void jamFontRenderExt(int x, int y, const char *string, JamFont *font, int w, ..
 ///
 /// \throws ERROR_OUT_OF_BOUNDS
 /////////////////////////////////////////////////////
-void jamFontRenderWrap(int x, int y, uint16 w, const char *string, JamFont *font);
+void jamFontRenderWrap(int x, int y, uint16 w, const char *string, JamBitmapFont *font);
 
 /////////////////////////////////////////////////////
 /// \brief Gets the width of a given string
@@ -103,7 +108,7 @@ void jamFontRenderWrap(int x, int y, uint16 w, const char *string, JamFont *font
 ///
 /// \return Returns the width of the string in pixels
 /////////////////////////////////////////////////////
-uint16 jamFontStringWidth(JamFont *font, const char *string);
+uint16 jamFontStringWidth(JamBitmapFont *font, const char *string);
 
 /////////////////////////////////////////////////////
 /// \brief Gets the height of a given string
@@ -113,7 +118,7 @@ uint16 jamFontStringWidth(JamFont *font, const char *string);
 ///
 /// \return Returns the height of the string in pixels
 /////////////////////////////////////////////////////
-uint16 jamFontStringHeight(JamFont *font, const char *string);
+uint16 jamFontStringHeight(JamBitmapFont *font, const char *string);
 
 /////////////////////////////////////////////////////
 /// \brief Gets the height of a given wrapped string
@@ -124,7 +129,7 @@ uint16 jamFontStringHeight(JamFont *font, const char *string);
 ///
 /// \return Returns the height of the string in pixels
 /////////////////////////////////////////////////////
-uint16 jamFontStringHeightWrap(JamFont *font, const char *string, uint16 w);
+uint16 jamFontStringHeightWrap(JamBitmapFont *font, const char *string, uint16 w);
 
 #ifdef __cplusplus
 }

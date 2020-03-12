@@ -36,7 +36,7 @@ void onEnemyFrame(JamWorld* world, JamEntity* self) {
 		self->hSpeed = -self->hSpeed;
 
 	// Make them face the direction they are walking in
-	self->scaleX = sign(self->hSpeed);
+	self->scaleX = (float)sign(self->hSpeed);
 
 	self->x += self->hSpeed * jamRendererGetDelta();
 }
@@ -190,7 +190,7 @@ bool runGame() {
 	gHandler = jamAssetHandlerCreate(1000);
 	jamAssetHandlerLoadINI(gHandler, "assets/level0.ini", bMap);
 	JamWorld* gameWorld = jamAssetHandlerGetWorld(gHandler, "GameWorld");
-	JamFont* font = jamAssetHandlerGetFont(gHandler, "GameFont");
+	JamBitmapFont* font = jamAssetHandlerGetFont(gHandler, "GameFont");
 
 	// Some setup
 	jamRendererSetCameraPos(25, 25);

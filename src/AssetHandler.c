@@ -202,7 +202,7 @@ static void _assetLoadWorld(JamAssetHandler *assetHandler, JamINI *ini, const ch
 }
 
 static void _assetLoadFont(JamAssetHandler *assetHandler, JamINI *ini, const char *headerName) {
-	JamFont* font = jamFontCreate(
+	JamBitmapFont* font = jamFontCreate(
 			jamINIGetKey(ini, headerName, "latin", ""),
 			jamINIGetKey(ini, headerName, "font", "0")
 			);
@@ -444,9 +444,9 @@ JamWorld* jamAssetHandlerGetWorld(JamAssetHandler *handler, const char *key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamFont* jamAssetHandlerGetFont(JamAssetHandler *handler, const char *key) {
+JamBitmapFont* jamAssetHandlerGetFont(JamAssetHandler *handler, const char *key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
-	JamFont* returnVal = NULL;
+	JamBitmapFont* returnVal = NULL;
 
 	if (handler != NULL) {
 		if (asset != NULL && asset->type == at_Font) {
