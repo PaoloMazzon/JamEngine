@@ -233,8 +233,8 @@ bool runGame() {
 				jamWorldProcFrame(gameWorld);
 
 				// Debug
-				jamFontRenderExt(16, 16, "FPS: %f\nDelta: %f", font, 999, jamRendererGetFramerate(),
-								 jamRendererGetDelta());
+				jamBitmapFontRenderExt(16, 16, "FPS: %f\nDelta: %f", font, 999, jamRendererGetFramerate(),
+									   jamRendererGetDelta());
 				/////////////////////////////////////////////////////////////////////
 
 				jamRendererProcEndFrame();

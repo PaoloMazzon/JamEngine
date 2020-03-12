@@ -202,10 +202,10 @@ static void _assetLoadWorld(JamAssetHandler *assetHandler, JamINI *ini, const ch
 }
 
 static void _assetLoadFont(JamAssetHandler *assetHandler, JamINI *ini, const char *headerName) {
-	JamBitmapFont* font = jamFontCreate(
+	JamBitmapFont* font = jamBitmapFontCreate(
 			jamINIGetKey(ini, headerName, "latin", ""),
 			jamINIGetKey(ini, headerName, "font", "0")
-			);
+	);
 
 	if (font != NULL) {
 		font->characterHeight = (uint8) atof(jamINIGetKey(ini, headerName, "character_height", "0"));
@@ -481,7 +481,7 @@ static void jamFreeAsset(JamAsset* asset) {
 		else if (asset->type == at_AudioBuffer)
 			jamAudioFreeBuffer(asset->buffer);
 		else if (asset->type == at_Font)
-			jamFontFree(asset->font);
+			jamBitmapFontFree(asset->font);
 		free(asset->name);
 		free(asset);
 	}

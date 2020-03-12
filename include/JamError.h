@@ -57,6 +57,9 @@ extern "C" {
 ///< OpenAL (The audio subsystem) messed up somewhere
 #define ERROR_OPENAL_ERROR      0b0001000000000000
 
+///< FreeType had an error somewhere (the font subsystem)
+#define ERROR_FREETYPE_ERROR    0b0010000000000000
+
 #define jSetError(errorCode, format, ...) __jSetError(errorCode, format, __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 /// \brief Sets an error flag

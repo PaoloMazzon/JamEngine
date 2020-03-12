@@ -37,7 +37,7 @@ SDL_Texture* loadTex(const char* fname) {
 ///////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-JamBitmapFont* jamFontCreate(const char *latinFname, const char *fontFname) {
+JamBitmapFont* jamBitmapFontCreate(const char *latinFname, const char *fontFname) {
 	JamBitmapFont* font = (JamBitmapFont*)calloc(1, sizeof(JamBitmapFont));
 	SDL_Texture* tex = NULL;
 
@@ -50,7 +50,7 @@ JamBitmapFont* jamFontCreate(const char *latinFname, const char *fontFname) {
 
 		// Some more checks
 		if (latin == NULL) {
-			jamFontFree(font);
+			jamBitmapFontFree(font);
 			jSetError(ERROR_OPEN_FAILED, "Failed to load latin font texture, SDL error: %s\n", SDL_GetError());
 			font = NULL;
 		} else {
@@ -68,7 +68,7 @@ JamBitmapFont* jamFontCreate(const char *latinFname, const char *fontFname) {
 				tex = loadTex(fontFname);
 
 				if (tex == NULL) {
-					jamFontFree(font);
+					jamBitmapFontFree(font);
 					jSetError(ERROR_OPEN_FAILED, "Failed to load font texture, SDL error: %s\n", SDL_GetError());
 					font = NULL;
 				} else {
@@ -86,7 +86,7 @@ JamBitmapFont* jamFontCreate(const char *latinFname, const char *fontFname) {
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void jamFontFree(JamBitmapFont *font) {
+void jamBitmapFontFree(JamBitmapFont *font) {
 	if (font != NULL) {
 		if (font->font != NULL)
 			SDL_DestroyTexture(font->font);
@@ -117,7 +117,7 @@ bool is4ByteCharacter(uint8 byte) {
 	return ((byte & 128) == 128 && (byte & 64) == 64 && (byte & 32) == 32 && (byte & 16) == 16 && (byte & 8) == 0);
 }
 
-void jamFontRender(int x, int y, const char *string, JamBitmapFont *font) {
+void jamBitmapFontRender(int x, int y, const char *string, JamBitmapFont *font) {
 	uint32 unichar;
 	uint32 tempChar;
 	bool ready = false;
@@ -219,7 +219,7 @@ void jamFontRender(int x, int y, const char *string, JamBitmapFont *font) {
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void jamFontRenderExt(int x, int y, const char *string, JamBitmapFont *font, int w, ...) {
+void jamBitmapFontRenderExt(int x, int y, const char *string, JamBitmapFont *font, int w, ...) {
 	// Variable length parameter things
 	va_list params;
 	va_start(params, w);
@@ -352,7 +352,7 @@ void jamFontRenderExt(int x, int y, const char *string, JamBitmapFont *font, int
 						// Print the character
 						SDL_RenderCopy(jamRendererGetInternalRenderer(), font->font, &charSheetBox, &charPlace);
 					} else { // Not in the font
-						jSetError(ERROR_OUT_OF_BOUNDS, "Error: Character '%u' is out of the font's range. (jamFontRenderExt)", unichar);
+						jSetError(ERROR_OUT_OF_BOUNDS, "Error: Character '%u' is out of the font's range. (jamBitmapFontRenderExt)", unichar);
 					}
 
 					// Check for text width
@@ -392,16 +392,16 @@ void jamFontRenderExt(int x, int y, const char *string, JamBitmapFont *font, int
 		}
 	} else {
 		if (jamRendererGetInternalRenderer() == NULL)
-			fprintf(stderr, "JamRenderer does not exist (jamFontRenderExt)");
+			fprintf(stderr, "JamRenderer does not exist (jamBitmapFontRenderExt)");
 		if (font == NULL)
-		jSetError(ERROR_NULL_POINTER, "JamBitmapFont does not exist (jamFontRenderExt)");
+		jSetError(ERROR_NULL_POINTER, "JamBitmapFont does not exist (jamBitmapFontRenderExt)");
 	}
 	va_end(params);
 }
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-void jamFontRenderWrap(int x, int y, uint16 w, const char *string, JamBitmapFont *font) {
+void jamBitmapFontRenderWrap(int x, int y, uint16 w, const char *string, JamBitmapFont *font) {
 	uint32 unichar;
 	uint32 tempChar;
 	bool ready = false;
@@ -508,7 +508,7 @@ void jamFontRenderWrap(int x, int y, uint16 w, const char *string, JamBitmapFont
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-uint16 jamFontStringWidth(JamBitmapFont *font, const char *string) {
+uint16 jamBitmapFontStringWidth(JamBitmapFont *font, const char *string) {
 	int i = 0;
 	uint16 lw = 0;
 	uint16 w = 0;
@@ -535,7 +535,7 @@ uint16 jamFontStringWidth(JamBitmapFont *font, const char *string) {
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-uint16 jamFontStringHeight(JamBitmapFont *font, const char *string) {
+uint16 jamBitmapFontStringHeight(JamBitmapFont *font, const char *string) {
 	int i = 0;
 	uint16 h = font->characterHeight;
 
@@ -552,7 +552,7 @@ uint16 jamFontStringHeight(JamBitmapFont *font, const char *string) {
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
-uint16 jamFontStringHeightWrap(JamBitmapFont *font, const char *string, uint16 w) {
+uint16 jamBitmapFontStringHeightWrap(JamBitmapFont *font, const char *string, uint16 w) {
 	int i = 0;
 	uint16 h = font->characterHeight;
 	uint16 width = 0;
