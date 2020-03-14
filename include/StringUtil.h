@@ -14,6 +14,15 @@ extern "C" {
 #define STRING_NOT_FOUND (-1)
 #define DEFAULT_ALLOC_AMOUNT 10
 
+// Macros to check for utf-8 header characters
+#define UTF_8_ONE_BYTE(c)    (c & 0b10000000 == 0b00000000 && c != 0)
+#define UTF_8_TWO_BYTES(c)   ((c & 0b11100000) | 0b11000000 == 0b11000000)
+#define UTF_8_THREE_BYTES(c) ((c & 0b11110000) | 0b11100000 == 0b11100000)
+#define UTF_8_FOUR_BYTES(c)  ((c & 0b11111000) | 0b11110000 == 0b11110000)
+
+// Checks if the character is a utf-8 continuation character
+#define UTF_8_CONTINUATION(c) (c & 0b11000000 == 0b10000000)
+
 /// \brief Makes it easier to work with strings
 /// 
 /// This thing was meant to work with ASCII, but nothing in
@@ -137,6 +146,13 @@ int jamStringBuilderLength(JamStringBuilder *builder);
 /// 
 /// \param builder The builder to free
 void jamStringBuilderFree(JamStringBuilder *builder);
+
+/// \brief Grabs the full UTF-8 character at pos, moving pos up to the next
+/// character and returning it
+/// \param string C-style string
+/// \param pos Position in string to grab unicode character, will be updated
+/// \return The next unicode character or zero if the end of the string (or an error in the encoding)
+uint32 jamStringNextUnicode(const char* string, int* pos);
 
 #ifdef atof
 #undef atof

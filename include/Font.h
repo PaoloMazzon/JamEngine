@@ -47,7 +47,7 @@ JamFont* jamFontCreate(const char* filename);
 /// \brief Sets the size of a given font
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_FREETYPE_ERROR
-void jamFontSetSize(JamFont* font, int size)
+void jamFontSetSize(JamFont* font, int size);
 
 /// \brief Frees a jam font from memory
 void jamFontFree(JamFont* font);

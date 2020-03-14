@@ -255,6 +255,49 @@ void jamStringBuilderFree(JamStringBuilder *builder) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
+uint32 jamStringNextUnicode(const char* string, int* pos) {
+	// This looks like a wall of code, but its really quite simple.
+	// Given the current position, it checks what kind of character
+	// it is and makes sure it has all the necessary utf-8 continuation
+	// characters for this header. Once it knows for certain what
+	// kind of character this is, it can do some bit-wise trickery
+	// to assemble the whole unicode character. If the character at
+	// pos is zero or there is a utf-8 error, zero will be returned
+	// because all of the utf-8 checking macros (UTF_8_*) will return
+	// false.
+	uint32 unicode = 0;
+
+	if (UTF_8_ONE_BYTE(string[*pos])) {
+		unicode = (uint32)string[*pos];
+		(*pos)++;
+	} else if (UTF_8_TWO_BYTES(string[*pos])
+			&& UTF_8_CONTINUATION(string[(*pos) + 1])) {
+		unicode = ((uint32)string[*pos] & 0b00011111) << 6;
+		unicode += (uint32)string[(*pos) + 1] & 0b00111111;
+		(*pos) += 2;
+	} else if (UTF_8_THREE_BYTES(string[*pos])
+			&& UTF_8_CONTINUATION(string[(*pos) + 1])
+			&& UTF_8_CONTINUATION(string[(*pos) + 2])) {
+		unicode = ((uint32)string[*pos] & 0b00001111) << 6;
+		unicode += ((uint32)string[(*pos) + 1] & 0b00111111) << 6;
+		unicode += (uint32)string[(*pos) + 2] & 0b00111111;
+		(*pos) += 3;
+	} else if (UTF_8_FOUR_BYTES(string[*pos])
+			&& UTF_8_CONTINUATION(string[(*pos) + 1])
+			&& UTF_8_CONTINUATION(string[(*pos) + 2])
+			&& UTF_8_CONTINUATION(string[(*pos) + 3])) {
+		unicode = ((uint32)string[*pos] & 0b00001111) << 6;
+		unicode += ((uint32)string[(*pos) + 1] & 0b00111111) << 6;
+		unicode += ((uint32)string[(*pos) + 2] & 0b00111111) << 6;
+		unicode += (uint32)string[(*pos) + 3] & 0b00111111;
+		(*pos) += 4;
+	}
+
+	return unicode;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
 double atof(const char* string) {
 	double output = 0;
 	int i;
