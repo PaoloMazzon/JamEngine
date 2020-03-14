@@ -44,8 +44,20 @@ typedef struct {
 /// \throws ERROR_ALLOC_FAILED
 JamFont* jamFontCreate(const char* filename);
 
+/// \brief Sets the size of a given font
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_FREETYPE_ERROR
+void jamFontSetSize(JamFont* font, int size)
+
 /// \brief Frees a jam font from memory
 void jamFontFree(JamFont* font);
+
+/// \brief Shuts down the font system, call at the end of the program if you used jamFontCreate
+///
+/// jamFontCreate will automatically initialize the font system if it hasn't been initialized
+/// yet. If you ever call jamFontCreate, you need to call this at the end of your program to
+/// prevent memory leaks. It is also safe to call this if you never called jamFontCreate.
+void jamFontQuit();
 
 /////////////////////////////////////////////////////
 /// \brief Creates a new font and returns it
