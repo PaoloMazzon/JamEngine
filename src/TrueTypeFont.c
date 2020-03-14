@@ -2,6 +2,8 @@
 #include "Font.h"
 #include <malloc.h>
 #include <Font.h>
+#include <ft2build.h>
+#include <freetype/freetype.h>
 
 // The freetype library
 static FT_Library gFontLib;
@@ -25,7 +27,7 @@ JamFont* jamFontCreate(const char* filename) {
 		newFont = (JamFont*)malloc(sizeof(JamFont));
 
 		if (newFont != NULL) {
-			FT_New_Face(gFontLib, filename, 0, &newFont->fontFace);
+			FT_New_Face(gFontLib, filename, 0, newFont->fontFace);
 		} else {
 			jSetError(ERROR_ALLOC_FAILED, "Failed to create font");
 		}

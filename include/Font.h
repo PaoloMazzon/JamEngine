@@ -12,7 +12,6 @@
 
 #pragma once
 #include "Renderer.h"
-#include <freetype/freetype.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,7 +36,7 @@ typedef struct {
 
 /// \brief A true type font for rendering .ttf/.otf type fonts
 typedef struct {
-	FT_Face fontFace; ///< The font itself
+	void* fontFace; ///< The font itself
 } JamFont;
 
 /// \brief Creates a new free type font
