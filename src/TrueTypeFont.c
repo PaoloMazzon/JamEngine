@@ -2,6 +2,7 @@
 #include "Font.h"
 #include <malloc.h>
 #include <Font.h>
+#include <StringUtil.h>
 #include <ft2build.h>
 #include <freetype/freetype.h>
 
@@ -62,8 +63,16 @@ void jamFontSetSize(JamFont* font, int size) {
 ///////////////////////////////////////////////////////////
 void jamFontRender(JamFont* font, int x, int y, const char* string) {
 	FT_Error err;
+	int pos = 0;
+	uint32 c = jamStringNextUnicode(string, &pos);
 	if (font != NULL && gFontLibInitialized) {
-		// TODO: This
+		while (err == 0 && c != 0) {
+			FT_Load_Glyph(font->fontFace, FT_Get_Char_Index(font->fontFace, c), 0);
+
+			// TODO: Render text using current glyph
+
+			c = jamStringNextUnicode(string, &pos);
+		}
 	} else {
 		if (font == NULL)
 			jSetError(ERROR_NULL_POINTER, "Font does not exist");
