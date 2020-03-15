@@ -6,6 +6,26 @@
 #include <malloc.h>
 #include "JamError.h"
 
+static inline bool _utf8OneByte(char c) {
+	return ((c & 0b10000000) == 0b00000000) && (c != 0);
+}
+
+static inline bool _utf8TwoBytes(char c) {
+	return (c & 0b11100000) == 0b11000000;
+}
+
+static inline bool _utf8ThreeBytes(char c) {
+	return (c & 0b11110000) == 0b11100000;
+}
+
+static inline bool _utf8FourBytes(char c) {
+	return (c & 0b11111000) == 0b11110000;
+}
+
+static inline bool _utf8ContinuationChar(char c) {
+	return (c & 0b11000000) == 0b10000000;
+}
+
 ///////////////////////////////////////////////////////////////
 JamStringBuilder* jamStringBuilderCreate() {
 	JamStringBuilder* builder = calloc(sizeof(JamStringBuilder), 1);
@@ -263,31 +283,31 @@ uint32 jamStringNextUnicode(const char* string, int* pos) {
 	// kind of character this is, it can do some bit-wise trickery
 	// to assemble the whole unicode character. If the character at
 	// pos is zero or there is a utf-8 error, zero will be returned
-	// because all of the utf-8 checking macros (UTF_8_*) will return
+	// because all of the utf-8 checking functions (UTF_8_*) will return
 	// false.
 	uint32 unicode = 0;
 
-	if (UTF_8_ONE_BYTE(string[*pos])) {
+	if (_utf8OneByte(string[*pos])) {
 		unicode = (uint32)string[*pos];
 		(*pos)++;
-	} else if (UTF_8_TWO_BYTES(string[*pos])
-			&& UTF_8_CONTINUATION(string[(*pos) + 1])) {
+	} else if (_utf8TwoBytes(string[*pos])
+			&& _utf8ContinuationChar(string[(*pos) + 1])) {
 		unicode = ((uint32)string[*pos] & 0b00011111) << 6;
 		unicode += (uint32)string[(*pos) + 1] & 0b00111111;
 		(*pos) += 2;
-	} else if (UTF_8_THREE_BYTES(string[*pos])
-			&& UTF_8_CONTINUATION(string[(*pos) + 1])
-			&& UTF_8_CONTINUATION(string[(*pos) + 2])) {
-		unicode = ((uint32)string[*pos] & 0b00001111) << 6;
-		unicode += ((uint32)string[(*pos) + 1] & 0b00111111) << 6;
-		unicode += (uint32)string[(*pos) + 2] & 0b00111111;
+	} else if (_utf8ThreeBytes(string[*pos])
+			&& _utf8ContinuationChar(string[(*pos) + 1])
+			&& _utf8ContinuationChar(string[(*pos) + 2])) {
+		unicode = ((uint32)string[*pos] & 0b00001111) << 12;
+		unicode |= ((uint32)string[(*pos) + 1] & 0b00111111) << 6;
+		unicode |= (uint32)string[(*pos) + 2] & 0b00111111;
 		(*pos) += 3;
-	} else if (UTF_8_FOUR_BYTES(string[*pos])
-			&& UTF_8_CONTINUATION(string[(*pos) + 1])
-			&& UTF_8_CONTINUATION(string[(*pos) + 2])
-			&& UTF_8_CONTINUATION(string[(*pos) + 3])) {
-		unicode = ((uint32)string[*pos] & 0b00001111) << 6;
-		unicode += ((uint32)string[(*pos) + 1] & 0b00111111) << 6;
+	} else if (_utf8FourBytes(string[*pos])
+			&& _utf8ContinuationChar(string[(*pos) + 1])
+			&& _utf8ContinuationChar(string[(*pos) + 2])
+			&& _utf8ContinuationChar(string[(*pos) + 3])) {
+		unicode = ((uint32)string[*pos] & 0b00001111) << 18;
+		unicode += ((uint32)string[(*pos) + 1] & 0b00111111) << 12;
 		unicode += ((uint32)string[(*pos) + 2] & 0b00111111) << 6;
 		unicode += (uint32)string[(*pos) + 3] & 0b00111111;
 		(*pos) += 4;

@@ -284,40 +284,19 @@ int main(int argc, char* argv[]) {
 				run = runGame();
 		}
 	} else { // Test specific functionality of JamEngine
-		// Load things
-		gHandler = jamAssetHandlerCreate(1000);
-		jamAssetHandlerLoadINI(gHandler, "assets/testassets.ini", NULL);
-		JamWorld* world = jamWorldCreate(50, 50, 32, 32, false);
-		JamBehaviour behaviour;
-		behaviour.onFrame = onFrame;
-		behaviour.onDestruction = NULL;
-		behaviour.onCreation = NULL;
-		behaviour.onDraw = onDraw;
-		JamEntity* testEnt =jamAssetHandlerGetEntity(gHandler, "PlayerEntity");
-		testEnt->behaviour = &behaviour;
-		int i;
-		for (i = 0; i < 1000; i++)
-			jamWorldAddEntity(world, jamEntityCopy(testEnt, 200, 200));
-		for (i = 0; i < 10000; i++)
-			jamWorldAddEntity(world, jamEntityCopy(testEnt, 1000, 1000));
-		//jamWorldEnableCaching(world);
-		int squareX = 0;
+		int pos = 0;
+		const char* testString = "";
+		uint32 c = jamStringNextUnicode(testString, &pos);
+		while (c != 0) {
+			printf("Character: %i\n", c);
+			c = jamStringNextUnicode(testString, &pos);
+		}
+		fflush(stdout);
 
 		// Testing
 		while (jamRendererProcEvents()) {
-			if (jamInputCheckKeyPressed(JAM_KB_DOWN))
-				jamWorldFilter(world);
-			jamRendererMoveCamera(((int)jamInputCheckKey(JAM_KB_D) - (int)jamInputCheckKey(JAM_KB_A)) * 10, ((int)jamInputCheckKey(JAM_KB_S) - (int)jamInputCheckKey(JAM_KB_W)) * 10);
-			jamDrawFillColour(255, 255, 255, 255);
-			jamWorldProcFrame(world);
-			jamDrawRectangleFilled(squareX++, 150, 32, 32);
-			if (squareX > 200) squareX = 0;
 			jamRendererProcEndFrame();
 		}
-
-		// Free memory
-		jamAssetHandlerFree(gHandler);
-		jamWorldFree(world);
 	}
 
 	jamRendererQuit();
