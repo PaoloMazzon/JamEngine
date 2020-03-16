@@ -24,7 +24,19 @@ struct _JamTexture {
 
 /// \brief Creates a texture that can be rendered to
 /// \throws ERROR_SDL_ERROR
+/// \throws ERROR_ALLOC_FAILED
 JamTexture* jamTextureCreate(int w, int h);
+
+/// \brief Creates a JamTexture from a SDL2 texture
+///
+/// Once you pass the SDL2 texture to this function,
+/// it belongs to the texture. Do not free the texture
+/// you pass here yourself as the texture will free
+/// it when you call jamTextureFree.
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ALLOC_FAILED
+JamTexture* jamTextureCreateFromTex(void* texture);
 
 /// \brief Loads a texture from a file
 /// \throws ERROR_SDL_ERROR

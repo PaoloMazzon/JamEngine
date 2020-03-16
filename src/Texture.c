@@ -32,7 +32,7 @@ JamTexture* jamTextureCreate(int w, int h) {
 			jSetError(ERROR_SDL_ERROR, "Failed to create SDL texture (jamTextureCreate). SDL Error: %s\n", SDL_GetError());
 		}
 	} else {
-		jSetError(ERROR_SDL_ERROR, "Failed to allocate JamTexture. SDL Error: %s\n", SDL_GetError());
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate JamTexture. SDL Error: %s\n", SDL_GetError());
 	}
 
 	// If we get a dud back, it returns null which informs the user
@@ -40,6 +40,23 @@ JamTexture* jamTextureCreate(int w, int h) {
 	// struct, it returns that so we need not wrap our return in some
 	// fail-safe statements.
 	return tex;
+}
+////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+JamTexture* jamTextureCreateFromTex(void* texture) {
+	JamTexture* tex = (JamTexture*)malloc(sizeof(JamTexture));
+
+	if (tex != NULL && texture != NULL) {
+		tex->tex = texture;
+		SDL_QueryTexture(texture, NULL, NULL, &tex->w, &tex->h);
+
+	} else {
+		if (tex == NULL)
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate JamTexture. SDL Error: %s\n", SDL_GetError());
+		if (texture == NULL)
+			jSetError(ERROR_NULL_POINTER, "Texture does not exist");
+	}
 }
 ////////////////////////////////////////////////////////////////
 

@@ -5,6 +5,7 @@
 #include <StringUtil.h>
 #include <ft2build.h>
 #include <freetype/freetype.h>
+#include <Texture.h>
 
 // The freetype library
 static FT_Library gFontLib;
@@ -12,10 +13,46 @@ static FT_Library gFontLib;
 // Weather or not freetype has been initialized
 static bool gFontLibInitialized;
 
+///////////// Functions that manage the "hidden" struct _JamFontRangeCache /////////////
+// To spare confusion on the whole inclusive-range-to-array-index bit
+static inline uint32 _rangeEndToPureEnd(uint32 rangeStart, uint32 rangeEnd) {
+	return (rangeEnd - rangeStart + 1);
+}
+
+// This function creates the x amount of array slots but does not so much as NULL them
+// so it is important you fill them right away.
+static _JamFontRangeCache* _createFontRange(uint32 rangeStart, uint32 rangeEnd) {
+	_JamFontRangeCache* range = (_JamFontRangeCache*)malloc(sizeof(_JamFontRangeCache));
+	JamTexture** texArray = (JamTexture**)malloc(sizeof(JamTexture*) * _rangeEndToPureEnd(rangeStart, rangeEnd));
+
+	if (range != NULL && texArray != NULL) {
+		range->characters = texArray;
+		range->rangeStart = rangeStart;
+		range->rangeEnd = rangeEnd;
+	} else {
+		free(range);
+		free(texArray);
+		range = NULL;
+	}
+
+	return range;
+}
+
+static void _freeFontRange(_JamFontRangeCache* fontRange) {
+	uint32 i;
+	if (fontRange != NULL) {
+		for (i = 0; i < _rangeEndToPureEnd(fontRange->rangeStart, fontRange->rangeEnd); i++)
+			jamTextureFree(fontRange->characters[i]);
+		free(fontRange);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////////////
+
 ///////////////////////////////////////////////////////////
-JamFont* jamFontCreate(const char* filename) {
+JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
+	FT_Error err;
 	if (!gFontLibInitialized) {
-		FT_Error err = FT_Init_FreeType(&gFontLib);
+		err = FT_Init_FreeType(&gFontLib);
 		if (err)
 			jSetError(ERROR_FREETYPE_ERROR, "FreeType could not be initialized, error code=%i", err);
 		else
@@ -28,7 +65,25 @@ JamFont* jamFontCreate(const char* filename) {
 		newFont = (JamFont*)malloc(sizeof(JamFont));
 
 		if (newFont != NULL) {
-			FT_New_Face(gFontLib, filename, 0, newFont->fontFace);
+			err = FT_New_Face(gFontLib, filename, 0, newFont->fontFace);
+
+			if (!err) {
+				// For the sake of this function producing the same size font
+				// across every system (such is what you want in a pixel-perfect
+				// game), FT_Set_Char_Size is not given the actual system DPI.
+				// This is a conscious choice that can be changed without too much
+				// effort since the renderer can provide that information.
+				err = FT_Set_Char_Size(newFont->fontFace, 0, size, 300, 300);
+
+				if (preloadASCII)
+					jamFontPreloadRange(newFont, 32, 127);
+
+				if (err) {
+					jSetError(ERROR_FREETYPE_ERROR, "Failed to set character size, error code=%i", err);
+				}
+			} else {
+				jSetError(ERROR_FREETYPE_ERROR, "Failed to create font face, error code=%i", err);
+			}
 		} else {
 			jSetError(ERROR_ALLOC_FAILED, "Failed to create font");
 		}
@@ -39,23 +94,11 @@ JamFont* jamFontCreate(const char* filename) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-void jamFontSetSize(JamFont* font, int size) {
-	FT_Error err;
-	if (font != NULL && gFontLibInitialized) {
-		// For the sake of this function producing the same size font
-		// across every system (such is what you want in a pixel-perfect
-		// game), FT_Set_Char_Size is not given the actual system DPI.
-		// This is a conscious choice that can be changed without too much
-		// effort since the renderer can provide that information.
-		err = FT_Set_Char_Size(font->fontFace, 0, size, 300, 300);
-
-		if (err != 0)
-			jSetError(ERROR_FREETYPE_ERROR, "An error (%i) occurred while setting font size", err);
+void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
+	if (font != NULL) {
+		// TODO: This
 	} else {
-		if (font == NULL)
-			jSetError(ERROR_NULL_POINTER, "Font does not exist");
-		if (!gFontLibInitialized)
-			jSetError(ERROR_FREETYPE_ERROR, "FreeType has not been initialized");
+		jSetError(ERROR_NULL_POINTER, "Font does not exist");
 	}
 }
 ///////////////////////////////////////////////////////////

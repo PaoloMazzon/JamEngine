@@ -34,20 +34,34 @@ typedef struct {
 	uint16 fontHeight;     ///< The height in pixels of the font page
 } JamBitmapFont;
 
+typedef struct {
+	uint32 rangeStart;       ///< Start of the unicode range of this cache
+	uint32 rangeEnd;         ///< End of the unicode range of this cache
+	JamTexture** characters; ///< Array of textures representing the range of characters
+} _JamFontRangeCache;
+
 /// \brief A true type font for rendering .ttf/.otf type fonts
 typedef struct {
-	void* fontFace; ///< The font itself
+	void* fontFace;              ///< The font itself
+	_JamFontRangeCache** ranges; ///< Array of caches that will be loaded with textures of the font
 } JamFont;
 
 /// \brief Creates a new free type font
+///
+/// Calling this function with preloadASCII enabled will make this
+/// function call jamFontPreloadRange with the range 32-127 (inclusive)
+/// after the font is created. Generally, you want this enabled.
+///
 /// \throws ERROR_FREETYPE_ERROR
 /// \throws ERROR_ALLOC_FAILED
-JamFont* jamFontCreate(const char* filename);
+JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII);
 
-/// \brief Sets the size of a given font
-/// \throws ERROR_NULL_POINTER
-/// \throws ERROR_FREETYPE_ERROR
-void jamFontSetSize(JamFont* font, int size);
+/// \brief Loads a range of characters into video memory for quick rendering
+///
+/// This function preloads a range of characters into video memory making font
+/// rendering much, much quicker at the expense of some amount of memory. The
+/// range is inclusive.
+void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd);
 
 /// \brief Frees a jam font from memory
 void jamFontFree(JamFont* font);
