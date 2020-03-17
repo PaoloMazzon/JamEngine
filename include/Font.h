@@ -44,6 +44,7 @@ typedef struct {
 typedef struct {
 	void* fontFace;              ///< The font itself
 	_JamFontRangeCache** ranges; ///< Array of caches that will be loaded with textures of the font
+	int rangeCount;              ///< Number of ranges in this font
 } JamFont;
 
 /// \brief Creates a new free type font

@@ -6,6 +6,7 @@
 #include <ft2build.h>
 #include <freetype/freetype.h>
 #include <Texture.h>
+#include <SDL.h>
 
 // The freetype library
 static FT_Library gFontLib;
@@ -66,6 +67,7 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
 
 		if (newFont != NULL) {
 			err = FT_New_Face(gFontLib, filename, 0, newFont->fontFace);
+			newFont->ranges = 0;
 
 			if (!err) {
 				// For the sake of this function producing the same size font
@@ -95,8 +97,68 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
 
 ///////////////////////////////////////////////////////////
 void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
+	Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	int shift = (req_format == STBI_rgb) ? 8 : 0;
+  	rmask = 0xff000000 >> shift;
+  	gmask = 0x00ff0000 >> shift;
+  	bmask = 0x0000ff00 >> shift;
+  	amask = 0x000000ff >> shift;
+#else // little endian, like x86
+	rmask = 0x000000ff;
+	gmask = 0x0000ff00;
+	bmask = 0x00ff0000;
+	amask = 0xff000000;
+#endif
+
+
+	uint32 i;
+	FT_Bitmap bitmap;
+	_JamFontRangeCache* range;
+	SDL_Surface* surf;
+	_JamFontRangeCache** newRanges;
+
 	if (font != NULL) {
-		// TODO: This
+		range = _createFontRange(rangeStart, rangeEnd);
+		newRanges = (_JamFontRangeCache**)realloc(font->ranges, sizeof(_JamFontRangeCache*) * (font->rangeCount + 1));
+
+		if (range != NULL && newRanges != NULL) {
+			range->rangeStart = rangeStart;
+			range->rangeEnd = rangeEnd;
+			font->ranges[font->rangeCount] = range;
+			font->rangeCount++;
+
+			for (i = rangeStart; i <= rangeEnd; i++) {
+				// 1. Load glyph
+				// 2. Create surface with glyph bitmap
+				// 3. Create texture from surface and send it off to jamTextureCreateFromTex
+				FT_Load_Glyph(font->fontFace, FT_Get_Char_Index(font->fontFace, i), 0);
+				bitmap = ((FT_Face) font->fontFace)->glyph->bitmap;
+
+				surf = SDL_CreateRGBSurfaceFrom(bitmap.buffer,
+										 bitmap.width,
+										 bitmap.rows,
+										 3,
+										 bitmap.pitch,
+										 0,
+										 0,
+										 0,
+										 0);
+
+				range->characters[i - rangeStart] = jamTextureCreateFromTex(
+						SDL_CreateTextureFromSurface(
+								jamRendererGetInternalRenderer(),
+								surf
+								));
+
+				SDL_FreeSurface(surf);
+			}
+		} else {
+			if (range == NULL)
+				jSetError(ERROR_ALLOC_FAILED, "Failed to create font range");
+			if (newRanges == NULL)
+				jSetError(ERROR_REALLOC_FAILED, "Failed to resize range list");
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Font does not exist");
 	}
@@ -110,9 +172,7 @@ void jamFontRender(JamFont* font, int x, int y, const char* string) {
 	uint32 c = jamStringNextUnicode(string, &pos);
 	if (font != NULL && gFontLibInitialized) {
 		while (err == 0 && c != 0) {
-			FT_Load_Glyph(font->fontFace, FT_Get_Char_Index(font->fontFace, c), 0);
-
-			// TODO: Render text using current glyph
+			// TODO: Find the current character in the cache and render the texture
 
 			c = jamStringNextUnicode(string, &pos);
 		}
