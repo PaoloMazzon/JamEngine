@@ -4,9 +4,10 @@
 #include <Font.h>
 #include <StringUtil.h>
 #include <ft2build.h>
-#include <freetype/freetype.h>
+#include FT_FREETYPE_H
 #include <Texture.h>
 #include <SDL.h>
+#include <Drawing.h>
 
 // The freetype library
 static FT_Library gFontLib;
@@ -145,13 +146,18 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 										 0,
 										 0);
 
-				range->characters[i - rangeStart] = jamTextureCreateFromTex(
-						SDL_CreateTextureFromSurface(
-								jamRendererGetInternalRenderer(),
-								surf
-								));
+				if (surf != NULL) {
+					range->characters[i - rangeStart] = jamTextureCreateFromTex(
+							SDL_CreateTextureFromSurface(
+									jamRendererGetInternalRenderer(),
+									surf
+							));
 
-				SDL_FreeSurface(surf);
+					SDL_FreeSurface(surf);
+				} else {
+					jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap");
+					range->characters[i - rangeStart] = NULL;
+				}
 			}
 		} else {
 			if (range == NULL)
@@ -169,10 +175,17 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 void jamFontRender(JamFont* font, int x, int y, const char* string) {
 	FT_Error err;
 	int pos = 0;
+	int i;
+	int xx = x;
 	uint32 c = jamStringNextUnicode(string, &pos);
 	if (font != NULL && gFontLibInitialized) {
 		while (err == 0 && c != 0) {
-			// TODO: Find the current character in the cache and render the texture
+			for (i = 0; i < font->rangeCount; i++) {
+				if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
+					jamDrawTexture(font->ranges[i]->characters[c], xx, y);
+					xx += font->ranges[i]->characters[c]->w;
+				}
+			}
 
 			c = jamStringNextUnicode(string, &pos);
 		}

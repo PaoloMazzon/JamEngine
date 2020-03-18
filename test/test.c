@@ -287,6 +287,7 @@ int main(int argc, char* argv[]) {
 		int pos = 0;
 		const char* testString = "";
 		uint32 c = jamStringNextUnicode(testString, &pos);
+		JamFont* font = jamFontCreate("assets/DroidSans.ttf", 16, true);
 		while (c != 0) {
 			printf("Character: %i\n", c);
 			c = jamStringNextUnicode(testString, &pos);
