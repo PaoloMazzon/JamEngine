@@ -67,8 +67,9 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
 		newFont = (JamFont*)malloc(sizeof(JamFont));
 
 		if (newFont != NULL) {
-			err = FT_New_Face(gFontLib, filename, 0, newFont->fontFace);
-			newFont->ranges = 0;
+			err = FT_New_Face(gFontLib, filename, 0, &newFont->fontFace);
+			newFont->ranges = NULL;
+			newFont->rangeCount = 0;
 
 			if (!err) {
 				// For the sake of this function producing the same size font
