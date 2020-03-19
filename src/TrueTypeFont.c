@@ -67,7 +67,7 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
 		newFont = (JamFont*)malloc(sizeof(JamFont));
 
 		if (newFont != NULL) {
-			err = FT_New_Face(gFontLib, filename, 0, &newFont->fontFace);
+			err = FT_New_Face(gFontLib, filename, 0, (FT_Face*)&newFont->fontFace);
 			newFont->ranges = NULL;
 			newFont->rangeCount = 0;
 
@@ -119,6 +119,8 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 	_JamFontRangeCache* range;
 	SDL_Surface* surf;
 	_JamFontRangeCache** newRanges;
+	bool error = false;
+	FT_Error err;
 
 	if (font != NULL) {
 		range = _createFontRange(rangeStart, rangeEnd);
@@ -127,14 +129,17 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 		if (range != NULL && newRanges != NULL) {
 			range->rangeStart = rangeStart;
 			range->rangeEnd = rangeEnd;
+			font->ranges = newRanges;
 			font->ranges[font->rangeCount] = range;
 			font->rangeCount++;
 
 			for (i = rangeStart; i <= rangeEnd; i++) {
-				// 1. Load glyph
+				// 1. Load glyph (and most likely render it)
 				// 2. Create surface with glyph bitmap
 				// 3. Create texture from surface and send it off to jamTextureCreateFromTex
-				FT_Load_Glyph(font->fontFace, FT_Get_Char_Index(font->fontFace, i), 0);
+				err = FT_Load_Glyph(font->fontFace, FT_Get_Char_Index(font->fontFace, i), 0);
+				if (((FT_Face) font->fontFace)->glyph->format != FT_GLYPH_FORMAT_BITMAP)
+					FT_Render_Glyph(((FT_Face)font->fontFace)->glyph, FT_RENDER_MODE_NORMAL);
 				bitmap = ((FT_Face) font->fontFace)->glyph->bitmap;
 
 				surf = SDL_CreateRGBSurfaceFrom(bitmap.buffer,
@@ -156,9 +161,18 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 
 					SDL_FreeSurface(surf);
 				} else {
-					jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap");
+					if (!error)
+						jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap, error code %i", err);
+					error = true;
 					range->characters[i - rangeStart] = NULL;
 				}
+			}
+
+			// If there was an error we abandon all progress and return null
+			if (error) {
+				_freeFontRange(range);
+				font->ranges = (_JamFontRangeCache**)realloc(font->ranges, sizeof(_JamFontRangeCache*) * (font->rangeCount - 1));
+				font->rangeCount--;
 			}
 		} else {
 			if (range == NULL)
@@ -174,7 +188,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 
 ///////////////////////////////////////////////////////////
 void jamFontRender(JamFont* font, int x, int y, const char* string) {
-	FT_Error err;
+	FT_Error err = 0;
 	int pos = 0;
 	int i;
 	int xx = x;
@@ -201,7 +215,10 @@ void jamFontRender(JamFont* font, int x, int y, const char* string) {
 
 ///////////////////////////////////////////////////////////
 void jamFontFree(JamFont* font) {
+	int i;
 	if (font != NULL) {
+		for (i = 0; i < font->rangeCount; i++)
+			_freeFontRange(font->ranges[i]);
 		FT_Done_Face(font->fontFace);
 		free(font);
 	}
