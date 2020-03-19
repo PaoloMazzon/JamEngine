@@ -296,6 +296,8 @@ int main(int argc, char* argv[]) {
 
 		// Testing
 		while (jamRendererProcEvents()) {
+			jamDrawFillColour(255, 255, 255, 255);
+			jamFontRender(font, 0, 0, "heck");
 			jamRendererProcEndFrame();
 		}
 	}

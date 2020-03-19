@@ -64,6 +64,11 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII);
 /// range is inclusive.
 void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd);
 
+/// \brief Renders a font
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_TRUETYPE_ERROR
+void jamFontRender(JamFont* font, int x, int y, const char* string);
+
 /// \brief Frees a jam font from memory
 void jamFontFree(JamFont* font);
 

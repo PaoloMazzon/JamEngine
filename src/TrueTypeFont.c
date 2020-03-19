@@ -117,7 +117,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 	uint32 i;
 	FT_Bitmap bitmap;
 	_JamFontRangeCache* range;
-	SDL_Surface* surf;
+	SDL_Texture* tex;
 	_JamFontRangeCache** newRanges;
 	bool error = false;
 	FT_Error err;
@@ -135,29 +135,43 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 
 			for (i = rangeStart; i <= rangeEnd; i++) {
 				// 1. Load glyph (and most likely render it)
-				// 2. Create surface with glyph bitmap
-				// 3. Create texture from surface and send it off to jamTextureCreateFromTex
+				// 2. Create texture with necessary attributes
+				// 3. Copy bitmap data to texture
 				err = FT_Load_Char(font->fontFace, i, FT_LOAD_RENDER);
 				bitmap = ((FT_Face) font->fontFace)->glyph->bitmap;
 
-				surf = SDL_CreateRGBSurfaceFrom(bitmap.buffer,
-										 bitmap.width,
-										 bitmap.rows,
-										 3,
-										 bitmap.pitch,
-										 rmask,
-										 gmask,
-										 bmask,
-										 amask);
+				tex = SDL_CreateTexture(jamRendererGetInternalRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, bitmap.width, bitmap.rows);
 
-				if (surf != NULL) {
-					range->characters[i - rangeStart] = jamTextureCreateFromTex(
-							SDL_CreateTextureFromSurface(
-									jamRendererGetInternalRenderer(),
-									surf
-							));
+				// This code is from an example and is going to be cleaned up
+				// Credit to this kind fellow https://github.com/wutipong
+				void* buffer;
+				int pitch;
+				SDL_LockTexture(tex, NULL, &buffer, &pitch);
 
-					SDL_FreeSurface(surf);
+				unsigned char *src_pixels = bitmap.buffer;
+				unsigned int *target_pixels = buffer;
+
+				SDL_PixelFormat* pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+
+				for (int y = 0; y < bitmap.rows; y++)
+				{
+					for (int x = 0; x < bitmap.width; x++)
+					{
+						int index = (y * bitmap.width) + x;
+
+						unsigned char alpha = src_pixels[index];
+						unsigned int pixel_value =
+								SDL_MapRGBA(pixel_format, 255, 255, 255, alpha);
+
+						target_pixels[index] = pixel_value;
+					}
+				}
+
+				SDL_FreeFormat(pixel_format);
+				SDL_UnlockTexture(tex);
+
+				if (tex != NULL) {
+					range->characters[i - rangeStart] = jamTextureCreateFromTex(tex);
 				} else {
 					if (!error)
 						jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap FT Error=%i SDL Error=%s", err, SDL_GetError());
