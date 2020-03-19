@@ -57,6 +57,8 @@ JamTexture* jamTextureCreateFromTex(void* texture) {
 		if (texture == NULL)
 			jSetError(ERROR_NULL_POINTER, "Texture does not exist");
 	}
+
+	return tex;
 }
 ////////////////////////////////////////////////////////////////
 

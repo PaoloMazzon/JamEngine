@@ -77,6 +77,7 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
 				// game), FT_Set_Char_Size is not given the actual system DPI.
 				// This is a conscious choice that can be changed without too much
 				// effort since the renderer can provide that information.
+				FT_Set_Pixel_Sizes(newFont->fontFace, 0, 64);
 				err = FT_Set_Char_Size(newFont->fontFace, size, size, 300, 300);
 
 				if (preloadASCII)
@@ -99,21 +100,6 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
 
 ///////////////////////////////////////////////////////////
 void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
-	Uint32 rmask, gmask, bmask, amask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	int shift = (req_format == STBI_rgb) ? 8 : 0;
-  	rmask = 0xff000000 >> shift;
-  	gmask = 0x00ff0000 >> shift;
-  	bmask = 0x0000ff00 >> shift;
-  	amask = 0x000000ff >> shift;
-#else // little endian, like x86
-	rmask = 0x000000ff;
-	gmask = 0x0000ff00;
-	bmask = 0x00ff0000;
-	amask = 0xff000000;
-#endif
-
-
 	uint32 i;
 	FT_Bitmap bitmap;
 	_JamFontRangeCache* range;
@@ -121,6 +107,11 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 	_JamFontRangeCache** newRanges;
 	bool error = false;
 	FT_Error err;
+	unsigned char *srcPixels;
+	unsigned int *targetPixels;
+	int index, x, y;
+	unsigned char alpha;
+	unsigned int pixel_value;
 
 	if (font != NULL) {
 		range = _createFontRange(rangeStart, rangeEnd);
@@ -148,26 +139,21 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 				int pitch;
 				SDL_LockTexture(tex, NULL, &buffer, &pitch);
 
-				unsigned char *src_pixels = bitmap.buffer;
-				unsigned int *target_pixels = buffer;
+				srcPixels = bitmap.buffer;
+				targetPixels = buffer;
 
-				SDL_PixelFormat* pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+				SDL_PixelFormat* pixelFormat = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
 
-				for (int y = 0; y < bitmap.rows; y++)
-				{
-					for (int x = 0; x < bitmap.width; x++)
-					{
-						int index = (y * bitmap.width) + x;
-
-						unsigned char alpha = src_pixels[index];
-						unsigned int pixel_value =
-								SDL_MapRGBA(pixel_format, 255, 255, 255, alpha);
-
-						target_pixels[index] = pixel_value;
+				for (y = 0; y < bitmap.rows; y++) {
+					for (x = 0; x < bitmap.width; x++) {
+						index = (y * bitmap.width) + x;
+						alpha = srcPixels[index];
+						pixel_value = SDL_MapRGBA(pixelFormat, 255, 255, 255, alpha);
+						targetPixels[index] = pixel_value;
 					}
 				}
 
-				SDL_FreeFormat(pixel_format);
+				SDL_FreeFormat(pixelFormat);
 				SDL_UnlockTexture(tex);
 
 				if (tex != NULL) {
@@ -209,8 +195,8 @@ void jamFontRender(JamFont* font, int x, int y, const char* string) {
 		while (err == 0 && c != 0) {
 			for (i = 0; i < font->rangeCount; i++) {
 				if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
-					jamDrawTexture(font->ranges[i]->characters[c], xx, y);
-					xx += font->ranges[i]->characters[c]->w;
+					jamDrawTexture(font->ranges[i]->characters[c - font->ranges[i]->rangeStart], xx, y);
+					xx += font->ranges[i]->characters[c - font->ranges[i]->rangeStart]->w;
 				}
 			}
 
