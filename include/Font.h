@@ -50,7 +50,7 @@ typedef struct {
 /// \brief Creates a new free type font
 ///
 /// Calling this function with preloadASCII enabled will make this
-/// function call jamFontPreloadRange with the range 32-127 (inclusive)
+/// function call jamFontPreloadRange with the range 33-126 (inclusive)
 /// after the font is created. Generally, you want this enabled.
 ///
 /// \throws ERROR_FREETYPE_ERROR

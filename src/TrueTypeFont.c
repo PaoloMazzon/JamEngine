@@ -77,10 +77,10 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
 				// game), FT_Set_Char_Size is not given the actual system DPI.
 				// This is a conscious choice that can be changed without too much
 				// effort since the renderer can provide that information.
-				err = FT_Set_Char_Size(newFont->fontFace, 0, size, 300, 300);
+				err = FT_Set_Char_Size(newFont->fontFace, size, size, 300, 300);
 
 				if (preloadASCII)
-					jamFontPreloadRange(newFont, 32, 127);
+					jamFontPreloadRange(newFont, 33, 126);
 
 				if (err) {
 					jSetError(ERROR_FREETYPE_ERROR, "Failed to set character size, error code=%i", err);
@@ -137,9 +137,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 				// 1. Load glyph (and most likely render it)
 				// 2. Create surface with glyph bitmap
 				// 3. Create texture from surface and send it off to jamTextureCreateFromTex
-				err = FT_Load_Glyph(font->fontFace, FT_Get_Char_Index(font->fontFace, i), 0);
-				if (((FT_Face) font->fontFace)->glyph->format != FT_GLYPH_FORMAT_BITMAP)
-					FT_Render_Glyph(((FT_Face)font->fontFace)->glyph, FT_RENDER_MODE_NORMAL);
+				err = FT_Load_Char(font->fontFace, i, FT_LOAD_RENDER);
 				bitmap = ((FT_Face) font->fontFace)->glyph->bitmap;
 
 				surf = SDL_CreateRGBSurfaceFrom(bitmap.buffer,
@@ -147,10 +145,10 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 										 bitmap.rows,
 										 3,
 										 bitmap.pitch,
-										 0,
-										 0,
-										 0,
-										 0);
+										 rmask,
+										 gmask,
+										 bmask,
+										 amask);
 
 				if (surf != NULL) {
 					range->characters[i - rangeStart] = jamTextureCreateFromTex(
@@ -162,7 +160,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 					SDL_FreeSurface(surf);
 				} else {
 					if (!error)
-						jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap, error code %i", err);
+						jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap FT Error=%i SDL Error=%s", err, SDL_GetError());
 					error = true;
 					range->characters[i - rangeStart] = NULL;
 				}
