@@ -70,6 +70,7 @@ void jamRendererInit(int *argc, char **argv, const char *name, uint32 w, uint32 
 					gRenderer->delta = 1;
 					gRenderer->renderingToScreenBuffer = true;
 					SDL_SetRenderTarget(sdlRenderer, tex->tex);
+					SDL_SetRenderDrawBlendMode(gRenderer->internalRenderer, SDL_BLENDMODE_BLEND);
 				} else {
 					jamRendererQuit();
 					gRenderer = NULL;

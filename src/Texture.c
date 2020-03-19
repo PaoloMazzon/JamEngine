@@ -26,6 +26,7 @@ JamTexture* jamTextureCreate(int w, int h) {
 			tex->w = w;
 			tex->h = h;
 			tex->renderTarget = true;
+			SDL_SetTextureBlendMode(tex->tex, SDL_BLENDMODE_BLEND);
 		} else {
 			free(tex);
 			tex = NULL;

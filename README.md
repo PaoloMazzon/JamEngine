@@ -24,12 +24,11 @@ Features
  - Supports the use of [Tiled](https://www.mapeditor.org/) as a level editor
  - Written purely in C
  - JamINI file I/O built in and extremely easy to use
- - Unicode text rendering (although bitmap fonts only at the moment)
+ - Unicode text rendering, weather it be bitmap or true type
  - Cross-platform implementations of atof and ftoa (string to double and vice-versa)
  - SAT collisions and simple rectangle/circle collisions are interchangeable
  - TileMaps that can be used for rendering complex tile layers and checking collisions
  - 3D audio support through OpenAL
- - Basic profiling support for cross-platform performance breakdowns
 
 Naming Conventions
 ==================
@@ -50,8 +49,9 @@ Features that I've decided are vital to the engine itself and will be added
 at some point in the near future. This would be things you simply expect
 out of a game engine.
 
- - Gamepad support
- - TTF/OTF font support (heck)
+ - Better input support, including gamepad support and control maps
+ - More control over audio (mainly pausing and related controls)
+ - Entity pathing system (such as following predetermined paths and possibly A*)
  
 Possible Additions
 ------------------
