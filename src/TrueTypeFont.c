@@ -199,12 +199,12 @@ void jamFontRender(JamFont* font, int x, int y, const char* string) {
 			for (i = 0; i < font->rangeCount; i++) {
 				if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
 					tex = font->ranges[i]->characters[c - font->ranges[i]->rangeStart];
-					dest.x = xx + (face->glyph->metrics.horiBearingX >> 6);
-					dest.y = y - (face->glyph->metrics.horiBearingY >> 6);
+					dest.x = xx;
+					dest.y = (y - tex->h); // TODO: Render from top left not bottom left
 					dest.w = tex->w;
 					dest.h = tex->h;
 					SDL_RenderCopy(jamRendererGetInternalRenderer(), tex->tex, NULL, &dest);
-					xx += tex->w;
+					xx += tex->w + 1;
 				}
 			}
 

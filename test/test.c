@@ -287,12 +287,12 @@ int main(int argc, char* argv[]) {
 		int pos = 0;
 		const char* testString = "";
 		uint32 c = jamStringNextUnicode(testString, &pos);
-		JamFont* font = jamFontCreate("assets/DroidSans.ttf", 32*32, true);
+		JamFont* font = jamFontCreate("assets/DroidSans.ttf", 16*16, true);
 
 		// Testing
 		while (jamRendererProcEvents()) {
 			jamDrawFillColour(0, 0, 0, 255);
-			jamFontRender(font, 0, 0, "h");
+			jamFontRender(font, 0, 100, "The quick brown fox jumps over the lazy dog.");
 			jamRendererProcEndFrame();
 		}
 	}
