@@ -15,6 +15,32 @@ static FT_Library gFontLib;
 // Weather or not freetype has been initialized
 static bool gFontLibInitialized;
 
+///////////// Functions that manage the "hidden" struct _JamFontTexture /////////////
+_JamFontTexture* _jamFontTextureCreate(void* texture, sint32 yOffset) {
+	_JamFontTexture* tex = (_JamFontTexture*)malloc(sizeof(_JamFontTexture));
+
+	if (tex != NULL && texture != NULL) {
+		tex->tex = texture;
+		tex->yOffset = yOffset;
+		SDL_QueryTexture(texture, NULL, NULL, &tex->w, &tex->h);
+
+	} else {
+		if (tex == NULL)
+			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate JamTexture. SDL Error: %s\n", SDL_GetError());
+		if (texture == NULL)
+			jSetError(ERROR_NULL_POINTER, "Texture does not exist");
+	}
+
+	return tex;
+}
+
+void _jamFontTextureFree(_JamFontTexture* tex) {
+	if (tex != NULL) {
+		SDL_DestroyTexture(tex->tex);
+		free(tex);
+	}
+}
+
 ///////////// Functions that manage the "hidden" struct _JamFontRangeCache /////////////
 // To spare confusion on the whole inclusive-range-to-array-index bit
 static inline uint32 _rangeEndToPureEnd(uint32 rangeStart, uint32 rangeEnd) {
@@ -25,7 +51,7 @@ static inline uint32 _rangeEndToPureEnd(uint32 rangeStart, uint32 rangeEnd) {
 // so it is important you fill them right away.
 static _JamFontRangeCache* _createFontRange(uint32 rangeStart, uint32 rangeEnd) {
 	_JamFontRangeCache* range = (_JamFontRangeCache*)malloc(sizeof(_JamFontRangeCache));
-	JamTexture** texArray = (JamTexture**)malloc(sizeof(JamTexture*) * _rangeEndToPureEnd(rangeStart, rangeEnd));
+	_JamFontTexture** texArray = (_JamFontTexture**)malloc(sizeof(_JamFontTexture*) * _rangeEndToPureEnd(rangeStart, rangeEnd));
 
 	if (range != NULL && texArray != NULL) {
 		range->characters = texArray;
@@ -44,7 +70,7 @@ static void _freeFontRange(_JamFontRangeCache* fontRange) {
 	uint32 i;
 	if (fontRange != NULL) {
 		for (i = 0; i < _rangeEndToPureEnd(fontRange->rangeStart, fontRange->rangeEnd); i++)
-			jamTextureFree(fontRange->characters[i]);
+			_jamFontTextureFree(fontRange->characters[i]);
 		free(fontRange);
 	}
 }
@@ -79,6 +105,11 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
 				// effort since the renderer can provide that information.
 				err = FT_Set_Pixel_Sizes(newFont->fontFace, 0, 64);
 				//err = FT_Set_Char_Size(newFont->fontFace, size, size, 300, 300);
+
+				// Write down space size
+				FT_Load_Char(newFont->fontFace, 32, 0);
+				newFont->space = ((FT_Face)newFont->fontFace)->glyph->linearHoriAdvance / 65536;
+				printf("Space: %i\n", newFont->space);
 
 				if (preloadASCII)
 					jamFontPreloadRange(newFont, 33, 126);
@@ -156,7 +187,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 				SDL_UnlockTexture(tex);
 
 				if (tex != NULL) {
-					range->characters[i - rangeStart] = jamTextureCreateFromTex(tex);
+					range->characters[i - rangeStart] = _jamFontTextureCreate(tex, ((FT_Face) font->fontFace)->glyph->bitmap_top);
 				} else {
 					if (!error)
 						jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap FT Error=%i SDL Error=%s", err, SDL_GetError());
@@ -190,17 +221,19 @@ void jamFontRender(JamFont* font, int x, int y, const char* string) {
 	int i;
 	int xx = x;
 	SDL_Rect dest;
-	JamTexture* tex;
+	_JamFontTexture* tex;
 	FT_Face face;
 	uint32 c = jamStringNextUnicode(string, &pos);
 	if (font != NULL && gFontLibInitialized) {
 		face = font->fontFace;
-		while (err == 0 && c != 0) {
+		while (c != 0) {
 			for (i = 0; i < font->rangeCount; i++) {
-				if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
+				if (c == 32) {
+					xx += font->space;
+				} else if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
 					tex = font->ranges[i]->characters[c - font->ranges[i]->rangeStart];
 					dest.x = xx;
-					dest.y = (y - tex->h); // TODO: Render from top left not bottom left
+					dest.y = y - tex->yOffset; // TODO: Render from top left not bottom left
 					dest.w = tex->w;
 					dest.h = tex->h;
 					SDL_RenderCopy(jamRendererGetInternalRenderer(), tex->tex, NULL, &dest);

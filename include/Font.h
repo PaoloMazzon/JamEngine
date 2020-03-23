@@ -35,9 +35,16 @@ typedef struct {
 } JamBitmapFont;
 
 typedef struct {
-	uint32 rangeStart;       ///< Start of the unicode range of this cache
-	uint32 rangeEnd;         ///< End of the unicode range of this cache
-	JamTexture** characters; ///< Array of textures representing the range of characters
+	sint32 w;       ///< Width of this glyph
+	sint32 h;       ///< Height of this glyph
+	sint32 yOffset; ///< How far down to render this glyph (q should be lower than P, for example)
+	void* tex;      ///< Internal bitmap texture of the glyph
+} _JamFontTexture;
+
+typedef struct {
+	uint32 rangeStart;            ///< Start of the unicode range of this cache
+	uint32 rangeEnd;              ///< End of the unicode range of this cache
+	_JamFontTexture** characters; ///< Array of textures representing the range of characters
 } _JamFontRangeCache;
 
 /// \brief A true type font for rendering .ttf/.otf type fonts
@@ -45,6 +52,7 @@ typedef struct {
 	void* fontFace;              ///< The font itself
 	_JamFontRangeCache** ranges; ///< Array of caches that will be loaded with textures of the font
 	int rangeCount;              ///< Number of ranges in this font
+	sint32 space;                ///< How many pixels a space is
 } JamFont;
 
 /// \brief Creates a new free type font
