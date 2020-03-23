@@ -127,18 +127,12 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII) {
 			newFont->rangeCount = 0;
 
 			if (!err) {
-				// For the sake of this function producing the same size font
-				// across every system (such is what you want in a pixel-perfect
-				// game), FT_Set_Char_Size is not given the actual system DPI.
-				// This is a conscious choice that can be changed without too much
-				// effort since the renderer can provide that information.
 				err = FT_Set_Pixel_Sizes(newFont->fontFace, 0, size);
 
 				// Various metrics
 				FT_Load_Char(newFont->fontFace, 32, 0);
 				newFont->space = (sint32)((FT_Face)newFont->fontFace)->glyph->linearHoriAdvance / 65536;
 				newFont->height = (sint32)((FT_Face)newFont->fontFace)->size->metrics.height >> 6;
-				printf("HEight: %i\n", newFont->height);
 
 				if (preloadASCII)
 					jamFontPreloadRange(newFont, 33, 126);
@@ -263,6 +257,60 @@ void jamFontRender(JamFont* font, int x, int y, const char* string) {
 		if (!gFontLibInitialized)
 			jSetError(ERROR_FREETYPE_ERROR, "FreeType has not been initialized");
 	}
+}
+///////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////
+void jamFontRenderExt(JamFont* font, int x, int y, const char* string, int w) {
+	// TODO: This
+}
+///////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////
+sint32 jamFontWidth(JamFont* font, const char* string) {
+	int i;
+	int pos = 0;
+	uint32 c;
+	sint32 w = 0;
+	sint32 prevW = 0;
+	sint32 prevAdvance = 0;
+	if (font != NULL) {
+		c = jamStringNextUnicode(string, &pos);
+		while (c != 0) {
+			if (c == 32) {
+				w += font->space;
+			} else {
+				for (i = 0; i < font->rangeCount; i++) {
+					if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
+						prevAdvance = font->ranges[i]->characters[c - font->ranges[i]->rangeStart]->advance;
+						w += prevAdvance;
+						prevW = font->ranges[i]->characters[c - font->ranges[i]->rangeStart]->w;
+					}
+				}
+			}
+			c = jamStringNextUnicode(string, &pos);
+		}
+
+		// For the last character we don't need the character advance,
+		// we need to instead know the width of the last character's
+		// texture.
+		w -= prevAdvance;
+		w += prevW;
+	}
+
+	return w;
+}
+///////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////
+sint32 jamFontHeight(JamFont* font) {
+	if (font != NULL) {
+		return font->height;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Font does not exist");
+	}
+
+	return 0;
 }
 ///////////////////////////////////////////////////////////
 

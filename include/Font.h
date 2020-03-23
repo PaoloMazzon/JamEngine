@@ -79,6 +79,30 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd);
 /// \throws ERROR_TRUETYPE_ERROR
 void jamFontRender(JamFont* font, int x, int y, const char* string);
 
+/// \brief Renders a font, moving text past w to the next line
+///
+/// This function draws words until the next word would be past w,
+/// at which point it will move down a line and continue drawing
+/// from there.
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_TRUETYPE_ERROR
+void jamFontRenderExt(JamFont* font, int x, int y, const char* string, int w);
+
+/// \brief Gets the width of a string if it were to be drawn
+///
+/// There are some cases where this would be wrong, but
+/// assuming you're just using some average kind of font
+/// and not some ridiculous size parameters/characters this
+/// will produce an exact width.
+///
+/// \throws ERROR_NULL_POINTER
+sint32 jamFontWidth(JamFont* font, const char* string);
+
+/// \brief Gets the height of a string if it were to be drawn
+/// \throws ERROR_NULL_POINTER
+sint32 jamFontHeight(JamFont* font);
+
 /// \brief Frees a jam font from memory
 void jamFontFree(JamFont* font);
 
