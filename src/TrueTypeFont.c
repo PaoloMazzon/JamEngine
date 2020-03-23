@@ -241,11 +241,17 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-void jamFontRender(JamFont* font, int x, int y, const char* string) {
+void jamFontRender(JamFont* font, int x, int y, const char* string, ...) { // TODO: Add %s/%i/%f/%c support
 	FT_Error err = 0;
 	int pos = 0;
 	int xx = x;
 	uint32 c = jamStringNextUnicode(string, &pos);
+
+	// Inline strings and such insertion variables
+	const char* buffer;
+	bool deleteBuffer = false;
+	int posInBuffer = 0;
+
 	if (font != NULL && gFontLibInitialized) {
 		while (c != 0) {
 			xx += _jamDrawCharacter(font, c, xx, y);
@@ -261,8 +267,15 @@ void jamFontRender(JamFont* font, int x, int y, const char* string) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-void jamFontRenderExt(JamFont* font, int x, int y, const char* string, int w) {
-	// TODO: This
+void jamFontRenderExt(JamFont* font, int x, int y, const char* string, int w, ...) {
+	if (font != NULL && gFontLibInitialized) {
+		// TODO: This
+	} else {
+		if (font == NULL)
+			jSetError(ERROR_NULL_POINTER, "Font does not exist");
+		if (!gFontLibInitialized)
+			jSetError(ERROR_FREETYPE_ERROR, "FreeType has not been initialized");
+	}
 }
 ///////////////////////////////////////////////////////////
 

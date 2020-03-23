@@ -75,9 +75,17 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII);
 void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd);
 
 /// \brief Renders a font
+///
+/// This function accepts string modifiers like printf would accept.
+/// Specifically, it accepts %s, %c, and %f.
+///
+///  + `%s` Inserts a given string at that spot
+///  + `%c` Inserts a given character at that spot (can be UTF-8)
+///  + `%f` Inserts a given floating point number (double)
+///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
-void jamFontRender(JamFont* font, int x, int y, const char* string);
+void jamFontRender(JamFont* font, int x, int y, const char* string, ...);
 
 /// \brief Renders a font, moving text past w to the next line
 ///
@@ -85,9 +93,16 @@ void jamFontRender(JamFont* font, int x, int y, const char* string);
 /// at which point it will move down a line and continue drawing
 /// from there.
 ///
+/// This function accepts string modifiers like printf would accept.
+/// Specifically, it accepts %s, %c, and %f.
+///
+///  + `%s` Inserts a given string at that spot
+///  + `%c` Inserts a given character at that spot (can be UTF-8)
+///  + `%f` Inserts a given floating point number (double)
+///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
-void jamFontRenderExt(JamFont* font, int x, int y, const char* string, int w);
+void jamFontRenderExt(JamFont* font, int x, int y, const char* string, int w, ...);
 
 /// \brief Gets the width of a string if it were to be drawn
 ///
