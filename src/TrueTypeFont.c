@@ -15,13 +15,41 @@ static FT_Library gFontLib;
 // Weather or not freetype has been initialized
 static bool gFontLibInitialized;
 
+////////// Helper functions (These guys don't make sure font is not NULL) ///////////
+
+// This returns how far to the right the cursor should move
+static sint32 _jamDrawCharacter(JamFont* font, uint32 c, sint32 x, sint32 y) {
+	int i;
+	sint32 cursorMove = 0;
+	SDL_Rect dest;
+	_JamFontTexture* tex;
+	if (c != 0) {
+		for (i = 0; i < font->rangeCount; i++) {
+			if (c == 32) {
+				cursorMove = font->space;
+			} else if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
+				tex = font->ranges[i]->characters[c - font->ranges[i]->rangeStart];
+				dest.x = x;
+				dest.y = y + font->height - tex->yOffset;
+				dest.w = tex->w;
+				dest.h = tex->h;
+				SDL_RenderCopy(jamRendererGetInternalRenderer(), tex->tex, NULL, &dest);
+				cursorMove = tex->advance;
+			}
+		}
+	}
+	return cursorMove;
+}
+
 ///////////// Functions that manage the "hidden" struct _JamFontTexture /////////////
-_JamFontTexture* _jamFontTextureCreate(void* texture, sint32 yOffset) {
+
+static _JamFontTexture* _jamFontTextureCreate(void* texture, sint32 yOffset, sint32 advance) {
 	_JamFontTexture* tex = (_JamFontTexture*)malloc(sizeof(_JamFontTexture));
 
 	if (tex != NULL && texture != NULL) {
 		tex->tex = texture;
 		tex->yOffset = yOffset;
+		tex->advance = advance;
 		SDL_QueryTexture(texture, NULL, NULL, &tex->w, &tex->h);
 
 	} else {
@@ -34,7 +62,7 @@ _JamFontTexture* _jamFontTextureCreate(void* texture, sint32 yOffset) {
 	return tex;
 }
 
-void _jamFontTextureFree(_JamFontTexture* tex) {
+static void _jamFontTextureFree(_JamFontTexture* tex) {
 	if (tex != NULL) {
 		SDL_DestroyTexture(tex->tex);
 		free(tex);
@@ -42,6 +70,7 @@ void _jamFontTextureFree(_JamFontTexture* tex) {
 }
 
 ///////////// Functions that manage the "hidden" struct _JamFontRangeCache /////////////
+
 // To spare confusion on the whole inclusive-range-to-array-index bit
 static inline uint32 _rangeEndToPureEnd(uint32 rangeStart, uint32 rangeEnd) {
 	return (rangeEnd - rangeStart + 1);
@@ -77,7 +106,7 @@ static void _freeFontRange(_JamFontRangeCache* fontRange) {
 ////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
+JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII) {
 	FT_Error err;
 	if (!gFontLibInitialized) {
 		err = FT_Init_FreeType(&gFontLib);
@@ -103,13 +132,13 @@ JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII) {
 				// game), FT_Set_Char_Size is not given the actual system DPI.
 				// This is a conscious choice that can be changed without too much
 				// effort since the renderer can provide that information.
-				err = FT_Set_Pixel_Sizes(newFont->fontFace, 0, 64);
-				//err = FT_Set_Char_Size(newFont->fontFace, size, size, 300, 300);
+				err = FT_Set_Pixel_Sizes(newFont->fontFace, 0, size);
 
-				// Write down space size
+				// Various metrics
 				FT_Load_Char(newFont->fontFace, 32, 0);
-				newFont->space = ((FT_Face)newFont->fontFace)->glyph->linearHoriAdvance / 65536;
-				printf("Space: %i\n", newFont->space);
+				newFont->space = (sint32)((FT_Face)newFont->fontFace)->glyph->linearHoriAdvance / 65536;
+				newFont->height = (sint32)((FT_Face)newFont->fontFace)->size->metrics.height >> 6;
+				printf("HEight: %i\n", newFont->height);
 
 				if (preloadASCII)
 					jamFontPreloadRange(newFont, 33, 126);
@@ -179,7 +208,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 				for (y = 0; y < bitmap.rows; y++) {
 					for (x = 0; x < bitmap.width; x++) {
 						index = (y * bitmap.width) + x;
-						targetPixels[index] = SDL_MapRGBA(pixelFormat, 0, 255, 0, srcPixels[index]);
+						targetPixels[index] = SDL_MapRGBA(pixelFormat, 255, 255, 255, srcPixels[index]);
 					}
 				}
 
@@ -187,7 +216,10 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 				SDL_UnlockTexture(tex);
 
 				if (tex != NULL) {
-					range->characters[i - rangeStart] = _jamFontTextureCreate(tex, ((FT_Face) font->fontFace)->glyph->bitmap_top);
+					range->characters[i - rangeStart] = _jamFontTextureCreate(
+							tex,
+							((FT_Face) font->fontFace)->glyph->bitmap_top,
+							(sint32)((FT_Face) font->fontFace)->glyph->linearHoriAdvance / 65536);
 				} else {
 					if (!error)
 						jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap FT Error=%i SDL Error=%s", err, SDL_GetError());
@@ -218,29 +250,11 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 void jamFontRender(JamFont* font, int x, int y, const char* string) {
 	FT_Error err = 0;
 	int pos = 0;
-	int i;
 	int xx = x;
-	SDL_Rect dest;
-	_JamFontTexture* tex;
-	FT_Face face;
 	uint32 c = jamStringNextUnicode(string, &pos);
 	if (font != NULL && gFontLibInitialized) {
-		face = font->fontFace;
 		while (c != 0) {
-			for (i = 0; i < font->rangeCount; i++) {
-				if (c == 32) {
-					xx += font->space;
-				} else if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
-					tex = font->ranges[i]->characters[c - font->ranges[i]->rangeStart];
-					dest.x = xx;
-					dest.y = y - tex->yOffset; // TODO: Render from top left not bottom left
-					dest.w = tex->w;
-					dest.h = tex->h;
-					SDL_RenderCopy(jamRendererGetInternalRenderer(), tex->tex, NULL, &dest);
-					xx += tex->w + 1;
-				}
-			}
-
+			xx += _jamDrawCharacter(font, c, xx, y);
 			c = jamStringNextUnicode(string, &pos);
 		}
 	} else {

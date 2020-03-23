@@ -38,6 +38,7 @@ typedef struct {
 	sint32 w;       ///< Width of this glyph
 	sint32 h;       ///< Height of this glyph
 	sint32 yOffset; ///< How far down to render this glyph (q should be lower than P, for example)
+	sint32 advance; ///< How far forward to move the next character after this one
 	void* tex;      ///< Internal bitmap texture of the glyph
 } _JamFontTexture;
 
@@ -53,6 +54,7 @@ typedef struct {
 	_JamFontRangeCache** ranges; ///< Array of caches that will be loaded with textures of the font
 	int rangeCount;              ///< Number of ranges in this font
 	sint32 space;                ///< How many pixels a space is
+	sint32 height;               ///< The maximum height of a line of font
 } JamFont;
 
 /// \brief Creates a new free type font
@@ -63,7 +65,7 @@ typedef struct {
 ///
 /// \throws ERROR_FREETYPE_ERROR
 /// \throws ERROR_ALLOC_FAILED
-JamFont* jamFontCreate(const char* filename, int size, bool preloadASCII);
+JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII);
 
 /// \brief Loads a range of characters into video memory for quick rendering
 ///
