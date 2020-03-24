@@ -100,6 +100,7 @@ static void _freeFontRange(_JamFontRangeCache* fontRange) {
 	if (fontRange != NULL) {
 		for (i = 0; i < _rangeEndToPureEnd(fontRange->rangeStart, fontRange->rangeEnd); i++)
 			_jamFontTextureFree(fontRange->characters[i]);
+		free(fontRange->characters);
 		free(fontRange);
 	}
 }
@@ -248,14 +249,56 @@ void jamFontRender(JamFont* font, int x, int y, const char* string, ...) { // TO
 	uint32 c = jamStringNextUnicode(string, &pos);
 
 	// Inline strings and such insertion variables
-	const char* buffer;
+	const char* buffer = "";
 	bool deleteBuffer = false;
-	int posInBuffer = 0;
+	int posInBuffer = -1;
+	uint32 prevC = 0;
+	va_list va;
+	va_start(va, string);
 
 	if (font != NULL && gFontLibInitialized) {
 		while (c != 0) {
-			xx += _jamDrawCharacter(font, c, xx, y);
-			c = jamStringNextUnicode(string, &pos);
+			// Process opcodes within the text
+			if (posInBuffer != -1 || (prevC != '%' && c != '%') || (prevC == '%' && c == '%')) {
+				if (c != '\n')
+					xx += _jamDrawCharacter(font, c, xx, y);
+				else
+					y += font->height;
+			} else if (prevC == '%') { // Insert a string or character or float
+				if (c == 'f') {
+					buffer = ftoa(va_arg(va, double));
+					if (buffer != NULL) {
+						posInBuffer = 0;
+						deleteBuffer = true;
+					} else {
+						jSetError(ERROR_WARNING, "Failed to ftoa a number");
+					}
+				} else if (c == 'c') {
+					xx += _jamDrawCharacter(font, va_arg(va, uint32), xx, y);
+				} else if (c == 's') {
+					posInBuffer = 0;
+					buffer = va_arg(va, const char*);
+				}
+			}
+
+			// Advance to the next character
+			if (posInBuffer == -1) {
+				prevC = c;
+				c = jamStringNextUnicode(string, &pos);
+			} else {
+				// We pull instead from the buffer, and switch back if the well is dry
+				c = jamStringNextUnicode(buffer, &posInBuffer);
+				if (c == 0) {
+					posInBuffer = -1;
+					prevC = 0;
+					c = jamStringNextUnicode(string, &pos);
+					if (deleteBuffer) {
+						deleteBuffer = false;
+						free((void*)buffer);
+					}
+					buffer = NULL;
+				}
+			}
 		}
 	} else {
 		if (font == NULL)
@@ -263,6 +306,8 @@ void jamFontRender(JamFont* font, int x, int y, const char* string, ...) { // TO
 		if (!gFontLibInitialized)
 			jSetError(ERROR_FREETYPE_ERROR, "FreeType has not been initialized");
 	}
+
+	va_end(va);
 }
 ///////////////////////////////////////////////////////////
 
@@ -333,6 +378,7 @@ void jamFontFree(JamFont* font) {
 	if (font != NULL) {
 		for (i = 0; i < font->rangeCount; i++)
 			_freeFontRange(font->ranges[i]);
+		free(font->ranges);
 		FT_Done_Face(font->fontFace);
 		free(font);
 	}
