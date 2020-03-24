@@ -131,7 +131,7 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII) {
 
 				// Various metrics
 				FT_Load_Char(newFont->fontFace, 32, 0);
-				newFont->space = (sint32)((FT_Face)newFont->fontFace)->glyph->linearHoriAdvance / 65536;
+				newFont->space = (sint32)round((double)((FT_Face)newFont->fontFace)->glyph->linearHoriAdvance / 65536.0f);
 				newFont->height = (sint32)((FT_Face)newFont->fontFace)->size->metrics.height >> 6;
 
 				if (preloadASCII)
@@ -213,7 +213,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 					range->characters[i - rangeStart] = _jamFontTextureCreate(
 							tex,
 							((FT_Face) font->fontFace)->glyph->bitmap_top,
-							(sint32)((FT_Face) font->fontFace)->glyph->linearHoriAdvance / 65536);
+							(sint32)round((double)((FT_Face) font->fontFace)->glyph->linearHoriAdvance / 65536.0f));
 				} else {
 					if (!error)
 						jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap FT Error=%i SDL Error=%s", err, SDL_GetError());
