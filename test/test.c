@@ -292,7 +292,7 @@ int main(int argc, char* argv[]) {
 		// Testing
 		while (jamRendererProcEvents()) {
 			jamDrawFillColour(0, 0, 0, 255);
-			jamFontRender(font, 0, 0, "The quick %f fox jumps over the lazy dog.", 5.4);
+			jamFontRender(font, 0, 0, "The quick %f fox \njump%%s over the lazy dog.\n%s", 5.4, "yes");
 			jamRendererProcEndFrame();
 		}
 

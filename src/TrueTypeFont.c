@@ -260,10 +260,19 @@ void jamFontRender(JamFont* font, int x, int y, const char* string, ...) { // TO
 		while (c != 0) {
 			// Process opcodes within the text
 			if (posInBuffer != -1 || (prevC != '%' && c != '%') || (prevC == '%' && c == '%')) {
-				if (c != '\n')
+				if (c != '\n') {
 					xx += _jamDrawCharacter(font, c, xx, y);
-				else
+				} else {
 					y += font->height;
+					xx = x;
+				}
+
+				// So we don't double trigger
+				if (prevC == '%') {
+					prevC = 0;
+					if (c == '%')
+						c = 0;
+				}
 			} else if (prevC == '%') { // Insert a string or character or float
 				if (c == 'f') {
 					buffer = ftoa(va_arg(va, double));
