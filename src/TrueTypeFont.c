@@ -64,12 +64,19 @@ static sint32 _jamDrawCharacterComplete(JamFont* font, uint32 c, sint32* x, sint
 	if (c != '\n') {
 		// If we have a left limit, we check if the following character will go past before drawing
 		if (w != 0) {
-			tex = _jamGetCharacterTex(font, c);
-			if (tex->w + *x > *x + w) {
-				*y += font->height;
-				*x = baseX;
+			if (c != 32) {
+				tex = _jamGetCharacterTex(font, c);
+				if (tex != NULL) {
+					if (tex->w + *x > baseX + w) {
+						*y += font->height;
+						*x = baseX;
+					}
+					_jamRenderCharacter(tex, *x, *y, font->height, r, g, b);
+					*x += tex->advance;
+				}
+			} else {
+				*x += font->space;
 			}
-			_jamRenderCharacter(tex, *x, *y, font->height, r, g, b);
 		} else {
 			*x += _jamDrawCharacter(font, c, *x, *y, r, g, b);
 		}
