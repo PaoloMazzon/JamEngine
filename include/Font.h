@@ -74,24 +74,16 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII);
 /// range is inclusive.
 void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd);
 
-/// \brief Renders a font
-///
-/// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %s, %c, and %f.
-///
-///  + `%s` Inserts a given string at that spot
-///  + `%c` Inserts a given character at that spot (can be UTF-8)
-///  + `%f` Inserts a given floating point number (double)
-///
-/// \throws ERROR_NULL_POINTER
-/// \throws ERROR_TRUETYPE_ERROR
-void jamFontRender(JamFont* font, int x, int y, const char* string, ...);
+/// \brief The actual font rendering function, use the macros instead
+void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int w, uint8 r, uint8 g, uint8 b, ...);
 
-/// \brief Renders a font, moving text past w to the next line
+/// \brief Renders a font
+/// \param font JamFont* to render from
+/// \param x X Position to start drawing from
+/// \param y Y position to start drawing from
+/// \param string Message to draw, may use % opcodes (read below) or newlines
+/// \param ... Extra arguments to back up any potential opcodes
 ///
-/// This function draws words until the next word would be past w,
-/// at which point it will move down a line and continue drawing
-/// from there.
 ///
 /// This function accepts string modifiers like printf would accept.
 /// Specifically, it accepts %s, %c, and %f.
@@ -102,7 +94,82 @@ void jamFontRender(JamFont* font, int x, int y, const char* string, ...);
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
-void jamFontRenderExt(JamFont* font, int x, int y, const char* string, int w, ...);
+#define jamFontRender(font, x, y, string, ...) _jamFontRenderDetailed(font, x, y, string, 0, 255, 255, 255, ##__VA_ARGS__);
+
+/// \brief Renders a font
+/// \param font JamFont* to render from
+/// \param x X Position to start drawing from
+/// \param y Y position to start drawing from
+/// \param string Message to draw, may use % opcodes (read below) or newlines
+/// \param r Red component of the colour to render the font as (0-255)
+/// \param g Green component of the colour to render the font as (0-255)
+/// \param b Blue component of the colour to render the font as (0-255)
+/// \param ... Extra arguments to back up any potential opcodes
+///
+///
+/// This function accepts string modifiers like printf would accept.
+/// Specifically, it accepts %s, %c, and %f.
+///
+///  + `%s` Inserts a given string at that spot
+///  + `%c` Inserts a given character at that spot (can be UTF-8)
+///  + `%f` Inserts a given floating point number (double)
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_TRUETYPE_ERROR
+#define jamFontRenderColour(font, x, y, string, r, g, b, ...) _jamFontRenderDetailed(font, x, y, string, 0, r, g, b, ##__VA_ARGS__);
+
+/// \brief Renders a font
+/// \param font JamFont* to render from
+/// \param x X Position to start drawing from
+/// \param y Y position to start drawing from
+/// \param string Message to draw, may use % opcodes (read below) or newlines
+/// \param w Width to draw to until moving down a line
+/// \param ... Extra arguments to back up any potential opcodes
+///
+/// Width specifies how far to draw to until this function will automatically
+/// start drawing down a line. This is useful if you're drawing in a text box
+/// or something where you don't want text to overflow out of the text box or
+/// whatever. It does this on a character-to-character basis, however, and as
+/// such it will cut words off should they end up near the end of a line.
+///
+/// This function accepts string modifiers like printf would accept.
+/// Specifically, it accepts %s, %c, and %f.
+///
+///  + `%s` Inserts a given string at that spot
+///  + `%c` Inserts a given character at that spot (can be UTF-8)
+///  + `%f` Inserts a given floating point number (double)
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_TRUETYPE_ERROR
+#define jamFontRenderExt(font, x, y, string, w, ...) _jamFontRenderDetailed(font, x, y, string, w, 255, 255, 255, ##__VA_ARGS__);
+
+/// \brief Renders a font
+/// \param font JamFont* to render from
+/// \param x X Position to start drawing from
+/// \param y Y position to start drawing from
+/// \param string Message to draw, may use % opcodes (read below) or newlines
+/// \param r Red component of the colour to render the font as (0-255)
+/// \param g Green component of the colour to render the font as (0-255)
+/// \param b Blue component of the colour to render the font as (0-255)
+/// \param w Width to draw to until moving down a line
+/// \param ... Extra arguments to back up any potential opcodes
+///
+/// Width specifies how far to draw to until this function will automatically
+/// start drawing down a line. This is useful if you're drawing in a text box
+/// or something where you don't want text to overflow out of the text box or
+/// whatever. It does this on a character-to-character basis, however, and as
+/// such it will cut words off should they end up near the end of a line.
+///
+/// This function accepts string modifiers like printf would accept.
+/// Specifically, it accepts %s, %c, and %f.
+///
+///  + `%s` Inserts a given string at that spot
+///  + `%c` Inserts a given character at that spot (can be UTF-8)
+///  + `%f` Inserts a given floating point number (double)
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_TRUETYPE_ERROR
+#define jamFontRenderColourExt(font, x, y, string, r, g, b, w, ...) _jamFontRenderDetailed(font, x, y, string, w, r, g, b, ##__VA_ARGS__);
 
 /// \brief Gets the width of a string if it were to be drawn
 ///

@@ -17,28 +17,66 @@ static bool gFontLibInitialized;
 
 ////////// Helper functions (These guys don't make sure font is not NULL) ///////////
 
-// This returns how far to the right the cursor should move
-static sint32 _jamDrawCharacter(JamFont* font, uint32 c, sint32 x, sint32 y) {
+// Finds the texture associated with a character (or NULL)
+static _JamFontTexture* _jamGetCharacterTex(JamFont* font, uint32 c) {
 	int i;
-	sint32 cursorMove = 0;
-	SDL_Rect dest;
-	_JamFontTexture* tex;
+	_JamFontTexture* tex = NULL;
 	if (c != 0) {
-		for (i = 0; i < font->rangeCount; i++) {
-			if (c == 32) {
-				cursorMove = font->space;
-			} else if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
-				tex = font->ranges[i]->characters[c - font->ranges[i]->rangeStart];
-				dest.x = x;
-				dest.y = y + font->height - tex->yOffset;
-				dest.w = tex->w;
-				dest.h = tex->h;
-				SDL_RenderCopy(jamRendererGetInternalRenderer(), tex->tex, NULL, &dest);
-				cursorMove = tex->advance;
+			for (i = 0; i < font->rangeCount; i++) {
+				if (c >= font->ranges[i]->rangeStart && c <= font->ranges[i]->rangeEnd) {
+					tex = font->ranges[i]->characters[c - font->ranges[i]->rangeStart];
 			}
 		}
 	}
-	return cursorMove;
+
+	return tex;
+}
+
+// Easily draws a character's texture
+static void _jamRenderCharacter(_JamFontTexture* tex, sint32 x, sint32 y, sint32 height, uint8 r, uint8 g, uint8 b) {
+	SDL_Rect dest;
+	dest.x = x;
+	dest.y = y - tex->yOffset + height;
+	dest.w = tex->w;
+	dest.h = tex->h;
+	SDL_SetTextureColorMod(tex->tex, r, g, b);
+	SDL_RenderCopy(jamRendererGetInternalRenderer(), tex->tex, NULL, &dest);
+}
+
+// Simply draws a character and returns how far forward to move the cursor
+static sint32 _jamDrawCharacter(JamFont* font, uint32 c, sint32 x, sint32 y, uint8 r, uint8 g, uint8 b) {
+	if (c != 32) {
+		_JamFontTexture *tex = _jamGetCharacterTex(font, c);
+		if (tex != NULL) {
+			_jamRenderCharacter(tex, x, y, font->height, r, g, b);
+			return tex->advance;
+		}
+		return 0;
+	} else {
+		return font->space;
+	}
+}
+
+// All of the above combined for one fancy function to draw characters
+static sint32 _jamDrawCharacterComplete(JamFont* font, uint32 c, sint32* x, sint32* y, sint32 baseX, int w, uint8 r, uint8 g, uint8 b) {
+	_JamFontTexture* tex;
+
+	if (c != '\n') {
+		// If we have a left limit, we check if the following character will go past before drawing
+		if (w != 0) {
+			tex = _jamGetCharacterTex(font, c);
+			if (tex->w + *x > *x + w) {
+				*y += font->height;
+				*x = baseX;
+			}
+			_jamRenderCharacter(tex, *x, *y, font->height, r, g, b);
+		} else {
+			*x += _jamDrawCharacter(font, c, *x, *y, r, g, b);
+		}
+	} else {
+		*y += font->height;
+		*x = baseX;
+	}
 }
 
 ///////////// Functions that manage the "hidden" struct _JamFontTexture /////////////
@@ -242,10 +280,20 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
-void jamFontRender(JamFont* font, int x, int y, const char* string, ...) { // TODO: Add %s/%i/%f/%c support
+/*
+ * There is actually only one font rendering function (this
+ * one), all of the ones you would typically call are just
+ * macros that simplify calls to this beast of a function.
+ * You could technically call this on your own but this
+ * function has a lot of side effects that if you don't account
+ * for on your own you may get wacky results.
+ */
+void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int w, uint8 r, uint8 g, uint8 b, ...) {
 	FT_Error err = 0;
 	int pos = 0;
 	int xx = x;
+	int potentialAdvance;
+	_JamFontTexture* tex;
 	uint32 c = jamStringNextUnicode(string, &pos);
 
 	// Inline strings and such insertion variables
@@ -260,12 +308,7 @@ void jamFontRender(JamFont* font, int x, int y, const char* string, ...) { // TO
 		while (c != 0) {
 			// Process opcodes within the text
 			if (posInBuffer != -1 || (prevC != '%' && c != '%') || (prevC == '%' && c == '%')) {
-				if (c != '\n') {
-					xx += _jamDrawCharacter(font, c, xx, y);
-				} else {
-					y += font->height;
-					xx = x;
-				}
+				_jamDrawCharacterComplete(font, c, &xx, &y, x, w, r, g, b);
 
 				// So we don't double trigger
 				if (prevC == '%') {
@@ -283,7 +326,7 @@ void jamFontRender(JamFont* font, int x, int y, const char* string, ...) { // TO
 						jSetError(ERROR_WARNING, "Failed to ftoa a number");
 					}
 				} else if (c == 'c') {
-					xx += _jamDrawCharacter(font, va_arg(va, uint32), xx, y);
+					_jamDrawCharacterComplete(font, c, &xx, &y, x, w, r, g, b);
 				} else if (c == 's') {
 					posInBuffer = 0;
 					buffer = va_arg(va, const char*);
@@ -317,19 +360,6 @@ void jamFontRender(JamFont* font, int x, int y, const char* string, ...) { // TO
 	}
 
 	va_end(va);
-}
-///////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////
-void jamFontRenderExt(JamFont* font, int x, int y, const char* string, int w, ...) {
-	if (font != NULL && gFontLibInitialized) {
-		// TODO: This
-	} else {
-		if (font == NULL)
-			jSetError(ERROR_NULL_POINTER, "Font does not exist");
-		if (!gFontLibInitialized)
-			jSetError(ERROR_FREETYPE_ERROR, "FreeType has not been initialized");
-	}
 }
 ///////////////////////////////////////////////////////////
 
