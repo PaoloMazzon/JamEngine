@@ -1,14 +1,12 @@
 /// \file Font.h
-/// \author lugi1
+/// \author plo
 /// \brief Fonts are a must for most modern games, and as such we have this
 ///
-/// Font.h is composed of two major parts: the fonts and the font renderers.
-/// Each font is made up of a latin base texture since most texts will include
-/// at least a couple latin/ascii characters as well as an optional unicode
-/// texture for whatever language you want to render. The font renderer expects
-/// all unicode text to be encoded in UTF-8, and will render any character it
-/// has access to (The font struct defines what range of unicode characters
-/// the extra font has access to).
+/// Font.h has tools for both TTF fonts and bitmap fonts. TTF fonts can look
+/// really good in multiple different resolutions, while you get complete
+/// control over how everything looks with bitmap fonts (but they take a lot
+/// longer to make whereas you just load a .ttf file and JamFont takes care
+/// of the rest).
 
 #pragma once
 #include "Renderer.h"
@@ -86,11 +84,11 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 ///
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %s, %c, and %f.
+/// Specifically, it accepts %%s, %%c, and %%f.
 ///
-///  + `%s` Inserts a given string at that spot
-///  + `%c` Inserts a given character at that spot (can be UTF-8)
-///  + `%f` Inserts a given floating point number (double)
+///  + `%%s` Inserts a given string at that spot
+///  + `%%c` Inserts a given character at that spot (can be UTF-8)
+///  + `%%f` Inserts a given floating point number (double)
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
@@ -108,11 +106,11 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 ///
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %s, %c, and %f.
+/// Specifically, it accepts %%s, %%c, and %%f.
 ///
-///  + `%s` Inserts a given string at that spot
-///  + `%c` Inserts a given character at that spot (can be UTF-8)
-///  + `%f` Inserts a given floating point number (double)
+///  + `%%s` Inserts a given string at that spot
+///  + `%%c` Inserts a given character at that spot (can be UTF-8)
+///  + `%%f` Inserts a given floating point number (double)
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
@@ -133,11 +131,11 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// such it will cut words off should they end up near the end of a line.
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %s, %c, and %f.
+/// Specifically, it accepts %%s, %%c, and %%f.
 ///
-///  + `%s` Inserts a given string at that spot
-///  + `%c` Inserts a given character at that spot (can be UTF-8)
-///  + `%f` Inserts a given floating point number (double)
+///  + `%%s` Inserts a given string at that spot
+///  + `%%c` Inserts a given character at that spot (can be UTF-8)
+///  + `%%f` Inserts a given floating point number (double)
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
@@ -161,11 +159,11 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// such it will cut words off should they end up near the end of a line.
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %s, %c, and %f.
+/// Specifically, it accepts %%s, %%c, and %%f.
 ///
-///  + `%s` Inserts a given string at that spot
-///  + `%c` Inserts a given character at that spot (can be UTF-8)
-///  + `%f` Inserts a given floating point number (double)
+///  + `%%s` Inserts a given string at that spot
+///  + `%%c` Inserts a given character at that spot (can be UTF-8)
+///  + `%%f` Inserts a given floating point number (double)
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
