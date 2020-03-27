@@ -17,6 +17,12 @@ static bool gFontLibInitialized;
 
 ////////// Helper functions (These guys don't make sure font is not NULL) ///////////
 
+// To spare confusion on the whole inclusive-range-to-array-index bit
+static inline uint32 _rangeEndToPureEnd(uint32 rangeStart, uint32 rangeEnd) {
+	return (rangeEnd - rangeStart + 1);
+}
+
+
 // Finds the texture associated with a character (or NULL)
 static _JamFontTexture* _jamGetCharacterTex(JamFont* font, uint32 c) {
 	int i;
@@ -86,6 +92,16 @@ static sint32 _jamDrawCharacterComplete(JamFont* font, uint32 c, sint32* x, sint
 	}
 }
 
+// Finds the max height of ascii characters and returns that height
+static sint32 _jamMaxASCIIHeight(JamFont* font) {
+	int i;
+	sint32 max = 0;
+	if (font->rangeCount == 1)
+		for (i = 0; i < _rangeEndToPureEnd(font->ranges[0]->rangeStart, font->ranges[0]->rangeEnd); i++)
+			max = (font->ranges[0]->characters[i]->h > max) ? font->ranges[0]->characters[i]->h : max;
+	return max;
+}
+
 ///////////// Functions that manage the "hidden" struct _JamFontTexture /////////////
 
 static _JamFontTexture* _jamFontTextureCreate(void* texture, sint32 yOffset, sint32 advance) {
@@ -115,11 +131,6 @@ static void _jamFontTextureFree(_JamFontTexture* tex) {
 }
 
 ///////////// Functions that manage the "hidden" struct _JamFontRangeCache /////////////
-
-// To spare confusion on the whole inclusive-range-to-array-index bit
-static inline uint32 _rangeEndToPureEnd(uint32 rangeStart, uint32 rangeEnd) {
-	return (rangeEnd - rangeStart + 1);
-}
 
 // This function creates the x amount of array slots but does not so much as NULL them
 // so it is important you fill them right away.
@@ -180,8 +191,10 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII) {
 				newFont->space = (sint32)round((double)((FT_Face)newFont->fontFace)->glyph->linearHoriAdvance / 65536.0f);
 				newFont->height = (sint32)((FT_Face)newFont->fontFace)->size->metrics.height >> 6;
 
-				if (preloadASCII)
+				if (preloadASCII) {
 					jamFontPreloadRange(newFont, 33, 126);
+					newFont->height = _jamMaxASCIIHeight(newFont);
+				}
 
 				if (err) {
 					jSetError(ERROR_FREETYPE_ERROR, "Failed to set character size, error code=%i", err);
@@ -296,12 +309,14 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
  * for on your own you may get wacky results.
  */
 void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int w, uint8 r, uint8 g, uint8 b, ...) {
+	jamRendererCalculateForCamera(&x, &y);
 	FT_Error err = 0;
 	int pos = 0;
 	int xx = x;
 	int potentialAdvance;
 	_JamFontTexture* tex;
 	uint32 c = jamStringNextUnicode(string, &pos);
+	JamColour* col;
 
 	// Inline strings and such insertion variables
 	const char* buffer = "";
@@ -309,7 +324,7 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 	int posInBuffer = -1;
 	uint32 prevC = 0;
 	va_list va;
-	va_start(va, string);
+	va_start(va, b);
 
 	if (font != NULL && gFontLibInitialized) {
 		while (c != 0) {
@@ -337,6 +352,11 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 				} else if (c == 's') {
 					posInBuffer = 0;
 					buffer = va_arg(va, const char*);
+				} else if (c == 'C') {
+					col = va_arg(va, JamColour*);
+					r = col->r;
+					g = col->g;
+					b = col->b;
 				}
 			}
 

@@ -190,7 +190,7 @@ bool runGame() {
 	gHandler = jamAssetHandlerCreate(1000);
 	jamAssetHandlerLoadINI(gHandler, "assets/level0.ini", bMap);
 	JamWorld* gameWorld = jamAssetHandlerGetWorld(gHandler, "GameWorld");
-	JamBitmapFont* font = jamAssetHandlerGetBitmapFont(gHandler, "GameFont");
+	JamFont* font = jamAssetHandlerGetFont(gHandler, "GameFont");
 
 	// Some setup
 	jamRendererSetCameraPos(25, 25);
@@ -233,8 +233,10 @@ bool runGame() {
 				jamWorldProcFrame(gameWorld);
 
 				// Debug
-				jamBitmapFontRenderExt(16, 16, "FPS: %f\nDelta: %f", font, 999, jamRendererGetFramerate(),
-									   jamRendererGetDelta());
+				sint32 debugX = (sint32)jamRendererGetCameraX() + 16;
+				sint32 debugY = (sint32)jamRendererGetCameraX() + 16;
+				jamDrawRectangleFilled(debugX - 2, debugY + 2, jamFontWidth(font, "FPS: 60") + 4, 16);
+				jamFontRender(font, debugX, debugY, "FPS: %f", round(jamRendererGetFramerate()));
 				/////////////////////////////////////////////////////////////////////
 
 				jamRendererProcEndFrame();

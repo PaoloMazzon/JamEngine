@@ -52,7 +52,7 @@ typedef struct {
 	_JamFontRangeCache** ranges; ///< Array of caches that will be loaded with textures of the font
 	int rangeCount;              ///< Number of ranges in this font
 	sint32 space;                ///< How many pixels a space is
-	sint32 height;               ///< The maximum height of a line of font
+	sint32 height;               ///< The max height of latin characters, this is set automatically by the preloadASCII option in jamFontCreate
 } JamFont;
 
 /// \brief Creates a new free type font
@@ -82,13 +82,22 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// \param string Message to draw, may use % opcodes (read below) or newlines
 /// \param ... Extra arguments to back up any potential opcodes
 ///
-///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %%s, %%c, and %%f.
+/// Specifically, it accepts %%s, %%c, %%C, and %%f (they are not 1-1
+/// with the behaviour of printf).
 ///
 ///  + `%%s` Inserts a given string at that spot
 ///  + `%%c` Inserts a given character at that spot (can be UTF-8)
 ///  + `%%f` Inserts a given floating point number (double)
+///  + `%%C` Switches the colour of the text from here on out (JamColour*)
+///
+/// For example, if you call `jamFontRender(font, x, y, "FPS: %f\n%CMy Game", (double)fps, &myColour);`,
+/// it would print
+///
+///     FPS: 60
+///     My Game
+///
+/// Where "My Game" would be rendered in the colour denoted by myColour.
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
@@ -104,13 +113,22 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// \param b Blue component of the colour to render the font as (0-255)
 /// \param ... Extra arguments to back up any potential opcodes
 ///
-///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %%s, %%c, and %%f.
+/// Specifically, it accepts %%s, %%c, %%C, and %%f (they are not 1-1
+/// with the behaviour of printf).
 ///
 ///  + `%%s` Inserts a given string at that spot
 ///  + `%%c` Inserts a given character at that spot (can be UTF-8)
 ///  + `%%f` Inserts a given floating point number (double)
+///  + `%%C` Switches the colour of the text from here on out (JamColour*)
+///
+/// For example, if you call `jamFontRender(font, x, y, "FPS: %f\n%CMy Game", (double)fps, &myColour);`,
+/// it would print
+///
+///     FPS: 60
+///     My Game
+///
+/// Where "My Game" would be rendered in the colour denoted by myColour.
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
@@ -131,11 +149,13 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// such it will cut words off should they end up near the end of a line.
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %%s, %%c, and %%f.
+/// Specifically, it accepts %%s, %%c, %%C, and %%f (they are not 1-1
+/// with the behaviour of printf).
 ///
 ///  + `%%s` Inserts a given string at that spot
 ///  + `%%c` Inserts a given character at that spot (can be UTF-8)
 ///  + `%%f` Inserts a given floating point number (double)
+///  + `%%C` Switches the colour of the text from here on out (JamColour*)
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
@@ -159,11 +179,21 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// such it will cut words off should they end up near the end of a line.
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %%s, %%c, and %%f.
+/// Specifically, it accepts %%s, %%c, %%C, and %%f (they are not 1-1
+/// with the behaviour of printf).
 ///
 ///  + `%%s` Inserts a given string at that spot
 ///  + `%%c` Inserts a given character at that spot (can be UTF-8)
 ///  + `%%f` Inserts a given floating point number (double)
+///  + `%%C` Switches the colour of the text from here on out (JamColour*)
+///
+/// For example, if you call `jamFontRender(font, x, y, "FPS: %f\n%CMy Game", (double)fps, &myColour);`,
+/// it would print
+///
+///     FPS: 60
+///     My Game
+///
+/// Where "My Game" would be rendered in the colour denoted by myColour.
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR

@@ -14,6 +14,19 @@
 extern "C" {
 #endif
 
+/// \brief Few functions need this, but its here nonetheless
+///
+/// At the time of writing this, the only functions that need
+/// this are the font rendering "functions", since they can change
+/// colour mid-text using this struct (as apposed to 3 arguments
+/// in va_arg which would be confusing at best and segfault-galore
+/// at worst).
+typedef struct {
+	uint8 r; ///< The red component from 0-255
+	uint8 g; ///< The green component from 0-255
+	uint8 b; ///< The blue component from 0-255
+} JamColour;
+
 /// \brief Sets the current colour of the renderer
 /// \throws ERROR_NULL_POINTER
 void jamDrawSetColour(uint8 r, uint8 g, uint8 b, uint8 a);
