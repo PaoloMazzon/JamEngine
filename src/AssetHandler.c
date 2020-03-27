@@ -201,7 +201,7 @@ static void _assetLoadWorld(JamAssetHandler *assetHandler, JamINI *ini, const ch
 	jamAssetHandlerLoadAsset(assetHandler, createAsset(world, at_World, headerName + 1), (headerName + 1));
 }
 
-static void _assetLoadFont(JamAssetHandler *assetHandler, JamINI *ini, const char *headerName) {
+static void _assetLoadBitmapFont(JamAssetHandler *assetHandler, JamINI *ini, const char *headerName) {
 	JamBitmapFont* font = jamBitmapFontCreate(
 			jamINIGetKey(ini, headerName, "latin", ""),
 			jamINIGetKey(ini, headerName, "font", "0")
@@ -213,6 +213,16 @@ static void _assetLoadFont(JamAssetHandler *assetHandler, JamINI *ini, const cha
 		font->uStart          = (uint32)atof(jamINIGetKey(ini, headerName, "uni_range_start", "0"));
 		font->uEnd            = (uint32)atof(jamINIGetKey(ini, headerName, "uni_range_end", "0"));
 	}
+
+	jamAssetHandlerLoadAsset(assetHandler, createAsset(font, at_BFont, headerName + 1), (headerName + 1));
+}
+
+static void _assetLoadFont(JamAssetHandler *assetHandler, JamINI *ini, const char *headerName) {
+	JamFont* font = jamFontCreate(
+			jamINIGetKey(ini, headerName, "font", "0"),
+			(uint32)atof(jamINIGetKey(ini, headerName, "size", "16")),
+			true
+	);
 
 	jamAssetHandlerLoadAsset(assetHandler, createAsset(font, at_Font, headerName + 1), (headerName + 1));
 }
@@ -245,6 +255,8 @@ void jamAssetHandlerLoadINI(JamAssetHandler *assetHandler, const char *filename,
 					_assetLoadHitbox(assetHandler, ini, ini->headerNames[i]);
 				} else if (ini->headerNames[i][0] == INI_AUDIO_PREFIX) {
 					_assetLoadAudio(assetHandler, ini, ini->headerNames[i]);
+				} else if (ini->headerNames[i][0] == INI_BFONT_PREFIX) {
+					_assetLoadBitmapFont(assetHandler, ini, ini->headerNames[i]);
 				} else if (ini->headerNames[i][0] == INI_FONT_PREFIX) {
 					_assetLoadFont(assetHandler, ini, ini->headerNames[i]);
 				}
@@ -444,15 +456,36 @@ JamWorld* jamAssetHandlerGetWorld(JamAssetHandler *handler, const char *key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamBitmapFont* jamAssetHandlerGetFont(JamAssetHandler *handler, const char *key) {
+JamFont* jamAssetHandlerGetFont(JamAssetHandler *handler, const char *key) {
 	JamAsset* asset = jamGetAssetFromHandler(handler, key);
-	JamBitmapFont* returnVal = NULL;
+	JamFont* returnVal = NULL;
 
 	if (handler != NULL) {
 		if (asset != NULL && asset->type == at_Font) {
 			returnVal = asset->font;
 		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected world", key);
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected font", key);
+		} else {
+			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find world for key %s", key);
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist");
+	}
+
+	return returnVal;
+}
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+JamBitmapFont* jamAssetHandlerGetBitmapFont(JamAssetHandler *handler, const char *key) {
+	JamAsset* asset = jamGetAssetFromHandler(handler, key);
+	JamBitmapFont* returnVal = NULL;
+
+	if (handler != NULL) {
+		if (asset != NULL && asset->type == at_BFont) {
+			returnVal = asset->bitFont;
+		} else if (asset != NULL) {
+			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected bitmap font", key);
 		} else {
 			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find world for key %s", key);
 		}
@@ -481,7 +514,9 @@ static void jamFreeAsset(JamAsset* asset) {
 		else if (asset->type == at_AudioBuffer)
 			jamAudioFreeBuffer(asset->buffer);
 		else if (asset->type == at_Font)
-			jamBitmapFontFree(asset->font);
+			jamFontFree(asset->font);
+		else if (asset->type == at_BFont)
+			jamBitmapFontFree(asset->bitFont);
 		free(asset->name);
 		free(asset);
 	}

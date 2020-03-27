@@ -190,7 +190,7 @@ bool runGame() {
 	gHandler = jamAssetHandlerCreate(1000);
 	jamAssetHandlerLoadINI(gHandler, "assets/level0.ini", bMap);
 	JamWorld* gameWorld = jamAssetHandlerGetWorld(gHandler, "GameWorld");
-	JamBitmapFont* font = jamAssetHandlerGetFont(gHandler, "GameFont");
+	JamBitmapFont* font = jamAssetHandlerGetBitmapFont(gHandler, "GameFont");
 
 	// Some setup
 	jamRendererSetCameraPos(25, 25);

@@ -45,6 +45,7 @@ typedef signed long long sint64;
 #define INI_AUDIO_PREFIX 'a'
 #define INI_WORLD_PREFIX 'w'
 #define INI_FONT_PREFIX 'f'
+#define INI_BFONT_PREFIX 'b'
 
 #ifdef __cplusplus
 }

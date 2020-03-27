@@ -55,13 +55,16 @@ And here is a list of recognized keys for every asset type
    + `height` Width in cells of the space map (generally should be double the average entity width)
  + Audio Buffers ***(prefix = 'a')***
    + `file` The file to load buffer from, as of right now only .wav files are supported
- + Fonts ***(prefix = 'f')***
+ + Bitmap Fonts ***(prefix = 'b')***
    + `latin` Latin font image's filename
    + `font` Unicode font filename (not required)
    + `character_width` Width of each character
    + `character_height` Height of each character
    + `uni_range_start` The beginning character of the unicode page (if applicable)
    + `uni_range_end` The final character of the unicode page (if applicable)
+ + Fonts ***(prefix = 'f')***
+   + `font` Font file name (anything FreeType will accept)
+   + `size` Size of the font (default=16)
 
 And an example ini file
 

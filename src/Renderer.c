@@ -12,6 +12,7 @@
 #include <SDL.h>
 #include <Audio.h>
 #include <SDL_image.h>
+#include "Font.h"
 
 static JamRenderer* gRenderer;
 
@@ -356,6 +357,7 @@ void jamRendererQuit() {
 		jamTextureFree(gRenderer->screenBuffer);
 		jamInputQuit();
 		jamAudioQuit();
+		jamFontQuit();
 		SDL_DestroyRenderer(gRenderer->internalRenderer);
 		SDL_DestroyWindow(gRenderer->gameWindow);
 		SDL_Quit();
