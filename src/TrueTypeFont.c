@@ -8,6 +8,7 @@
 #include <Texture.h>
 #include <SDL.h>
 #include <Drawing.h>
+#include <Sprite.h>
 
 // The freetype library
 static FT_Library gFontLib;
@@ -316,7 +317,6 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 	int potentialAdvance;
 	_JamFontTexture* tex;
 	uint32 c = jamStringNextUnicode(string, &pos);
-	JamColour* col;
 
 	// Inline strings and such insertion variables
 	const char* buffer = "";
@@ -325,6 +325,8 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 	uint32 prevC = 0;
 	va_list va;
 	va_start(va, b);
+	JamColour* col;
+	JamSprite* spr;
 
 	if (font != NULL && gFontLibInitialized) {
 		while (c != 0) {
@@ -339,7 +341,7 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 						c = 0;
 				}
 			} else if (prevC == '%') { // Insert a string or character or float
-				if (c == 'f') {
+				if (c == 'f') { // Real number
 					buffer = ftoa(va_arg(va, double));
 					if (buffer != NULL) {
 						posInBuffer = 0;
@@ -347,16 +349,26 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 					} else {
 						jSetError(ERROR_WARNING, "Failed to ftoa a number");
 					}
-				} else if (c == 'c') {
+				} else if (c == 'c') { // Character
 					_jamDrawCharacterComplete(font, c, &xx, &y, x, w, r, g, b);
-				} else if (c == 's') {
+				} else if (c == 's') { // String
 					posInBuffer = 0;
 					buffer = va_arg(va, const char*);
-				} else if (c == 'C') {
+				} else if (c == 'C') { // Change of colour
 					col = va_arg(va, JamColour*);
 					r = col->r;
 					g = col->g;
 					b = col->b;
+				} else if (c == 'S') { // Inline sprite
+					spr = va_arg(va, JamSprite*);
+					if (spr != NULL) {
+						if (w != 0 && xx + spr->width > x + w) {
+							xx = x;
+							y += font->height;
+						}
+						jamDrawSprite(spr, xx + (sint32)jamRendererGetCameraX(), y + (sint32)jamRendererGetCameraY(), 1, 1, 0, 255, true);
+						xx += spr->width;
+					}
 				}
 			}
 
@@ -423,6 +435,30 @@ sint32 jamFontWidth(JamFont* font, const char* string) {
 	}
 
 	return w;
+}
+///////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////
+sint32 jamFontRenderCharacter(JamFont* font, sint32 x, sint32 y, uint32 c, uint8 r, uint8 g, uint8 b) {
+	_JamFontTexture* tex;
+	sint32 advance = 0;
+
+	if (font != NULL) {
+		if (c != 32) {
+			tex = _jamGetCharacterTex(font, c);
+
+			if (tex != NULL) {
+				advance = tex->advance;
+				_jamRenderCharacter(tex, x, y, font->height, r, g, b);
+			}
+		} else {
+			advance = font->space;
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Font does not exist");
+	}
+
+	return advance;
 }
 ///////////////////////////////////////////////////////////
 

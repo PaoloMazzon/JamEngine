@@ -83,13 +83,14 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// \param ... Extra arguments to back up any potential opcodes
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %%s, %%c, %%C, and %%f (they are not 1-1
+/// Specifically, it accepts %%s, %%c, %%C, %%S, and %%f (they are not 1-1
 /// with the behaviour of printf).
 ///
 ///  + `%%s` Inserts a given string at that spot
 ///  + `%%c` Inserts a given character at that spot (can be UTF-8)
 ///  + `%%f` Inserts a given floating point number (double)
 ///  + `%%C` Switches the colour of the text from here on out (JamColour*)
+///  + `%%S` Renders a sprite at this spot (JamSprite*)
 ///
 /// For example, if you call `jamFontRender(font, x, y, "FPS: %f\n%CMy Game", (double)fps, &myColour);`,
 /// it would print
@@ -98,6 +99,11 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 ///     My Game
 ///
 /// Where "My Game" would be rendered in the colour denoted by myColour.
+/// Please note that %%S will render a sprite at exactly that spot in
+/// text, and for that reason will most likely look a little "janky".
+/// This is because most characters have a vertical advance they are
+/// pushed down by, and it will take a little playing around with before
+/// you get perfect results.
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
@@ -114,13 +120,14 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// \param ... Extra arguments to back up any potential opcodes
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %%s, %%c, %%C, and %%f (they are not 1-1
+/// Specifically, it accepts %%s, %%c, %%C, %%S, and %%f (they are not 1-1
 /// with the behaviour of printf).
 ///
 ///  + `%%s` Inserts a given string at that spot
 ///  + `%%c` Inserts a given character at that spot (can be UTF-8)
 ///  + `%%f` Inserts a given floating point number (double)
 ///  + `%%C` Switches the colour of the text from here on out (JamColour*)
+///  + `%%S` Renders a sprite at this spot (JamSprite*)
 ///
 /// For example, if you call `jamFontRender(font, x, y, "FPS: %f\n%CMy Game", (double)fps, &myColour);`,
 /// it would print
@@ -129,6 +136,11 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 ///     My Game
 ///
 /// Where "My Game" would be rendered in the colour denoted by myColour.
+/// Please note that %%S will render a sprite at exactly that spot in
+/// text, and for that reason will most likely look a little "janky".
+/// This is because most characters have a vertical advance they are
+/// pushed down by, and it will take a little playing around with before
+/// you get perfect results.
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
@@ -149,13 +161,14 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// such it will cut words off should they end up near the end of a line.
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %%s, %%c, %%C, and %%f (they are not 1-1
+/// Specifically, it accepts %%s, %%c, %%C, %%S, and %%f (they are not 1-1
 /// with the behaviour of printf).
 ///
 ///  + `%%s` Inserts a given string at that spot
 ///  + `%%c` Inserts a given character at that spot (can be UTF-8)
 ///  + `%%f` Inserts a given floating point number (double)
 ///  + `%%C` Switches the colour of the text from here on out (JamColour*)
+///  + `%%S` Renders a sprite at this spot (JamSprite*)
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
@@ -164,6 +177,11 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// \brief Renders a font
 /// \param font JamFont* to render from
 /// \param x X Position to start drawing from
+/// Please note that %%S will render a sprite at exactly that spot in
+/// text, and for that reason will most likely look a little "janky".
+/// This is because most characters have a vertical advance they are
+/// pushed down by, and it will take a little playing around with before
+/// you get perfect results.
 /// \param y Y position to start drawing from
 /// \param string Message to draw, may use % opcodes (read below) or newlines
 /// \param r Red component of the colour to render the font as (0-255)
@@ -179,13 +197,14 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 /// such it will cut words off should they end up near the end of a line.
 ///
 /// This function accepts string modifiers like printf would accept.
-/// Specifically, it accepts %%s, %%c, %%C, and %%f (they are not 1-1
+/// Specifically, it accepts %%s, %%c, %%C, %%S, and %%f (they are not 1-1
 /// with the behaviour of printf).
 ///
 ///  + `%%s` Inserts a given string at that spot
 ///  + `%%c` Inserts a given character at that spot (can be UTF-8)
 ///  + `%%f` Inserts a given floating point number (double)
 ///  + `%%C` Switches the colour of the text from here on out (JamColour*)
+///  + `%%S` Renders a sprite at this spot (JamSprite*)
 ///
 /// For example, if you call `jamFontRender(font, x, y, "FPS: %f\n%CMy Game", (double)fps, &myColour);`,
 /// it would print
@@ -194,10 +213,39 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 ///     My Game
 ///
 /// Where "My Game" would be rendered in the colour denoted by myColour.
+/// Please note that %%S will render a sprite at exactly that spot in
+/// text, and for that reason will most likely look a little "janky".
+/// This is because most characters have a vertical advance they are
+/// pushed down by, and it will take a little playing around with before
+/// you get perfect results.
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
 #define jamFontRenderColourExt(font, x, y, string, r, g, b, w, ...) _jamFontRenderDetailed(font, x, y, string, w, r, g, b, ##__VA_ARGS__);
+
+/// \brief Renders a specific character from a font returning the advance
+/// \param font Font to find the character in
+/// \param x X position of the character
+/// \param y Y position of the character
+/// \param c Unicode character to render (yes, ASCII codes are fine)
+/// \param r Red component of the character's colour
+/// \param g green component of the character's colour
+/// \param b blue component of the character's colour
+///
+/// This function is to have greater control over your font rendering.
+/// When called, it will render the character to the given x/y in the
+/// selected colour and return the horizontal advance of that character.
+/// For the uninitiated, the horizontal advance is how far forward the
+/// next character should be rendered (and is not necessarily the width
+/// of the character). In the case of a space, nothing will be rendered
+/// and the recommended advance of the space in this font is returned.
+/// If the character is not found or its something like newline, nothing
+/// will be rendered, no errors will be set, and 0 will be returned..
+///
+/// \return The horizontal advance of the character (read desc.)
+///
+/// \throws ERROR_NULL_POINTER
+sint32 jamFontRenderCharacter(JamFont* font, sint32 x, sint32 y, uint32 c, uint8 r, uint8 g, uint8 b);
 
 /// \brief Gets the width of a string if it were to be drawn
 ///
