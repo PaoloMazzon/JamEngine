@@ -261,28 +261,6 @@ typedef enum {
 	JAM_KB_APP2 = 284,
 } JamKeyboardKeys;
 
-/// \brief Keeps track of keyboard/mouse/gamepad input
-///
-/// The renderer MUST be created before this, also this
-/// input struct does not pay any attention to the state
-/// of the screen buffer, and thus provides only info
-/// on the mouse in relation to the window. If you would
-/// like the mouse coordinates in relation to the screen
-/// buffer, use the windowToScreenBufferCoordinates function
-/// to get the mouse coordinates in the game world.
-typedef struct {
-	// Keyboard stuff
-	const uint8* currentInput; ///< This is the current frame's input
-	uint8* previousInput; ///< This is the last frame's input
-	int kbLen; ///< The length of the two above arrays
-
-	// Mouse stuff
-	int mX; ///< The mouse's current x position
-	int mY; ///< The mouse's current y position
-	uint32 mouseState; ///< Current frame's mice buttons
-	uint32 previousMouseState; ///< Last frame's mice buttons
-} JamInput;
-
 /// \brief Creates an input struct for keeping track of user-input
 /// \throws ERROR_ALLOC_FAILED
 void jamInputInit();
@@ -320,6 +298,14 @@ int jamInputGetMouseX();
 /// \brief Grabs the mouse's Y position
 /// \throws ERROR_NULL_POINTER
 int jamInputGetMouseY();
+
+/// \brief Gets the mouse's scalar velocity
+/// \throws ERROR_NULL_POINTER
+double jamInputGetMouseVelocity();
+
+/// \brief Gets the direction of the mouse's velocity in radians
+/// \throws ERROR_NULL_POINTER
+double jamInputGetMouseDirection();
 
 /// \brief Checks if a mouse button is currently pressed
 /// \throws ERROR_NULL_POINTER
