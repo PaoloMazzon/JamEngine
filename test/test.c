@@ -287,19 +287,14 @@ int main(int argc, char* argv[]) {
 				run = runGame();
 		}
 	} else { // Test specific functionality of JamEngine
-		int pos = 0;
-		const char* testString = "";
-		uint32 c = jamStringNextUnicode(testString, &pos);
-		JamFont* font = jamFontCreate("assets/DroidSans.ttf", 24, true);
+		printf("Numpads: %i\n", jamInputGetNumGamepads());
 
 		// Testing
 		while (jamRendererProcEvents()) {
 			jamDrawFillColour(0, 0, 0, 255);
-			jamFontRenderExt(font, 0, 0, "The quick %f fox jump%%s over the lazy dog.%s", 480, 5.4, "yes");
 			jamRendererProcEndFrame();
 		}
 
-		jamFontFree(font);
 		jamFontQuit();
 	}
 

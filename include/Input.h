@@ -261,6 +261,35 @@ typedef enum {
 	JAM_KB_APP2 = 284,
 } JamKeyboardKeys;
 
+/// \brief The various controls of a gamepad
+///
+/// This is similar to the SDL_CONTROLLER* values
+/// but jamEngine does a lot more for gamepads to
+/// make them a nicer experience.
+typedef enum {
+	JAM_AXIS_LEFTX,
+	JAM_AXIS_LEFTY,
+	JAM_AXIS_RIGHTX,
+	JAM_AXIS_RIGHTY,
+	JAM_AXIS_TRIGGERLEFT,
+	JAM_AXIS_TRIGGERRIGHT,
+	JAM_BUTTON_A,
+	JAM_BUTTON_B,
+	JAM_BUTTON_X,
+	JAM_BUTTON_Y,
+	JAM_BUTTON_BACK,
+	JAM_BUTTON_GUIDE,
+	JAM_BUTTON_START,
+	JAM_BUTTON_LEFTSTICK,
+	JAM_BUTTON_RIGHTSTICK,
+	JAM_BUTTON_LEFTSHOULDER,
+	JAM_BUTTON_RIGHTSHOULDER,
+	JAM_BUTTON_DPAD_UP,
+	JAM_BUTTON_DPAD_DOWN,
+	JAM_BUTTON_DPAD_LEFT,
+	JAM_BUTTON_DPAD_RIGHT
+} JamGamepadTriggers;
+
 /// \brief Creates an input struct for keeping track of user-input
 /// \throws ERROR_ALLOC_FAILED
 void jamInputInit();
@@ -287,15 +316,15 @@ void jamInputUpdate(double screenMultiplier);
 
 /// \brief Checks a trigger (or button) on a gamepad
 /// \throws ERROR_NULL_POINTER
-float jamInputCheckGamepad(uint8 trigger);
+float jamInputCheckGamepad(int gamepad, JamGamepadTriggers trigger);
 
 /// \brief Checks a trigger (or button) on a gamepad pressed
 /// \throws ERROR_NULL_POINTER
-float jamInputCheckGamepadPressed(uint8 trigger);
+float jamInputCheckGamepadPressed(int gamepad, JamGamepadTriggers trigger);
 
 /// \brief Checks a trigger (or button) on a gamepad released
 /// \throws ERROR_NULL_POINTER
-float jamInputCheckGamepadReleased(uint8 trigger);
+float jamInputCheckGamepadReleased(int gamepad, JamGamepadTriggers trigger);
 
 /// \brief Checks if a key is currently pressed
 /// \throws ERROR_OUT_OF_BOUNDS

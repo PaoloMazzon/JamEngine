@@ -35,6 +35,7 @@ typedef struct {
 	// Gamepad shenanigans
 	SDL_GameController* controllers[8]; ///< The gamepads we get input from
 	uint8 numControllers;               ///< How many gamepads there are
+	sint16 gamepadControls[8][21];      ///< The triggers, axis, and buttons of any controller
 } _JamInput;
 
 static _JamInput* gInputPointer;
@@ -125,11 +126,14 @@ void jamInputUpdate(double screenMultiplier) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-float jamInputCheckGamepad(uint8 trigger) {
-	if (gInputPointer != NULL) {
-		return 0;
+float jamInputCheckGamepad(int gamepad, JamGamepadTriggers trigger) {
+	if (gInputPointer != NULL && trigger < 21) {
+		// TODO: This
 	} else {
-		jSetError(ERROR_NULL_POINTER, "_JamInput doesn't exist (jamInputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
+		if (trigger >= 21)
+			jSetError(ERROR_OUT_OF_BOUNDS, "Trigger value out of bounds");
+		if (gInputPointer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Input not initialized");
 	}
 
 	return 0;
@@ -137,14 +141,32 @@ float jamInputCheckGamepad(uint8 trigger) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-float jamInputCheckGamepadPressed(uint8 trigger) {
+float jamInputCheckGamepadPressed(int gamepad, JamGamepadTriggers trigger) {
+	if (gInputPointer != NULL && trigger < 21) {
+		// TODO: This
+	} else {
+		if (trigger >= 21)
+			jSetError(ERROR_OUT_OF_BOUNDS, "Trigger value out of bounds");
+		if (gInputPointer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Input not initialized");
+	}
 
+	return 0;
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-float jamInputCheckGamepadReleased(uint8 trigger) {
+float jamInputCheckGamepadReleased(int gamepad, JamGamepadTriggers trigger) {
+	if (gInputPointer != NULL && trigger < 21) {
+		// TODO: This
+	} else {
+		if (trigger >= 21)
+			jSetError(ERROR_OUT_OF_BOUNDS, "Trigger value out of bounds");
+		if (gInputPointer == NULL)
+			jSetError(ERROR_NULL_POINTER, "Input not initialized");
+	}
 
+	return 0;
 }
 //////////////////////////////////////////////////////////////
 
