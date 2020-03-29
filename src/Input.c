@@ -31,15 +31,19 @@ typedef struct {
 	int mYP;                   ///< Previous mouse y position
 	uint32 mouseState;         ///< Current frame's mice buttons
 	uint32 previousMouseState; ///< Last frame's mice buttons
+
+	// Gamepad shenanigans
+	SDL_GameController* controllers[8]; ///< The gamepads we get input from
+	uint8 numControllers;               ///< How many gamepads there are
 } _JamInput;
 
 static _JamInput* gInputPointer;
 
 //////////////////////////////////////////////////////////////
 void jamInputInit() {
+	int i;
 	gInputPointer = (_JamInput*)malloc(sizeof(_JamInput));
 
-	// Double check, of course
 	if (gInputPointer != NULL) {
 		// Now we grab the first piece
 		gInputPointer->currentInput = SDL_GetKeyboardState(&gInputPointer->kbLen);
@@ -47,7 +51,8 @@ void jamInputInit() {
 		// And create the other array
 		gInputPointer->previousInput = (Uint8*)malloc((size_t)gInputPointer->kbLen);
 
-		// And again, double check
+		// Load gamepads
+		jamInputRefreshGamepads();
 		if (gInputPointer->previousInput == NULL) {
 			free(gInputPointer);
 			gInputPointer = NULL;
@@ -55,6 +60,38 @@ void jamInputInit() {
 		}
 	} else {
 		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate input. SDL Error: %s\n", SDL_GetError());
+	}
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+uint8 jamInputGetNumGamepads() {
+	if (gInputPointer != NULL) {
+		return gInputPointer->numControllers;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Input not initialized");
+	}
+
+	return 0;
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+void jamInputRefreshGamepads() {
+	int i;
+	if (gInputPointer != NULL) {
+		gInputPointer->numControllers = 0;
+
+		// Find the gamepads
+		for (i = 0; i < SDL_NumJoysticks(); i++) {
+			if (SDL_IsGameController(i)) {
+				gInputPointer->controllers[++gInputPointer->numControllers] = SDL_GameControllerOpen(i);
+				if (gInputPointer->controllers[gInputPointer->numControllers - 1] == NULL)
+					jSetError(ERROR_SDL_ERROR, "Failed to open a game controller");
+			}
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Input not initialized");
 	}
 }
 //////////////////////////////////////////////////////////////
@@ -84,6 +121,30 @@ void jamInputUpdate(double screenMultiplier) {
 		gInputPointer->mX = (int)((double)gInputPointer->mX / screenMultiplier);
 		gInputPointer->mY = (int)((double)gInputPointer->mY / screenMultiplier);
 	}
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+float jamInputCheckGamepad(uint8 trigger) {
+	if (gInputPointer != NULL) {
+		return 0;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "_JamInput doesn't exist (jamInputCheckKeyPressed). SDL Error: %s\n", SDL_GetError());
+	}
+
+	return 0;
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+float jamInputCheckGamepadPressed(uint8 trigger) {
+
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
+float jamInputCheckGamepadReleased(uint8 trigger) {
+
 }
 //////////////////////////////////////////////////////////////
 

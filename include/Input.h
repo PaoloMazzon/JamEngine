@@ -268,6 +268,15 @@ void jamInputInit();
 /// \brief Returns true if input was initialized properly or false otherwise
 bool jamInputIsInitialized();
 
+/// \brief Forces input to reassess the number of gamepads connected to the system
+/// \throws ERROR_SDL_ERROR
+/// \throws ERROR_NULL_POINTER
+void jamInputRefreshGamepads();
+
+/// \brief Gets the number of connected gamepads
+/// \throws ERROR_NULL_POINTER
+uint8 jamInputGetNumGamepads();
+
 /// \brief Updates an input struct
 ///
 /// This must either be ran before you run rendererProcEvents or the
@@ -275,6 +284,18 @@ bool jamInputIsInitialized();
 ///
 /// \throws ERROR_NULL_POINTER
 void jamInputUpdate(double screenMultiplier);
+
+/// \brief Checks a trigger (or button) on a gamepad
+/// \throws ERROR_NULL_POINTER
+float jamInputCheckGamepad(uint8 trigger);
+
+/// \brief Checks a trigger (or button) on a gamepad pressed
+/// \throws ERROR_NULL_POINTER
+float jamInputCheckGamepadPressed(uint8 trigger);
+
+/// \brief Checks a trigger (or button) on a gamepad released
+/// \throws ERROR_NULL_POINTER
+float jamInputCheckGamepadReleased(uint8 trigger);
 
 /// \brief Checks if a key is currently pressed
 /// \throws ERROR_OUT_OF_BOUNDS
