@@ -22,22 +22,24 @@ void jamRendererInit(int *argc, char **argv, const char *name, uint32 w, uint32 
 	SDL_Window* window;
 	JamTexture* tex;
 	gRenderer = (JamRenderer*)malloc(sizeof(JamRenderer));
-	jamInputInit();
 	jamAudioInit(argc, argv);
 
 	// Check if we were given a dud
-	if (gRenderer != NULL && jamInputIsInitialized() && jamAudioIsInitialized()) {
+	if (gRenderer != NULL && jamAudioIsInitialized()) {
 
 		// Ignore any complaints valgrind gives about this, its out
 		// of my control
 		SDL_Init(SDL_INIT_EVERYTHING);
+
+		// Input depends on SDL being initialized
+		jamInputInit();
 
 		// Make the window centered on the screen, and as an OpenGL window
 		window = SDL_CreateWindow(name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_OPENGL);
 		gRenderer->gameWindow = window;
 
 		// Check for a dud again
-		if (window != NULL) {
+		if (window != NULL && jamInputIsInitialized()) {
 			// Make the internal gRenderer with a couple bits
 			//  - It can draw to textures
 			//  - It is hardware accelerated

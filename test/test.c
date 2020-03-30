@@ -287,11 +287,15 @@ int main(int argc, char* argv[]) {
 				run = runGame();
 		}
 	} else { // Test specific functionality of JamEngine
-		printf("Numpads: %i\n", jamInputGetNumGamepads());
+		printf("Gamepads: %i\n", jamInputGetNumGamepads());
 
 		// Testing
-		while (jamRendererProcEvents()) {
+		while (jamRendererProcEvents() && !jGetError()) {
 			jamDrawFillColour(0, 0, 0, 255);
+
+			// Draw input things
+			//printf("Right Trigger: %f\nLeft Trigger: %f", jamInputCheckGamepad(0, JAM_AXIS_TRIGGERRIGHT), jamInputCheckGamepad(0, JAM_AXIS_TRIGGERLEFT));
+
 			jamRendererProcEndFrame();
 		}
 
