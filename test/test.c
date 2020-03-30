@@ -294,8 +294,8 @@ int main(int argc, char* argv[]) {
 			jamDrawFillColour(0, 0, 0, 255);
 
 			// Draw input things
-			if (jamInputCheckGamepad(0, JAM_AXIS_TRIGGERRIGHT) != 0)
-				printf("Right Trigger");
+			if (jamInputCheckGamepad(0, JAM_BUTTON_A))
+				printf("yes\n");
 
 			jamRendererProcEndFrame();
 		}

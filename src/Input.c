@@ -165,7 +165,7 @@ void jamInputUpdate(double screenMultiplier) {
 //////////////////////////////////////////////////////////////
 float jamInputCheckGamepad(int gamepad, JamGamepadTriggers trigger) {
 	if (gInputPointer != NULL && trigger < 21 && gInputPointer->numControllers > gamepad) {
-		return (float)gInputPointer->gamepadControls[trigger][gamepad] / (float)0x8000;
+		return (float)gInputPointer->gamepadControls[gamepad][trigger] / (float)0x8000;
 	} else {
 		if (trigger >= 21)
 			jSetError(ERROR_OUT_OF_BOUNDS, "Trigger value out of bounds");
