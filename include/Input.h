@@ -316,7 +316,7 @@ typedef struct {
 /// \brief Used internally by JamControlMap, not to be used by the end user
 typedef struct {
 	_JamInputBinding** inputList; ///< Inputs to add together
-	uint8 inputs;          ///< Number of inputs in the list
+	uint8 inputs;                 ///< Number of inputs in the list
 } _JamInputList;
 
 /// \brief A fancy way to track input without having to check individual keys
