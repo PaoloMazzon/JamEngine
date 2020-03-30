@@ -290,6 +290,95 @@ typedef enum {
 	JAM_BUTTON_DPAD_RIGHT = 20
 } JamGamepadTriggers;
 
+/// \brief Describes the different input methods available
+typedef enum {
+	JAM_KEYBOARD_INPUT, ///< Input originating from the keyboard
+	JAM_GAMEPAD_INPUT,  ///< Input originating from a gamepad
+	JAM_MOUSE_INPUT     ///< Input originating from the mouse (specifically the buttons, not the movement)
+} JamInputType;
+
+/// \brief Describes what state we want an input to be in
+typedef enum {
+	JAM_INPUT_PRESSED,  ///< Only when this input is pressed
+	JAM_INPUT_RELEASED, ///< Only when this input is released
+	JAM_INPUT_ACTIVE    ///< Any time while this input is held down
+} JamInputState;
+
+/// \brief Used internally by _JamControlList, not to be used by the end user
+typedef struct {
+	int code;            ///< Keycode or gamepad code of this input
+	int gamepad;         ///< What gamepad we're checking (if applicable)
+	JamInputType type;   ///< The type of input we want
+	JamInputState state; ///< State we're looking for (pressed, active, released)
+	float modifier;      ///< Multiplier of this input
+} _JamInputBinding;
+
+/// \brief Used internally by JamControlMap, not to be used by the end user
+typedef struct {
+	_JamInputBinding** inputList; ///< Inputs to add together
+	uint8 inputs;          ///< Number of inputs in the list
+} _JamInputList;
+
+/// \brief A fancy way to track input without having to check individual keys
+///
+/// The core idea behind a control map is that you bind any number of inputs
+/// (keys, gamepad buttons, triggers) to a single control with modifiers that
+/// outputs a single float value. For example, a sample control we'll call
+/// movement might be bound to the following keys:
+///
+///  + the left key, with a -1 modifier
+///  + the right key, with a +1 modifer
+///  + the first gamepad's left x-axis
+///
+/// All three of those inputs would be multiplied by their individual multiplier
+/// and added together (while being bound from [-1, 1]) when that control is
+/// checked. In practice, this means you could break down your horizontal and
+/// vertical movement down to 2 lines of code without ever having to check gamepads
+/// or keys individually (meaning rebinding them is also easier).
+typedef struct {
+	_JamInputList** controls; ///< The controls themselves
+	uint32 numControls;          ///< Amount of controls saved
+} JamControlMap;
+
+/// \brief Creates a control map
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ALLOC_FAILED
+JamControlMap* jamControlMapCreate();
+
+/// \brief Frees a control map
+void jamControlMapFree(JamControlMap* map);
+
+/// \brief Adds a control to a control map and returns the index
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ALLOC_FAILED
+uint32 jamControlMapAddControl(JamControlMap* map);
+
+/// \brief Adds an input to a control
+/// \param map Control map to add to
+/// \param control Specific control to add the input to
+/// \param code Keycode/gamepad code/mouse button to trigger off (JAM_KB_F for example)
+/// \param gamepad Which gamepad to trigger off, if applicable (-1 for any)
+/// \param type Type of input we are checking (mouse, keyboard, gamepad)
+/// \param state State of the control we are looking for (just pressed, just released, or currently held)
+/// \param multiplier Multiplier of this control
+/// \return Returns the specific input this is bound to if you plan on changing it later
+///
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ALLOC_FAILED
+/// \throws ERROR_OUT_OF_BOUNDS
+uint8 jamControlMapAddInput(JamControlMap* map, uint32 control, int code, int gamepad, JamInputType type, JamInputState state, float multiplier);
+
+/// \brief Removes an input from a control
+/// \throws ERROR_NULL_POINTER
+void jamControlMapRemoveInput(JamControlMap* map, uint32 control, uint8 input);
+
+/// \brief Remove a control from a control map
+/// \throws ERROR_NULL_POINTER
+void jamControlMapRemoveControl(JamControlMap* map, uint32 control);
+
+/// \brief Checks a control in a control map and returns anything from -1 to 1
+float jamControlMapCheck(JamControlMap* map, uint32 control);
+
 /// \brief Creates an input struct for keeping track of user-input
 /// \throws ERROR_ALLOC_FAILED
 void jamInputInit();

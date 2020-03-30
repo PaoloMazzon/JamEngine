@@ -29,6 +29,7 @@ Features
  - SAT collisions and simple rectangle/circle collisions are interchangeable
  - TileMaps that can be used for rendering complex tile layers and checking collisions
  - 3D audio support through OpenAL
+ - Optional input management system to abstract away the qualms of managing gamepads and different keys
 
 Naming Conventions
 ==================
@@ -49,7 +50,6 @@ Features that I've decided are vital to the engine itself and will be added
 at some point in the near future. This would be things you simply expect
 out of a game engine.
 
- - A fancy input handler
  - More control over audio (mainly pausing and related controls)
  - Entity pathing system (such as following predetermined paths and possibly A*)
  
