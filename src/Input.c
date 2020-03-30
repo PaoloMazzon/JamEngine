@@ -163,6 +163,18 @@ void jamInputUpdate(double screenMultiplier) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
+bool jamInputGamepadIsConnected(int gamepad) {
+	if (gInputPointer != NULL && gInputPointer->numControllers > gamepad) {
+		return SDL_GameControllerGetAttached(gInputPointer->controllers[gamepad]);
+	} else if (gInputPointer == NULL) {
+		jSetError(ERROR_NULL_POINTER, "Input not initialized");
+	}
+
+	return 0;
+}
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
 float jamInputCheckGamepad(int gamepad, JamGamepadTriggers trigger) {
 	if (gInputPointer != NULL && trigger < 21 && gInputPointer->numControllers > gamepad) {
 		return (float)gInputPointer->gamepadControls[gamepad][trigger] / (float)0x8000;

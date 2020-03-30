@@ -306,6 +306,16 @@ void jamInputRefreshGamepads();
 /// \throws ERROR_NULL_POINTER
 uint8 jamInputGetNumGamepads();
 
+/// \brief Checks if a gamepad is still connected or not
+///
+/// If for example you would check gamepad 1 knowing full well that there
+/// never was a gamepad 1 then the function will just return false and not
+/// throw any errors. ERROR_NULL_POINTER is thrown by calling this before
+/// input has been initialized.
+///
+/// \throws ERROR_NULL_POINTER
+bool jamInputGamepadIsConnected(int gamepad);
+
 /// \brief Updates an input struct
 ///
 /// This must either be ran before you run rendererProcEvents or the
