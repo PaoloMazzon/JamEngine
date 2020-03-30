@@ -319,12 +319,26 @@ void jamInputUpdate(double screenMultiplier);
 float jamInputCheckGamepad(int gamepad, JamGamepadTriggers trigger);
 
 /// \brief Checks a trigger (or button) on a gamepad pressed
+///
+/// The base jamInputCheckGamepad returns a float because axis and
+/// triggers can be various states between on and off. Released and
+/// pressed, however, is either true or false and to check if axis
+/// and triggers have been released/pressed it checks if their val
+/// is above the deadzone.
+///
 /// \throws ERROR_NULL_POINTER
-float jamInputCheckGamepadPressed(int gamepad, JamGamepadTriggers trigger);
+bool jamInputCheckGamepadPressed(int gamepad, JamGamepadTriggers trigger);
 
 /// \brief Checks a trigger (or button) on a gamepad released
+///
+/// The base jamInputCheckGamepad returns a float because axis and
+/// triggers can be various states between on and off. Released and
+/// pressed, however, is either true or false and to check if axis
+/// and triggers have been released/pressed it checks if their val
+/// is above the deadzone.
+///
 /// \throws ERROR_NULL_POINTER
-float jamInputCheckGamepadReleased(int gamepad, JamGamepadTriggers trigger);
+bool jamInputCheckGamepadReleased(int gamepad, JamGamepadTriggers trigger);
 
 /// \brief Checks if a key is currently pressed
 /// \throws ERROR_OUT_OF_BOUNDS
