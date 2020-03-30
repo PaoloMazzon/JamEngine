@@ -35,7 +35,8 @@ typedef struct {
 	// Gamepad shenanigans
 	SDL_GameController* controllers[8]; ///< The gamepads we get input from
 	uint8 numControllers;               ///< How many gamepads there are
-	sint16 gamepadControls[8][21];      ///< The triggers, axis, and buttons of any controller
+	sint16 gamepadControls[21][8];      ///< The triggers, axis, and buttons of any controller
+	sint16 gamepadControlsPrev[21][8];  ///< Previous gamepad input
 } _JamInput;
 
 static _JamInput* gInputPointer;
@@ -121,14 +122,39 @@ void jamInputUpdate(double screenMultiplier) {
 		gInputPointer->mYP;
 		gInputPointer->mX = (int)((double)gInputPointer->mX / screenMultiplier);
 		gInputPointer->mY = (int)((double)gInputPointer->mY / screenMultiplier);
+
+		// Gamepad input
+		for (i = 0; i < gInputPointer->numControllers; i++) {
+			memccpy(gInputPointer->gamepadControlsPrev, gInputPointer->gamepadControls, 8 * 21, sizeof(sint16));
+			gInputPointer->gamepadControls[JAM_BUTTON_A][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_A);
+			gInputPointer->gamepadControls[JAM_BUTTON_B][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_B);
+			gInputPointer->gamepadControls[JAM_BUTTON_X][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_X);
+			gInputPointer->gamepadControls[JAM_BUTTON_Y][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_Y);
+			gInputPointer->gamepadControls[JAM_BUTTON_BACK][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_BACK);
+			gInputPointer->gamepadControls[JAM_BUTTON_GUIDE][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_GUIDE);
+			gInputPointer->gamepadControls[JAM_BUTTON_START][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_START);
+			gInputPointer->gamepadControls[JAM_BUTTON_LEFTSTICK][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_LEFTSTICK);
+			gInputPointer->gamepadControls[JAM_BUTTON_RIGHTSTICK][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_RIGHTSTICK);
+			gInputPointer->gamepadControls[JAM_BUTTON_LEFTSHOULDER][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
+			gInputPointer->gamepadControls[JAM_BUTTON_RIGHTSHOULDER][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
+			gInputPointer->gamepadControls[JAM_BUTTON_DPAD_UP][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_DPAD_UP);
+			gInputPointer->gamepadControls[JAM_BUTTON_DPAD_DOWN][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_DPAD_DOWN);
+			gInputPointer->gamepadControls[JAM_BUTTON_DPAD_LEFT][i] = SDL_GameControllerGetButton(gInputPointer->controllers[i], SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+			gInputPointer->gamepadControls[JAM_AXIS_LEFTX][i] = SDL_GameControllerGetAxis(gInputPointer->controllers[i], SDL_CONTROLLER_AXIS_LEFTX);
+			gInputPointer->gamepadControls[JAM_AXIS_LEFTY][i] = SDL_GameControllerGetAxis(gInputPointer->controllers[i], SDL_CONTROLLER_AXIS_LEFTY);
+			gInputPointer->gamepadControls[JAM_AXIS_RIGHTX][i] = SDL_GameControllerGetAxis(gInputPointer->controllers[i], SDL_CONTROLLER_AXIS_RIGHTX);
+			gInputPointer->gamepadControls[JAM_AXIS_RIGHTY][i] = SDL_GameControllerGetAxis(gInputPointer->controllers[i], SDL_CONTROLLER_AXIS_RIGHTY);
+			gInputPointer->gamepadControls[JAM_AXIS_TRIGGERLEFT][i] = SDL_GameControllerGetAxis(gInputPointer->controllers[i], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+			gInputPointer->gamepadControls[JAM_AXIS_TRIGGERRIGHT][i] = SDL_GameControllerGetAxis(gInputPointer->controllers[i], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+		}
 	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 float jamInputCheckGamepad(int gamepad, JamGamepadTriggers trigger) {
-	if (gInputPointer != NULL && trigger < 21) {
-		// TODO: This
+	if (gInputPointer != NULL && trigger < 21 && gInputPointer->numControllers > gamepad) {
+		return (float)gInputPointer->gamepadControls[trigger][gamepad] / (float)0x8000;
 	} else {
 		if (trigger >= 21)
 			jSetError(ERROR_OUT_OF_BOUNDS, "Trigger value out of bounds");
@@ -142,7 +168,7 @@ float jamInputCheckGamepad(int gamepad, JamGamepadTriggers trigger) {
 
 //////////////////////////////////////////////////////////////
 float jamInputCheckGamepadPressed(int gamepad, JamGamepadTriggers trigger) {
-	if (gInputPointer != NULL && trigger < 21) {
+	if (gInputPointer != NULL && trigger < 21 && gInputPointer->numControllers > gamepad) {
 		// TODO: This
 	} else {
 		if (trigger >= 21)
@@ -157,7 +183,7 @@ float jamInputCheckGamepadPressed(int gamepad, JamGamepadTriggers trigger) {
 
 //////////////////////////////////////////////////////////////
 float jamInputCheckGamepadReleased(int gamepad, JamGamepadTriggers trigger) {
-	if (gInputPointer != NULL && trigger < 21) {
+	if (gInputPointer != NULL && trigger < 21 && gInputPointer->numControllers > gamepad) {
 		// TODO: This
 	} else {
 		if (trigger >= 21)
