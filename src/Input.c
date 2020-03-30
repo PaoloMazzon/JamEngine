@@ -48,6 +48,7 @@ void jamInputInit() {
 	gInputPointer = (_JamInput*)malloc(sizeof(_JamInput));
 
 	if (gInputPointer != NULL) {
+		gInputPointer->numControllers = 0;
 		// Now we grab the first piece
 		gInputPointer->currentInput = SDL_GetKeyboardState(&gInputPointer->kbLen);
 
@@ -86,14 +87,20 @@ uint8 jamInputGetNumGamepads() {
 void jamInputRefreshGamepads() {
 	int i;
 	if (gInputPointer != NULL) {
+		// Close the old ones first
+		for (i = 0; i < gInputPointer->numControllers; i++)
+			SDL_GameControllerClose(gInputPointer->controllers[i]);
+
 		gInputPointer->numControllers = 0;
 
 		// Find the gamepads
 		for (i = 0; i < SDL_NumJoysticks(); i++) {
 			if (SDL_IsGameController(i)) {
-				gInputPointer->controllers[++gInputPointer->numControllers] = SDL_GameControllerOpen(i);
-				if (gInputPointer->controllers[gInputPointer->numControllers - 1] == NULL)
+				gInputPointer->controllers[gInputPointer->numControllers] = SDL_GameControllerOpen(i);
+				if (gInputPointer->controllers[gInputPointer->numControllers] == NULL)
 					jSetError(ERROR_SDL_ERROR, "Failed to open a game controller");
+				else
+					gInputPointer->numControllers++;
 			}
 		}
 	} else {
@@ -175,13 +182,13 @@ bool jamInputCheckGamepadPressed(int gamepad, JamGamepadTriggers trigger) {
 	if (gInputPointer != NULL && trigger < 21 && gInputPointer->numControllers > gamepad) {
 		if (trigger == JAM_AXIS_LEFTX || trigger == JAM_AXIS_LEFTY ||
 				trigger == JAM_AXIS_RIGHTX || trigger == JAM_AXIS_RIGHTY) {
-			return abs(gInputPointer->gamepadControls[trigger][gamepad]) > gInputPointer->deadzone &&
-				   abs(gInputPointer->gamepadControlsPrev[trigger][gamepad]) < gInputPointer->deadzone;
+			return abs(gInputPointer->gamepadControls[gamepad][trigger]) > gInputPointer->deadzone &&
+				   abs(gInputPointer->gamepadControlsPrev[gamepad][trigger]) < gInputPointer->deadzone;
 		} else if (trigger == JAM_AXIS_TRIGGERLEFT || trigger == JAM_AXIS_TRIGGERRIGHT) {
-			return gInputPointer->gamepadControls[trigger][gamepad] > gInputPointer->deadzone &&
-				   gInputPointer->gamepadControlsPrev[trigger][gamepad] < gInputPointer->deadzone;
+			return gInputPointer->gamepadControls[gamepad][trigger] > gInputPointer->deadzone &&
+				   gInputPointer->gamepadControlsPrev[gamepad][trigger] < gInputPointer->deadzone;
 		} else {
-			return gInputPointer->gamepadControls[trigger][gamepad] && !gInputPointer->gamepadControlsPrev[trigger][gamepad];
+			return gInputPointer->gamepadControls[gamepad][trigger] && !gInputPointer->gamepadControlsPrev[trigger][gamepad];
 		}
 	} else {
 		if (trigger >= 21)
@@ -199,13 +206,13 @@ bool jamInputCheckGamepadReleased(int gamepad, JamGamepadTriggers trigger) {
 	if (gInputPointer != NULL && trigger < 21 && gInputPointer->numControllers > gamepad) {
 		if (trigger == JAM_AXIS_LEFTX || trigger == JAM_AXIS_LEFTY ||
 			trigger == JAM_AXIS_RIGHTX || trigger == JAM_AXIS_RIGHTY) {
-			return abs(gInputPointer->gamepadControls[trigger][gamepad]) < gInputPointer->deadzone &&
-				   abs(gInputPointer->gamepadControlsPrev[trigger][gamepad]) > gInputPointer->deadzone;
+			return abs(gInputPointer->gamepadControls[gamepad][trigger]) < gInputPointer->deadzone &&
+				   abs(gInputPointer->gamepadControlsPrev[gamepad][trigger]) > gInputPointer->deadzone;
 		} else if (trigger == JAM_AXIS_TRIGGERLEFT || trigger == JAM_AXIS_TRIGGERRIGHT) {
-			return gInputPointer->gamepadControls[trigger][gamepad] < gInputPointer->deadzone &&
-				   gInputPointer->gamepadControlsPrev[trigger][gamepad] > gInputPointer->deadzone;
+			return gInputPointer->gamepadControls[gamepad][trigger] < gInputPointer->deadzone &&
+				   gInputPointer->gamepadControlsPrev[gamepad][trigger] > gInputPointer->deadzone;
 		} else {
-			return !gInputPointer->gamepadControls[trigger][gamepad] && gInputPointer->gamepadControlsPrev[trigger][gamepad];
+			return !gInputPointer->gamepadControls[gamepad][trigger] && gInputPointer->gamepadControlsPrev[trigger][gamepad];
 		}
 	} else {
 		if (trigger >= 21)
@@ -372,7 +379,11 @@ bool jamInputCheckMouseButtonReleased(uint8 button) {
 
 //////////////////////////////////////////////////////////////
 void jamInputQuit() {
+	int i;
 	if (gInputPointer != NULL) {
+		for (i = 0; i < gInputPointer->numControllers; i++)
+			SDL_GameControllerClose(gInputPointer->controllers[i]);
+
 		free(gInputPointer->previousInput);
 		free(gInputPointer);
 	}
