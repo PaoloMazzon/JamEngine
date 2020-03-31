@@ -316,7 +316,9 @@ typedef struct {
 /// \brief Used internally by JamControlMap, not to be used by the end user
 typedef struct {
 	_JamInputBinding** inputList; ///< Inputs to add together
-	uint8 inputs;                 ///< Number of inputs in the list
+	uint8 size;                   ///< Number of inputs connected to this control
+	char* name;                   ///< Name of this input
+	void* next;                   ///< Next in the link list should there be a collision
 } _JamInputList;
 
 /// \brief A fancy way to track input without having to check individual keys
@@ -337,7 +339,7 @@ typedef struct {
 /// or keys individually (meaning rebinding them is also easier).
 typedef struct {
 	_JamInputList** controls; ///< The controls themselves
-	uint32 numControls;          ///< Amount of controls saved
+	uint32 bucketSize;        ///< Size of the hash bucket
 } JamControlMap;
 
 /// \brief Creates a control map
@@ -345,13 +347,18 @@ typedef struct {
 /// \throws ERROR_ALLOC_FAILED
 JamControlMap* jamControlMapCreate();
 
+/// \brief Loads a control map from a string previously created in jamControlMapSerialize
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ALLOC_FAILED
+JamControlMap* jamControlMapLoad(const char* mapString);
+
 /// \brief Frees a control map
 void jamControlMapFree(JamControlMap* map);
 
-/// \brief Adds a control to a control map and returns the index
+/// \brief Adds a control to a control map
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
-uint32 jamControlMapAddControl(JamControlMap* map);
+void jamControlMapAddControl(JamControlMap* map, const char* name);
 
 /// \brief Adds an input to a control
 /// \param map Control map to add to
@@ -366,18 +373,23 @@ uint32 jamControlMapAddControl(JamControlMap* map);
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_OUT_OF_BOUNDS
-uint8 jamControlMapAddInput(JamControlMap* map, uint32 control, int code, int gamepad, JamInputType type, JamInputState state, float multiplier);
+uint8 jamControlMapAddInput(JamControlMap* map, const char* control, int code, int gamepad, JamInputType type, JamInputState state, float multiplier);
 
 /// \brief Removes an input from a control
 /// \throws ERROR_NULL_POINTER
-void jamControlMapRemoveInput(JamControlMap* map, uint32 control, uint8 input);
+void jamControlMapRemoveInput(JamControlMap* map, const char* control, uint8 input);
 
 /// \brief Remove a control from a control map
 /// \throws ERROR_NULL_POINTER
-void jamControlMapRemoveControl(JamControlMap* map, uint32 control);
+void jamControlMapRemoveControl(JamControlMap* map, const char* control);
 
 /// \brief Checks a control in a control map and returns anything from -1 to 1
-float jamControlMapCheck(JamControlMap* map, uint32 control);
+float jamControlMapCheck(JamControlMap* map, const char* control);
+
+/// \brief Turns a control map into a string that can be loaded (the returned string must be freed)
+/// \throws ERROR_NULL_POINTER
+/// \throws ERROR_ALLOC_FAILED
+char* jamControlMapSerialize(JamControlMap* map);
 
 /// \brief Creates an input struct for keeping track of user-input
 /// \throws ERROR_ALLOC_FAILED
