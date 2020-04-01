@@ -5,6 +5,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <Input.h>
+#include <StringUtil.h>
 #include <JamError.h>
 #include <SDL.h>
 #include "Vector.h"
@@ -102,38 +103,176 @@ void jamControlMapFree(JamControlMap* map) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-void jamControlMapAddControl(JamControlMap* map, const char* name) {
+static _JamInputList* _jamInputListCreate(const char* name) {
+    _JamInputList* list = (_JamInputList*)malloc(sizeof(_JamInputList));
+	if (list != NULL) {
+		list->name = (char*)malloc(strlen(name) + 1);
+		list->next = NULL;
+		list->size = 0;
+		list->inputList = NULL;
 
+		if (list->name != NULL) {
+			strcpy(list->name, name);
+		} else {
+			free(list);
+			jSetError(ERROR_ALLOC_FAILED, "Failed to copy string");
+		}
+	} else {
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create input list");
+	}
+
+	return list;
+}
+
+// Makes sure a control exists in a map, returns the list or NULL if it failed
+static _JamInputList* _jamControlMapAssertControl(JamControlMap* map, const char* name, bool createIfNotFound) {
+	_JamInputList* list, *next;
+	list = NULL;
+	int pos = (int)jamHashString(name, INPUT_BUCKET_SIZE);
+	
+	if (map != NULL) {
+		// There is already stuff here
+		if (map->bucket[pos] != NULL) {
+			// Either find the element in the linked list or find the last element in the linked list
+			next = map->bucket[pos];
+		    while (next->next != NULL && strcmp(next->name, name) != 0)
+				next = next->next;
+
+			if (strcmp(next->name, name) == 0) {
+				// This is it
+				list = next;
+			} else if (createIfNotFound) {
+				// We must create it
+				list = _jamInputListCreate(name);
+			    next->next = list;
+			}
+		} else if (createIfNotFound) {
+			// We need to make it here
+			list = _jamInputListCreate(name);
+			map->bucket[pos] = list;
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Map does not exist");
+	}
+
+	return list;
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 uint8 jamControlMapAddInput(JamControlMap* map, const char* control, int code, int gamepad, JamInputType type, JamInputState state, float multiplier) {
+	_JamInputList* list = _jamControlMapAssertControl(map, control, true);
+	_JamInputBinding* newVec;
+	uint8 inputLoc = 0;
 
+	// Asserting the list guarantees the map exists
+	if (list != NULL) {
+		// Extend the current list's list to allow another input
+		newVec = (_JamInputBinding*)realloc(list->inputList, sizeof(_JamInputBinding) * list->size + 1);
+
+		// Fill the struct with its new values
+		if (newVec != NULL) {
+			newVec[list->size].type = type;
+			newVec[list->size].code = code;
+			newVec[list->size].gamepad = gamepad;
+			newVec[list->size].modifier = multiplier;
+			newVec[list->size].state = state;
+			list->inputList = newVec;
+			list->size += 1;
+		} else {
+			jSetError(ERROR_REALLOC_FAILED, "Failed to resize input vector");
+		}
+	} else {
+		jSetError(ERROR_ALLOC_FAILED, "Could not assert the input list");
+	}
+
+	return inputLoc;
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 void jamControlMapRemoveInput(JamControlMap* map, const char* control, uint8 input) {
-
+	// TODO: This
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 void jamControlMapRemoveControl(JamControlMap* map, const char* control) {
+	int pos = (int)jamHashString(control, INPUT_BUCKET_SIZE);
+	_JamInputList* next, *prev;
 
+	if (map != NULL) {
+		if (map->bucket[pos] != NULL) {
+			// Locate the list in the bucket/linked list
+			next = map->bucket[pos];
+			prev = NULL;
+			while (next->next != NULL && strcmp(control, next->name) != 0) {
+				prev = next;
+				next = next->next;
+			}
+
+			// We don't know if we found it or hit the end of the linked list yet
+			if (strcmp(control, next->name) == 0) {
+				free(next->inputList);
+				if (prev != NULL)
+					prev->next = next->next;
+				else
+					map->bucket[pos] = NULL;
+				free(next);
+
+			}
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Map doesn't exist");
+	}
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 float jamControlMapCheck(JamControlMap* map, const char* control) {
+	float check = 0;
+	uint8 i;
+	_JamInputList* list = _jamControlMapAssertControl(map, control, false);
+	_JamInputBinding* bind;
 
+	if (list != NULL) {
+		for (i = 0; i < list->size; i++) {
+			bind = &list->inputList[i];
+			if (bind->type == JAM_KEYBOARD_INPUT) {
+				if (bind->state == JAM_INPUT_PRESSED)
+					check += (float)jamInputCheckKeyPressed((JamKeyboardKeys)bind->code) * bind->modifier;
+				else if (bind->state == JAM_INPUT_RELEASED)
+					check += (float)jamInputCheckKeyReleased((JamKeyboardKeys)bind->code) * bind->modifier;
+				else if (bind->state == JAM_INPUT_ACTIVE)
+					check += (float)jamInputCheckKey((JamKeyboardKeys)bind->code) * bind->modifier;
+			} else if (bind->type == JAM_GAMEPAD_INPUT) {
+				if (bind->state == JAM_INPUT_PRESSED)
+					check += (float)jamInputCheckGamepadPressed(bind->gamepad, (JamGamepadTriggers)bind->code) * bind->modifier;
+				else if (bind->state == JAM_INPUT_RELEASED)
+					check += (float)jamInputCheckGamepadReleased(bind->gamepad, (JamGamepadTriggers)bind->code) * bind->modifier;
+				else if (bind->state == JAM_INPUT_ACTIVE)
+					check += jamInputCheckGamepad(bind->gamepad, (JamGamepadTriggers)bind->code) * bind->modifier;
+			} else if (bind->type == JAM_MOUSE_INPUT) {
+				if (bind->state == JAM_INPUT_PRESSED)
+					check += (float)jamInputCheckMouseButtonPressed((uint8)bind->code) * bind->modifier;
+				else if (bind->state == JAM_INPUT_RELEASED)
+					check += (float)jamInputCheckMouseButtonReleased((uint8)bind->code) * bind->modifier;
+				else if (bind->state == JAM_INPUT_ACTIVE)
+					check += (float)jamInputCheckMouseButton((uint8)bind->code) * bind->modifier;
+			}
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Control [%s] not found", control);
+	}
+
+	// Clamp between -1 and 1
+	return (check > 1) ? 1 : (check < -1 ? -1 : check);
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 JamBuffer* jamControlMapSerialize(JamControlMap* map) {
-
+	// TODO: This
 }
 //////////////////////////////////////////////////////////////
 
