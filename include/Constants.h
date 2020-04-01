@@ -36,6 +36,9 @@ typedef signed long long sint64;
 
 ///< The ID of an entity not within a world
 #define ID_NOT_ASSIGNED (-1)
+
+///< Default bucket size of a control map for hashing
+#define INPUT_BUCKET_SIZE 50
 	
 // The names of JamINI headers for assets
 #define INI_SPRITE_PREFIX 's'

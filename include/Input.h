@@ -3,6 +3,7 @@
 /// \brief Declares the input handler and some functions to make it easier to use
 #pragma once
 #include "Constants.h"
+#include "Buffer.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -314,8 +315,12 @@ typedef struct {
 } _JamInputBinding;
 
 /// \brief Used internally by JamControlMap, not to be used by the end user
+///
+/// inputList, unlike most other lists in JamEngine is a vector in the sense
+/// that it is a list of _JamInputBinding's themselves and not a list of pointers
+/// to _JamInputBinding's.
 typedef struct {
-	_JamInputBinding** inputList; ///< Inputs to add together
+	_JamInputBinding* inputList;  ///< Inputs to add together
 	uint8 size;                   ///< Number of inputs connected to this control
 	char* name;                   ///< Name of this input
 	void* next;                   ///< Next in the link list should there be a collision
@@ -338,8 +343,7 @@ typedef struct {
 /// vertical movement down to 2 lines of code without ever having to check gamepads
 /// or keys individually (meaning rebinding them is also easier).
 typedef struct {
-	_JamInputList** controls; ///< The controls themselves
-	uint32 bucketSize;        ///< Size of the hash bucket
+	_JamInputList** bucket; ///< The control bucket (for hashing)
 } JamControlMap;
 
 /// \brief Creates a control map
@@ -350,7 +354,7 @@ JamControlMap* jamControlMapCreate();
 /// \brief Loads a control map from a string previously created in jamControlMapSerialize
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
-JamControlMap* jamControlMapLoad(const char* mapString);
+JamControlMap* jamControlMapLoad(JamBuffer* buffer);
 
 /// \brief Frees a control map
 void jamControlMapFree(JamControlMap* map);
@@ -386,10 +390,11 @@ void jamControlMapRemoveControl(JamControlMap* map, const char* control);
 /// \brief Checks a control in a control map and returns anything from -1 to 1
 float jamControlMapCheck(JamControlMap* map, const char* control);
 
-/// \brief Turns a control map into a string that can be loaded (the returned string must be freed)
+/// \brief Turns a control map into a JamBuffer, which you must free yourself
+///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
-char* jamControlMapSerialize(JamControlMap* map);
+JamBuffer* jamControlMapSerialize(JamControlMap* map);
 
 /// \brief Creates an input struct for keeping track of user-input
 /// \throws ERROR_ALLOC_FAILED

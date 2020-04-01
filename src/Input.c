@@ -44,19 +44,60 @@ static _JamInput* gInputPointer;
 
 //////////////////////////////////////////////////////////////
 JamControlMap* jamControlMapCreate() {
+	JamControlMap* map = (JamControlMap*)malloc(sizeof(JamControlMap));
+	_JamInputList** bucket;
 
+	if (map != NULL) {
+		// We zero the bucket because we may need to save it and as such iterate it
+		bucket = (_JamInputList**)calloc(INPUT_BUCKET_SIZE, sizeof(_JamInputList*));
+
+		if (bucket != NULL) {
+			map->bucket = bucket;
+		} else {
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create bucket");
+			free(map);
+			map = NULL;
+		}
+	} else {
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create map");
+	}
+
+	return map;
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-JamControlMap* jamControlMapLoad(const char* mapString) {
-
+JamControlMap* jamControlMapLoad(JamBuffer* mapString) {
+	// TODO: This
 }
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 void jamControlMapFree(JamControlMap* map) {
+	int i;
+	_JamInputList* next, *prev;
+	if (map != NULL) {
+		for (i = 0; i < INPUT_BUCKET_SIZE; i++) {
+			if (map->bucket[i] != NULL) {
+				free(map->bucket[i]->name);
+				free(map->bucket[i]->inputList);
+				next = map->bucket[i]->next;
 
+				while (next != NULL) {
+					free(next->name);
+					free(next->inputList);
+					prev = next->next;
+					free(next);
+					next = prev;
+				}
+
+				free(map->bucket[i]);
+			}
+		}
+
+		free(map->bucket);
+		free(map);
+	}
 }
 //////////////////////////////////////////////////////////////
 
@@ -91,7 +132,7 @@ float jamControlMapCheck(JamControlMap* map, const char* control) {
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-char* jamControlMapSerialize(JamControlMap* map) {
+JamBuffer* jamControlMapSerialize(JamControlMap* map) {
 
 }
 //////////////////////////////////////////////////////////////
