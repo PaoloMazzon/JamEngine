@@ -387,6 +387,24 @@ float jamControlMapCheck(JamControlMap* map, const char* control);
 
 /// \brief Turns a control map into a JamBuffer, which you must free yourself
 ///
+/// You're not really supposed to modify or load this data yourself, but here
+/// is the format this outputs in anyway for documentation's sake.
+///
+/// First is the header information
+///
+///  + 5 bytes containing the version string (no terminating 0)
+///  + 4 bytes denoting the number of controls in the map
+///
+/// Now the body, which is each individual control and its list of inputs
+///
+///  + 2 bytes denoting the size of the name of this control in bytes
+///  + 1 bytes denoting the number of inputs for this control
+///  + Some number of bytes which contains the name itself (see the first bullet point above)
+///  + Sequentially, all of the inputs (1:1 copies of their _JamInputBinding in that order)
+///
+/// The order of the _JamInputBinding data is the same as it is listed in this
+/// header file (and most likely the doxygen documentation).
+///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
 JamBuffer* jamControlMapSerialize(JamControlMap* map);

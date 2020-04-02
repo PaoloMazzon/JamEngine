@@ -283,7 +283,60 @@ float jamControlMapCheck(JamControlMap* map, const char* control) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 JamBuffer* jamControlMapSerialize(JamControlMap* map) {
-	// TODO: This
+	JamBuffer* buffer;
+	int i, j;
+	uint64 totalSize = 4 + INPUT_VERSION_STRING_SIZE;
+	int count = 0;
+	_JamInputList *next;
+	uint16 len;
+
+	if (map != NULL) {
+		// We need to count the total inputs as well as their name's size first
+		for (i = 0; i < INPUT_BUCKET_SIZE; i++) {
+			next = map->bucket[i];
+			while (next != NULL) {
+				count++;
+				totalSize += strlen(next->name) + 3;
+				totalSize += sizeof(_JamInputBinding) * next->size;
+				next = next->next;
+			}
+		}
+
+		buffer = jamBufferCreate(totalSize);
+
+		// Now we actually load the buffer
+		if (buffer != NULL) {
+			jamBufferAddByteX(buffer, INPUT_VERSION_STRING, INPUT_VERSION_STRING_SIZE);
+			jamBufferAddByte4(buffer, &count);
+			for (i = 0; i < INPUT_BUCKET_SIZE; i++) {
+				next = map->bucket[i];
+				while (next != NULL) {
+					// First the information on this control
+					len = (uint16)strlen(next->name);
+					jamBufferAddByte2(buffer, &len);
+					jamBufferAddByte1(buffer, &next->size);
+					jamBufferAddByteX(buffer, next->name, len);
+
+					// Now all of the inputs
+					for (j = 0; j < next->size; j++) {
+						jamBufferAddByte4(buffer, &next->inputList[j].code);
+						jamBufferAddByte4(buffer, &next->inputList[j].gamepad);
+						jamBufferAddByte4(buffer, &next->inputList[j].type);
+						jamBufferAddByte4(buffer, &next->inputList[j].state);
+						jamBufferAddByte4(buffer, &next->inputList[j].modifier);
+					}
+
+					next->next = NULL;
+				}
+			}
+		} else {
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create buffer");
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Map doesn't exist");
+	}
+
+	buffer = NULL;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

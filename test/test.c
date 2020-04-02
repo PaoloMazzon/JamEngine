@@ -295,6 +295,7 @@ int main(int argc, char* argv[]) {
 		jamControlMapAddInput(map, "move", JAM_KB_LEFT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, -1);
 		jamControlMapAddInput(map, "move", JAM_KB_RIGHT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, 1);
 		jamControlMapRemoveControl(map, "move2");
+		jamBufferSave(jamControlMapSerialize(map), "buffer.bin");
 		int x = 50;
 
 		// Testing

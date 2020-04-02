@@ -151,7 +151,7 @@ void jamBufferAddByte1(JamBuffer *buffer, void *data) {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-void jamAddByte2(JamBuffer *buffer, void* data) {
+void jamBufferAddByte2(JamBuffer *buffer, void* data) {
 	if (buffer != NULL && buffer->pointer + 2 <= buffer->size) {
 		memcpy(&buffer->buffer[buffer->pointer], data, 2);
 		buffer->pointer += 2;
