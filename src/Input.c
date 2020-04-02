@@ -68,12 +68,6 @@ JamControlMap* jamControlMapCreate() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-JamControlMap* jamControlMapLoad(JamBuffer* mapString) {
-	// TODO: This
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
 void jamControlMapFree(JamControlMap* map) {
 	int i;
 	_JamInputList* next, *prev;
@@ -191,6 +185,64 @@ uint8 jamControlMapAddInput(JamControlMap* map, const char* control, int code, i
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+JamControlMap* jamControlMapLoad(JamBuffer* buffer) {
+	uint8 numInputs;
+	uint16 nameSize;
+	char* tempName;
+	_JamInputBinding* list;
+	_JamInputBinding bind;
+	int numControls;
+	char string[] = "12345\0";
+	bool error = false;
+	JamControlMap* map = jamControlMapCreate();
+	int i, j;
+
+	if (buffer != NULL && map != NULL) {
+		buffer->pointer = 0;
+		jamBufferReadByteX(buffer, string, INPUT_VERSION_STRING_SIZE);
+		if (strcmp(INPUT_VERSION_STRING, string) == 0) {
+			jamBufferReadByte4(buffer, &numControls);
+
+			// We load each control now
+			for (i = 0; i < numControls && !error; i++) {
+				// Create name and list memory first
+				jamBufferReadByte2(buffer, &nameSize);
+				jamBufferReadByte1(buffer, &numInputs);
+				tempName = (char*)malloc(nameSize + 1);
+				list = (_JamInputBinding*)malloc(numInputs * sizeof(_JamInputBinding));
+				if (tempName != NULL && list != NULL) {
+					jamBufferReadByteX(buffer, tempName, nameSize);
+					tempName[nameSize] = 0;
+
+					// Now load each input
+					for (j = 0; j < numInputs; j++) {
+						jamBufferReadByteX(buffer, &bind, sizeof(_JamInputBinding));
+						jamControlMapAddInput(map, tempName, bind.code, bind.gamepad, bind.type, bind.state, bind.modifier);
+					}
+				} else {
+					error = true;
+					free(list);
+					free(tempName);
+					jSetError(ERROR_ALLOC_FAILED, "Failed to copy name");
+				}
+			}
+		} else {
+			jSetError(ERROR_WARNING, "Control map buffer version incompatible");
+		}
+	} else {
+		if (buffer == NULL) {
+			jamControlMapFree(map);
+			jSetError(ERROR_NULL_POINTER, "buffer doesn't exist");
+		}
+		if (map == NULL)
+			jSetError(ERROR_ALLOC_FAILED, "Failed to create map");
+	}
+
+	return map;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 void jamControlMapRemoveInput(JamControlMap* map, const char* control, uint8 input) {
 	int i;
 	_JamInputList* list = _jamControlMapAssertControl(map, control, false);
@@ -283,7 +335,7 @@ float jamControlMapCheck(JamControlMap* map, const char* control) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 JamBuffer* jamControlMapSerialize(JamControlMap* map) {
-	JamBuffer* buffer;
+	JamBuffer* buffer = NULL;
 	int i, j;
 	uint64 totalSize = 4 + INPUT_VERSION_STRING_SIZE;
 	int count = 0;
@@ -326,7 +378,7 @@ JamBuffer* jamControlMapSerialize(JamControlMap* map) {
 						jamBufferAddByte4(buffer, &next->inputList[j].modifier);
 					}
 
-					next->next = NULL;
+					next = next->next;
 				}
 			}
 		} else {
@@ -336,7 +388,7 @@ JamBuffer* jamControlMapSerialize(JamControlMap* map) {
 		jSetError(ERROR_NULL_POINTER, "Map doesn't exist");
 	}
 
-	buffer = NULL;
+	return buffer;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

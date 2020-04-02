@@ -294,15 +294,15 @@ int main(int argc, char* argv[]) {
 		jamControlMapAddInput(map, "move3", JAM_KB_RIGHT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, 1);
 		jamControlMapAddInput(map, "move", JAM_KB_LEFT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, -1);
 		jamControlMapAddInput(map, "move", JAM_KB_RIGHT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, 1);
-		jamControlMapRemoveControl(map, "move2");
-		jamBufferSave(jamControlMapSerialize(map), "buffer.bin");
+		JamBuffer* buffer = jamControlMapSerialize(map);
+		JamControlMap* newMap = jamControlMapLoad(buffer);
 		int x = 50;
 
 		// Testing
 		while (jamRendererProcEvents() && !jGetError()) {
 			jamDrawFillColour(0, 0, 0, 255);
 
-			x += jamControlMapCheck(map, "move") * 2;
+			x += jamControlMapCheck(newMap, "move") * 2;
 			jamDrawSetColour(0, 255, 255, 255);
 			jamDrawRectangleFilled(x, 250, 32, 32);
 			jamDrawSetColour(0, 0, 0, 255);
