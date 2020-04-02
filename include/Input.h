@@ -12,6 +12,7 @@ extern "C" {
 #define MOUSE_LEFT_BUTTON 1
 #define MOUSE_MIDDLE_BUTTON 2
 #define MOUSE_RIGHT_BUTTON 4
+#define MOUSE_UNKNOWN 0
 
 /// \brief The keyboard bindings needed to check keyboard presses
 ///
@@ -268,6 +269,7 @@ typedef enum {
 /// but jamEngine does a lot more for gamepads to
 /// make them a nicer experience.
 typedef enum {
+	JAM_GAMEPAD_UNKNOWN = 50,
 	JAM_AXIS_LEFTX = 0,
 	JAM_AXIS_LEFTY = 1,
 	JAM_AXIS_RIGHTX = 2,
