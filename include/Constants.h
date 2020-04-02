@@ -38,7 +38,7 @@ typedef signed long long sint64;
 #define ID_NOT_ASSIGNED (-1)
 
 ///< Default bucket size of a control map for hashing
-#define INPUT_BUCKET_SIZE 50
+#define INPUT_BUCKET_SIZE 1
 	
 // The names of JamINI headers for assets
 #define INI_SPRITE_PREFIX 's'

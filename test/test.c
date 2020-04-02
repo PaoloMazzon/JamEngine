@@ -287,20 +287,29 @@ int main(int argc, char* argv[]) {
 				run = runGame();
 		}
 	} else { // Test specific functionality of JamEngine
-		printf("Gamepads: %i\n", jamInputGetNumGamepads());
+		JamControlMap* map = jamControlMapCreate();
+		jamControlMapAddInput(map, "move1", JAM_KB_LEFT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, -1);
+		jamControlMapAddInput(map, "move1", JAM_KB_RIGHT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, 1);
+		jamControlMapAddInput(map, "move2", JAM_KB_LEFT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, -1);
+		jamControlMapAddInput(map, "move3", JAM_KB_RIGHT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, 1);
+		jamControlMapAddInput(map, "move", JAM_KB_LEFT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, -1);
+		jamControlMapAddInput(map, "move", JAM_KB_RIGHT, 0, JAM_KEYBOARD_INPUT, JAM_INPUT_ACTIVE, 1);
+		jamControlMapRemoveControl(map, "move2");
+		int x = 50;
 
 		// Testing
 		while (jamRendererProcEvents() && !jGetError()) {
 			jamDrawFillColour(0, 0, 0, 255);
 
-			// Draw input things
-			if (jamInputCheckGamepad(0, JAM_BUTTON_A))
-				printf("yes\n");
+			x += jamControlMapCheck(map, "move") * 2;
+			jamDrawSetColour(0, 255, 255, 255);
+			jamDrawRectangleFilled(x, 250, 32, 32);
+			jamDrawSetColour(0, 0, 0, 255);
 
 			jamRendererProcEndFrame();
 		}
 
-		jamFontQuit();
+		jamControlMapFree(map);
 	}
 
 	jamRendererQuit();
