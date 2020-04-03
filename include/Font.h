@@ -32,14 +32,27 @@ typedef struct {
 	uint16 fontHeight;     ///< The height in pixels of the font page
 } JamBitmapFont;
 
+/// \brief A specialized character texture that handles both bitmap and true type textures
 typedef struct {
-	sint32 w;       ///< Width of this glyph
-	sint32 h;       ///< Height of this glyph
-	sint32 yOffset; ///< How far down to render this glyph (q should be lower than P, for example)
-	sint32 advance; ///< How far forward to move the next character after this one
-	void* tex;      ///< Internal bitmap texture of the glyph
+	union {
+		///< If this is a true type font we need this data
+		struct {
+			sint32 w;       ///< Width of this glyph
+			sint32 h;       ///< Height of this glyph
+			sint32 yOffset; ///< How far down to render this glyph (q should be lower than P, for example)
+			sint32 advance; ///< How far forward to move the next character after this one
+			void *tex;      ///< Internal bitmap texture of the glyph
+		};
+
+		///< We only require position in texture for bitmap fonts
+		struct {
+			sint32 xInTex; ///< X position in the font texture of this character
+			sint32 yInTex; ///< Y position in the font texture of this character
+		};
+	};
 } _JamFontTexture;
 
+/// \brief A range of unicode character textures
 typedef struct {
 	uint32 rangeStart;            ///< Start of the unicode range of this cache
 	uint32 rangeEnd;              ///< End of the unicode range of this cache
@@ -48,11 +61,17 @@ typedef struct {
 
 /// \brief A true type font for rendering .ttf/.otf type fonts
 typedef struct {
-	void* fontFace;              ///< The font itself
+	///< In bitmap fonts we need the source texture, otherwise we need the font face
+	union {
+		void *fontFace; ///< TrueType font face
+		void *fontTex;  ///< Bitmap texture containing the font
+	};
 	_JamFontRangeCache** ranges; ///< Array of caches that will be loaded with textures of the font
 	int rangeCount;              ///< Number of ranges in this font
 	sint32 space;                ///< How many pixels a space is
+	sint32 width;                ///< Width of a character (only applies to bitmap fonts)
 	sint32 height;               ///< The max height of latin characters, this is set automatically by the preloadASCII option in jamFontCreate
+	bool bitmap;                 ///< Weather or not this is a bitmap font
 } JamFont;
 
 /// \brief Creates a new free type font
@@ -64,6 +83,23 @@ typedef struct {
 /// \throws ERROR_FREETYPE_ERROR
 /// \throws ERROR_ALLOC_FAILED
 JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII);
+
+/// \brief Creates a font from a bitmap font
+/// \param filename Filename of the bitmap image
+/// \param characterWidth Width of each character in pixels
+/// \param characterHeight Height of each character in pixels
+///
+/// Loads a font from a bitmap, expecting the characters 0-128 exclusive.
+/// While it is possible to load a bitmap font with unicode characters, it
+/// it not officially supported and if you create a font with this function
+/// you will be unable to use jamFontPreloadRange to load unicode ranges and
+/// you will have to instead load it manually yourself. This function also
+/// loads the image as if it is a sprite sheet and as such you can have it
+/// wrap around the image to the next line.
+///
+/// \throws ERROR_SDL_ERROR
+/// \throws ERROR_ALLOC_FAILED
+JamFont* jamFontCreateFromBitmap(const char* filename, uint32 characterWidth, uint32 characterHeight);
 
 /// \brief Loads a range of characters into video memory for quick rendering
 ///
@@ -270,98 +306,6 @@ void jamFontFree(JamFont* font);
 /// yet. If you ever call jamFontCreate, you need to call this at the end of your program to
 /// prevent memory leaks. It is also safe to call this if you never called jamFontCreate.
 void jamFontQuit();
-
-/////////////////////////////////////////////////////
-/// \brief Creates a new font and returns it
-///
-/// \param latinFname The latin font filename
-/// \param fontFname The bitmap font's filename
-///
-/// \return Returns a new font
-///
-/// \throws ERROR_OPEN_FAILED
-/// \throws ERROR_ALLOC_FAILED
-/////////////////////////////////////////////////////
-JamBitmapFont* jamBitmapFontCreate(const char *latinFname, const char *fontFname);
-
-/////////////////////////////////////////////////////
-/// \brief Frees a font
-///
-/// \param font The font to free
-/////////////////////////////////////////////////////
-void jamBitmapFontFree(JamBitmapFont *font);
-
-/////////////////////////////////////////////////////
-/// \brief Renders text to a renderer
-///
-/// \param x The x position to draw at
-/// \param y The y position to draw at
-/// \param string The string to render
-/// \param font The font to use
-///
-/// \throws ERROR_OUT_OF_BOUNDS
-/////////////////////////////////////////////////////
-void jamBitmapFontRender(int x, int y, const char *string, JamBitmapFont *font);
-
-/////////////////////////////////////////////////////
-/// \brief Renders text to a renderer with wrapping
-/// 	   and support for % tags/newlines
-///
-/// \param x The x position to draw at
-/// \param y The y position to draw at
-/// \param w The width at which to wrap
-/// \param string The string to render
-/// \param font The font to use
-/// \param w Width before a newline
-///
-/// \throws ERROR_OUT_OF_BOUNDS
-/// \throws ERROR_NULL_POINTER
-/////////////////////////////////////////////////////
-void jamBitmapFontRenderExt(int x, int y, const char *string, JamBitmapFont *font, int w, ...);
-
-/////////////////////////////////////////////////////
-/// \brief Renders text to a renderer with wrapping
-///
-/// \param x The x position to draw at
-/// \param y The y position to draw at
-/// \param w The width at which to wrap
-/// \param string The string to render
-/// \param font The font to use
-///
-/// \throws ERROR_OUT_OF_BOUNDS
-/////////////////////////////////////////////////////
-void jamBitmapFontRenderWrap(int x, int y, uint16 w, const char *string, JamBitmapFont *font);
-
-/////////////////////////////////////////////////////
-/// \brief Gets the width of a given string
-///
-/// \param font The font to check
-/// \param string The string to check
-///
-/// \return Returns the width of the string in pixels
-/////////////////////////////////////////////////////
-uint16 jamBitmapFontStringWidth(JamBitmapFont *font, const char *string);
-
-/////////////////////////////////////////////////////
-/// \brief Gets the height of a given string
-///
-/// \param font The font to check
-/// \param string The string to check
-///
-/// \return Returns the height of the string in pixels
-/////////////////////////////////////////////////////
-uint16 jamBitmapFontStringHeight(JamBitmapFont *font, const char *string);
-
-/////////////////////////////////////////////////////
-/// \brief Gets the height of a given wrapped string
-///
-/// \param font The font to check
-/// \param string The string to check
-/// \param w The w at which to wrap
-///
-/// \return Returns the height of the string in pixels
-/////////////////////////////////////////////////////
-uint16 jamBitmapFontStringHeightWrap(JamBitmapFont *font, const char *string, uint16 w);
 
 #ifdef __cplusplus
 }

@@ -40,14 +40,26 @@ static _JamFontTexture* _jamGetCharacterTex(JamFont* font, uint32 c) {
 }
 
 // Easily draws a character's texture
-static void _jamRenderCharacter(_JamFontTexture* tex, sint32 x, sint32 y, sint32 height, uint8 r, uint8 g, uint8 b) {
-	SDL_Rect dest;
-	dest.x = x;
-	dest.y = y - tex->yOffset + height;
-	dest.w = tex->w;
-	dest.h = tex->h;
-	SDL_SetTextureColorMod(tex->tex, r, g, b);
-	SDL_RenderCopy(jamRendererGetInternalRenderer(), tex->tex, NULL, &dest);
+static void _jamRenderCharacter(JamFont* font, _JamFontTexture* tex, sint32 x, sint32 y, sint32 height, uint8 r, uint8 g, uint8 b) {
+	SDL_Rect dest, src;
+
+	if (!font->bitmap) {
+		dest.x = x;
+		dest.y = y - tex->yOffset + height;
+		dest.w = tex->w;
+		dest.h = tex->h;
+		SDL_SetTextureColorMod(tex->tex, r, g, b);
+		SDL_RenderCopy(jamRendererGetInternalRenderer(), tex->tex, NULL, &dest);
+	} else {
+		dest.x = x;
+		dest.y = y;
+		dest.w = font->width;
+		dest.h = font->height;
+		src.x = tex->xInTex;
+		src.y = tex->yInTex;
+		SDL_SetTextureColorMod(font->fontTex, r, g, b);
+		SDL_RenderCopy(jamRendererGetInternalRenderer(), font->fontTex, &src, &dest);
+	}
 }
 
 // Simply draws a character and returns how far forward to move the cursor
@@ -55,8 +67,8 @@ static sint32 _jamDrawCharacter(JamFont* font, uint32 c, sint32 x, sint32 y, uin
 	if (c != 32) {
 		_JamFontTexture *tex = _jamGetCharacterTex(font, c);
 		if (tex != NULL) {
-			_jamRenderCharacter(tex, x, y, font->height, r, g, b);
-			return tex->advance;
+			_jamRenderCharacter(font, tex, x, y, font->height, r, g, b);
+			return !font->bitmap ? tex->advance : font->width;
 		}
 		return 0;
 	} else {
@@ -78,8 +90,8 @@ static sint32 _jamDrawCharacterComplete(JamFont* font, uint32 c, sint32* x, sint
 						*y += font->height;
 						*x = baseX;
 					}
-					_jamRenderCharacter(tex, *x, *y, font->height, r, g, b);
-					*x += tex->advance;
+					_jamRenderCharacter(font, tex, *x, *y, font->height, r, g, b);
+					*x += !font->bitmap ? tex->advance : font->width;
 				}
 			} else {
 				*x += font->space;
@@ -124,9 +136,10 @@ static _JamFontTexture* _jamFontTextureCreate(void* texture, sint32 yOffset, sin
 	return tex;
 }
 
-static void _jamFontTextureFree(_JamFontTexture* tex) {
+static void _jamFontTextureFree(JamFont* font, _JamFontTexture* tex) {
 	if (tex != NULL) {
-		SDL_DestroyTexture(tex->tex);
+		if (!font->bitmap)
+			SDL_DestroyTexture(tex->tex);
 		free(tex);
 	}
 }
@@ -152,11 +165,11 @@ static _JamFontRangeCache* _createFontRange(uint32 rangeStart, uint32 rangeEnd) 
 	return range;
 }
 
-static void _freeFontRange(_JamFontRangeCache* fontRange) {
+static void _freeFontRange(JamFont* font, _JamFontRangeCache* fontRange) {
 	uint32 i;
 	if (fontRange != NULL) {
 		for (i = 0; i < _rangeEndToPureEnd(fontRange->rangeStart, fontRange->rangeEnd); i++)
-			_jamFontTextureFree(fontRange->characters[i]);
+			_jamFontTextureFree(font, fontRange->characters[i]);
 		free(fontRange->characters);
 		free(fontRange);
 	}
@@ -191,6 +204,7 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII) {
 				FT_Load_Char(newFont->fontFace, 32, 0);
 				newFont->space = (sint32)round((double)((FT_Face)newFont->fontFace)->glyph->linearHoriAdvance / 65536.0f);
 				newFont->height = (sint32)((FT_Face)newFont->fontFace)->size->metrics.height >> 6;
+				newFont->bitmap = false;
 
 				if (preloadASCII) {
 					jamFontPreloadRange(newFont, 33, 126);
@@ -213,6 +227,20 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII) {
 ///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
+JamFont* jamFontCreateFromBitmap(const char* filename, uint32 characterWidth, uint32 characterHeight) {
+	JamFont* newFont = (JamFont*)malloc(sizeof(JamFont));
+
+	if (newFont != NULL) {
+		// TODO: This
+	} else {
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate font");
+	}
+
+	return newFont;
+}
+///////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////
 void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 	uint32 i;
 	FT_Bitmap bitmap;
@@ -225,7 +253,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 	unsigned int *targetPixels;
 	int index, x, y;
 
-	if (font != NULL) {
+	if (font != NULL && font->bitmap == false) {
 		range = _createFontRange(rangeStart, rangeEnd);
 		newRanges = (_JamFontRangeCache**)realloc(font->ranges, sizeof(_JamFontRangeCache*) * (font->rangeCount + 1));
 
@@ -284,7 +312,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 
 			// If there was an error we abandon all progress and return null
 			if (error) {
-				_freeFontRange(range);
+				_freeFontRange(font, range);
 				font->ranges = (_JamFontRangeCache**)realloc(font->ranges, sizeof(_JamFontRangeCache*) * (font->rangeCount - 1));
 				font->rangeCount--;
 			}
@@ -295,7 +323,10 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 				jSetError(ERROR_REALLOC_FAILED, "Failed to resize range list");
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "Font does not exist");
+		if (font == NULL)
+			jSetError(ERROR_NULL_POINTER, "Font does not exist");
+		else
+			jSetError(ERROR_NULL_POINTER, "Font is not a true type font");
 	}
 }
 ///////////////////////////////////////////////////////////
@@ -448,8 +479,8 @@ sint32 jamFontRenderCharacter(JamFont* font, sint32 x, sint32 y, uint32 c, uint8
 			tex = _jamGetCharacterTex(font, c);
 
 			if (tex != NULL) {
-				advance = tex->advance;
-				_jamRenderCharacter(tex, x, y, font->height, r, g, b);
+				advance = !font->bitmap ? tex->advance : font->width;
+				_jamRenderCharacter(font, tex, x, y, font->height, r, g, b);
 			}
 		} else {
 			advance = font->space;
@@ -479,9 +510,12 @@ void jamFontFree(JamFont* font) {
 	int i;
 	if (font != NULL) {
 		for (i = 0; i < font->rangeCount; i++)
-			_freeFontRange(font->ranges[i]);
+			_freeFontRange(font, font->ranges[i]);
 		free(font->ranges);
-		FT_Done_Face(font->fontFace);
+		if (font->bitmap)
+			SDL_DestroyTexture(font->fontTex);
+		else
+			FT_Done_Face(font->fontFace);
 		free(font);
 	}
 }
