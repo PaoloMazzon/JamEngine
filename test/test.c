@@ -234,7 +234,7 @@ bool runGame() {
 
 				// Debug
 				sint32 debugX = (sint32)jamRendererGetCameraX() + 16;
-				sint32 debugY = (sint32)jamRendererGetCameraX() + 16;
+				sint32 debugY = (sint32)jamRendererGetCameraY() + 16;
 				jamDrawRectangleFilled(debugX - 2, debugY + 2, jamFontWidth(font, "FPS: 60") + 4, 16);
 				JamSprite* sprite = jamAssetHandlerGetSprite(gHandler, "EnemySprite");
 				jamFontRender(font, debugX, debugY, "FPS: %f", round(jamRendererGetFramerate()), sprite);
