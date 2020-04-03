@@ -9,6 +9,7 @@
 #include <SDL.h>
 #include <Drawing.h>
 #include <Sprite.h>
+#include <SDL_image.h>
 
 // The freetype library
 static FT_Library gFontLib;
@@ -57,6 +58,8 @@ static void _jamRenderCharacter(JamFont* font, _JamFontTexture* tex, sint32 x, s
 		dest.h = font->height;
 		src.x = tex->xInTex;
 		src.y = tex->yInTex;
+		src.w = font->width;
+		src.h = font->height;
 		SDL_SetTextureColorMod(font->fontTex, r, g, b);
 		SDL_RenderCopy(jamRendererGetInternalRenderer(), font->fontTex, &src, &dest);
 	}
@@ -229,12 +232,55 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII) {
 ///////////////////////////////////////////////////////////
 JamFont* jamFontCreateFromBitmap(const char* filename, uint32 characterWidth, uint32 characterHeight) {
 	JamFont* newFont = (JamFont*)malloc(sizeof(JamFont));
+	_JamFontRangeCache* range = _createFontRange(0, 127);
+	_JamFontRangeCache** ranges = (_JamFontRangeCache**)malloc(sizeof(_JamFontRangeCache*));
+	SDL_Surface* surf = IMG_Load(filename);
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(jamRendererGetInternalRenderer(), surf);
+	int w, h;
+	int i;
+	int xx = 0;
+	int yy = 0;
 
-	if (newFont != NULL) {
-		// TODO: This
+	if (newFont != NULL && range != NULL && ranges != NULL && surf != NULL && tex != NULL) {
+		// Load metrics
+		newFont->fontTex = tex;
+		newFont->width = characterWidth;
+		newFont->height = characterHeight;
+		newFont->bitmap = true;
+		newFont->space = characterWidth;
+		newFont->ranges = ranges;
+		newFont->rangeCount = 1;
+		ranges[0] = range;
+
+		SDL_QueryTexture(tex, NULL, NULL, &w, &h);
+
+		// Create all the textures
+		for (i = 0; i < 128; i++) {
+			range->characters[i] = (_JamFontTexture*)malloc(sizeof(_JamFontTexture));
+			if (range->characters[i] != NULL) {
+				range->characters[i]->xInTex = xx;
+				range->characters[i]->yInTex = yy;
+
+				// Advance to the next character in the texture
+				if (xx + characterWidth >= w) {
+					xx = 0;
+					yy += characterHeight;
+				} else {
+					xx += characterWidth;
+				}
+			} else {
+				jSetError(ERROR_ALLOC_FAILED, "Failed to create character");
+			}
+		}
 	} else {
-		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate font");
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate something [%s]", SDL_GetError());
+		free(newFont);
+		free(range);
+		free(ranges);
+		SDL_DestroyTexture(tex);
 	}
+
+	SDL_FreeSurface(surf);
 
 	return newFont;
 }

@@ -202,19 +202,13 @@ static void _assetLoadWorld(JamAssetHandler *assetHandler, JamINI *ini, const ch
 }
 
 static void _assetLoadBitmapFont(JamAssetHandler *assetHandler, JamINI *ini, const char *headerName) {
-	JamBitmapFont* font = jamBitmapFontCreate(
-			jamINIGetKey(ini, headerName, "latin", ""),
-			jamINIGetKey(ini, headerName, "font", "0")
+	JamFont* font = jamFontCreateFromBitmap(
+			jamINIGetKey(ini, headerName, "font", ""),
+			(uint32)atof(jamINIGetKey(ini, headerName, "character_width", "0")),
+			(uint32)atof(jamINIGetKey(ini, headerName, "character_height", "0"))
 	);
 
-	if (font != NULL) {
-		font->characterHeight = (uint8) atof(jamINIGetKey(ini, headerName, "character_height", "0"));
-		font->characterWidth  = (uint8) atof(jamINIGetKey(ini, headerName, "character_width", "0"));
-		font->uStart          = (uint32)atof(jamINIGetKey(ini, headerName, "uni_range_start", "0"));
-		font->uEnd            = (uint32)atof(jamINIGetKey(ini, headerName, "uni_range_end", "0"));
-	}
-
-	jamAssetHandlerLoadAsset(assetHandler, createAsset(font, at_BFont, headerName + 1), (headerName + 1));
+	jamAssetHandlerLoadAsset(assetHandler, createAsset(font, at_Font, headerName + 1), (headerName + 1));
 }
 
 static void _assetLoadFont(JamAssetHandler *assetHandler, JamINI *ini, const char *headerName) {
@@ -477,27 +471,6 @@ JamFont* jamAssetHandlerGetFont(JamAssetHandler *handler, const char *key) {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-JamBitmapFont* jamAssetHandlerGetBitmapFont(JamAssetHandler *handler, const char *key) {
-	JamAsset* asset = jamGetAssetFromHandler(handler, key);
-	JamBitmapFont* returnVal = NULL;
-
-	if (handler != NULL) {
-		if (asset != NULL && asset->type == at_BFont) {
-			returnVal = asset->bitFont;
-		} else if (asset != NULL) {
-			jSetError(ERROR_ASSET_WRONG_TYPE, "Incorrect asset type for key %s, expected bitmap font", key);
-		} else {
-			jSetError(ERROR_ASSET_NOT_FOUND, "Failed to find world for key %s", key);
-		}
-	} else {
-		jSetError(ERROR_NULL_POINTER, "JamAssetHandler does not exist");
-	}
-
-	return returnVal;
-}
-///////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////
 static void jamFreeAsset(JamAsset* asset) {
 	if (asset != NULL) {
 		// Now dump whatever asset is here
@@ -515,8 +488,6 @@ static void jamFreeAsset(JamAsset* asset) {
 			jamAudioFreeBuffer(asset->buffer);
 		else if (asset->type == at_Font)
 			jamFontFree(asset->font);
-		else if (asset->type == at_BFont)
-			jamBitmapFontFree(asset->bitFont);
 		free(asset->name);
 		free(asset);
 	}

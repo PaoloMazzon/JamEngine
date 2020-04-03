@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-enum JamAssetType {at_Texture, at_Sprite, at_Entity, at_Hitbox, at_AudioBuffer, at_World, at_BFont, at_Font};
+enum JamAssetType {at_Texture, at_Sprite, at_Entity, at_Hitbox, at_AudioBuffer, at_World, at_Font};
 
 /// \brief A struct that can hold any of the assets the asset handler needs
 typedef struct __sJamAsset JamAsset;
@@ -32,7 +32,6 @@ struct __sJamAsset{
 		JamHitbox* hitbox;      ///< The internal hitbox
 		JamAudioBuffer* buffer; ///< The internal audio buffer
 		JamWorld* world;        ///< The internal world
-		JamBitmapFont* bitFont; ///< The internal bitmap font
 		JamFont* font;          ///< The internal font
 	};
 	char* name;     ///< Name of the asset for hashing purposes
@@ -127,11 +126,6 @@ JamWorld* jamAssetHandlerGetWorld(JamAssetHandler *handler, const char *key);
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ASSET_WRONG_TYPE
 JamFont* jamAssetHandlerGetFont(JamAssetHandler *handler, const char *key);
-
-/// \brief Pulls a specific asset safely, making sure the types match up
-/// \throws ERROR_NULL_POINTER
-/// \throws ERROR_ASSET_WRONG_TYPE
-JamBitmapFont* jamAssetHandlerGetBitmapFont(JamAssetHandler *handler, const char *key);
 
 /// \brief Frees an asset handler and all of its components
 void jamAssetHandlerFree(JamAssetHandler *handler);

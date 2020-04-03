@@ -15,23 +15,6 @@
 extern "C" {
 #endif
 
-/////////////////////////////////////////////////////
-/// \brief A font used for drawing text
-///
-/////////////////////////////////////////////////////
-typedef struct {
-	void* latin;           ///< The essential latin characters; expects U+0000 - U+00FF (0 - 255)
-	void* font;            ///< The internal bitmap font
-	uint32 uStart;         ///< Where the font begins in unicode points (Inclusive)
-	uint32 uEnd;           ///< Where the font ends in unicode points (Inclusive)
-	uint8 characterWidth;  ///< The width in pixels of a single character
-	uint8 characterHeight; ///< The height in pixels of a single character
-	uint16 latinWidth;     ///< The width in pixels of the latin page
-	uint16 latinHeight;    ///< The height in pixels of the latin page
-	uint16 fontWidth;      ///< The width in pixels of the font page
-	uint16 fontHeight;     ///< The height in pixels of the font page
-} JamBitmapFont;
-
 /// \brief A specialized character texture that handles both bitmap and true type textures
 typedef struct {
 	union {
