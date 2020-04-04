@@ -507,6 +507,16 @@ void jamInputUpdate(double screenMultiplier) {
 			gInputPointer->gamepadControls[i][JAM_AXIS_RIGHTY]          = SDL_GameControllerGetAxis(gInputPointer->controllers[i], SDL_CONTROLLER_AXIS_RIGHTY);
 			gInputPointer->gamepadControls[i][JAM_AXIS_TRIGGERLEFT]     = SDL_GameControllerGetAxis(gInputPointer->controllers[i], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
 			gInputPointer->gamepadControls[i][JAM_AXIS_TRIGGERRIGHT]    = SDL_GameControllerGetAxis(gInputPointer->controllers[i], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+
+			// Deadzone
+			if (abs(gInputPointer->gamepadControls[i][JAM_AXIS_LEFTX]) < gInputPointer->deadzone)
+				gInputPointer->gamepadControls[i][JAM_AXIS_LEFTX] = 0;
+			if (abs(gInputPointer->gamepadControls[i][JAM_AXIS_LEFTY]) < gInputPointer->deadzone)
+				gInputPointer->gamepadControls[i][JAM_AXIS_LEFTY] = 0;
+			if (abs(gInputPointer->gamepadControls[i][JAM_AXIS_RIGHTX]) < gInputPointer->deadzone)
+				gInputPointer->gamepadControls[i][JAM_AXIS_RIGHTX] = 0;
+			if (abs(gInputPointer->gamepadControls[i][JAM_AXIS_RIGHTY]) < gInputPointer->deadzone)
+				gInputPointer->gamepadControls[i][JAM_AXIS_RIGHTY] = 0;
 		}
 	}
 }
