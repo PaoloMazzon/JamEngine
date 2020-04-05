@@ -381,11 +381,11 @@ JamEntity* jamWorldFindEntity(JamWorld *world, int id) {
 
 ///////////////////////////////////////////////////////
 void jamWorldProcFrame(JamWorld *world) {
-	int i, j, k;
+	int i, j, k, l;
 	int cellStartX, cellStartY;
 	int cellEndX, cellEndY;
 	JamEntityList* currentList;
-	JamEntity* ent;
+	JamEntity* ent, *tempEnt;
 
 	if (world != NULL) {
 		// If we're using the in-range cache we must lock the cache
@@ -394,8 +394,17 @@ void jamWorldProcFrame(JamWorld *world) {
 			pthread_mutex_lock(&world->entityCacheMutex);
 
 			// Process frames
-			for (i = 0; i < world->inRangeCache->size; i++)
-				_updateEntity(world, world->inRangeCache->entities[i]);
+			for (i = 0; i < world->inRangeCache->size; i++) {
+				if (world->inRangeCache->entities[i] != NULL && !world->inRangeCache->entities[i]->destroy)
+					_updateEntity(world, world->inRangeCache->entities[i]);
+				else if (world->inRangeCache->entities[i] != NULL) { // Delet entity
+					for (j = 0; j < world->inRangeCache->entities[i]->cells; j++)
+						world->entityGrid[world->inRangeCache->entities[i]->cellsIn[j]]->entities[world->inRangeCache->entities[i]->cellsLoc[j]] = NULL;
+					world->worldEntities->entities[world->inRangeCache->entities[i]->id] = NULL;
+					jamEntityFree(world->inRangeCache->entities[i], false, false, false);
+					world->inRangeCache->entities[i] = NULL;
+				}
+			}
 
 			// Process drawing functions
 			for (i = 0; i < world->inRangeCache->size; i++)
@@ -415,9 +424,15 @@ void jamWorldProcFrame(JamWorld *world) {
 				for (j = cellStartX; j <= cellEndX; j++) {
 					currentList = _getListAtPos(world, j, i);
 					for (k = 0; k < currentList->size; k++) {
-						if (currentList->entities[k] != NULL) {
+						if (currentList->entities[k] != NULL && !currentList->entities[k]->destroy) {
 							currentList->entities[k]->proc = false;
 							currentList->entities[k]->draw = false;
+						} else if (currentList->entities[k] != NULL) { // Delet entity
+							tempEnt = currentList->entities[k];
+							for (l = 0; l < tempEnt->cells; l++)
+								world->entityGrid[tempEnt->cellsIn[l]]->entities[tempEnt->cellsLoc[l]] = NULL;
+							world->worldEntities->entities[tempEnt->id] = NULL;
+							jamEntityFree(tempEnt, false, false, false);
 						}
 					}
 				}
@@ -439,19 +454,6 @@ void jamWorldProcFrame(JamWorld *world) {
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamWorld does not exist (jamWorldProcFrame)");
-	}
-}
-///////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////
-void jamWorldRemoveEntity(JamWorld *world, int id) {
-	int i;
-	JamEntity* ent;
-
-	if (world != NULL) {
-		// TODO: This
-	} else {
-		jSetError(ERROR_NULL_POINTER, "World does not exist");
 	}
 }
 ///////////////////////////////////////////////////////

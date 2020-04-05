@@ -57,6 +57,7 @@ typedef struct _JamEntity {
 	int cellsIn[4];        ///< The specific cells this entity is in
 	int cellsLoc[4];       ///< Where in the entity list this entity is
 	volatile bool inCache; ///< Weather or not this specific entity is in entity cache
+	bool destroy;          ///< Weather or not this entity will be destroyed the next time its processed
 
 	// Utilities not utilized by the engine
 	double hSpeed;   ///< Horizontal speed

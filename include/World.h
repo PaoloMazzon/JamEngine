@@ -100,10 +100,6 @@ void jamWorldProcFrame(JamWorld *world);
 /// \throws ERROR_NULL_POINTER
 void jamWorldRotateEntity(JamWorld *world, int id);
 
-/// \brief Removes an entity from the world
-/// \throws ERROR_NULL_POINTER
-void jamWorldRemoveEntity(JamWorld *world, int id);
-
 /// \brief Caches in-range entities if that is enabled
 ///
 /// To be a bit more technical, this function starts the caching
