@@ -89,8 +89,8 @@ static sint32 _jamDrawCharacterComplete(JamFont* font, uint32 c, sint32* x, sint
 			if (c != 32) {
 				tex = _jamGetCharacterTex(font, c);
 				if (tex != NULL) {
-					if (tex->w + *x > baseX + w) {
-						*y += font->height;
+					if ((font->bitmap ? font->width : tex->w) + *x > baseX + w) {
+						*y += (!font->bitmap ? font->height : font->height + 1);
 						*x = baseX;
 					}
 					_jamRenderCharacter(font, tex, *x, *y, font->height, r, g, b);
@@ -103,7 +103,7 @@ static sint32 _jamDrawCharacterComplete(JamFont* font, uint32 c, sint32* x, sint
 			*x += _jamDrawCharacter(font, c, *x, *y, r, g, b);
 		}
 	} else {
-		*y += font->height;
+		*y += (!font->bitmap ? font->height : font->height + 1);
 		*x = baseX;
 	}
 }
@@ -441,7 +441,7 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 					if (spr != NULL) {
 						if (w != 0 && xx + spr->width > x + w) {
 							xx = x;
-							y += font->height;
+							y += (!font->bitmap ? font->height : font->height + 1);
 						}
 						jamDrawSpriteFrame(spr, xx + (sint32)jamRendererGetCameraX(), y + (sint32)jamRendererGetCameraY(), 1, 1, 0, 255, 0);
 						xx += spr->width;
