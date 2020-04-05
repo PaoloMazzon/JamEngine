@@ -41,9 +41,7 @@ typedef struct {
 	// Animation things
 	JamFrame** frames;      ///< The list of frames in the sprite's animation
 	uint32 animationLength; ///< The length (in frames) of the animation
-	uint16 frameDelay;      ///< How many frames in between each animation frame
-	uint32 currentFrame;    ///< The current frame of the animation
-	uint16 frameTime;       ///< Amount of frames left till the next frame
+	uint32 frameDelay;      ///< How many frames in between each animation frame
 	bool looping;           ///< Weather or not to loop the animation
 
 	// Convenience
@@ -88,19 +86,6 @@ void jamSpriteAppendFrame(JamSprite *sprite, JamFrame *frame);
 JamSprite* jamSpriteLoadFromSheet(JamTexture *spriteSheet, uint32 cellCount, uint32 xInSheet, uint32 yInSheet,
 								  uint32 cellW, uint32 cellH, uint32 paddingW, uint32 paddingH, uint32 xAlign,
 								  uint16 frameDelay, bool looping);
-
-/// \brief Updates a sprite's animation
-///
-/// Don't run this if updateOnDraw is on, also don't
-/// run this multiple times a frame
-///
-/// \throws ERROR_NULL_POINTER
-void jamSpriteUpdate(JamSprite *sprite);
-
-/// \brief Draws a sprite on screen
-/// \throws ERROR_NULL_POINTER
-void jamDrawSprite(JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot,
-				   uint8 alpha, bool updateOnDraw);
 
 /// \brief Draws a specific frame of a sprite without screwing with the animation
 /// \throws ERROR_OUT_OF_BOUNDS

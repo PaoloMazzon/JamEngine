@@ -33,6 +33,25 @@ static inline int _roundDoubleToInt(double x) {
 	return (int)round(x);
 }
 
+// Processes an entity's animation
+void _updateEntSprite(JamEntity* ent) {
+	if (ent->updateOnDraw) {
+		ent->frameTimer += jamRendererGetDelta();
+		if (ent->frameTimer >= ent->sprite->frameDelay) {
+			ent->frameTimer = 0;
+			ent->currentFrame++;
+			if (ent->currentFrame >= ent->sprite->animationLength) {
+				if (!ent->sprite->looping) {
+					ent->updateOnDraw = false;
+					ent->currentFrame = ent->sprite->animationLength - 1;
+				} else {
+					ent->currentFrame = 0;
+				}
+			}
+		}
+	}
+}
+
 //////////////////////////////////////////////////////////
 JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, double y, double hitboxOffsetX,
 						   double hitboxOffsetY, JamBehaviour *behaviour) {
@@ -65,6 +84,8 @@ JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 		ent->cells = 0;
 		ent->destroy = false;
 		ent->inCache = false;
+		ent->frameTimer = 0;
+		ent->currentFrame = 0;
 	} else {
 		jSetError(ERROR_ALLOC_FAILED, "Failed to create JamEntity struct");
 	}
@@ -105,7 +126,8 @@ JamEntity* jamEntityCopy(JamEntity *baseEntity, double x, double y) {
 void jamDrawEntity(JamEntity *entity) {
 	if (entity != NULL) {
 		if (entity->sprite != NULL)
-			jamDrawSprite(
+			_updateEntSprite(entity);
+			jamDrawSpriteFrame(
 					entity->sprite,
 					_roundDoubleToInt(entity->x),
 					_roundDoubleToInt(entity->y),
@@ -113,7 +135,7 @@ void jamDrawEntity(JamEntity *entity) {
 					entity->scaleY,
 					entity->rot,
 					entity->alpha,
-					entity->updateOnDraw
+					entity->currentFrame
 			);
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamEntity does not exist");
@@ -288,6 +310,20 @@ void jamEntitySnapY(JamEntity *entity, JamTileMap *tilemap, int direction) {
 			jSetError(ERROR_NULL_POINTER, "TileMap doesn't exist");
 		if (entity->sprite == NULL)
 			jSetError(ERROR_NULL_POINTER, "Entity's sprite doesn't exist");
+	}
+}
+//////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////
+void jamEntitySetSprite(JamEntity* ent, JamSprite* spr) {
+	if (ent != NULL && ent->sprite != spr) {
+		ent->sprite = spr;
+		ent->frameTimer = 0;
+		ent->currentFrame = 0;
+		ent->updateOnDraw = true;
+	} else {
+		if (ent == NULL)
+			jSetError(ERROR_NULL_POINTER, "Entity doesn't exist");
 	}
 }
 //////////////////////////////////////////////////////////

@@ -443,7 +443,7 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 							xx = x;
 							y += font->height;
 						}
-						jamDrawSprite(spr, xx + (sint32)jamRendererGetCameraX(), y + (sint32)jamRendererGetCameraY(), 1, 1, 0, 255, true);
+						jamDrawSpriteFrame(spr, xx + (sint32)jamRendererGetCameraX(), y + (sint32)jamRendererGetCameraY(), 1, 1, 0, 255, 0);
 						xx += spr->width;
 					}
 				}

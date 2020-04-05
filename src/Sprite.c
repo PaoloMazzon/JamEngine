@@ -24,8 +24,6 @@ JamSprite* jamSpriteCreate(uint32 animationLength, uint16 frameDelay, bool loopi
 		sprite->frames = list;
 		sprite->animationLength = animationLength;
 		sprite->frameDelay = frameDelay;
-		sprite->currentFrame = 0;
-		sprite->frameTime = 0;
 		sprite->looping = looping;
 		sprite->originX = 0;
 		sprite->originY = 0;
@@ -146,69 +144,6 @@ JamSprite* jamSpriteLoadFromSheet(JamTexture *spriteSheet, uint32 cellCount, uin
 	}
 
 	return sprite;
-}
-///////////////////////////////////////////////////
-
-///////////////////////////////////////////////////
-void jamSpriteUpdate(JamSprite *sprite) {
-	if (sprite != NULL) {
-		// No need to do anything if only 1 frame
-		if (sprite->animationLength > 1) {
-			// Is it time to change frame?
-			if (sprite->frameTime == sprite->frameDelay) {
-				// Are we at the final frame?
-				if (sprite->currentFrame == sprite->animationLength - 1) {
-					// Does the animation loop?
-					if (sprite->looping) {
-						// Go back to the start of the animation
-						sprite->currentFrame = 0;
-						sprite->frameTime = 0;
-					} else {
-						// Break the loop
-						sprite->frameTime++;
-					}
-				} else {
-					// Move up a frame
-					sprite->currentFrame++;
-					sprite->frameTime = 0;
-				}
-			} else {
-				// Just wait a little longer
-				sprite->frameTime++;
-			}
-		}
-	} else {
-		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamSpriteUpdate)");
-	}
-}
-///////////////////////////////////////////////////
-
-///////////////////////////////////////////////////
-void jamDrawSprite(JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY, double rot,
-				   uint8 alpha, bool updateOnDraw) {
-	if (sprite != NULL) {
-		// Update the sprite if that is to be done before drawing
-		if (updateOnDraw)
-			jamSpriteUpdate(sprite);
-
-		// Draw it to the screen with all the crazy parameters
-		jamDrawTexturePartExt(sprite->frames[sprite->currentFrame]->tex,
-							  x,
-							  y,
-							  sprite->originX,
-							  sprite->originY,
-							  scaleX,
-							  scaleY,
-							  rot,
-							  alpha,
-							  sprite->frames[sprite->currentFrame]->x,
-							  sprite->frames[sprite->currentFrame]->y,
-							  sprite->frames[sprite->currentFrame]->w,
-							  sprite->frames[sprite->currentFrame]->h
-		);
-	} else {
-		jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamDrawSprite)");
-	}
 }
 ///////////////////////////////////////////////////
 

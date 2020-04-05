@@ -122,7 +122,7 @@ static void _assetLoadSprite(JamAssetHandler *assetHandler, JamINI *ini, const c
 			(uint32) atof(jamINIGetKey(ini, headerName, "padding_height",   "0")),
 			(uint32) atof(jamINIGetKey(ini, headerName, "x_align",          "0")),
 			(uint16) atof(jamINIGetKey(ini, headerName, "frame_delay",      "0")),
-			(bool)   atof(jamINIGetKey(ini, headerName, "looping",          "0")));
+			(bool)   atof(jamINIGetKey(ini, headerName, "looping",          "1")));
 	if (spr != NULL) {
 		spr->originX = (sint32) atof(jamINIGetKey(ini, headerName, "x_origin", "0"));
 		spr->originY = (sint32) atof(jamINIGetKey(ini, headerName, "y_origin", "0"));
