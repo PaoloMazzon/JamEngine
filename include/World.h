@@ -57,7 +57,19 @@ typedef struct _JamWorld {
 JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellHeight, bool cache);
 
 /// \brief Finds any collisions between ent and other entities in the world
-/// \return Returns the first entity found to be colliding with ent or NULL
+///
+/// This function is meant to be looped until NULL is returned, if you don't
+/// do this it is not guaranteed to work after the first time. For example,
+/// you might use this to damage all the enemies currently touching a sword
+/// by
+///
+/// 	JamEntity* ent = jamWorldEntityCollision(world, entity, x, y);
+/// 	while (ent != NULL) {
+/// 		ent->hp -= 10;
+/// 		ent = jamWorldEntityCollision(world, entity, x, y);
+///		}
+///
+///
 /// \throws ERROR_NULL_POINTER
 JamEntity* jamWorldEntityCollision(JamWorld* world, JamEntity* ent, double x, double y);
 

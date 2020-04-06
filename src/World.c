@@ -292,6 +292,16 @@ JamWorld* jamWorldCreate(int gridWidth, int gridHeight, int cellWidth, int cellH
  * 3. As soon as a collision is found, we can stop searching and just return that one
  */
 JamEntity* jamWorldEntityCollision(JamWorld* world, JamEntity* ent, double x, double y) {
+	static JamEntity* rememberedEnt = NULL;
+	static int listPos = 0;
+	static int corner = 0;
+
+	if (rememberedEnt != ent) {
+		rememberedEnt = ent;
+		listPos = 0;
+		corner = 0;
+	}
+
 	JamEntity* returnEnt = NULL;
 	int cells[4];
 	int i, j;
@@ -302,12 +312,15 @@ JamEntity* jamWorldEntityCollision(JamWorld* world, JamEntity* ent, double x, do
 		cells[2] = _gridPosFromCoords(world, jamEntityVisibleX1(ent, x), jamEntityVisibleY2(ent, y));
 		cells[3] = _gridPosFromCoords(world, jamEntityVisibleX2(ent, x), jamEntityVisibleY2(ent, y));
 
-		for (i = 0; i < 4 && returnEnt == NULL; i++) {
-			for (j = 0; j < world->entityGrid[cells[i]]->size && returnEnt == NULL; j++) {
+		for (i = corner; i < 4 && returnEnt == NULL; i++) {
+			for (j = listPos; j < world->entityGrid[cells[i]]->size && returnEnt == NULL; j++) {
 				if (world->entityGrid[cells[i]]->entities[j] != NULL &&
-						world->entityGrid[cells[i]]->entities[j] != ent &&
-						jamEntityCheckCollision(x, y, ent, world->entityGrid[cells[i]]->entities[j]))
+					world->entityGrid[cells[i]]->entities[j] != ent &&
+					jamEntityCheckCollision(x, y, ent, world->entityGrid[cells[i]]->entities[j])) {
 					returnEnt = world->entityGrid[cells[i]]->entities[j];
+					listPos = j + 1;
+					corner = i;
+				}
 			}
 		}
 	} else {
@@ -315,6 +328,10 @@ JamEntity* jamWorldEntityCollision(JamWorld* world, JamEntity* ent, double x, do
 			jSetError(ERROR_NULL_POINTER, "World does not exist");
 		if (ent == NULL)
 			jSetError(ERROR_NULL_POINTER, "Entity does not exist");
+	}
+
+	if (returnEnt == NULL) {
+		rememberedEnt = NULL;
 	}
 
 	return returnEnt;
