@@ -229,7 +229,6 @@ bool runGame() {
 				jamDrawRectangleFilled(debugX - 2, debugY + 2, jamFontWidth(font, "FPS: 60") + 4, 16);
 				JamSprite* sprite = jamAssetHandlerGetSprite(gHandler, "EnemySprite");
 				jamFontRender(font, debugX, debugY, "FPS: %f", round(jamRendererGetFramerate()), sprite);
-				jamFontRenderExt(font, jamRendererGetCameraX(), jamRendererGetCameraY(), "this is a really long string that goes on for a while did i mention how long this string is like holy hell it needs to chill out wow its still going", GAME_WIDTH);
 				/////////////////////////////////////////////////////////////////////
 
 				jamRendererProcEndFrame();

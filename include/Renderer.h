@@ -183,7 +183,7 @@ void jamRendererCalculateForCamera(int *x, int *y);
 
 /// \brief Sets the render target, or null for the screen
 /// \throws ERROR_NULL_POINTER
-void jamRenderSetTarget(JamTexture *texture);
+void jamRendererSetTarget(JamTexture *texture);
 
 /// \brief Updates the screen buffer. Returns false if this fails.
 /// \throws ERROR_NULL_POINTER

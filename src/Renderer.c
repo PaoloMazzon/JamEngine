@@ -396,7 +396,7 @@ bool jamRendererProcEvents() {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-void jamRenderSetTarget(JamTexture *texture) {
+void jamRendererSetTarget(JamTexture *texture) {
 	// The preliminary check
 	if (gRenderer != NULL) {
 		if (texture == NULL) {
@@ -407,7 +407,7 @@ void jamRenderSetTarget(JamTexture *texture) {
 			SDL_SetRenderTarget(gRenderer->internalRenderer, texture->tex);
 		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRenderSetTarget)");
+		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererSetTarget)");
 	}
 }
 /////////////////////////////////////////////////////////////
