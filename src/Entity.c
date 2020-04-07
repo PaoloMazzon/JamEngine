@@ -125,7 +125,7 @@ JamEntity* jamEntityCopy(JamEntity *baseEntity, double x, double y) {
 //////////////////////////////////////////////////////////
 void jamDrawEntity(JamEntity *entity) {
 	if (entity != NULL) {
-		if (entity->sprite != NULL)
+		if (entity->sprite != NULL) {
 			_updateEntSprite(entity);
 			jamDrawSpriteFrame(
 					entity->sprite,
@@ -137,6 +137,7 @@ void jamDrawEntity(JamEntity *entity) {
 					entity->alpha,
 					entity->currentFrame
 			);
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamEntity does not exist");
 	}
@@ -331,11 +332,10 @@ void jamEntitySetSprite(JamEntity* ent, JamSprite* spr) {
 //////////////////////////////////////////////////////////
 double jamEntityVisibleX1(JamEntity* entity, double x) {
 	if (entity != NULL) {
-		if (entity->sprite != NULL) {
+		if (entity->sprite != NULL)
 			return x - entity->sprite->originX;
-		} else {
-			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
-		}
+		else
+			return x;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Entity does not exist");
 	}
@@ -347,11 +347,10 @@ double jamEntityVisibleX1(JamEntity* entity, double x) {
 //////////////////////////////////////////////////////////
 double jamEntityVisibleY1(JamEntity* entity, double y) {
 	if (entity != NULL) {
-		if (entity->sprite != NULL) {
+		if (entity->sprite != NULL)
 			return y - entity->sprite->originY;
-		} else {
-			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
-		}
+		else
+			return y;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Entity does not exist");
 	}
@@ -363,11 +362,10 @@ double jamEntityVisibleY1(JamEntity* entity, double y) {
 //////////////////////////////////////////////////////////
 double jamEntityVisibleX2(JamEntity* entity, double x) {
 	if (entity != NULL) {
-		if (entity->sprite != NULL) {
+		if (entity->sprite != NULL)
 			return x - entity->sprite->originX + entity->sprite->width;
-		} else {
-			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
-		}
+		else
+			return x;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Entity does not exist");
 	}
@@ -379,11 +377,10 @@ double jamEntityVisibleX2(JamEntity* entity, double x) {
 //////////////////////////////////////////////////////////
 double jamEntityVisibleY2(JamEntity* entity, double y) {
 	if (entity != NULL) {
-		if (entity->sprite != NULL) {
+		if (entity->sprite != NULL)
 			return y - entity->sprite->originY + entity->sprite->height;
-		} else {
-			jSetError(ERROR_WARNING, "Warning: Attempting to calculate visible box of entity without a sprite");
-		}
+		else
+			return y;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Entity does not exist");
 	}

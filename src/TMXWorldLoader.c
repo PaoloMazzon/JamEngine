@@ -9,6 +9,7 @@
 #include "tmx.h"
 
 JamAsset* createAsset(void*, enum JamAssetType);
+JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
 
 ///////////////////////////////////////////////////////////////////////////////
 // This function is meant for jamTMXLoadWorld and is not safe to call
@@ -16,11 +17,20 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 	JamEntity* tempEntity;
 	tmx_object* currentObject = layer->content.objgr->head;
 	bool failedToLoad = false;
+	JamAsset* asset;
 
 	// Loop the linked list
 	while (currentObject != NULL) {
-		tempEntity = jamEntityCopy(jamAssetHandlerGetEntity(handler, currentObject->type), currentObject->x,
-								   currentObject->y);
+		// Locate the entity in the handler or use the type
+		asset = jamGetAssetFromHandler(handler, currentObject->type);
+
+		if (asset != NULL && asset->type == at_Entity) {
+			tempEntity = jamEntityCopy(asset->entity, currentObject->x,
+									   currentObject->y);
+		} else {
+			tempEntity = jamEntityCreate(NULL, NULL, currentObject->x, currentObject->y, 0, 0, NULL);
+			tempEntity->type = (uint32)atof(currentObject->type);
+		}
 
 		if (tempEntity != NULL) {
 			jamWorldAddEntity(world, tempEntity);

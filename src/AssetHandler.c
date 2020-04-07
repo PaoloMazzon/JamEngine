@@ -19,7 +19,7 @@
 #include <Font.h>
 #include "TMXWorldLoader.h"
 
-static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
+JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
 
 ///////////////////////////////////////////////////////////////
 void jamAssetHandlerLoadAsset(JamAssetHandler *handler, JamAsset *asset, const char *id) {
@@ -291,7 +291,7 @@ void jamAssetHandlerLoadINI(JamAssetHandler *assetHandler, const char *filename,
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
-static JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) {
+JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key) {
 	JamAsset* asset = NULL;
 	bool found = true;
 
