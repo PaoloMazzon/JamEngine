@@ -473,9 +473,21 @@ void jamRendererConvertCoords(int *x, int *y) {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
+double jamRendererSetDeltaCap(double cap) {
+	if (gRenderer != NULL) {
+		return gRenderer->deltaCap = cap;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized");
+	}
+
+	return 1;
+}
+/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
 double jamRendererGetDelta() {
 	if (gRenderer != NULL) {
-		return gRenderer->delta;
+		return gRenderer->delta <= gRenderer->deltaCap ? gRenderer->delta : gRenderer->deltaCap;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized");
 	}

@@ -54,8 +54,8 @@ typedef struct {
 	double tempCamX; ///< X coord of camera to be pushed to the actual coord at end of frame
     double tempCamY; ///< Y coord of camera to be pushed to the actual coord at end of frame
 
-	
-	double delta; ///< The delta multiplier (actual_frame_time/expected_frame_time used to make up for fluctuating framerates)
+	double deltaCap; ///< Maximum returnable delta
+	double delta;    ///< The delta multiplier (actual_frame_time/expected_frame_time used to make up for fluctuating framerates)
 } JamRenderer;
 
 /// \brief Initializes a Renderer
@@ -105,6 +105,9 @@ void jamRendererMoveCamera(double x_relative, double y_relative);
 /// \brief Gets the current framerate the renderer is trying to run at
 /// \throws ERROR_NULL_POINTER
 double jamRendererGetFramerate();
+
+/// \brief Sets the maximum value jamRendererGetDelta() will return (even if the actual value is larger)
+double jamRendererSetDeltaCap(double cap);
 
 /// \brief Grabs the delta multiplier for this frame
 ///
