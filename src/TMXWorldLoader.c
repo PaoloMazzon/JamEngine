@@ -44,6 +44,11 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 			// This is to account for the difference in sprite origins between JamEngine and Tiled
 			tempEntity->y -= currentObject->height;
 
+			if (tempEntity->sprite != NULL) {
+				tempEntity->x += tempEntity->sprite->originX;
+				tempEntity->y += tempEntity->sprite->originY;
+			}
+
 			// Load properties of the et_Object into the new entity
 			if (currentObject->visible)
 				tempEntity->alpha = 255;
