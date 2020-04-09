@@ -79,6 +79,7 @@ void jamWorldHandlerQuit() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void jamWorldHandlerSwitch(const char* name) {
 	int i;
+	bool found = false;
 	if (gHandler != NULL) {
 		if (name == WORLD_QUIT) {
 			gSwitch = true;
@@ -88,8 +89,12 @@ void jamWorldHandlerSwitch(const char* name) {
 				if (strcmp(name, gHandler->worlds[i]->name) == 0) {
 					gSwitch = true;
 					gCurrentWorld = i;
+					found = true;
 				}
 			}
+
+			if (!found)
+				jSetError(ERROR_WORLD_NOT_FOUND, "World [%s] doesn't exist", name);
 		}
 
 	} else {
@@ -153,7 +158,7 @@ void jamWorldHandlerRun(JamAssetHandler* assetHandler) {
 		if (gHandler->worlds[gCurrentWorld]->onCreate != NULL)
 			(gHandler->worlds[gCurrentWorld]->onCreate)(world, assetHandler);
 
-		while (gCurrentWorld != -1 && jamRendererProcEvents()) {
+		while (gCurrentWorld != -1 && jamRendererProcEvents() && !jGetError()) {
 			// Process the frame
 			if (gHandler->worlds[gCurrentWorld]->onFrame != NULL)
 				(gHandler->worlds[gCurrentWorld]->onFrame)(world, assetHandler);

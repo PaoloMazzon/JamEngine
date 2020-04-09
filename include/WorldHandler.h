@@ -45,6 +45,7 @@ void jamWorldHandlerAdd(const char* filename, const char* name, void (*onCreate)
 /// time each frame it will do nothing (unless it is told to quit).
 ///
 /// \throws ERROR_NULL_POINTER
+/// \throws ERROR_WORLD_NOT_FOUND
 void jamWorldHandlerSwitch(const char* name);
 
 /// \brief Switches to the next world in the handler (since worlds are added sequentially)
