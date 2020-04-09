@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-#define WORLD_HANDLER_ARGS JamWorld* self
+#define WORLD_HANDLER_ARGS JamWorld* self, JamAssetHandler* assetHandler
 #define WORLD_QUIT NULL
 
 /// \brief Starts the world handler subsystem (the renderer does this)
@@ -31,7 +31,7 @@ void jamWorldHandlerQuit();
 /// \param filename Filename of the .tmx file to load for this world or NULL if you wish only to have the functions (for a menu or something)
 /// \param name Name of the world or NULL to use the filename (without the path or extension, ie "assets/level1.tmx" would be "level1")
 /// \param onCreate After the tmx is loaded and the world is about to be ran, onCreate is called
-/// \param onFrame Called every frame to update the world, jamWorldProcFrame should be called in this function
+/// \param onFrame Called every frame to update the world, jamWorldProcFrame should be called in it (use NULL to make the handler call jamWorldProcFrame for this world)
 /// \param onCleanup Right before the world is freed
 /// \throws ERROR_ALLOC_FAILED
 /// \throws ERROR_REALLOC_FAILED

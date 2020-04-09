@@ -44,9 +44,9 @@ void _jamWorldEntryFree(_JamWorldEntry* entry) {
 	}
 }
 
-static _JamWorldHandler* gHandler;
-static int gCurrentWorld;
-static bool gSwitch;
+static _JamWorldHandler* gHandler = NULL;
+static int gCurrentWorld = 0;
+static bool gSwitch = 0;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void jamWorldHandlerInit() {
@@ -113,24 +113,68 @@ void jamWorldHandlerRestart() {
 	} else {
 		jSetError(ERROR_NULL_POINTER, "World handler not initialized");
 	}
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-	void jamWorldHandlerAdd(const char* filename, const char* name, void (*onCreate)(WORLD_HANDLER_ARGS), void (*onFrame)(WORLD_HANDLER_ARGS), void (*onCleanup)(WORLD_HANDLER_ARGS)) {
-		if (gHandler != NULL) {
-			// TODO: This
+void jamWorldHandlerAdd(const char* filename, const char* name, void (*onCreate)(WORLD_HANDLER_ARGS), void (*onFrame)(WORLD_HANDLER_ARGS), void (*onCleanup)(WORLD_HANDLER_ARGS)) {
+	_JamWorldEntry** newList;
+	_JamWorldEntry* newEntry;
+	if (gHandler != NULL) {
+		newList = realloc(gHandler->worlds, (gHandler->size + 1) * sizeof(_JamWorldEntry*));
+		newEntry = _jamWorldEntryCreate(filename, name, onCreate, onFrame, onCleanup);
+
+		if (newList != NULL && newEntry != NULL) {
+			newList[gHandler->size] = newEntry;
+			gHandler->size++;
+			gHandler->worlds = newList;
 		} else {
-			jSetError(ERROR_NULL_POINTER, "World handler not initialized");
+			if (newList == NULL)
+				jSetError(ERROR_REALLOC_FAILED, "Failed to reallocate list");
+			_jamWorldEntryFree(newEntry);
 		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "World handler not initialized");
 	}
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void jamWorldHandlerRun(JamAssetHandler* assetHandler) {
-	if (gHandler != NULL) {
-		// TODO: This
+	if (gHandler != NULL && gHandler->size > 0) {
+		// Load the world and call the on create function
+		JamWorld* world = gHandler->worlds[gCurrentWorld]->filename != NULL ?
+				jamTMXLoadWorld(assetHandler, gHandler->worlds[gCurrentWorld]->filename) : NULL;
+		if (gHandler->worlds[gCurrentWorld]->onCreate != NULL)
+			(gHandler->worlds[gCurrentWorld]->onCreate)(world, assetHandler);
+
+		while (gCurrentWorld != -1) {
+			// Process the frame
+			if (gHandler->worlds[gCurrentWorld]->onFrame != NULL)
+				(gHandler->worlds[gCurrentWorld]->onFrame)(world, assetHandler);
+			else
+				jamWorldProcFrame(world);
+
+			// Possibly swap worlds
+			if (gSwitch && gCurrentWorld != -1) {
+				// Call cleanup function, destroy the world, create the new one, and call its creation function
+				if (gHandler->worlds[gCurrentWorld]->onCleanup != NULL)
+					(gHandler->worlds[gCurrentWorld]->onCleanup)(world, assetHandler);
+
+				jamWorldFree(world);
+				world = gHandler->worlds[gCurrentWorld]->filename != NULL ?
+								  jamTMXLoadWorld(assetHandler, gHandler->worlds[gCurrentWorld]->filename) : NULL;
+				if (gHandler->worlds[gCurrentWorld]->onCreate != NULL)
+					(gHandler->worlds[gCurrentWorld]->onCreate)(world, assetHandler);
+
+				gSwitch = false;
+			}
+		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "World handler not initialized");
+		if (gHandler == NULL)
+			jSetError(ERROR_NULL_POINTER, "World handler not initialized");
+		else
+			jSetError(ERROR_WARNING, "Warning: There are no worlds in the handler");
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
