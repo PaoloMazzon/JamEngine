@@ -50,7 +50,7 @@ static void jamTMXDataSetProperty(tmx_property* property, void* ptr) {
 			// Copy data into the JamTMXData
 			data->names = newNames;
 			data->values = newProps;
-			data->names[data->size] = strcpy(malloc(strlen(property->name)), property->name);
+			data->names[data->size] = strcpy(malloc(strlen(property->name) + 1), property->name);
 			data->values[data->size] = prop;
 			data->size++;
 
