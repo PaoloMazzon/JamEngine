@@ -13,6 +13,7 @@
 #include <Audio.h>
 #include <SDL_image.h>
 #include "Font.h"
+#include "WorldHandler.h"
 
 static JamRenderer* gRenderer;
 
@@ -23,6 +24,7 @@ void jamRendererInit(int *argc, char **argv, const char *name, uint32 w, uint32 
 	JamTexture* tex;
 	gRenderer = (JamRenderer*)malloc(sizeof(JamRenderer));
 	jamAudioInit(argc, argv);
+	jamWorldHandlerInit();
 
 	// Check if we were given a dud
 	if (gRenderer != NULL && jamAudioIsInitialized()) {
@@ -361,6 +363,7 @@ void jamRendererQuit() {
 		jamInputQuit();
 		jamAudioQuit();
 		jamFontQuit();
+		jamWorldHandlerQuit();
 		SDL_DestroyRenderer(gRenderer->internalRenderer);
 		SDL_DestroyWindow(gRenderer->gameWindow);
 		SDL_Quit();

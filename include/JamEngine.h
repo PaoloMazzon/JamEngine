@@ -17,6 +17,7 @@
 #include <AssetHandler.h>
 #include <JamError.h>
 #include <Vector.h>
+#include <WorldHandler.h>
 #include <World.h>
 #include <TileMap.h>
 #include <World.h>

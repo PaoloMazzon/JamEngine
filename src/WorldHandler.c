@@ -2,6 +2,7 @@
 #include <malloc.h>
 #include <JamError.h>
 #include <memory.h>
+#include <File.h>
 
 typedef struct {
 	const char* name;                      // Name of this world entry
@@ -20,8 +21,12 @@ _JamWorldEntry* _jamWorldEntryCreate(const char* filename, const char* name, voi
 	if (filename != NULL || name != NULL) {
 		_JamWorldEntry *entry = malloc(sizeof(_JamWorldEntry));
 		if (entry != NULL) {
-			entry->name = name != NULL ? strcpy(malloc(strlen(name) + 1), name) : NULL;
-			entry->name = filename != NULL ? strcpy(malloc(strlen(filename) + 1), filename) : NULL;
+			if (name == NULL) {
+				entry->name = jamGetNameOfFile(filename);
+			} else {
+				entry->name = strcpy(malloc(strlen(name) + 1), name);
+			}
+			entry->filename = filename != NULL ? strcpy(malloc(strlen(filename) + 1), filename) : NULL;
 			entry->onFrame = onFrame;
 			entry->onCleanup = onCleanup;
 			entry->onCreate = onCreate;
@@ -148,7 +153,7 @@ void jamWorldHandlerRun(JamAssetHandler* assetHandler) {
 		if (gHandler->worlds[gCurrentWorld]->onCreate != NULL)
 			(gHandler->worlds[gCurrentWorld]->onCreate)(world, assetHandler);
 
-		while (gCurrentWorld != -1) {
+		while (gCurrentWorld != -1 && jamRendererProcEvents()) {
 			// Process the frame
 			if (gHandler->worlds[gCurrentWorld]->onFrame != NULL)
 				(gHandler->worlds[gCurrentWorld]->onFrame)(world, assetHandler);
@@ -169,7 +174,14 @@ void jamWorldHandlerRun(JamAssetHandler* assetHandler) {
 
 				gSwitch = false;
 			}
+
+			jamRendererProcEndFrame();
 		}
+
+		// Clean up the world/call its destroy function
+		if (gHandler->worlds[gCurrentWorld]->onCleanup != NULL)
+			(gHandler->worlds[gCurrentWorld]->onCleanup)(world, assetHandler);
+		jamWorldFree(world);
 	} else {
 		if (gHandler == NULL)
 			jSetError(ERROR_NULL_POINTER, "World handler not initialized");
