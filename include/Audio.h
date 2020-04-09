@@ -103,6 +103,12 @@ void jamAudioSetGlobalGain(float volume);
 /// By default the global gain multiplier is 1.
 float jamAudioGetGlobalGain();
 
+/// \brief Pauses an audio source
+void jamAudioSourcePause(JamAudioSource* source);
+
+/// \brief Rewinds an audio source back to the start
+void jamAudioSourceRewind(JamAudioSource* source);
+
 /// \brief Creates an audio source
 ///
 /// This is for 3D audio, and if you don't need 3D audio you'll

@@ -255,6 +255,26 @@ void jamAudioUpdateSource(JamAudioSource *source) {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
+void jamAudioSourcePause(JamAudioSource* source) {
+	if (source != NULL) {
+		alSourcePause(source->soundID);
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Source doesn't exist");
+	}
+}
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
+void jamAudioSourceRewind(JamAudioSource* source) {
+	if (source != NULL) {
+		alSourceRewind(source->soundID);
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Source doesn't exist");
+	}
+}
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
 void jamAudioPlay(JamAudioBuffer *buffer, JamAudioSource *source, bool looping) {
 	if (buffer != NULL && gAudioPlayer != NULL) {
 		// Setup the surrounding audio playback parameters

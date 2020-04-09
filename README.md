@@ -50,8 +50,7 @@ Features that I've decided are vital to the engine itself and will be added
 at some point in the near future. This would be things you simply expect
 out of a game engine.
 
- - More control over audio (mainly pausing and related controls)
- - Entity pathing system (such as following predetermined paths and possibly A*)
+ - World management system
  
 Possible Additions
 ------------------
