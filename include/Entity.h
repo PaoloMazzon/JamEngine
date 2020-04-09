@@ -17,6 +17,8 @@
 extern "C" {
 #endif
 
+struct _JamTMXData;
+
 /// \brief Defines an in-game entity
 ///
 /// Since all drawing/hitbox functions are done with ints
@@ -51,15 +53,16 @@ typedef struct _JamEntity {
 	double frameTimer;   ///< Time remaining on current frame
 
 	// Things to help worlds
-	double xPrev;          ///< Last frame's x position (JamWorlds will handle this automatically)
-	double yPrev;          ///< Last frame's y position (JamWorlds will handle this automatically)
-	bool proc;             ///< Weather or not this entity has been processed this frame
-	bool draw;             ///< Weather or not this entity has been drawn this frame
-	uint32 cells;          ///< How many cells this entity is in in the world map
-	int cellsIn[4];        ///< The specific cells this entity is in
-	int cellsLoc[4];       ///< Where in the entity list this entity is
-	volatile bool inCache; ///< Weather or not this specific entity is in entity cache
-	bool destroy;          ///< Weather or not this entity will be destroyed the next time its processed
+	double xPrev;                   ///< Last frame's x position (JamWorlds will handle this automatically)
+	double yPrev;                   ///< Last frame's y position (JamWorlds will handle this automatically)
+	bool proc;                      ///< Weather or not this entity has been processed this frame
+	bool draw;                      ///< Weather or not this entity has been drawn this frame
+	uint32 cells;                   ///< How many cells this entity is in in the world map
+	int cellsIn[4];                 ///< The specific cells this entity is in
+	int cellsLoc[4];                ///< Where in the entity list this entity is
+	volatile bool inCache;          ///< Weather or not this specific entity is in entity cache
+	bool destroy;                   ///< Weather or not this entity will be destroyed the next time its processed
+	struct _JamTMXData* properties; ///< Data potentially imported from a .tmx file or NULL
 
 	// Utilities not utilized by the engine
 	double hSpeed;   ///< Horizontal speed

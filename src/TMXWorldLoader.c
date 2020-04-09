@@ -3,6 +3,8 @@
 #include <TileMap.h>
 #include <Sprite.h>
 #include <Frame.h>
+#include <memory.h>
+#include <tmx.h>
 #include "JamEngine.h"
 #include "TMXWorldLoader.h"
 #include "JamError.h"
@@ -10,6 +12,98 @@
 
 JamAsset* createAsset(void*, enum JamAssetType);
 JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
+
+///////////////////////////////////////////////////////////////////////////////
+JamTMXData* jamTMXDataCreate() {
+	JamTMXData* data = calloc(1, sizeof(JamTMXData));
+	if (data == NULL)
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create properties");
+	return data;
+}
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+JamTMXProperty* jamTMXDataGetProperty(JamTMXData* data, const char* propertyName) {
+	int i;
+	if (data != NULL) {
+		for (i = 0; i < data->size; i++)
+			if (strcmp(propertyName, data->names[i]) == 0)
+				return data->values[i];
+	}
+
+	return NULL;
+}
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+static void jamTMXDataSetProperty(tmx_property* property, void* ptr) {
+	JamTMXData* data = ptr;
+	const char** newNames;
+	JamTMXProperty** newProps;
+	JamTMXProperty* prop;
+	if (ptr != NULL && property->type != PT_NONE) {
+		newNames = realloc(data->names, (data->size + 1) * sizeof(const char*));
+		newProps = realloc(data->values, (data->size + 1) * sizeof(JamTMXProperty*));
+		prop = malloc(sizeof(JamTMXProperty));
+
+		if (prop != NULL && newNames != NULL && newProps != NULL) {
+			// Copy data into the JamTMXData
+			data->names = newNames;
+			data->values = newProps;
+			data->names[data->size] = strcpy(malloc(strlen(property->name)), property->name);
+			data->values[data->size] = prop;
+			data->size++;
+
+			// Copy data into the property
+			if (property->type == PT_FILE) {
+				prop->type = tt_File;
+				prop->fileVal = strcpy(malloc(strlen(property->value.file)), property->value.file);
+			} else if (property->type == PT_STRING) {
+				prop->type = tt_String;
+				prop->fileVal = strcpy(malloc(strlen(property->value.string)), property->value.string);
+			} else if (property->type == PT_BOOL) {
+				prop->type = tt_Bool;
+				prop->boolVal = property->value.boolean != 0;
+			} else if (property->type == PT_COLOR) {
+				JamColour c;
+				c.r = (uint8)((property->value.color >> 16) & 0x000000FF);
+				c.g = (uint8)((property->value.color >> 8) & 0x000000FF);
+				c.b = (uint8)property->value.color;
+				printf("R/G/B %i/%i/%i\n", c.r, c.g, c.b);
+				prop->type = tt_Colour;
+				prop->colourVal = c;
+			} else if (property->type == PT_FLOAT) {
+				prop->type = tt_Float;
+				prop->floatVal = property->value.decimal;
+			} else if (property->type == PT_INT) {
+				prop->type = tt_Int;
+				prop->intVal = property->value.integer;
+			}
+		} else {
+			jSetError(ERROR_REALLOC_FAILED, "Failed to allocate new property");
+		}
+	}
+}
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+void jamTMXDataFree(JamTMXData* data) {
+	int i;
+	if (data != NULL) {
+		for (i = 0; i < data->size; i++) {
+			free((void*)data->names[i]);
+			if (data->values[i]->type == tt_File)
+				free((void*)data->values[i]->fileVal);
+			if (data->values[i]->type == tt_String)
+				free((void*)data->values[i]->stringVal);
+			free(data->values[i]);
+		}
+		free(data->names);
+		free(data->values);
+		free(data);
+	}
+}
+///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
 // This function is meant for jamTMXLoadWorld and is not safe to call
@@ -34,6 +128,12 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 
 		if (tempEntity != NULL) {
 			jamWorldAddEntity(world, tempEntity);
+
+			// Load properties
+			if (currentObject->properties != NULL) {
+				tempEntity->properties = jamTMXDataCreate();
+				tmx_property_foreach(currentObject->properties, jamTMXDataSetProperty, tempEntity->properties);
+			}
 
 			// Adjust scale
 			if (tempEntity->sprite != NULL) {

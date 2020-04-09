@@ -21,7 +21,7 @@ extern "C" {
 /// colour mid-text using this struct (as apposed to 3 arguments
 /// in va_arg which would be confusing at best and segfault-galore
 /// at worst).
-typedef struct {
+typedef struct _JamColour {
 	uint8 r; ///< The red component from 0-255
 	uint8 g; ///< The green component from 0-255
 	uint8 b; ///< The blue component from 0-255

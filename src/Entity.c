@@ -80,6 +80,7 @@ JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 		ent->xPrev = 0;
 		ent->yPrev = 0;
 		ent->proc = false;
+		ent->properties = NULL;
 		ent->draw = false;
 		ent->cells = 0;
 		ent->destroy = false;
@@ -389,6 +390,8 @@ double jamEntityVisibleY2(JamEntity* entity, double y) {
 }
 //////////////////////////////////////////////////////////
 
+void jamTMXDataFree(struct _JamTMXData* data);
+
 //////////////////////////////////////////////////////////
 void jamEntityFree(JamEntity *entity, bool destroyHitbox, bool destroySprite, bool destroyFrames) {
 	if (entity != NULL) {
@@ -396,6 +399,7 @@ void jamEntityFree(JamEntity *entity, bool destroyHitbox, bool destroySprite, bo
 			jamHitboxFree(entity->hitbox);
 		if (destroySprite)
 			jamSpriteFree(entity->sprite, destroyFrames, false);
+		jamTMXDataFree(entity->properties);
 		free(entity);
 	}
 }
