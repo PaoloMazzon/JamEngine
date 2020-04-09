@@ -30,6 +30,7 @@ Features
  - TileMaps that can be used for rendering complex tile layers and checking collisions
  - 3D audio support through OpenAL
  - Optional input management system to abstract away the qualms of managing gamepads and different keys
+ - World management system to make many levels easier
 
 Naming Conventions
 ==================
@@ -42,20 +43,8 @@ I'll set it in stone here.
  + Enum values start with their enum's abbreviation followed by an underscore (for example, `JamEntityType`'s things start with `et_*`)
  + Functions in the same file must all start with the same prefix (with some obvious exceptions, this is basically namespaces) (like how all functions in AssetHandler.h start with `jamAssetHandler*`) A rather large exception is no matter what file drawing functions belong to, they should be prefixed with `jamDraw*`
 
-Future Additions
-================
-Near Future
------------
-Features that I've decided are vital to the engine itself and will be added
-at some point in the near future. This would be things you simply expect
-out of a game engine.
-
- - World management system
- 
-Possible Additions
-------------------
-Various bits and pieces I think would be cool but aren't terribly important
-to the JamEngine library itself and as such are prioritized much lower.
+Possible Future Additions
+=========================
 
  - Make a neat little IDE-type interface so a beginner can focus on the code and less on the AssetHandler's files/behaviour maps
  - Some basic GUI type features in JamEngine like a textbox, buttons, drop down lists, etc...
