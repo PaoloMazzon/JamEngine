@@ -162,7 +162,7 @@ void jamWorldHandlerRun(JamAssetHandler* assetHandler) {
 			// Process the frame
 			if (gHandler->worlds[gCurrentWorld]->onFrame != NULL)
 				(gHandler->worlds[gCurrentWorld]->onFrame)(world, assetHandler);
-			else
+			else if (world != NULL)
 				jamWorldProcFrame(world);
 
 			// Possibly swap worlds
