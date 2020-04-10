@@ -161,6 +161,26 @@ bool jamEntityCheckCollision(double x, double y, JamEntity *entity1, JamEntity *
 		
 		// Now check the collision itself
 		coll = jamHitboxCollision(entity1->hitbox, x1, y1, entity2->hitbox, x2, y2);
+	} else if (entity1 != NULL && entity2 != NULL && ((entity1->hitbox == NULL
+			   && entity2->hitbox != NULL) || (entity1->hitbox != NULL && entity2->hitbox == NULL))) {
+		if (entity1->hitbox == NULL)
+			coll = pointInRectangle(
+					entity1->x,
+					entity1->y,
+					_getEntHitX(entity2, entity2->x),
+					_getEntHitY(entity2, entity2->y),
+					entity2->hitbox->width,
+					entity2->hitbox->height
+			);
+		else
+			coll = pointInRectangle(
+					entity2->x,
+					entity2->y,
+					_getEntHitX(entity1, entity1->x),
+					_getEntHitY(entity1, entity1->y),
+					entity1->hitbox->width,
+					entity1->hitbox->height
+			);
 	} else {
 		if (entity1 == NULL) {
 			jSetError(ERROR_NULL_POINTER, "entity1 does not exist");
