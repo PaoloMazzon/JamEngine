@@ -151,6 +151,7 @@ void jamWorldHandlerAdd(const char* filename, const char* name, void (*onCreate)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void jamWorldHandlerRun(JamAssetHandler* assetHandler) {
+	gSwitch = false; // In case the user switches world before running
 	if (gHandler != NULL && gHandler->size > 0) {
 		// Load the world and call the on create function
 		JamWorld* world = gHandler->worlds[gCurrentWorld]->filename != NULL ?
