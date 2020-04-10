@@ -98,6 +98,10 @@ void jamWorldAddEntity(JamWorld *world, JamEntity *entity);
 /// \throws ERROR_OUT_OF_BOUNDS
 JamEntity* jamWorldFindEntity(JamWorld *world, int id);
 
+/// \brief Finds an entity's id from the entity's type (if there are multiple, the first one found is returned)
+/// \throws ERROR_NULL_POINTER
+int jamWorldFindEntityType(JamWorld* world, uint32 type);
+
 /// \brief Processes and draws the entities in the world
 ///
 /// This function will run all in-range entities onFrame function

@@ -397,6 +397,22 @@ JamEntity* jamWorldFindEntity(JamWorld *world, int id) {
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
+int jamWorldFindEntityType(JamWorld* world, uint32 type) {
+	int i;
+
+	if (world != NULL) {
+		for (i = 0; i < world->worldEntities->size; i++)
+			if (world->worldEntities->entities[i] != NULL world->worldEntities->entities[i]->type == type)
+				return i;
+	} else {
+		jSetError(ERROR_NULL_POINTER, "World does not exist");
+	}
+
+	return ID_NOT_ASSIGNED;
+}
+///////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////
 void jamWorldDestroyEntity(JamEntity* entity){
 	if (entity) entity->destroy;
 }
