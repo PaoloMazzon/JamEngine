@@ -13,7 +13,7 @@ include_directories(../tmx)
 
 # This is entirely so CLion will stop complaining
 if (WIN32)
-	include_directories(../include C:/SDL/include C:/libs/libXML2/include/libxml2 C:/libs/OpenAL/include C:/libs/ALUT/include)
+	include_directories(../include C:/libs/Freetype/include C:/SDL/include C:/libs/libXML2/include/libxml2 C:/libs/OpenAL/include C:/libs/ALUT/include)
 elseif (UNIX)
 	find_package(LibXml2 REQUIRED)
 	find_package(OpenAL REQUIRED)
@@ -25,7 +25,7 @@ endif()
 add_library(${PROJECT_NAME} ${C_FILES} ${H_FILES} ${TMX_FILES})
 
 if (WIN32)
-	target_link_libraries(${PROJECT_NAME} C:/libs/libXML2/lib/libxml2.lib C:/libs/libXML2/lib/libxml2_a.lib C:/libs/libXML2/lib/libxml2_a_dll.lib C:/libs/zlib/dll32/zlibwapi.lib C:/SDL/lib/x86/SDL2main.lib C:/SDL/lib/x86/SDL2.lib C:/SDL/lib/x86/SDL2_image.lib C:/libs/OpenAL/libs/Win32/OpenAL32.lib C:/libs/ALUT/lib/alut.lib)
+	target_link_libraries(${PROJECT_NAME} C:libs/Freetype/freetype.lib C:/libs/libXML2/lib/libxml2.lib C:/libs/libXML2/lib/libxml2_a.lib C:/libs/libXML2/lib/libxml2_a_dll.lib C:/libs/zlib/dll32/zlibwapi.lib C:/SDL/lib/x86/SDL2main.lib C:/SDL/lib/x86/SDL2.lib C:/SDL/lib/x86/SDL2_image.lib C:/libs/OpenAL/libs/Win32/OpenAL32.lib C:/libs/ALUT/lib/alut.lib)
 elseif (UNIX)
 	find_package(SDL2 REQUIRED)
 	find_package(SDL2_image REQUIRED)

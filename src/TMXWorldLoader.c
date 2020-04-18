@@ -9,6 +9,7 @@
 #include "TMXWorldLoader.h"
 #include "JamError.h"
 #include "tmx.h"
+#include <string.h>
 
 JamAsset* createAsset(void*, enum JamAssetType);
 JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);

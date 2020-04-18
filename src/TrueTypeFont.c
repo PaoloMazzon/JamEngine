@@ -10,6 +10,7 @@
 #include <Drawing.h>
 #include <Sprite.h>
 #include <SDL_image.h>
+#include <math.h>
 
 // The freetype library
 static FT_Library gFontLib;

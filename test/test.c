@@ -12,6 +12,7 @@
 #include <JamEngine.h>
 #include "JamEngine.h"
 #include <stdlib.h>
+#include <string.h>
 
 /////////////////// Constants ///////////////////
 #define GAME_WIDTH 480

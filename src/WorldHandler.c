@@ -3,6 +3,7 @@
 #include <JamError.h>
 #include <memory.h>
 #include <File.h>
+#include <string.h>
 
 typedef struct {
 	const char* name;                      // Name of this world entry
