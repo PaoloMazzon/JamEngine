@@ -9,7 +9,6 @@
 #include <SDL.h>
 #include <Drawing.h>
 #include <Sprite.h>
-#include <SDL_image.h>
 #include <math.h>
 
 // The freetype library
@@ -230,19 +229,20 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII) {
 }
 ///////////////////////////////////////////////////////////
 
+SDL_Texture* jamSDLTextureLoad(const char* filename);
+
 ///////////////////////////////////////////////////////////
 JamFont* jamFontCreateFromBitmap(const char* filename, uint32 characterWidth, uint32 characterHeight) {
 	JamFont* newFont = (JamFont*)malloc(sizeof(JamFont));
 	_JamFontRangeCache* range = _createFontRange(0, 127);
 	_JamFontRangeCache** ranges = (_JamFontRangeCache**)malloc(sizeof(_JamFontRangeCache*));
-	SDL_Surface* surf = IMG_Load(filename);
-	SDL_Texture* tex = SDL_CreateTextureFromSurface(jamRendererGetInternalRenderer(), surf);
+	SDL_Texture* tex = jamSDLTextureLoad(filename);
 	int w, h;
 	int i;
 	int xx = 0;
 	int yy = 0;
 
-	if (newFont != NULL && range != NULL && ranges != NULL && surf != NULL && tex != NULL) {
+	if (newFont != NULL && range != NULL && ranges != NULL && tex != NULL) {
 		// Load metrics
 		newFont->fontTex = tex;
 		newFont->width = characterWidth;
@@ -280,8 +280,6 @@ JamFont* jamFontCreateFromBitmap(const char* filename, uint32 characterWidth, ui
 		free(ranges);
 		SDL_DestroyTexture(tex);
 	}
-
-	SDL_FreeSurface(surf);
 
 	return newFont;
 }

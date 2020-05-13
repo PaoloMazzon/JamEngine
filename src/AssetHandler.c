@@ -5,7 +5,7 @@
 #include "AssetHandler.h"
 #include "INI.h"
 #include <stdio.h>
-#include <dirent.h>
+#include <string.h>
 #include <INI.h>
 #include <StringMap.h>
 #include <AssetHandler.h>

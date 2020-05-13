@@ -23,7 +23,7 @@ typedef struct {
 	union {
 		double radius; ///< For circle collisions
 		JamPolygon* polygon;
-		struct { ;
+		struct {
 			double width; ///< For rectangle collisions
 			double height; ///< For rectangle collisions
 		};

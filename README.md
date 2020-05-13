@@ -43,6 +43,34 @@ I'll set it in stone here.
  + Enum values start with their enum's abbreviation followed by an underscore (for example, `JamEntityType`'s things start with `et_*`)
  + Functions in the same file must all start with the same prefix (with some obvious exceptions, this is basically namespaces) (like how all functions in AssetHandler.h start with `jamAssetHandler*`) A rather large exception is no matter what file drawing functions belong to, they should be prefixed with `jamDraw*`
 
+Usage
+=====
+This is still a bit of a work-in-progress, but should be at least a good starting point.
+
+Windows
+-------
+Only msys2 is "officially" supported, as I do not have the time to maintain a Visual Studio project as well as
+msys2/mingw64 which is my preferred way of developing on Windows. Once you have msys2 installed, how you compile
+JamEngine is almost identical to compiling on Linux: use your package manager (pacman on msys2) to download the
+dependencies listed at the top and then use cmake to make the makefile that will use gcc to compile an exe.
+
+    pacman -S all-the-dependencies (use pacman -Ss to find specific package names)
+    git clone https://github.com/PaoloMazzon/JamEngine.git
+    cd JamEngine
+    cmake CMakeLists.txt
+    make
+
+Linux
+-----
+Using your preferred package manager, install the dependencies then use the cmake file. It will likely look
+something like
+
+    sudo apt-get install all-the-dependencies
+    git clone https://github.com/PaoloMazzon/JamEngine.git
+    cd JamEngine
+    cmake CMakeLists.txt
+    make
+
 Possible Future Additions
 =========================
 

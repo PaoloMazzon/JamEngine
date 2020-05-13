@@ -6,8 +6,66 @@
 #include "Renderer.h"
 #include <stdio.h>
 #include <SDL.h>
-#include <SDL_image.h>
 #include "JamError.h"
+
+unsigned char *stbi_load(char const *filename, int *x, int *y, int *channels_in_file, int desired_channels);
+void stbi_image_free(void *retval_from_stbi_load);
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+int shift = (req_format == STBI_rgb) ? 8 : 0;
+  	const Uint32 rmask = 0xff000000 >> shift;
+  	const Uint32 gmask = 0x00ff0000 >> shift;
+  	const Uint32 bmask = 0x0000ff00 >> shift;
+	const Uint32 amask = 0x000000ff >> shift;
+#else // little endian, like x86
+	const Uint32 rmask = 0x000000ff;
+	const Uint32 gmask = 0x0000ff00;
+	const Uint32 bmask = 0x00ff0000;
+	const Uint32 amask = 0xff000000;
+#endif
+
+// This is essentially a hidden function, you can use it in your games (all the
+// error checking and such is there) but its meant for in-engine use.
+SDL_Texture* jamSDLTextureLoad(const char* filename) {
+	int x, y, n;
+	SDL_Texture* tex = NULL;
+
+	unsigned char* pixels = stbi_load(filename, &x, &y, &n, 4);
+	SDL_Surface *img = SDL_CreateRGBSurfaceFrom(pixels, x, y, 32, x * 4, rmask, gmask, bmask, amask);
+
+	if (img != NULL) {
+		tex = SDL_CreateTextureFromSurface(jamRendererGetInternalRenderer(), img);
+		if (tex == NULL)
+			jSetError(ERROR_SDL_ERROR, "SDL Error while converting to texture [%s]: %s", filename, SDL_GetError());
+	} else {
+		if (pixels == NULL)
+			jSetError(ERROR_ALLOC_FAILED, "Failed to load image %s", filename);
+		else
+			jSetError(ERROR_SDL_ERROR, "SDL error loading texture %s: %s", filename, SDL_GetError());
+	}
+	SDL_FreeSurface(img);
+	stbi_image_free(pixels);
+
+	return tex;
+}
+
+// Essentially the same as above but doesn't convert to a texture
+SDL_Surface* jamSDLSurfaceLoad(const char* filename) {
+	int x, y, n;
+
+	unsigned char* pixels = stbi_load(filename, &x, &y, &n, 4);
+	SDL_Surface *img = SDL_CreateRGBSurfaceFrom(pixels, x, y, 32, x * 4, rmask, gmask, bmask, amask);
+
+	if (img == NULL) {
+		if (pixels == NULL)
+			jSetError(ERROR_ALLOC_FAILED, "Failed to load image %s", filename);
+		else
+			jSetError(ERROR_SDL_ERROR, "SDL error loading texture %s: %s", filename, SDL_GetError());
+	}
+	stbi_image_free(pixels);
+
+	return img;
+}
 
 ////////////////////////////////////////////////////////////////
 JamTexture* jamTextureCreate(int w, int h) {
@@ -66,48 +124,25 @@ JamTexture* jamTextureCreateFromTex(void* texture) {
 ////////////////////////////////////////////////////////////////
 JamTexture* jamTextureLoad(const char *filename) {
 	JamTexture* tex = NULL;
+	SDL_Texture* sdltex;
+	int x, y, z;
 
-	// Check that the renderer isn't a dud
 	if (jamRendererGetInternalRenderer() != NULL) {
-		// Create the basic tex struct
 		tex = (JamTexture*) malloc(sizeof(JamTexture));
 
-		// Check if we were given a dud
 		if (tex != NULL) {
-			// Loading from an image is a two-part process: loading
-			// the image from a file to a surface, then putting
-			// that software-level surface onto a hardware-level
-			// texture.
-			SDL_Surface *img = IMG_Load(filename);
+			sdltex = jamSDLTextureLoad(filename);
 
 			// And once again, check if we got a dud back
-			if (img != NULL) {
-				// Now we place that surface onto a texture
-				tex->tex = SDL_CreateTextureFromSurface(jamRendererGetInternalRenderer(), img);
-
-				// Cleanup irregardless of what happens next
-				SDL_FreeSurface(img);
-
-				// And of course check that it was successful
-				if (tex->tex != NULL) {
-					// This is really just a fancy way of loading width and height
-					// into the texture struct. SDL2 will actually load
-					// the width and height into the arguments passed,
-					// hence why pointers to our width and height is passed
-					// and not the values themselves.
-					SDL_QueryTexture(tex->tex, NULL, NULL, &tex->w, &tex->h);
-
-					// In SDL2, you can't load an image and draw on the same texture
-					tex->renderTarget = false;
-				} else {
-					free(tex);
-					tex = NULL;
-					jSetError(ERROR_SDL_ERROR, "Failed to create texture from surface (jamTextureLoad). SDL Error: %s\n", SDL_GetError());
-				}
+			if (sdltex != NULL) {
+				// Put the texture into the struct and query its info
+				tex->tex = sdltex;
+				SDL_QueryTexture(tex->tex, NULL, NULL, &tex->w, &tex->h);
+				tex->renderTarget = false;
 			} else {
 				free(tex);
 				tex = NULL;
-				jSetError(ERROR_SDL_ERROR, "Failed to create SDL surface (jamTextureLoad). SDL Error: %s\n", SDL_GetError());
+				jSetError(ERROR_SDL_ERROR, "Failed to create tex", SDL_GetError());
 			}
 		} else {
 			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate JamTexture. SDL Error: %s\n", SDL_GetError());
