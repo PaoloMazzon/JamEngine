@@ -10,8 +10,6 @@ file(GLOB H_FILES ../include/*.h)
 file(GLOB TMX_FILES ../tmx/*)
 include_directories(../include)
 include_directories(../tmx)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-message(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 find_package(LibXml2 REQUIRED)
 find_package(OpenAL REQUIRED)
