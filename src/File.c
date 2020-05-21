@@ -69,7 +69,7 @@ JamStringList* jamStringListLoad(const char *fname) {
 			currentString = (char*)calloc(1, sizeOfLine);
 			if (currentString != NULL) {
 				// Get the string, then throw it in the list
-				fgets(currentString, (int)sizeOfLine, file); // TODO: Fix this not working on last line of a file
+				fgets(currentString, (int)sizeOfLine, file);
 				jamStringListAppend(list, currentString, true);
 			} else {
 				jSetError(ERROR_ALLOC_FAILED, "Failed to create string (jamStringListLoad)");
