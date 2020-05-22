@@ -6,6 +6,42 @@
 #include <JamError.h>
 #include <malloc.h>
 #include <stdio.h>
+#include <string.h>
+#include <EasySave.h>
+
+////////////////// Helper functions //////////////////
+const char* copyString(const char* string) {
+	char* str = malloc(strlen(string) + 1);
+
+	if (str != NULL)
+		strcpy(str, string);
+	else
+		jSetError(ERROR_ALLOC_FAILED, "Failed to copy string %s", string);
+
+	return str;
+}
+
+_JamEasyData* _jamEasyDataCreate(const char* name, _JamEasyDataType type) {
+	_JamEasyData* data = malloc(sizeof(_JamEasyData));
+
+	if (data != NULL) {
+		data->type = type;
+		data->key = copyString(name);
+	} else {
+		jSetError(ERROR_ALLOC_FAILED, "Failed to create data of name %s", name);
+	}
+
+	return data;
+}
+
+void _jamEasyDataFree(_JamEasyData* data) {
+	if (data != NULL) {
+		free((void*)data->key);
+		if (data->type == bytesVal)
+			free(data->data);
+	}
+}
+//////////////////////////////////////////////////////
 
 // TODO: This file
 

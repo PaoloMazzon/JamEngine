@@ -23,6 +23,7 @@ typedef enum {
 // A piece of data in the easy saver
 typedef struct {
 	_JamEasyDataType type; ///< Type of data this is
+	const char* key;
 
 	union {
 		double doubleVal;
@@ -57,6 +58,14 @@ typedef struct {
 /// It is also worth noting that the easy save makes its own copies
 /// of everything (keys, strings, variable length data), and as such
 /// they will all be freed when the easy save is closed.
+///
+/// Example:
+///
+/// 	JamEasySave* ez = jamEasySaveLoad("filename.txt");
+/// 	player.maxHp = jamEasySaveGetDouble(ez, "maxHp");
+/// 	jamEasySaveSetString(ez, "version", "1.0.4");
+/// 	jamEasySaveClose(ez);
+///
 typedef struct {
 	uint32 size; ///< Amount of data in this easy save
 	_JamEasyData* data; ///< Vector of all the data
@@ -65,6 +74,25 @@ typedef struct {
 } JamEasySave;
 
 /// \brief Loads an easy save or returns an empty one
+///
+/// For reference, here is an overview of how easy save files are
+/// structured:
+///
+///  + 4 bytes at the top representing how many entries there are
+///  + For each entry, the following
+///    + 2 bytes for the length of the key with terminating 0
+///    + 1 byte for the type of entry this is (string, uint8...)
+///    + 4 bytes for the size of the entry (in case its variable length)
+///    + x bytes for this entry's key (with terminating 0)
+///    + x bytes for the value of this entry
+///
+/// Since these save as binary files, it essentially means that these
+/// files are not human read-able or modifiable. That by no means implies
+/// that this is some sort of save-file-encryption and should not
+/// be treated as such. If you would like something that a user can
+/// open up and tweak without a hex editor and this documentation,
+/// consider using a JamINI instead (although they are a bit more
+/// work to use).
 JamEasySave* jamEasySaveLoad(const char* filename);
 
 /// brief Gets a double from an easy save
