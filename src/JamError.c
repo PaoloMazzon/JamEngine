@@ -8,7 +8,7 @@
 static uint16 jErrorCode;
 
 /////////////////////////////////////////////////////////
-void __jSetError(uint16 errorCode, const char* format, const char* function, int line, ...) {
+int __jSetError(uint16 errorCode, const char* format, const char* function, int line, ...) {
 	// First just add the error flag to the error code
 	jErrorCode = errorCode | jErrorCode;
 
@@ -25,6 +25,7 @@ void __jSetError(uint16 errorCode, const char* format, const char* function, int
 	vfprintf(stderr, format, args);
 	fprintf(stderr, "\n");
 	va_end(args);
+	return 0;
 }
 /////////////////////////////////////////////////////////
 

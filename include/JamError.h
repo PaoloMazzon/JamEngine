@@ -66,7 +66,7 @@ extern "C" {
 #define jSetError(errorCode, format, ...) __jSetError(errorCode, format, __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 /// \brief Sets an error flag
-void __jSetError(uint16 errorCode, const char* format, const char* function, int line,  ...);
+int __jSetError(uint16 errorCode, const char* format, const char* function, int line,  ...);
 
 /// \brief Grabs all errors and clears them
 ///
