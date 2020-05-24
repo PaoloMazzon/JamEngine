@@ -68,8 +68,7 @@ typedef struct {
 ///
 typedef struct {
 	uint32 size; ///< Amount of data in this easy save
-	_JamEasyData* data; ///< Vector of all the data
-	const char** names; ///< Name of each piece of data
+	_JamEasyData** data; ///< Vector of all the data
 	const char* filename; ///< Filename of this save
 } JamEasySave;
 
@@ -81,7 +80,7 @@ typedef struct {
 ///  + 4 bytes at the top representing how many entries there are
 ///  + For each entry, the following
 ///    + 2 bytes for the length of the key with terminating 0
-///    + 1 byte for the type of entry this is (string, uint8...)
+///    + 4 byte for the type of entry this is (string, uint8...) (this could be 1 byte but enums are ints)
 ///    + 4 bytes for the size of the entry (in case its variable length)
 ///    + x bytes for this entry's key (with terminating 0)
 ///    + x bytes for the value of this entry
