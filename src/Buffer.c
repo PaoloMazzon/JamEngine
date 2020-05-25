@@ -17,7 +17,7 @@ JamBuffer* jamBufferCreate(uint64 size) {
 		free(internalBuffer);
 	} else {
 		// Assign buffer things
-		buffer->buffer = internalBuffer;
+		buffer->buffer = size == 0 ? NULL : internalBuffer;
 		buffer->size = size;
 		buffer->pointer = 0;
 	}

@@ -40,6 +40,9 @@ static void _jamEasyDataFree(_JamEasyData* data) {
 		free((void*)data->key);
 		if (data->type == bytesVal)
 			free(data->data);
+		if (data->type == stringVal)
+			free((void*)data->stringVal);
+		free(data);
 	}
 }
 
@@ -76,7 +79,7 @@ int _jamEasySaveFindDataSpot(JamEasySave* save, const char* key) {
 			found = true;
 
 	if (!found) {
-		newList = realloc(save->data, sizeof(_JamEasyData*) * save->size + 1);
+		newList = realloc(save->data, sizeof(_JamEasyData*) * (save->size + 1));
 		newData = _jamEasyDataCreate(copyString(key), 0);
 		if (newList != NULL && newData != NULL) {
 			save->data = newList;
@@ -96,11 +99,9 @@ int _jamEasySaveFindDataSpot(JamEasySave* save, const char* key) {
 JamEasySave* jamEasySaveLoad(const char* filename) {
 	JamBuffer* buffer = jamBufferLoad(filename);
 	JamEasySave* save = malloc(sizeof(JamEasySave));
-	bool error = false;
-	uint32 i, entrySize, strLen, type, dataSize;
+	uint32 i, strLen, type, dataSize;
 	_JamEasyData* entry;
 	char* tempString;
-	_JamEasyData** array;
 
 	if (buffer != NULL && save != NULL) {
 		save->filename = copyString(filename);
@@ -110,7 +111,9 @@ JamEasySave* jamEasySaveLoad(const char* filename) {
 		if (buffer->size != 0) {
 			// Read the number of entries and loop over them
 			jamBufferReadByte4(buffer, &save->size);
-			save->data = malloc(sizeof(_JamEasyData*) * save->size) || jSetError(ERROR_ALLOC_FAILED, "Failed to allocate");
+			save->data = malloc(sizeof(_JamEasyData*) * save->size);
+			if (save->data == NULL)
+				jSetError(ERROR_ALLOC_FAILED, "Failed to allocate");
 			for (i = 0; i < save->size && save->data != NULL; i++) {
 				// Extract data for current entry
 				jamBufferReadByte2(buffer, &strLen);
@@ -435,14 +438,14 @@ void jamEasySaveFlush(JamEasySave* easySave) {
 		uint16 strLen;
 
 		if (output != NULL) {
-			fwrite(easySave->size, 4, 1, output);
+			fwrite(&easySave->size, 4, 1, output);
 
 			for (i = 0; i < easySave->size; i++) {
-				strLen = (uint16)(strlen(easySave->data[i]->stringVal) + 1);
+				strLen = (uint16)(strlen(easySave->data[i]->key) + 1);
 				fwrite(&strLen, 2, 1, output);
 				fwrite(&easySave->data[i]->type, 4, 1, output);
 				fwrite(&easySave->data[i]->size, 4, 1, output);
-				fwrite(&easySave->data[i]->key, strLen, 1, output);
+				fwrite(easySave->data[i]->key, strLen + 1, 1, output);
 
 				if (easySave->data[i]->type == doubleVal) {
 					fwrite(&easySave->data[i]->doubleVal, 8, 1, output);
@@ -463,7 +466,7 @@ void jamEasySaveFlush(JamEasySave* easySave) {
 				} else if (easySave->data[i]->type == sint8Val) {
 					fwrite(&easySave->data[i]->sint8Val, 1, 1, output);
 				} else if (easySave->data[i]->type == stringVal) {
-					fwrite(&easySave->data[i]->stringVal, strLen, 1, output);
+					fwrite(easySave->data[i]->stringVal, strlen(easySave->data[i]->stringVal) + 1, 1, output);
 				} else if (easySave->data[i]->type == bytesVal) {
 					fwrite(&easySave->data[i]->data, easySave->data[i]->size, 1, output);
 				}
@@ -484,13 +487,8 @@ void jamEasySaveClose(JamEasySave* easySave) {
 		jamEasySaveFlush(easySave);
 
 		// Free entries
-		for (i = 0; i < easySave->size; i++) {
-			if (easySave->data[i]->type == stringVal)
-				free((void*)easySave->data[i]->stringVal);
-			else if (easySave->data[i]->type == bytesVal)
-				free(easySave->data[i]->data);
-			free((void*)easySave->data[i]->key);
-		}
+		for (i = 0; i < easySave->size; i++)
+			_jamEasyDataFree(easySave->data[i]);
 
 		// Free the vector and save
 		free(easySave->data);

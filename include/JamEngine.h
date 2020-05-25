@@ -7,6 +7,7 @@
 #include <Entity.h>
 #include <Font.h>
 #include <Drawing.h>
+#include <EasySave.h>
 #include <File.h>
 #include <Entity.h>
 #include <Clock.h>
