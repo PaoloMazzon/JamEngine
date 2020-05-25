@@ -42,7 +42,57 @@ static void _jamEasyDataFree(_JamEasyData* data) {
 			free(data->data);
 	}
 }
+
+// Finds and checks the data type of key assuming save is a valid pointer and returns it in ret
+static bool _jamEasySaveFindAssert(JamEasySave* save, const char* key, _JamEasyDataType type, _JamEasyData** ret) {
+	int i;
+	bool found = false;
+
+	for (i = 0; i < save->size && !found; i++) {
+		if (strcmp(save->data[i]->key, key) == 0) {
+			if (save->data[i]->type == type) {
+				*ret = save->data[i];
+				found = true;
+			} else {
+				jSetError(ERROR_WARNING, "Data type not matching key [type:key] [%i:%s]", type, key);
+			}
+		}
+	}
+
+	return found;
+}
+
+// Finds a location for data in the save and returns the index (easy save must exist and this will either
+// overwrite old data or make a new one)
+int _jamEasySaveFindDataSpot(JamEasySave* save, const char* key) {
+	int i;
+	bool found = false;
+	_JamEasyData** newList;
+	_JamEasyData* newData;
+
+	// First we check if we can just find it
+	for (i = 0; i < save->size; i++)
+		if (strcmp(key, save->data[i]->key) == 0)
+			found = true;
+
+	if (!found) {
+		newList = realloc(save->data, sizeof(_JamEasyData*) * save->size + 1);
+		newData = _jamEasyDataCreate(copyString(key), 0);
+		if (newList != NULL && newData != NULL) {
+			save->data = newList;
+			newList[save->size] = newData;
+			i = save->size;
+			save->size++;
+		} else {
+			i = -1;
+			jSetError(ERROR_REALLOC_FAILED, "Failed to append key to save %s", key);
+		}
+	}
+
+	return i;
+}
 //////////////////////////////////////////////////////
+
 JamEasySave* jamEasySaveLoad(const char* filename) {
 	JamBuffer* buffer = jamBufferLoad(filename);
 	JamEasySave* save = malloc(sizeof(JamEasySave));
@@ -117,15 +167,23 @@ JamEasySave* jamEasySaveLoad(const char* filename) {
 
 double jamEasySaveGetDouble(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, doubleVal, &data))
+			return data->doubleVal;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetDouble(JamEasySave* easySave, const char* key, double val) {
-	if (easySave != NULL) {
-
+if (easySave != NULL) {
+	int i = _jamEasySaveFindDataSpot(easySave, key);
+	if (i != -1) {
+		easySave->data[i]->doubleVal = val;
+		easySave->data[i]->type = doubleVal;
+	}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -133,15 +191,23 @@ void jamEasySaveSetDouble(JamEasySave* easySave, const char* key, double val) {
 
 uint64 jamEasySaveGetUint64(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, uint64Val, &data))
+			return data->uint64Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetUint64(JamEasySave* easySave, const char* key, uint64 val) {
-	if (easySave != NULL) {
-
+if (easySave != NULL) {
+	int i = _jamEasySaveFindDataSpot(easySave, key);
+	if (i != -1) {
+		easySave->data[i]->uint64Val = val;
+		easySave->data[i]->type = uint64Val;
+	}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -149,15 +215,23 @@ void jamEasySaveSetUint64(JamEasySave* easySave, const char* key, uint64 val) {
 
 uint32 jamEasySaveGetUint32(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, uint32Val, &data))
+			return data->uint32Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetUint32(JamEasySave* easySave, const char* key, uint32 val) {
 	if (easySave != NULL) {
-
+		int i = _jamEasySaveFindDataSpot(easySave, key);
+		if (i != -1) {
+			easySave->data[i]->uint32Val = val;
+			easySave->data[i]->type = uint32Val;
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -165,15 +239,23 @@ void jamEasySaveSetUint32(JamEasySave* easySave, const char* key, uint32 val) {
 
 uint16 jamEasySaveGetUint16(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, uint16Val, &data))
+			return data->uint16Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetUint16(JamEasySave* easySave, const char* key, uint16 val) {
 	if (easySave != NULL) {
-
+		int i = _jamEasySaveFindDataSpot(easySave, key);
+		if (i != -1) {
+			easySave->data[i]->uint16Val = val;
+			easySave->data[i]->type = uint16Val;
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -181,15 +263,23 @@ void jamEasySaveSetUint16(JamEasySave* easySave, const char* key, uint16 val) {
 
 uint8 jamEasySaveGetUint8(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, uint8Val, &data))
+			return data->uint8Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetUint8(JamEasySave* easySave, const char* key, uint8 val) {
 	if (easySave != NULL) {
-
+		int i = _jamEasySaveFindDataSpot(easySave, key);
+		if (i != -1) {
+			easySave->data[i]->uint8Val = val;
+			easySave->data[i]->type = uint8Val;
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -197,15 +287,23 @@ void jamEasySaveSetUint8(JamEasySave* easySave, const char* key, uint8 val) {
 
 sint64 jamEasySaveGetSint64(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, sint64Val, &data))
+			return data->sint64Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetSint64(JamEasySave* easySave, const char* key, sint64 val) {
 	if (easySave != NULL) {
-
+		int i = _jamEasySaveFindDataSpot(easySave, key);
+		if (i != -1) {
+			easySave->data[i]->sint64Val = val;
+			easySave->data[i]->type = sint64Val;
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -213,15 +311,23 @@ void jamEasySaveSetSint64(JamEasySave* easySave, const char* key, sint64 val) {
 
 sint32 jamEasySaveGetSint32(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, sint32Val, &data))
+			return data->sint32Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetSint32(JamEasySave* easySave, const char* key, sint32 val) {
 	if (easySave != NULL) {
-
+		int i = _jamEasySaveFindDataSpot(easySave, key);
+		if (i != -1) {
+			easySave->data[i]->sint32Val = val;
+			easySave->data[i]->type = sint32Val;
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -229,15 +335,23 @@ void jamEasySaveSetSint32(JamEasySave* easySave, const char* key, sint32 val) {
 
 sint16 jamEasySaveGetSint16(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, sint16Val, &data))
+			return data->sint16Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetSint16(JamEasySave* easySave, const char* key, sint16 val) {
 	if (easySave != NULL) {
-
+		int i = _jamEasySaveFindDataSpot(easySave, key);
+		if (i != -1) {
+			easySave->data[i]->sint16Val = val;
+			easySave->data[i]->type = sint16Val;
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -245,15 +359,23 @@ void jamEasySaveSetSint16(JamEasySave* easySave, const char* key, sint16 val) {
 
 sint8 jamEasySaveGetSint8(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, sint8Val, &data))
+			return data->sint8Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetSint8(JamEasySave* easySave, const char* key, sint8 val) {
 	if (easySave != NULL) {
-
+		int i = _jamEasySaveFindDataSpot(easySave, key);
+		if (i != -1) {
+			easySave->data[i]->sint8Val = val;
+			easySave->data[i]->type = sint8Val;
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -261,15 +383,23 @@ void jamEasySaveSetSint8(JamEasySave* easySave, const char* key, sint8 val) {
 
 const char* jamEasySaveGetString(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, stringVal, &data))
+			return data->stringVal;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
+
+	return 0;
 }
 
 void jamEasySaveSetString(JamEasySave* easySave, const char* key, const char* val) {
 	if (easySave != NULL) {
-
+		int i = _jamEasySaveFindDataSpot(easySave, key);
+		if (i != -1) {
+			easySave->data[i]->stringVal = copyString(val);
+			easySave->data[i]->type = stringVal;
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -277,7 +407,9 @@ void jamEasySaveSetString(JamEasySave* easySave, const char* key, const char* va
 
 void* jamEasySaveGetData(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
-
+		_JamEasyData* data;
+		if (_jamEasySaveFindAssert(easySave, key, bytesVal, &data))
+			return data->data;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
@@ -285,7 +417,12 @@ void* jamEasySaveGetData(JamEasySave* easySave, const char* key) {
 
 void jamEasySaveSetData(JamEasySave* easySave, const char* key, void* data, uint32 size) {
 	if (easySave != NULL) {
-
+		int i = _jamEasySaveFindDataSpot(easySave, key);
+		if (i != -1) {
+			easySave->data[i]->data = malloc(size);
+			memcpy(easySave->data[i]->data, data, size);
+			easySave->data[i]->type = bytesVal;
+		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
 	}
