@@ -26,3 +26,4 @@ test/JamEngineTest
 libJamEngine.a
 run.sh
 Project.cbp
+save.bin

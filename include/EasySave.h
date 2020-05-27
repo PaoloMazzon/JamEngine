@@ -7,17 +7,17 @@
 
 // For data type checking
 typedef enum {
-	doubleVal = 0,
-	uint64Val = 1,
-	uint32Val = 2,
-	uint16Val = 3,
-	uint8Val = 4,
-	sint64Val = 5,
-	sint32Val = 6,
-	sint16Val = 7,
-	sint8Val = 8,
-	stringVal = 9,
-	bytesVal = 10
+	dt_DoubleVal = 0,
+	dt_Uint64Val = 1,
+	dt_Uint32Val = 2,
+	dt_Uint16Val = 3,
+	dt_Uint8Val = 4,
+	dt_Sint64Val = 5,
+	dt_Sint32Val = 6,
+	dt_Sint16Val = 7,
+	dt_Sint8Val = 8,
+	dt_StringVal = 9,
+	dt_BytesVal = 10
 } _JamEasyDataType;
 
 // A piece of data in the easy saver

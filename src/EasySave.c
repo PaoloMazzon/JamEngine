@@ -38,9 +38,9 @@ static _JamEasyData* _jamEasyDataCreate(const char* name, _JamEasyDataType type)
 static void _jamEasyDataFree(_JamEasyData* data) {
 	if (data != NULL) {
 		free((void*)data->key);
-		if (data->type == bytesVal)
+		if (data->type == dt_BytesVal)
 			free(data->data);
-		if (data->type == stringVal)
+		if (data->type == dt_StringVal)
 			free((void*)data->stringVal);
 		free(data);
 	}
@@ -127,27 +127,27 @@ JamEasySave* jamEasySaveLoad(const char* filename) {
 					jamBufferReadByteX(buffer, tempString, strLen);
 
 					// Now we extract data based on what this is
-					if (type == doubleVal) {
+					if (type == dt_DoubleVal) {
 						jamBufferReadByte8(buffer, &entry->doubleVal);
-					} else if (type == uint64Val) {
+					} else if (type == dt_Uint64Val) {
 						jamBufferReadByte8(buffer, &entry->uint64Val);
-					} else if (type == uint32Val) {
+					} else if (type == dt_Uint32Val) {
 						jamBufferReadByte4(buffer, &entry->uint32Val);
-					} else if (type == uint16Val) {
+					} else if (type == dt_Uint16Val) {
 						jamBufferReadByte2(buffer, &entry->uint16Val);
-					} else if (type == uint8Val) {
+					} else if (type == dt_Uint8Val) {
 						jamBufferReadByte1(buffer, &entry->uint8Val);
-					} else if (type == sint64Val) {
+					} else if (type == dt_Sint64Val) {
 						jamBufferReadByte8(buffer, &entry->sint64Val);
-					} else if (type == sint32Val) {
+					} else if (type == dt_Sint32Val) {
 						jamBufferReadByte4(buffer, &entry->sint32Val);
-					} else if (type == sint16Val) {
+					} else if (type == dt_Sint16Val) {
 						jamBufferReadByte2(buffer, &entry->sint16Val);
-					} else if (type == sint8Val) {
+					} else if (type == dt_Sint8Val) {
 						jamBufferReadByte1(buffer, &entry->sint8Val);
-					} else if (type == stringVal) {
+					} else if (type == dt_StringVal) {
 						jamBufferReadByteX(buffer, &entry->stringVal, dataSize);
-					} else if (type == bytesVal) {
+					} else if (type == dt_BytesVal) {
 						jamBufferReadByteX(buffer, &entry->data, dataSize);
 						entry->size = dataSize;
 					}
@@ -171,7 +171,7 @@ JamEasySave* jamEasySaveLoad(const char* filename) {
 double jamEasySaveGetDouble(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, doubleVal, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_DoubleVal, &data))
 			return data->doubleVal;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -185,7 +185,7 @@ if (easySave != NULL) {
 	int i = _jamEasySaveFindDataSpot(easySave, key);
 	if (i != -1) {
 		easySave->data[i]->doubleVal = val;
-		easySave->data[i]->type = doubleVal;
+		easySave->data[i]->type = dt_DoubleVal;
 	}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -195,7 +195,7 @@ if (easySave != NULL) {
 uint64 jamEasySaveGetUint64(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, uint64Val, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_Uint64Val, &data))
 			return data->uint64Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -209,7 +209,7 @@ if (easySave != NULL) {
 	int i = _jamEasySaveFindDataSpot(easySave, key);
 	if (i != -1) {
 		easySave->data[i]->uint64Val = val;
-		easySave->data[i]->type = uint64Val;
+		easySave->data[i]->type = dt_Uint64Val;
 	}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -219,7 +219,7 @@ if (easySave != NULL) {
 uint32 jamEasySaveGetUint32(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, uint32Val, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_Uint32Val, &data))
 			return data->uint32Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -233,7 +233,7 @@ void jamEasySaveSetUint32(JamEasySave* easySave, const char* key, uint32 val) {
 		int i = _jamEasySaveFindDataSpot(easySave, key);
 		if (i != -1) {
 			easySave->data[i]->uint32Val = val;
-			easySave->data[i]->type = uint32Val;
+			easySave->data[i]->type = dt_Uint32Val;
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -243,7 +243,7 @@ void jamEasySaveSetUint32(JamEasySave* easySave, const char* key, uint32 val) {
 uint16 jamEasySaveGetUint16(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, uint16Val, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_Uint16Val, &data))
 			return data->uint16Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -257,7 +257,7 @@ void jamEasySaveSetUint16(JamEasySave* easySave, const char* key, uint16 val) {
 		int i = _jamEasySaveFindDataSpot(easySave, key);
 		if (i != -1) {
 			easySave->data[i]->uint16Val = val;
-			easySave->data[i]->type = uint16Val;
+			easySave->data[i]->type = dt_Uint16Val;
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -267,7 +267,7 @@ void jamEasySaveSetUint16(JamEasySave* easySave, const char* key, uint16 val) {
 uint8 jamEasySaveGetUint8(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, uint8Val, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_Uint8Val, &data))
 			return data->uint8Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -281,7 +281,7 @@ void jamEasySaveSetUint8(JamEasySave* easySave, const char* key, uint8 val) {
 		int i = _jamEasySaveFindDataSpot(easySave, key);
 		if (i != -1) {
 			easySave->data[i]->uint8Val = val;
-			easySave->data[i]->type = uint8Val;
+			easySave->data[i]->type = dt_Uint8Val;
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -291,7 +291,7 @@ void jamEasySaveSetUint8(JamEasySave* easySave, const char* key, uint8 val) {
 sint64 jamEasySaveGetSint64(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, sint64Val, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_Sint64Val, &data))
 			return data->sint64Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -305,7 +305,7 @@ void jamEasySaveSetSint64(JamEasySave* easySave, const char* key, sint64 val) {
 		int i = _jamEasySaveFindDataSpot(easySave, key);
 		if (i != -1) {
 			easySave->data[i]->sint64Val = val;
-			easySave->data[i]->type = sint64Val;
+			easySave->data[i]->type = dt_Sint64Val;
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -315,7 +315,7 @@ void jamEasySaveSetSint64(JamEasySave* easySave, const char* key, sint64 val) {
 sint32 jamEasySaveGetSint32(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, sint32Val, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_Sint32Val, &data))
 			return data->sint32Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -329,7 +329,7 @@ void jamEasySaveSetSint32(JamEasySave* easySave, const char* key, sint32 val) {
 		int i = _jamEasySaveFindDataSpot(easySave, key);
 		if (i != -1) {
 			easySave->data[i]->sint32Val = val;
-			easySave->data[i]->type = sint32Val;
+			easySave->data[i]->type = dt_Sint32Val;
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -339,7 +339,7 @@ void jamEasySaveSetSint32(JamEasySave* easySave, const char* key, sint32 val) {
 sint16 jamEasySaveGetSint16(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, sint16Val, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_Sint16Val, &data))
 			return data->sint16Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -353,7 +353,7 @@ void jamEasySaveSetSint16(JamEasySave* easySave, const char* key, sint16 val) {
 		int i = _jamEasySaveFindDataSpot(easySave, key);
 		if (i != -1) {
 			easySave->data[i]->sint16Val = val;
-			easySave->data[i]->type = sint16Val;
+			easySave->data[i]->type = dt_Sint16Val;
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -363,7 +363,7 @@ void jamEasySaveSetSint16(JamEasySave* easySave, const char* key, sint16 val) {
 sint8 jamEasySaveGetSint8(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, sint8Val, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_Sint8Val, &data))
 			return data->sint8Val;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -377,7 +377,7 @@ void jamEasySaveSetSint8(JamEasySave* easySave, const char* key, sint8 val) {
 		int i = _jamEasySaveFindDataSpot(easySave, key);
 		if (i != -1) {
 			easySave->data[i]->sint8Val = val;
-			easySave->data[i]->type = sint8Val;
+			easySave->data[i]->type = dt_Sint8Val;
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -387,7 +387,7 @@ void jamEasySaveSetSint8(JamEasySave* easySave, const char* key, sint8 val) {
 const char* jamEasySaveGetString(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, stringVal, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_StringVal, &data))
 			return data->stringVal;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -401,7 +401,7 @@ void jamEasySaveSetString(JamEasySave* easySave, const char* key, const char* va
 		int i = _jamEasySaveFindDataSpot(easySave, key);
 		if (i != -1) {
 			easySave->data[i]->stringVal = copyString(val);
-			easySave->data[i]->type = stringVal;
+			easySave->data[i]->type = dt_StringVal;
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -411,7 +411,7 @@ void jamEasySaveSetString(JamEasySave* easySave, const char* key, const char* va
 void* jamEasySaveGetData(JamEasySave* easySave, const char* key) {
 	if (easySave != NULL) {
 		_JamEasyData* data;
-		if (_jamEasySaveFindAssert(easySave, key, bytesVal, &data))
+		if (_jamEasySaveFindAssert(easySave, key, dt_BytesVal, &data))
 			return data->data;
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -424,7 +424,7 @@ void jamEasySaveSetData(JamEasySave* easySave, const char* key, void* data, uint
 		if (i != -1) {
 			easySave->data[i]->data = malloc(size);
 			memcpy(easySave->data[i]->data, data, size);
-			easySave->data[i]->type = bytesVal;
+			easySave->data[i]->type = dt_BytesVal;
 		}
 	} else {
 		jSetError(ERROR_NULL_POINTER, "Easy save doesn't exist");
@@ -445,29 +445,29 @@ void jamEasySaveFlush(JamEasySave* easySave) {
 				fwrite(&strLen, 2, 1, output);
 				fwrite(&easySave->data[i]->type, 4, 1, output);
 				fwrite(&easySave->data[i]->size, 4, 1, output);
-				fwrite(easySave->data[i]->key, strLen + 1, 1, output);
+				fwrite(easySave->data[i]->key, strLen, 1, output);
 
-				if (easySave->data[i]->type == doubleVal) {
+				if (easySave->data[i]->type == dt_DoubleVal) {
 					fwrite(&easySave->data[i]->doubleVal, 8, 1, output);
-				} else if (easySave->data[i]->type == uint64Val) {
+				} else if (easySave->data[i]->type == dt_Uint64Val) {
 					fwrite(&easySave->data[i]->uint64Val, 8, 1, output);
-				} else if (easySave->data[i]->type == uint32Val) {
+				} else if (easySave->data[i]->type == dt_Uint32Val) {
 					fwrite(&easySave->data[i]->uint32Val, 4, 1, output);
-				} else if (easySave->data[i]->type == uint16Val) {
+				} else if (easySave->data[i]->type == dt_Uint16Val) {
 					fwrite(&easySave->data[i]->uint16Val, 2, 1, output);
-				} else if (easySave->data[i]->type == uint8Val) {
+				} else if (easySave->data[i]->type == dt_Uint8Val) {
 					fwrite(&easySave->data[i]->uint8Val, 1, 1, output);
-				} else if (easySave->data[i]->type == sint64Val) {
+				} else if (easySave->data[i]->type == dt_Sint64Val) {
 					fwrite(&easySave->data[i]->sint64Val, 8, 1, output);
-				} else if (easySave->data[i]->type == sint32Val) {
+				} else if (easySave->data[i]->type == dt_Sint32Val) {
 					fwrite(&easySave->data[i]->sint32Val, 4, 1, output);
-				} else if (easySave->data[i]->type == sint16Val) {
+				} else if (easySave->data[i]->type == dt_Sint16Val) {
 					fwrite(&easySave->data[i]->sint16Val, 2, 1, output);
-				} else if (easySave->data[i]->type == sint8Val) {
+				} else if (easySave->data[i]->type == dt_Sint8Val) {
 					fwrite(&easySave->data[i]->sint8Val, 1, 1, output);
-				} else if (easySave->data[i]->type == stringVal) {
+				} else if (easySave->data[i]->type == dt_StringVal) {
 					fwrite(easySave->data[i]->stringVal, strlen(easySave->data[i]->stringVal) + 1, 1, output);
-				} else if (easySave->data[i]->type == bytesVal) {
+				} else if (easySave->data[i]->type == dt_BytesVal) {
 					fwrite(&easySave->data[i]->data, easySave->data[i]->size, 1, output);
 				}
 			}
