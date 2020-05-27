@@ -146,7 +146,11 @@ JamEasySave* jamEasySaveLoad(const char* filename) {
 					} else if (type == dt_Sint8Val) {
 						jamBufferReadByte1(buffer, &entry->sint8Val);
 					} else if (type == dt_StringVal) {
-						jamBufferReadByteX(buffer, &entry->stringVal, dataSize);
+						entry->stringVal = malloc(dataSize);
+						if (entry->stringVal != NULL)
+							jamBufferReadByteX(buffer, (void*)entry->stringVal, dataSize);
+						else
+							jSetError(ERROR_ALLOC_FAILED, "Failed to allocate string in %s", filename);
 					} else if (type == dt_BytesVal) {
 						jamBufferReadByteX(buffer, &entry->data, dataSize);
 						entry->size = dataSize;
@@ -444,7 +448,12 @@ void jamEasySaveFlush(JamEasySave* easySave) {
 				strLen = (uint16)(strlen(easySave->data[i]->key) + 1);
 				fwrite(&strLen, 2, 1, output);
 				fwrite(&easySave->data[i]->type, 4, 1, output);
-				fwrite(&easySave->data[i]->size, 4, 1, output);
+				if (easySave->data[i]->type == dt_StringVal) {
+					uint32 len = (uint32)strlen(easySave->data[i]->stringVal) + 1;
+					fwrite(&len, 4, 1, output);
+				} else {
+					fwrite(&easySave->data[i]->size, 4, 1, output);
+				}
 				fwrite(easySave->data[i]->key, strLen, 1, output);
 
 				if (easySave->data[i]->type == dt_DoubleVal) {
