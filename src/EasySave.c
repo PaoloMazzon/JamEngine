@@ -74,13 +74,13 @@ int _jamEasySaveFindDataSpot(JamEasySave* save, const char* key) {
 	_JamEasyData* newData;
 
 	// First we check if we can just find it
-	for (i = 0; i < save->size; i++)
+	for (i = 0; (i < save->size && !found); i++)
 		if (strcmp(key, save->data[i]->key) == 0)
 			found = true;
 
 	if (!found) {
 		newList = realloc(save->data, sizeof(_JamEasyData*) * (save->size + 1));
-		newData = _jamEasyDataCreate(copyString(key), 0);
+		newData = _jamEasyDataCreate(copyString(key), dt_Sint32Val);
 		if (newList != NULL && newData != NULL) {
 			save->data = newList;
 			newList[save->size] = newData;
