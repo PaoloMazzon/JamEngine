@@ -117,7 +117,7 @@ void jamRendererSetIcon(const char* imageFilename) {
 	if (gRenderer != NULL) {
 		SDL_Surface *surf = jamSDLSurfaceLoad(imageFilename);
 		SDL_SetWindowIcon(gRenderer->gameWindow, surf);
-		SDL_FreeSurface(surf);
+		jamSDLSurfaceLoad(NULL);
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized");
 	}

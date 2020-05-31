@@ -86,8 +86,7 @@ void jamBufferSave(JamBuffer *buffer, const char *filename) {
 ////////////////////////////////////////////////
 void jamBufferFree(JamBuffer *buffer) {
 	if (buffer != NULL) {
-		if (buffer->buffer != NULL)
-			free(buffer->buffer);
+		free(buffer->buffer);
 		free(buffer);
 	}
 }

@@ -169,6 +169,8 @@ JamEasySave* jamEasySaveLoad(const char* filename) {
 			jSetError(ERROR_NULL_POINTER, "Failed to create save");
 	}
 
+	jamBufferFree(buffer);
+
 	return save;
 }
 

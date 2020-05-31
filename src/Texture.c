@@ -49,22 +49,32 @@ SDL_Texture* jamSDLTextureLoad(const char* filename) {
 	return tex;
 }
 
-// Essentially the same as above but doesn't convert to a texture
+// Loads a surface using a filename, call with NULL filename to free the surface.
+// (Don't use this for long-term surface usage)
 SDL_Surface* jamSDLSurfaceLoad(const char* filename) {
 	int x, y, n;
+	static SDL_Surface* img;
+	static unsigned char* pixels;
 
-	unsigned char* pixels = stbi_load(filename, &x, &y, &n, 4);
-	SDL_Surface *img = SDL_CreateRGBSurfaceFrom(pixels, x, y, 32, x * 4, rmask, gmask, bmask, amask);
+	if (filename != NULL) {
+		pixels = stbi_load(filename, &x, &y, &n, 4);
+		img = SDL_CreateRGBSurfaceFrom(pixels, x, y, 32, x * 4, rmask, gmask, bmask, amask);
 
-	if (img == NULL) {
-		if (pixels == NULL)
-			jSetError(ERROR_ALLOC_FAILED, "Failed to load image %s", filename);
-		else
-			jSetError(ERROR_SDL_ERROR, "SDL error loading texture %s: %s", filename, SDL_GetError());
+		if (img == NULL) {
+			if (pixels == NULL)
+				jSetError(ERROR_ALLOC_FAILED, "Failed to load image %s", filename);
+			else
+				jSetError(ERROR_SDL_ERROR, "SDL error loading texture %s: %s", filename, SDL_GetError());
+		}
+
+		return img;
+	} else {
+		stbi_image_free(pixels);
+		pixels = NULL;
+		SDL_FreeSurface(img);
+		img = NULL;
+		return NULL;
 	}
-	stbi_image_free(pixels);
-
-	return img;
 }
 
 ////////////////////////////////////////////////////////////////
