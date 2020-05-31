@@ -279,7 +279,7 @@ int main(int argc, char* argv[]) {
 				run = runGame();
 		}
 	} else { // Test specific functionality of JamEngine
-		JamEasySave* save = jamEasySaveLoad("save.bin");
+		JamEasySave *save = jamEasySaveLoad("save.bin");
 		jamEasySaveSetSint64(save, "yes", 582);
 		jamEasySaveSetString(save, "no", "poopypants");
 		jamEasySaveClose(save);

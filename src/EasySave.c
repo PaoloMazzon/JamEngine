@@ -69,22 +69,22 @@ static bool _jamEasySaveFindAssert(JamEasySave* save, const char* key, _JamEasyD
 // overwrite old data or make a new one)
 int _jamEasySaveFindDataSpot(JamEasySave* save, const char* key) {
 	int i;
-	bool found = false;
+	int spot = -1;
 	_JamEasyData** newList;
 	_JamEasyData* newData;
 
 	// First we check if we can just find it
-	for (i = 0; (i < save->size && !found); i++)
+	for (i = 0; (i < save->size && spot == -1); i++)
 		if (strcmp(key, save->data[i]->key) == 0)
-			found = true;
+			spot = i;
 
-	if (!found) {
+	if (spot == -1) {
 		newList = realloc(save->data, sizeof(_JamEasyData*) * (save->size + 1));
 		newData = _jamEasyDataCreate(copyString(key), dt_Sint32Val);
 		if (newList != NULL && newData != NULL) {
 			save->data = newList;
 			newList[save->size] = newData;
-			i = save->size;
+			spot = save->size;
 			save->size++;
 		} else {
 			i = -1;
@@ -92,7 +92,7 @@ int _jamEasySaveFindDataSpot(JamEasySave* save, const char* key) {
 		}
 	}
 
-	return i;
+	return spot;
 }
 //////////////////////////////////////////////////////
 
