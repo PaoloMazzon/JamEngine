@@ -13,6 +13,7 @@
 
 JamAsset* createAsset(void*, enum JamAssetType);
 JamAsset* jamGetAssetFromHandler(JamAssetHandler *assetHandler, const char* key);
+const char* copyString(const char* string);
 
 ///////////////////////////////////////////////////////////////////////////////
 JamTMXData* jamTMXDataCreate() {
@@ -51,26 +52,26 @@ static void jamTMXDataSetProperty(tmx_property* property, void* ptr) {
 			// Copy data into the JamTMXData
 			data->names = newNames;
 			data->values = newProps;
-			data->names[data->size] = strcpy(malloc(strlen(property->name) + 1), property->name);
+			data->names[data->size] = copyString(property->name);
+
 			data->values[data->size] = prop;
 			data->size++;
 
 			// Copy data into the property
 			if (property->type == PT_FILE) {
 				prop->type = tt_File;
-				prop->fileVal = strcpy(malloc(strlen(property->value.file)), property->value.file);
+				prop->fileVal = copyString(property->value.file);
 			} else if (property->type == PT_STRING) {
 				prop->type = tt_String;
-				prop->fileVal = strcpy(malloc(strlen(property->value.string)), property->value.string);
+				prop->fileVal = copyString(property->value.string);
 			} else if (property->type == PT_BOOL) {
 				prop->type = tt_Bool;
 				prop->boolVal = property->value.boolean != 0;
 			} else if (property->type == PT_COLOR) {
-				JamColour c;
+				JamColour c; // JamColour makes rgb easy but the tmx file just uses a 32-bit int to store colour
 				c.r = (uint8)((property->value.color >> 16) & 0x000000FF);
 				c.g = (uint8)((property->value.color >> 8) & 0x000000FF);
 				c.b = (uint8)property->value.color;
-				printf("R/G/B %i/%i/%i\n", c.r, c.g, c.b);
 				prop->type = tt_Colour;
 				prop->colourVal = c;
 			} else if (property->type == PT_FLOAT) {
@@ -108,7 +109,7 @@ void jamTMXDataFree(JamTMXData* data) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // This function is meant for jamTMXLoadWorld and is not safe to call
-bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_layer* layer) {
+static bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_layer* layer) {
 	JamEntity* tempEntity;
 	tmx_object* currentObject = layer->content.objgr->head;
 	bool failedToLoad = false;
@@ -170,7 +171,7 @@ bool loadObjectLayerIntoWorld(JamAssetHandler* handler, JamWorld* world, tmx_lay
 
 ///////////////////////////////////////////////////////////////////////////////
 // This function is meant for jamTMXLoadWorld and is not safe to call
-JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH, tmx_map* tmx) {
+static JamTileMap* createTileMapFromTMXLayer(JamAssetHandler* handler, tmx_layer* layer, uint32 mapW, uint32 mapH, uint32 tileW, uint32 tileH, tmx_map* tmx) {
 	JamTileMap* map = jamTileMapCreate(mapW, mapH, tileW, tileH);
 	JamSprite* currentSprite;
 	tmx_tile* tile;
