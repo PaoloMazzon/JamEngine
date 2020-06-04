@@ -69,14 +69,14 @@ something like
     git clone https://github.com/PaoloMazzon/JamEngine.git
     cd JamEngine
     cmake CMakeLists.txt
-    make
+    make 
+ 
+Planned Future Additions
+========================
 
-Possible Future Additions
-=========================
+In order of importance,
 
- - Make a neat little IDE-type interface so a beginner can focus on the code and less on the AssetHandler's files/behaviour maps
- - Some basic GUI type features in JamEngine like a textbox, buttons, drop down lists, etc...
- - Bind JamEngine to some languages like Lua and Python (and Lisp..! maybe)
- - Make rendering backend OpenGL instead of SDL2, but keep using SDL2 for window management and input
- - As an extension to the previous, GLSL shader support for fancy post processing 
- - Use .json files instead of .ini files to load assets (as a way to ditch the prefix system)
+ 1. Rework the tilemaps or make an additional version
+ 2. Convert to OpenGL instead of SDL2 renderer (and simple support for GLSL shaders)
+ 3. Use .json files instead of .ini files to load assets (as a way to ditch the prefix system)
+ 4. Make an IDE for JamEngine, most likely utilizing TCC and written using Kivy
