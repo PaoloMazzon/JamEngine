@@ -57,7 +57,7 @@ JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 						   double hitboxOffsetY, JamBehaviour *behaviour) {
 	JamEntity* ent = (JamEntity*)malloc(sizeof(JamEntity));
 
-	// Check that it worked
+	// A monsterous beast of defaults
 	if (ent != NULL) {
 		ent->sprite = sprite;
 		ent->hitbox = hitbox;
@@ -120,6 +120,22 @@ JamEntity* jamEntityCopy(JamEntity *baseEntity, double x, double y) {
 	}
 
 	return newEnt;
+}
+//////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////
+void _jamEntityCopyInPlace(JamEntity *baseEntity, JamEntity *inPlaceEntity, double x, double y) {
+	inPlaceEntity->type = baseEntity->type;
+	inPlaceEntity->rot = baseEntity->rot;
+	inPlaceEntity->alpha = baseEntity->alpha;
+	inPlaceEntity->updateOnDraw = baseEntity->updateOnDraw;
+	inPlaceEntity->behaviour = baseEntity->behaviour;
+	inPlaceEntity->scaleX = baseEntity->scaleX;
+	inPlaceEntity->scaleY = baseEntity->scaleY;
+	inPlaceEntity->hSpeed = baseEntity->hSpeed;
+	inPlaceEntity->vSpeed = baseEntity->vSpeed;
+	inPlaceEntity->friction = baseEntity->friction;
+	inPlaceEntity->z = baseEntity->z;
 }
 //////////////////////////////////////////////////////////
 

@@ -77,7 +77,12 @@ JamEntity* jamEntityCreate(JamSprite *sprite, JamHitbox *hitbox, double x, doubl
 						   double hitboxOffsetY, JamBehaviour *behaviour);
 
 /// \brief Makes a 1:1 copy of an entity and returns the new copy
+/// \throws ERROR_NULL_POINTER
 JamEntity* jamEntityCopy(JamEntity *baseEntity, double x, double y);
+
+/// \brief Primarily for in-engine use, copies an entity to an already existing entity (typically for vectors)
+/// \warning Since this is for in-engine use, it doesn't check for NULL pointers and as such will happily segfault if misused
+void _jamEntityCopyInPlace(JamEntity *baseEntity, JamEntity *inPlaceEntity, double x, double y);
 
 /// \brief Draws an entity
 /// \throws ERROR_NULL_POINTER
