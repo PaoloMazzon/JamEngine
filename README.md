@@ -53,12 +53,13 @@ Only msys2 is "officially" supported, as I do not have the time to maintain a Vi
 msys2/mingw64 which is my preferred way of developing on Windows. Once you have msys2 installed, how you compile
 JamEngine is almost identical to compiling on Linux: use your package manager (pacman on msys2) to download the
 dependencies listed at the top and then use cmake to make the makefile that will use gcc to compile an exe.
+It should look something like this (from the MinGW64 shell, not the msys2 shell)
 
     pacman -S all-the-dependencies (use pacman -Ss to find specific package names)
     git clone https://github.com/PaoloMazzon/JamEngine.git
     cd JamEngine
-    cmake CMakeLists.txt
-    make
+    /mingw64/cmake.exe -G "MinGW Makefiles" CMakeLists.txt
+    mingw32-make
 
 Linux
 -----
