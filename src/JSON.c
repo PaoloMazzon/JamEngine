@@ -20,6 +20,7 @@ static char *_jamJSONLoadFileNoWhiteSpace(const char *filename) {
 	char *oldString;
 	uint32 size = 0;
 	uint32 i;
+	bool inQuotes = false;
 	bool clear = false;
 
 	if (file != NULL) {
@@ -48,7 +49,9 @@ static char *_jamJSONLoadFileNoWhiteSpace(const char *filename) {
 		if (clear) {
 			uint32 counter = 0;
 			for (i = 0; i < size; i++) {
-				if (buffer[i] != ' ' && buffer[i] != '\n' && buffer[i] != '\r' && buffer[i] != '\t') {
+				if (buffer[i] == '"')
+					inQuotes = !inQuotes;
+				if ((buffer[i] != ' ' && buffer[i] != '\n' && buffer[i] != '\r' && buffer[i] != '\t') || inQuotes) {
 					string[counter] = buffer[i];
 					counter++;
 				}

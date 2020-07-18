@@ -9,7 +9,6 @@
 #include <Tweening.h>
 #include <EntityList.h>
 #include <memory.h>
-#include <JamEngine.h>
 #include "JamEngine.h"
 #include <stdlib.h>
 #include <string.h>
@@ -279,10 +278,7 @@ int main(int argc, char* argv[]) {
 				run = runGame();
 		}
 	} else { // Test specific functionality of JamEngine
-		JamEasySave *save = jamEasySaveLoad("save.bin");
-		jamEasySaveSetSint64(save, "yes", 582);
-		jamEasySaveSetString(save, "no", "poopypants");
-		jamEasySaveClose(save);
+		
 	}
 
 	jamRendererQuit();

@@ -20,6 +20,7 @@ lib/Makefiles
 test/cmake_install.cmake
 test/JamEngine.cbp
 test/Makefiles
+test/JamEngineTest.exe
 JamEngineBuilder.cbp
 Project.cbp
 test/JamEngineTest
