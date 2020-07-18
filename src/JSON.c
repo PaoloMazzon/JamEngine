@@ -86,7 +86,7 @@ JamJSONObject *jamJSONParse(const char *filename) {
 	JamJSONObject *out = NULL;
 
 	if (file != NULL) {
-		out = _jamJSONParseObject((char*)file->buffer)
+		out = _jamJSONParseObject((char*)file->buffer);
 	} else {
 		jSetError(ERROR_OPEN_FAILED, "Buffer could not be opened");
 	}
