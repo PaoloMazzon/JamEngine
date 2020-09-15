@@ -8,6 +8,7 @@
 #pragma once
 #include "Constants.h"
 #include "Input.h"
+#include "VK2D/VK2D.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,41 +19,22 @@ extern "C" {
 #define RENDERER_FULLSCREEN 2
 
 typedef struct _JamTexture JamTexture;
+typedef struct VK2DRendererConfig JamRenderConfig;
 
-/// \brief The core renderer required for a game
-///
-/// The user almost never touches the screen directly, there
-/// is instead a screen buffer to draw to. All general drawing
-/// is done to the display buffer, then at the end of the
-/// frame drawn to the screen. This means that the user can
-/// set the screen buffer to something other than the window
-/// size and choose at what size it will be rendered. For
-/// example, you can have the screen buffer be 320*240 then
-/// upscale it to 1280*960 for a pixel-art game.
-///
-/// Updating the game window undoes any changes you make to
-/// the size of the rendered buffer.
+/// \brief The core renderer required for a game, this is just informative, you'll likely never touch this struct
 typedef struct {
-	void* internalRenderer;   ///< The SDL2 internal renderer
 	void* gameWindow;         ///< The SDL2 window to draw to
-	JamTexture* screenBuffer; ///< We don't draw directly to the screen, rather through this texture
-	uint32 displayBufferW;    ///< The width of the buffer on screen
-	uint32 displayBufferH;    ///< The height of the buffer on screen
-	uint32 displayBufferX;    ///< X position on screen of the display buffer
-	uint32 displayBufferY;    ///< Y position on screen of the display buffer
+	VK2DTexture screenBuffer; ///< Drawing is through this texture for proper upscaling and shader support
+	VK2DCamera camera;        ///< Camera
+	JamRenderConfig config;   ///< VK2D's renderer doesn't keep track of config in a way that would be good for this engine
 
 	uint64 lastTime;              ///< Used for calculating frame wait time
 	uint64 between;               ///< Also used for calculating frame wait time
 	uint64 timePerFrame;          ///< Number of microseconds per frame
 	double framerate;             ///< The current framerate
 	uint64 fps;                   ///< The expected framerate
-	bool renderingToScreenBuffer; ///< Until SDL_GetRenderTarget is figured out, this is a stand in
+	bool renderingToScreenBuffer; ///< Keeps track of the current render target
 	bool sleepEnabled;            ///< For unlocking framerates
-
-	double cameraX;  ///< X Location of the camera in the game world (offset to render by)
-	double cameraY;  ///< Y Location of the camera in the game world (offset to render by)
-	double tempCamX; ///< X coord of camera to be pushed to the actual coord at end of frame
-    double tempCamY; ///< Y coord of camera to be pushed to the actual coord at end of frame
 
 	double deltaCap; ///< Maximum returnable delta
 	double delta;    ///< The delta multiplier (actual_frame_time/expected_frame_time used to make up for fluctuating framerates)
@@ -68,11 +50,7 @@ typedef struct {
 ///
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_ALLOC_FAILED
-void jamRendererInit(int *argc, char **argv, const char *name, uint32 w, uint32 h, double framerate);
-
-/// \brief Returns the internal renderer used by JamRenderer
-/// \throws ERROR_NULL_POINTER
-void* jamRendererGetInternalRenderer();
+void jamRendererInit(int *argc, char **argv, const char *name, uint32 w, uint32 h, double framerate, JamRenderConfig *config);
 
 /// \brief Sets the window's icon to an image (png, jpg, bmp, etc...)
 /// \throws ERROR_NULL_POINTER
@@ -177,13 +155,6 @@ void jamRendererSetFramerate(double framerate);
 /// \throws ERROR_NULL_POINTER
 bool jamRendererTargetIsScreenBuffer();
 
-/// \brief Calculates x/y for the renderer's camera
-///
-/// If renderer is NULL, this function won't complain or anything,
-/// so you can throw this anywhere. This only changes the x and y
-/// if the renderer's render target is the screen.
-void jamRendererCalculateForCamera(int *x, int *y);
-
 /// \brief Sets the render target, or null for the screen
 /// \throws ERROR_NULL_POINTER
 void jamRendererSetTarget(JamTexture *texture);
@@ -191,17 +162,8 @@ void jamRendererSetTarget(JamTexture *texture);
 /// \brief Updates the screen buffer. Returns false if this fails.
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_SDL_ERROR
-bool jamRendererConfig(uint32 internalWidth, uint32 internalHeight, uint32 displayWidth,
+void jamRendererConfig(uint32 internalWidth, uint32 internalHeight, uint32 displayWidth,
 					   uint32 displayHeight);
-
-/// \brief Converts window coordinates to screen buffer coordinates
-///
-/// This is really just for the input module, you most likely will
-/// never need to use this. Nonetheless, it is available lest you
-/// have some crazy shenanigans going on.
-///
-/// \throws ERROR_NULL_POINTER
-void jamRendererConvertCoords(int *x, int *y);
 
 /// \brief Run this every frame at the start of the frame,
 ///  returns false if it's time to break the game loop

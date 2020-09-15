@@ -263,7 +263,8 @@ int main(int argc, char* argv[]) {
 		testingSuite = true;
 
 	// Initialize JamEngine
-	jamRendererInit(&argc, argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60);
+	JamRenderConfig config = {msaa_32x, sm_TripleBuffer, ft_Nearest};
+	jamRendererInit(&argc, argv, "JamEngine", SCREEN_WIDTH, SCREEN_HEIGHT, 60, &config);
 	jamRendererSetAA(false);
 	jamRendererSetIcon("assets/icon.png");
 	bool run = true;
@@ -278,7 +279,10 @@ int main(int argc, char* argv[]) {
 				run = runGame();
 		}
 	} else { // Test specific functionality of JamEngine
-		
+		while (jamRendererProcEvents()) {
+
+			jamRendererProcEndFrame();
+		}
 	}
 
 	jamRendererQuit();

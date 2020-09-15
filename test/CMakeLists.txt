@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
 project(JamEngineTest C)
 set(CMAKE_C_STANDARD 11)
-include_directories(../include)
+include_directories(../include ../Vulkan2D/)
 
 find_package(LibXml2 REQUIRED)
 find_package(OpenAL REQUIRED)
