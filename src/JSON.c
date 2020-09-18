@@ -4,6 +4,7 @@
 #include "Buffer.h"
 #include "JamError.h"
 #include <malloc.h>
+#include <string.h>
 #include <stdio.h>
 
 // Parses a json object from a string; the string needs not end at
@@ -85,16 +86,15 @@ static char *_jamJSONLoadFileNoWhiteSpace(const char *filename) {
  *  5. Populate array with values, recursively calling object parser as needed
  */
 JamJSONObject *jamJSONParse(const char *filename) {
-	JamBuffer *file = _jamJSONLoadFileNoWhiteSpace(filename);
 	JamJSONObject *out = NULL;
+	const char *buf = _jamJSONLoadFileNoWhiteSpace(filename);
 
-	if (file != NULL) {
-		out = _jamJSONParseObject((char*)file->buffer);
+	if (buf != NULL) {
+		out = _jamJSONParseObject((void*)buf);
 	} else {
 		jSetError(ERROR_OPEN_FAILED, "Buffer could not be opened");
 	}
 
-	jamBufferFree(file);
 	return out;
 }
 ///////////////////////////////////////////////////////////////////
@@ -104,11 +104,11 @@ void jamJSONFree(JamJSONObject *object) {
 	uint32 i;
 	if (object != NULL) {
 		for (i = 0; i < object->size; i++) {
-			free(object->values[i].key);
+			free((void*)object->values[i].key);
 			if (object->values[i].type == ot_String)
-				free(object->values[i].string);
+				free((void*)object->values[i].Value.string);
 			else if (object->values[i].type == ot_Object)
-				jamJSONFree(object->values[i].object);
+				jamJSONFree(object->values[i].Value.object);
 		}
 		free(object->values);
 	}

@@ -15,7 +15,7 @@ JamFrame* jamFrameCreate(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h
 
 	// Check for its validity
 	if (frame != NULL) {
-		frame->tex = tex;
+		frame->tex = vk2dTextureLoad(tex->tex->img, x, y, w, h);
 		frame->x = x;
 		frame->y = y;
 		frame->w = w;
@@ -31,7 +31,7 @@ JamFrame* jamFrameCreate(JamTexture *tex, sint32 x, sint32 y, sint32 w, sint32 h
 //////////////////////////////////////////////////////////////
 void jamDrawFrame(JamFrame *frame, sint32 x, sint32 y) {
 	if (frame != NULL) {
-		jamDrawTexturePart(frame->tex, x, y, frame->x, frame->y, frame->w, frame->h);
+		vk2dRendererDrawTexture(frame->tex, x, y, 1, 1, 0, 0, 0);
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamFrame does not exist. (jamDrawFrame)");
 	}
@@ -42,8 +42,9 @@ void jamDrawFrame(JamFrame *frame, sint32 x, sint32 y) {
 void jamFrameFree(JamFrame *frame, bool destroyTexture) {
 	if (frame != NULL) {
 		if (destroyTexture) {
-			jamTextureFree(frame->tex);
+			jamTextureFree(frame->jtex);
 		}
+		vk2dTextureFree(frame->tex);
 		free(frame);
 	}
 }

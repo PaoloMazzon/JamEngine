@@ -22,11 +22,12 @@ extern "C" {
 /// need to tell the frame where on the spritesheet to gather its
 /// info.
 typedef struct {
-	JamTexture* tex; ///< The texture this frame is using
-	sint32 x; ///< The top left corner of the drawn area
-	sint32 y; ///< The top left corner of the drawn area
-	sint32 w; ///< The width of the drawn area
-	sint32 h; ///< The height of the drawn area
+	JamTexture *jtex; ///< Texture this came from
+	VK2DTexture tex;  ///< The texture this frame is using
+	sint32 x;         ///< The top left corner of the drawn area
+	sint32 y;         ///< The top left corner of the drawn area
+	sint32 w;         ///< The width of the drawn area
+	sint32 h;         ///< The height of the drawn area
 } JamFrame;
 
 /// \brief Creates a frame

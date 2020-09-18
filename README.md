@@ -31,6 +31,7 @@ Features
  - 3D audio support through OpenAL
  - Optional input management system to abstract away the qualms of managing gamepads and different keys
  - World management system to make many levels easier
+ - [Vulkan2D](https://github.com/PaoloMazzon/Vulkan2D) used to render, all of its power accessible inside the engine
 
 Naming Conventions
 ==================
@@ -78,6 +79,5 @@ Planned Future Additions
 In order of importance,
 
  1. Rework the tilemaps or make an additional version
- 2. Convert to OpenGL instead of SDL2 renderer (and simple support for GLSL shaders)
  3. Use .json files instead of .ini files to load assets (as a way to ditch the prefix system)
  4. Make an IDE for JamEngine, most likely utilizing TCC and written using Kivy

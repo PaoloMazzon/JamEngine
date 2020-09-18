@@ -16,9 +16,10 @@ extern "C" {
 /// to depends on if it was used to load a file or
 /// created without loading a file
 struct _JamTexture {
-	void* tex; ///< The internal SDL2 texture
-	sint32 w; ///< Texture's width
-	sint32 h; ///< Texture's height
+	VK2DImage img;     ///< Image for the texture
+	VK2DTexture tex;   ///< The internal SDL2 texture
+	sint32 w;          ///< Texture's width
+	sint32 h;          ///< Texture's height
 	bool renderTarget; ///< Weather or not this texture can be rendered to
 };
 
@@ -26,17 +27,6 @@ struct _JamTexture {
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_ALLOC_FAILED
 JamTexture* jamTextureCreate(int w, int h);
-
-/// \brief Creates a JamTexture from a SDL2 texture
-///
-/// Once you pass the SDL2 texture to this function,
-/// it belongs to the texture. Do not free the texture
-/// you pass here yourself as the texture will free
-/// it when you call jamTextureFree.
-///
-/// \throws ERROR_NULL_POINTER
-/// \throws ERROR_ALLOC_FAILED
-JamTexture* jamTextureCreateFromTex(void* texture);
 
 /// \brief Loads a texture from a file
 /// \throws ERROR_SDL_ERROR

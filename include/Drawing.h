@@ -47,10 +47,6 @@ void jamDrawRectangle(int x, int y, int w, int h);
 /// \throws ERROR_NULL_POINTER
 void jamDrawRectangleFilled(int x, int y, int w, int h);
 
-/// \brief Draws a polygon
-/// \throws ERROR_NULL_POINTER
-void jamDrawPolygon(JamPolygon *poly, int x, int y);
-
 /// \breif Draws a texture to the current target
 /// \throws ERROR_NULL_POINTER
 void jamDrawTexture(JamTexture *texture, sint32 x, sint32 y);
@@ -79,20 +75,6 @@ void jamDrawTileMap(JamTileMap *tileMap, int x, int y, uint32 xInMapStart, uint3
 /// \throws ERROR_NULL_POINTER
 void jamDrawTextureExt(JamTexture *texture, sint32 x, sint32 y, sint32 originX, sint32 originY,
 					   float scaleX, float scaleY, double rot, uint8 alpha);
-
-
-/// \breif Draws part of a texture to the current target
-void jamDrawTexturePart(JamTexture *texture, sint32 x, sint32 y, sint32 texX, sint32 texY,
-						sint32 texW, sint32 texH);
-
-/// \breif Draws a texture to the renderer with a bunch of extra preferences
-/// \param scaleX The x scale of the texture, 1 for normal
-/// \param scaleY The y scale of the texture, 1 for normal
-/// \param rot Rotation in radians
-/// \param alpha The alpha from 0-1
-void jamDrawTexturePartExt(JamTexture *texture, sint32 x, sint32 y, sint32 originX,
-						   sint32 originY, float scaleX, float scaleY, double rot, uint8 alpha, sint32 texX,
-						   sint32 texY, sint32 texW, sint32 texH);
 
 #ifdef __cplusplus
 }

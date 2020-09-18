@@ -151,21 +151,11 @@ JamSprite* jamSpriteLoadFromSheet(JamTexture *spriteSheet, uint32 cellCount, uin
 void jamDrawSpriteFrame(JamSprite *sprite, sint32 x, sint32 y, float scaleX, float scaleY,
 						double rot, uint8 alpha, uint32 frame) {
 	if (sprite != NULL && frame < sprite->animationLength) {
-		// Draw it to the screen with all the crazy parameters
-		jamDrawTexturePartExt(sprite->frames[frame]->tex,
-							  x,
-							  y,
-							  sprite->originX,
-							  sprite->originY,
-							  scaleX,
-							  scaleY,
-							  rot,
-							  alpha,
-							  sprite->frames[frame]->x,
-							  sprite->frames[frame]->y,
-							  sprite->frames[frame]->w,
-							  sprite->frames[frame]->h
-		);
+		uint8 r, g, b, a;
+		jamDrawGetColour(&r, &g, &b, &a);
+		jamDrawSetColour(r, g, b, alpha);
+		vk2dRendererDrawTexture(sprite->frames[frame]->tex, x - sprite->originX, y - sprite->originY, scaleX, scaleY, rot, sprite->originX, sprite->originY);
+		jamDrawSetColour(r, g, b, a);
 	} else {
 		if (sprite == NULL) {
 			jSetError(ERROR_NULL_POINTER, "JamSprite does not exist (jamDrawSpriteFrame)");

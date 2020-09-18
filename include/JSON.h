@@ -19,13 +19,13 @@ typedef enum {
 
 /// \brief A value in a JSON object
 struct JamJSONValue {
-	union Value {
+	union {
 		const char *string;    ///< String value
 		double real;           ///< Number value
 		bool boolean;          ///< Boolean value
 		JamJSONObject *object; ///< Another object as a value
 		void *nil;             ///< This is NULL if the type is ot_Null
-	};
+	} Value;
 	const char *key;        ///< Name of this object
 	JamJSONObjectType type; ///< Type of JSON object this is
 };

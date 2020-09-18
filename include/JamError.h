@@ -63,6 +63,9 @@ extern "C" {
 ///< World handler was told to switch to a world that doesn't exist
 #define ERROR_WORLD_NOT_FOUND   0b0100000000000000
 
+///< Something went wrong on VK2D's end
+#define ERROR_VULKAN_ERROR 0b1000000000000000
+
 #define jSetError(errorCode, format, ...) __jSetError(errorCode, format, __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 /// \brief Sets an error flag

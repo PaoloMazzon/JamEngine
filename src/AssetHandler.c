@@ -227,7 +227,7 @@ void jamAssetHandlerLoadINI(JamAssetHandler *assetHandler, const char *filename,
 	JamINI* ini = jamINILoad(filename);
 	uint32 i, j;
 
-	if (assetHandler != NULL && jamRendererGetInternalRenderer() != NULL && ini != NULL) {
+	if (assetHandler != NULL && ini != NULL) {
 		// Load the texture ids first
 		for (i = 0; i < ini->numberOfHeaders; i++) {
 			if (strcmp(ini->headerNames[i], "texture_ids") == 0) {
@@ -277,9 +277,6 @@ void jamAssetHandlerLoadINI(JamAssetHandler *assetHandler, const char *filename,
 	} else {
 		if (assetHandler == NULL) {
 			jSetError(ERROR_NULL_POINTER, "JamAsset loader does not exist for file %s", filename);
-		}
-		if (jamRendererGetInternalRenderer() == NULL) {
-			jSetError(ERROR_NULL_POINTER, "JamRenderer does not exist for file %s", filename);
 		}
 		if (ini == NULL) {
 			jSetError(ERROR_OPEN_FAILED, "Failed to load JamINI for file %s", filename);
