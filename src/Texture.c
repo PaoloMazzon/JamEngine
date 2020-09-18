@@ -103,6 +103,37 @@ JamTexture* jamTextureLoad(const char *filename) {
 ////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////
+JamTexture *jamTextureFromSurface(void *surface) {
+	JamTexture* tex = malloc(sizeof(JamTexture));
+
+	if (tex != NULL) {
+		tex->img = vk2dImageFromSurface(vk2dRendererGetDevice(), surface);
+
+		if (tex->img != NULL) {
+			vk2dTextureLoad(vk2dRendererGetDevice(), 0, 0, ((SDL_Surface*)surface)->w, ((SDL_Surface*)surface)->h);
+			if (tex->tex != NULL) {
+				tex->w = ((SDL_Surface*)surface)->w;
+				tex->h = ((SDL_Surface*)surface)->h;
+				tex->renderTarget = false;
+			} else {
+				jSetError(ERROR_VULKAN_ERROR, "Failed to create Vulkan texture");
+				free(tex);
+				tex = NULL;
+			}
+		} else {
+			jSetError(ERROR_VULKAN_ERROR, "Failed to create Vulkan image");
+			free(tex);
+			tex = NULL;
+		}
+	} else {
+		jSetError(ERROR_ALLOC_FAILED, "Failed to allocate texture");
+	}
+
+	return tex;
+}
+////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
 void jamTextureFree(JamTexture *tex) {
 	if (tex != NULL) {
 		vk2dImageFree(tex->img);

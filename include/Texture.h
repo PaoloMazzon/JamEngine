@@ -29,10 +29,16 @@ struct _JamTexture {
 JamTexture* jamTextureCreate(int w, int h);
 
 /// \brief Loads a texture from a file
-/// \throws ERROR_SDL_ERROR
+/// \throws ERROR_VULKAN_ERROR
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_ALLOC_FAILED
 JamTexture* jamTextureLoad(const char *filename);
+
+/// \brief Creates a texture from an SDL2 surface
+/// \param surface Surface to create the texture from
+/// \return Returns the new texture or NULL if it failed
+/// \throws ERROR_NULL_POINTER
+JamTexture *jamTextureFromSurface(void *surface);
 
 /// \brief Frees a texture from memory
 void jamTextureFree(JamTexture *tex);

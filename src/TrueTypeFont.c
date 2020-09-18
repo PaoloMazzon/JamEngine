@@ -17,6 +17,19 @@ static FT_Library gFontLib;
 // Weather or not freetype has been initialized
 static bool gFontLibInitialized;
 
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+rmask = 0xff000000;
+gmask = 0x00ff0000;
+bmask = 0x0000ff00;
+amask = 0x000000ff;
+#else
+rmask = 0x000000ff;
+gmask = 0x0000ff00;
+bmask = 0x00ff0000;
+amask = 0xff000000;
+#endif
+
+
 ////////// Helper functions (These guys don't make sure font is not NULL) ///////////
 
 // To spare confusion on the whole inclusive-range-to-array-index bit
@@ -120,10 +133,10 @@ static sint32 _jamMaxASCIIHeight(JamFont* font) {
 
 ///////////// Functions that manage the "hidden" struct _JamFontTexture /////////////
 
-static _JamFontTexture* _jamFontTextureCreate(void* texture, sint32 yOffset, sint32 advance) {
+static _JamFontTexture* _jamFontTextureCreate(void* surf, sint32 yOffset, sint32 advance) {
 	_JamFontTexture* tex = (_JamFontTexture*)malloc(sizeof(_JamFontTexture));
 
-	if (tex != NULL && texture != NULL) {
+	if (tex != NULL && surf != NULL) {
 		tex->tex = texture;
 		tex->yOffset = yOffset;
 		tex->advance = advance;
@@ -290,7 +303,7 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 	uint32 i;
 	FT_Bitmap bitmap;
 	_JamFontRangeCache* range;
-	SDL_Texture* tex;
+	SDL_Surface* surf;
 	_JamFontRangeCache** newRanges;
 	bool error = false;
 	FT_Error err;
@@ -316,21 +329,17 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 				err = FT_Load_Char(font->fontFace, i, FT_LOAD_RENDER);
 				bitmap = ((FT_Face) font->fontFace)->glyph->bitmap;
 
-				tex = SDL_CreateTexture(jamRendererGetInternalRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, bitmap.width, bitmap.rows);
-				SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
+				surf = SDL_CreateRGBSurface(0, bitmap.width, bitmap.rows, 32, rmask, gmask, bmask, amask);
+				if (surf == NULL) error = true;
 
-				// Credit to this kind fellow https://github.com/wutipong
-				// For most of the following code before the if statement
-				// (Which I modified for the purpose of making it fit the
-				// code style of the engine)
-				void* buffer;
-				int pitch;
-				SDL_LockTexture(tex, NULL, &buffer, &pitch);
+				void* buffer = surf->pixels;
+				int pitch = 4 * surf->w;
 
 				srcPixels = bitmap.buffer;
 				targetPixels = (unsigned int*)buffer;
 
 				SDL_PixelFormat* pixelFormat = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+				if (pixelFormat == NULL) error = true;
 
 				for (y = 0; y < bitmap.rows; y++) {
 					for (x = 0; x < bitmap.width; x++) {
@@ -340,19 +349,12 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 				}
 
 				SDL_FreeFormat(pixelFormat);
-				SDL_UnlockTexture(tex);
 
-				if (tex != NULL) {
-					range->characters[i - rangeStart] = _jamFontTextureCreate(
-							tex,
-							((FT_Face) font->fontFace)->glyph->bitmap_top,
-							(sint32)round((double)((FT_Face) font->fontFace)->glyph->linearHoriAdvance / 65536.0f));
-				} else {
-					if (!error)
-						jSetError(ERROR_SDL_ERROR, "Failed to create surface from FreeType bitmap FT Error=%i SDL Error=%s", err, SDL_GetError());
-					error = true;
-					range->characters[i - rangeStart] = NULL;
-				}
+				range->characters[i - rangeStart] = _jamFontTextureCreate(
+						surf,
+						((FT_Face) font->fontFace)->glyph->bitmap_top,
+						(sint32)round((double)((FT_Face) font->fontFace)->glyph->linearHoriAdvance / 65536.0f));
+				SDL_FreeSurface(surf);
 			}
 
 			// If there was an error we abandon all progress and return null
@@ -386,7 +388,6 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
  * for on your own you may get wacky results.
  */
 void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int w, uint8 r, uint8 g, uint8 b, ...) {
-	jamRendererCalculateForCamera(&x, &y);
 	FT_Error err = 0;
 	int pos = 0;
 	int xx = x;

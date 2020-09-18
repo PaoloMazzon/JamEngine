@@ -20,17 +20,17 @@ typedef struct {
 	union {
 		///< If this is a true type font we need this data
 		struct {
-			sint32 w;       ///< Width of this glyph
-			sint32 h;       ///< Height of this glyph
-			sint32 yOffset; ///< How far down to render this glyph (q should be lower than P, for example)
-			sint32 advance; ///< How far forward to move the next character after this one
-			void *tex;      ///< Internal bitmap texture of the glyph
+			sint32 w;        ///< Width of this glyph
+			sint32 h;        ///< Height of this glyph
+			sint32 yOffset;  ///< How far down to render this glyph (q should be lower than P, for example)
+			sint32 advance;  ///< How far forward to move the next character after this one
+			JamTexture *tex; ///< Internal bitmap texture of the glyph
 		};
 
-		///< We only require position in texture for bitmap fonts
 		struct {
-			sint32 xInTex; ///< X position in the font texture of this character
-			sint32 yInTex; ///< Y position in the font texture of this character
+			sint32 xInTex;   ///< X position in the font texture of this character
+			sint32 yInTex;   ///< Y position in the font texture of this character
+			JamFrame *frame; ///< Particular texture for this bitmap bit
 		};
 	};
 } _JamFontTexture;
@@ -46,8 +46,8 @@ typedef struct {
 typedef struct {
 	///< In bitmap fonts we need the source texture, otherwise we need the font face
 	union {
-		void *fontFace; ///< TrueType font face
-		void *fontTex;  ///< Bitmap texture containing the font
+		void *fontFace;      ///< TrueType font face
+		JamTexture *fontTex; ///< Bitmap texture containing the font
 	};
 	_JamFontRangeCache** ranges; ///< Array of caches that will be loaded with textures of the font
 	int rangeCount;              ///< Number of ranges in this font
