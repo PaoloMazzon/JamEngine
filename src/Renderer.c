@@ -379,6 +379,7 @@ double jamRendererGetDelta() {
 /////////////////////////////////////////////////////////////
 void jamRendererProcEndFrame() {
 	if (gRenderer != NULL) {
+		vk2dRendererSetTarget(VK2D_TARGET_SCREEN);
 		vk2dRendererEndFrame();
 
 		// Calculate time in between frames
