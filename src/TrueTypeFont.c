@@ -17,18 +17,10 @@ static FT_Library gFontLib;
 // Weather or not freetype has been initialized
 static bool gFontLibInitialized;
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-rmask = 0xff000000;
-gmask = 0x00ff0000;
-bmask = 0x0000ff00;
-amask = 0x000000ff;
-#else
-rmask = 0x000000ff;
-gmask = 0x0000ff00;
-bmask = 0x00ff0000;
-amask = 0xff000000;
-#endif
-
+extern Uint32 rmask;
+extern Uint32 gmask;
+extern Uint32 bmask;
+extern Uint32 amask;
 
 ////////// Helper functions (These guys don't make sure font is not NULL) ///////////
 
@@ -36,7 +28,6 @@ amask = 0xff000000;
 static inline uint32 _rangeEndToPureEnd(uint32 rangeStart, uint32 rangeEnd) {
 	return (rangeEnd - rangeStart + 1);
 }
-
 
 // Finds the texture associated with a character (or NULL)
 static _JamFontTexture* _jamGetCharacterTex(JamFont* font, uint32 c) {
@@ -55,27 +46,15 @@ static _JamFontTexture* _jamGetCharacterTex(JamFont* font, uint32 c) {
 
 // Easily draws a character's texture
 static void _jamRenderCharacter(JamFont* font, _JamFontTexture* tex, sint32 x, sint32 y, sint32 height, uint8 r, uint8 g, uint8 b) {
-	SDL_Rect dest, src;
+	uint8 rr, gg, bb, aa;
 
-	if (!font->bitmap) {
-		dest.x = x;
-		dest.y = y - tex->yOffset + height;
-		dest.w = tex->w;
-		dest.h = tex->h;
-		SDL_SetTextureColorMod(tex->tex, r, g, b);
-		SDL_RenderCopy(jamRendererGetInternalRenderer(), tex->tex, NULL, &dest);
-	} else {
-		dest.x = x;
-		dest.y = y;
-		dest.w = font->width;
-		dest.h = font->height;
-		src.x = tex->xInTex;
-		src.y = tex->yInTex;
-		src.w = font->width;
-		src.h = font->height;
-		SDL_SetTextureColorMod(font->fontTex, r, g, b);
-		SDL_RenderCopy(jamRendererGetInternalRenderer(), font->fontTex, &src, &dest);
-	}
+	jamDrawGetColour(&rr, &gg, &bb, &aa);
+	jamDrawSetColour(r, g, b, aa);
+	if (!font->bitmap)
+		jamDrawTexture(tex->tex, x, y);
+	else
+		jamDrawFrame(tex->frame, x, y);
+	jamDrawSetColour(rr, gg, bb, aa);
 }
 
 // Simply draws a character and returns how far forward to move the cursor
@@ -133,20 +112,20 @@ static sint32 _jamMaxASCIIHeight(JamFont* font) {
 
 ///////////// Functions that manage the "hidden" struct _JamFontTexture /////////////
 
-static _JamFontTexture* _jamFontTextureCreate(void* surf, sint32 yOffset, sint32 advance) {
+static _JamFontTexture* _jamFontTextureCreate(SDL_Surface* surf, sint32 yOffset, sint32 advance) {
 	_JamFontTexture* tex = (_JamFontTexture*)malloc(sizeof(_JamFontTexture));
 
 	if (tex != NULL && surf != NULL) {
-		tex->tex = texture;
+		tex->tex = jamTextureFromSurface(surf);
 		tex->yOffset = yOffset;
 		tex->advance = advance;
-		SDL_QueryTexture(texture, NULL, NULL, &tex->w, &tex->h);
-
+		tex->w = surf->w;
+		tex->h = surf->h;
 	} else {
 		if (tex == NULL)
 			jSetError(ERROR_ALLOC_FAILED, "Failed to allocate JamTexture. SDL Error: %s\n", SDL_GetError());
-		if (texture == NULL)
-			jSetError(ERROR_NULL_POINTER, "Texture does not exist");
+		if (surf == NULL)
+			jSetError(ERROR_NULL_POINTER, "Surface does not exist");
 	}
 
 	return tex;
@@ -155,7 +134,9 @@ static _JamFontTexture* _jamFontTextureCreate(void* surf, sint32 yOffset, sint32
 static void _jamFontTextureFree(JamFont* font, _JamFontTexture* tex) {
 	if (tex != NULL) {
 		if (!font->bitmap)
-			SDL_DestroyTexture(tex->tex);
+			jamTextureFree(tex->tex);
+		else
+			jamFrameFree(tex->frame, false);
 		free(tex);
 	}
 }
@@ -242,14 +223,12 @@ JamFont* jamFontCreate(const char* filename, uint32 size, bool preloadASCII) {
 }
 ///////////////////////////////////////////////////////////
 
-SDL_Texture* jamSDLTextureLoad(const char* filename);
-
 ///////////////////////////////////////////////////////////
 JamFont* jamFontCreateFromBitmap(const char* filename, uint32 characterWidth, uint32 characterHeight) {
 	JamFont* newFont = (JamFont*)malloc(sizeof(JamFont));
 	_JamFontRangeCache* range = _createFontRange(0, 127);
 	_JamFontRangeCache** ranges = (_JamFontRangeCache**)malloc(sizeof(_JamFontRangeCache*));
-	SDL_Texture* tex = jamSDLTextureLoad(filename);
+	JamTexture *tex = jamTextureLoad(filename);
 	int w, h;
 	int i;
 	int xx = 0;
@@ -266,7 +245,8 @@ JamFont* jamFontCreateFromBitmap(const char* filename, uint32 characterWidth, ui
 		newFont->rangeCount = 1;
 		ranges[0] = range;
 
-		SDL_QueryTexture(tex, NULL, NULL, &w, &h);
+		w = tex->w;
+		h = tex->h;
 
 		// Create all the textures
 		for (i = 0; i < 128; i++) {
@@ -291,7 +271,7 @@ JamFont* jamFontCreateFromBitmap(const char* filename, uint32 characterWidth, ui
 		free(newFont);
 		free(range);
 		free(ranges);
-		SDL_DestroyTexture(tex);
+		jamTextureFree(tex);
 	}
 
 	return newFont;
@@ -559,7 +539,7 @@ void jamFontFree(JamFont* font) {
 			_freeFontRange(font, font->ranges[i]);
 		free(font->ranges);
 		if (font->bitmap)
-			SDL_DestroyTexture(font->fontTex);
+			jamTextureFree(font->fontTex);
 		else
 			FT_Done_Face(font->fontFace);
 		free(font);

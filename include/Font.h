@@ -10,6 +10,7 @@
 
 #pragma once
 #include "Renderer.h"
+#include "Frame.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,6 +19,13 @@ extern "C" {
 /// \brief A specialized character texture that handles both bitmap and true type textures
 typedef struct {
 	union {
+		///< For bitmap fonts
+		struct {
+			sint32 xInTex;   ///< X position in the font texture of this character
+			sint32 yInTex;   ///< Y position in the font texture of this character
+			JamFrame *frame; ///< Particular texture for this bitmap bit
+		};
+
 		///< If this is a true type font we need this data
 		struct {
 			sint32 w;        ///< Width of this glyph
@@ -25,12 +33,6 @@ typedef struct {
 			sint32 yOffset;  ///< How far down to render this glyph (q should be lower than P, for example)
 			sint32 advance;  ///< How far forward to move the next character after this one
 			JamTexture *tex; ///< Internal bitmap texture of the glyph
-		};
-
-		struct {
-			sint32 xInTex;   ///< X position in the font texture of this character
-			sint32 yInTex;   ///< Y position in the font texture of this character
-			JamFrame *frame; ///< Particular texture for this bitmap bit
 		};
 	};
 } _JamFontTexture;

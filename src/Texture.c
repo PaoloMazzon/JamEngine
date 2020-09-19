@@ -1,24 +1,15 @@
 #include "Texture.h"
 #include "Renderer.h"
-#include <stdio.h>
 #include <SDL.h>
 #include "JamError.h"
 
 unsigned char *stbi_load(char const *filename, int *x, int *y, int *channels_in_file, int desired_channels);
 void stbi_image_free(void *retval_from_stbi_load);
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-int shift = 0;
-  	const Uint32 rmask = 0xff000000 >> shift;
-  	const Uint32 gmask = 0x00ff0000 >> shift;
-  	const Uint32 bmask = 0x0000ff00 >> shift;
-	const Uint32 amask = 0x000000ff >> shift;
-#else // little endian, like x86
-	const Uint32 rmask = 0x000000ff;
-	const Uint32 gmask = 0x0000ff00;
-	const Uint32 bmask = 0x00ff0000;
-	const Uint32 amask = 0xff000000;
-#endif
+extern Uint32 rmask;
+extern Uint32 gmask;
+extern Uint32 bmask;
+extern Uint32 amask;
 
 // Loads a surface using a filename, call with NULL filename to free the surface.
 // (Don't use this for long-term surface usage)
@@ -110,7 +101,7 @@ JamTexture *jamTextureFromSurface(void *surface) {
 		tex->img = vk2dImageFromSurface(vk2dRendererGetDevice(), surface);
 
 		if (tex->img != NULL) {
-			vk2dTextureLoad(vk2dRendererGetDevice(), 0, 0, ((SDL_Surface*)surface)->w, ((SDL_Surface*)surface)->h);
+			vk2dTextureLoad(tex->img, 0, 0, ((SDL_Surface*)surface)->w, ((SDL_Surface*)surface)->h);
 			if (tex->tex != NULL) {
 				tex->w = ((SDL_Surface*)surface)->w;
 				tex->h = ((SDL_Surface*)surface)->h;
