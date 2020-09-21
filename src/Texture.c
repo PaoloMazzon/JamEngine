@@ -127,6 +127,7 @@ JamTexture *jamTextureFromSurface(void *surface) {
 ////////////////////////////////////////////////////////////////
 void jamTextureFree(JamTexture *tex) {
 	if (tex != NULL) {
+		vk2dRendererWait();
 		vk2dImageFree(tex->img);
 		vk2dTextureFree(tex->tex);
 		free(tex);
