@@ -254,6 +254,7 @@ JamFont* jamFontCreateFromBitmap(const char* filename, uint32 characterWidth, ui
 			if (range->characters[i] != NULL) {
 				range->characters[i]->xInTex = xx;
 				range->characters[i]->yInTex = yy;
+				range->characters[i]->frame = jamFrameCreate(tex, xx, yy, w, h);
 
 				// Advance to the next character in the texture
 				if (xx + characterWidth >= w) {

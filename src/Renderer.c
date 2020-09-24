@@ -297,6 +297,7 @@ bool jamRendererProcEvents() {
 		vk2dRendererStartFrame(colour);
 		vk2dRendererSetTarget(gRenderer->screenBuffer);
 		vk2dRendererClear();
+		vk2dRendererSetTextureCamera(true);
 	} else {
 		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererProcEvents)");
 	}

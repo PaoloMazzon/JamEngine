@@ -101,7 +101,7 @@ JamTexture *jamTextureFromSurface(void *surface) {
 		tex->img = vk2dImageFromSurface(vk2dRendererGetDevice(), surface);
 
 		if (tex->img != NULL) {
-			vk2dTextureLoad(tex->img, 0, 0, ((SDL_Surface*)surface)->w, ((SDL_Surface*)surface)->h);
+			tex->tex = vk2dTextureLoad(tex->img, 0, 0, ((SDL_Surface*)surface)->w, ((SDL_Surface*)surface)->h);
 			if (tex->tex != NULL) {
 				tex->w = ((SDL_Surface*)surface)->w;
 				tex->h = ((SDL_Surface*)surface)->h;
