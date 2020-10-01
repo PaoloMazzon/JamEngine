@@ -51,7 +51,7 @@ static void _jamRenderCharacter(JamFont* font, _JamFontTexture* tex, sint32 x, s
 	jamDrawGetColour(&rr, &gg, &bb, &aa);
 	jamDrawSetColour(r, g, b, aa);
 	if (!font->bitmap)
-		jamDrawTexture(tex->tex, x, y);
+		jamDrawTexture(tex->tex, x, y - tex->yOffset + height);
 	else
 		jamDrawFrame(tex->frame, x, y);
 	jamDrawSetColour(rr, gg, bb, aa);
@@ -319,17 +319,17 @@ void jamFontPreloadRange(JamFont* font, uint32 rangeStart, uint32 rangeEnd) {
 				srcPixels = bitmap.buffer;
 				targetPixels = (unsigned int*)buffer;
 
-				SDL_PixelFormat* pixelFormat = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
-				if (pixelFormat == NULL) error = true;
+				//SDL_PixelFormat* pixelFormat = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+				//if (pixelFormat == NULL) error = true;
 
 				for (y = 0; y < bitmap.rows; y++) {
 					for (x = 0; x < bitmap.width; x++) {
 						index = (y * bitmap.width) + x;
-						targetPixels[index] = SDL_MapRGBA(pixelFormat, 255, 255, 255, srcPixels[index]);
+						targetPixels[index] = SDL_MapRGBA(surf->format, 255, 255, 255, srcPixels[index]);
 					}
 				}
 
-				SDL_FreeFormat(pixelFormat);
+				//SDL_FreeFormat(pixelFormat);
 
 				range->characters[i - rangeStart] = _jamFontTextureCreate(
 						surf,
