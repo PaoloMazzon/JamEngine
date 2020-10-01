@@ -87,7 +87,8 @@ void jamDrawTextureExt(JamTexture *texture, sint32 x, sint32 y, sint32 originX, 
 	Uint8 r, g, b, a;
 	jamDrawGetColour(&r, &g, &b, &a);
 	jamDrawSetColour(r, g, b, alpha);
-
+	if (scaleX < 0) x += (float)texture->w * -scaleX;
+	if (scaleY < 0) y += (float)texture->h * -scaleY;
 	vk2dRendererDrawTexture(texture->tex, x - originX, y - originY, scaleX, scaleY, rot, originX, originY);
 
 	jamDrawSetColour(r, g, b, a);

@@ -154,6 +154,8 @@ void jamDrawSpriteFrame(JamSprite *sprite, sint32 x, sint32 y, float scaleX, flo
 		uint8 r, g, b, a;
 		jamDrawGetColour(&r, &g, &b, &a);
 		jamDrawSetColour(r, g, b, alpha);
+		if (scaleX < 0) x += (float)sprite->frames[frame]->w * -scaleX;
+		if (scaleY < 0) y += (float)sprite->frames[frame]->h * -scaleY;
 		vk2dRendererDrawTexture(sprite->frames[frame]->tex, x - sprite->originX, y - sprite->originY, scaleX, scaleY, rot, sprite->originX, sprite->originY);
 		jamDrawSetColour(r, g, b, a);
 	} else {
