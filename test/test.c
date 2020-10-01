@@ -184,7 +184,6 @@ bool runGame() {
 	JamFont* font = jamAssetHandlerGetFont(gHandler, "GameFont");
 
 	// Some setup
-	jamRendererSetCameraPos(25, 25);
 	JamAudioBuffer* sound = jamAssetHandlerGetAudioBuffer(gHandler, "PopSound");
 	JamAudioSource* source = jamAudioCreateSource();
 
@@ -194,6 +193,7 @@ bool runGame() {
 		while (runLoop) {
 			// Update the renderer and check for a quit signal
 			runLoop = jamRendererProcEvents();
+			jamRendererSetCameraPos(25, 25);
 
 			if (runLoop) {
 				jamDrawFillColour(0, 0, 0, 255);
@@ -215,7 +215,7 @@ bool runGame() {
 
 				/////////////////////////// DRAWING THINGS //////////////////////////
 				// Draw the background
-				jamDrawTexture(jamAssetHandlerGetTexture(gHandler, "BackgroundTexture"), (sint32)jamRendererGetCameraX(), (sint32)jamRendererGetCameraX());
+				jamDrawTexture(jamAssetHandlerGetTexture(gHandler, "BackgroundTexture"), jamRendererGetCameraX(), jamRendererGetCameraY());
 
 				// Draw the game world
 				for (i = 0; i < MAX_TILEMAPS; i++)
@@ -228,7 +228,7 @@ bool runGame() {
 				sint32 debugY = (sint32)jamRendererGetCameraY() + 16;
 				jamDrawRectangleFilled(debugX - 2, debugY + 2, jamFontWidth(font, "FPS: 60") + 4, 16);
 				JamSprite* sprite = jamAssetHandlerGetSprite(gHandler, "EnemySprite");
-				jamFontRender(font, debugX, debugY, "FPS: %f", round(jamRendererGetFramerate()), sprite);
+				jamFontRender(font, debugX, debugY, "FPS: %f", round(jamRendererGetFramerate()));
 				/////////////////////////////////////////////////////////////////////
 
 				jamRendererProcEndFrame();

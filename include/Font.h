@@ -128,7 +128,7 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
-#define jamFontRender(font, x, y, string, ...) _jamFontRenderDetailed(font, x, y, string, 0, 255, 255, 255, ##__VA_ARGS__);
+#define jamFontRender(font, x, y, string, ...) _jamFontRenderDetailed(font, x, y, string, 0, 255, 255, 255, ##__VA_ARGS__)
 
 /// \brief Renders a font
 /// \param font JamFont* to render from
@@ -165,7 +165,7 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
-#define jamFontRenderColour(font, x, y, string, r, g, b, ...) _jamFontRenderDetailed(font, x, y, string, 0, r, g, b, ##__VA_ARGS__);
+#define jamFontRenderColour(font, x, y, string, r, g, b, ...) _jamFontRenderDetailed(font, x, y, string, 0, r, g, b, ##__VA_ARGS__)
 
 /// \brief Renders a font
 /// \param font JamFont* to render from
@@ -193,7 +193,7 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
-#define jamFontRenderExt(font, x, y, string, w, ...) _jamFontRenderDetailed(font, x, y, string, w, 255, 255, 255, ##__VA_ARGS__);
+#define jamFontRenderExt(font, x, y, string, w, ...) _jamFontRenderDetailed(font, x, y, string, w, 255, 255, 255, ##__VA_ARGS__)
 
 /// \brief Renders a font
 /// \param font JamFont* to render from
@@ -242,7 +242,7 @@ void _jamFontRenderDetailed(JamFont* font, int x, int y, const char* string, int
 ///
 /// \throws ERROR_NULL_POINTER
 /// \throws ERROR_TRUETYPE_ERROR
-#define jamFontRenderColourExt(font, x, y, string, r, g, b, w, ...) _jamFontRenderDetailed(font, x, y, string, w, r, g, b, ##__VA_ARGS__);
+#define jamFontRenderColourExt(font, x, y, string, r, g, b, w, ...) _jamFontRenderDetailed(font, x, y, string, w, r, g, b, ##__VA_ARGS__)
 
 /// \brief Renders a specific character from a font returning the advance
 /// \param font Font to find the character in

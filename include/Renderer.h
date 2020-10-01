@@ -26,6 +26,7 @@ typedef struct {
 	void* gameWindow;         ///< The SDL2 window to draw to
 	VK2DTexture screenBuffer; ///< Drawing is through this texture for proper upscaling and shader support
 	VK2DCamera camera;        ///< Camera
+	VK2DCamera oldCam;        ///< Camera at the start of the frame
 	JamRenderConfig config;   ///< VK2D's renderer doesn't keep track of config in a way that would be good for this engine
 
 	uint64 lastTime;              ///< Used for calculating frame wait time
