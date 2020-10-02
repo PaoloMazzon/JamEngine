@@ -183,14 +183,26 @@ double jamRendererGetFramerate() {
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
-bool jamRendererReset(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen) {
-	// TODO: This
+void jamRendererReset(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen) {
+	if (gRenderer != NULL) {
+		if (fullscreen) {
+			SDL_SetWindowFullscreen(gRenderer->gameWindow, fullscreen == RENDERER_BORDERLESS_FULLSCREEN ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+		} else {
+			SDL_SetWindowSize(gRenderer->gameWindow, windowWidth, windowHeight);
+		}
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized");
+	}
 }
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
 void jamRendererIntegerScale() {
-	// TODO: This
+	if (gRenderer != NULL) {
+		// TODO: This
+	} else {
+		jSetError(ERROR_NULL_POINTER, "Renderer has not been initialized");
+	}
 }
 /////////////////////////////////////////////////////////////
 
@@ -309,10 +321,23 @@ bool jamRendererProcEvents() {
 
 /////////////////////////////////////////////////////////////
 void jamRendererSetTarget(JamTexture *texture) {
-	if (gRenderer != NULL) {
-		// TODO: This
+	if (gRenderer != NULL && texture != NULL && texture->renderTarget) {
+		if (texture == NULL) {
+			gRenderer->renderingToScreenBuffer = true;
+			vk2dRendererSetTarget(gRenderer->screenBuffer);
+			vk2dRendererSetTextureCamera(true);
+		} else {
+			gRenderer->renderingToScreenBuffer = false;
+			vk2dRendererSetTarget(texture->tex);
+			vk2dRendererSetTextureCamera(false);
+		}
 	} else {
-		jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererSetTarget)");
+		if (gRenderer == NULL)
+			jSetError(ERROR_NULL_POINTER, "JamRenderer has not been initialized (jamRendererSetTarget)");
+		if (texture == NULL)
+			jSetError(ERROR_NULL_POINTER, "Texture doesn't exist");
+		else if (!texture->renderTarget)
+			jSetError(ERROR_NULL_POINTER, "Texture is not a render target");
 	}
 }
 /////////////////////////////////////////////////////////////

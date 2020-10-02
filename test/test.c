@@ -204,7 +204,7 @@ bool runGame() {
 					jamRendererIntegerScale();
 				}
 				if (jamInputCheckKeyPressed(JAM_KB_G)) {
-					jamRendererReset(GAME_WIDTH, GAME_HEIGHT, RENDERER_WINDOWED);
+					jamRendererReset(GAME_WIDTH * 2, GAME_HEIGHT * 2, RENDERER_WINDOWED);
 					jamRendererIntegerScale();
 				}
 				if (jamInputCheckKeyPressed(JAM_KB_P)) {

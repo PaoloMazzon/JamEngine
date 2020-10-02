@@ -116,7 +116,7 @@ double jamRendererGetDelta();
 ///
 /// \throws ERROR_SDL_ERROR
 /// \throws ERROR_NULL_POINTER
-bool jamRendererReset(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen);
+void jamRendererReset(uint32 windowWidth, uint32 windowHeight, uint8 fullscreen);
 
 /// \brief Upscales your screen buffer as much as it can while retaining its aspect ratio and integer scaling
 ///
